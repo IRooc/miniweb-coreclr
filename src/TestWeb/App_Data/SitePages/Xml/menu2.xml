@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SitePage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Url>menu2</Url>
+  <Title>Menu2</Title>
+  <Template>~/Views/Pages/OneColumn.cshtml</Template>
+  <Layout>~/views/_layout.cshtml</Layout>
+  <Visible>true</Visible>
+  <ShowInMenu>true</ShowInMenu>
+  <SortOrder>30</SortOrder>
+  <LastModified>2015-06-21T11:25:52.8905181+02:00</LastModified>
+  <Sections />
+</SitePage>

@@ -1,0 +1,80 @@
+﻿@using MiniWeb.Core
+@inject IMiniWebSite MiniWebSite
+<!DOCTYPE html>
+
+<html>
+<head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>@Model.MetaTitle - @MiniWebSite.Configuration.Title</title>
+	<meta name="description" content="@Model.MetaDescription" />
+	<link rel="stylesheet" href="/css/bootstrap-3.0.0.css" />
+	<link rel="stylesheet" href="/css/site.css" />
+	<link rel="dns-prefetch" href="http://gravatar.com/" />
+
+    <meta name="application-name" content="@MiniWebSite.Configuration.Title" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+
+    <meta property="og:title" content="@Model.MetaTitle" />
+    <meta property="og:type" content="website" />
+
+</head>
+<body class="@Model.GetBodyCss()">
+	<div class="container">
+		<header role="banner">
+			HEADER
+		</header>
+		<div role="navigation" class="mainmenu navbar navbar-default">
+			<div class="navbar-header">
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					@{
+						var subRoot = MiniWebSite.PageHierarchy.FirstOrDefault(p => Model.Url.StartsWith(p.Url + "/") || Model.Url == p.Url);
+						var url = subRoot != null ? subRoot.Url : null;
+					}
+					@foreach (var page in MiniWebSite.PageHierarchy.Where(p => p.VisibleInMenu() || MiniWebSite.IsAuthenticated(User)))
+					{
+						<li class="@(page.Url == url ? "active" : "") @(!page.ShowInMenu || !page.Visible ? "hiddenitem" : "")"><a href="/@page.Url">@page.Title</a></li>
+					}
+				</ul>
+			</div>
+		</div>
+		@if (subRoot != null && ((SitePage)subRoot).Pages.Any(p => p.VisibleInMenu()))
+		{
+			<div role="navigation" class="submenu navbar navbar-default">
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						@foreach (var page in ((SitePage)subRoot).Pages.Where(p => p.VisibleInMenu() || MiniWebSite.IsAuthenticated(User)))
+						{
+							<li class="@(page.Url == Model.Url ? "active" : "") @(!page.ShowInMenu ? "hiddenitem" : "")"><a href="/@page.Url">@page.Title</a></li>
+						}
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		}
+		@RenderBody()
+	</div>
+	<div class="container">
+		<footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+			<span>
+				Footer
+			</span>
+		</footer>
+	</div>
+	<script src="/scripts/jquery-2.0.2.js"></script>
+	<script src="/scripts/bootstrap.min.js"></script>
+	<script src="/scripts/site.js" ></script>
+	
+	@if (MiniWebSite.IsAuthenticated(User)) {
+		@Html.Partial("/Views/_adminMenu.cshtml")
+	}
+	</body>
+</html>

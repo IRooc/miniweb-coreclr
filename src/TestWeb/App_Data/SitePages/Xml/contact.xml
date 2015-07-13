@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SitePage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Url>contact</Url>
+  <Title>Contact</Title>
+  <Template>~/Views/Pages/OneColumn.cshtml</Template>
+  <Layout>~/views/_layout.cshtml</Layout>
+  <Visible>true</Visible>
+  <ShowInMenu>true</ShowInMenu>
+  <SortOrder>60</SortOrder>
+  <LastModified>2015-06-21T11:27:34.7892441+02:00</LastModified>
+  <Sections>
+    <PageSection>
+      <Key>content</Key>
+      <Items>
+        <ContentItem>
+          <Title>Contact</Title>
+          <Template>~/Views/Items/item.cshtml</Template>
+          <Content>Contact information</Content>
+        </ContentItem>
+      </Items>
+    </PageSection>
+  </Sections>
+</SitePage>

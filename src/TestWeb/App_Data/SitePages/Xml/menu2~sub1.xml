@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SitePage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Url>menu2/sub1</Url>
+  <Title>Sub menu item1</Title>
+  <Template>~/Views/Pages/OneColumn.cshtml</Template>
+  <Layout>~/Views/_layout.cshtml</Layout>
+  <MetaTitle>Sub menu item1</MetaTitle>
+  <MetaDescription>Test tset estest</MetaDescription>
+  <Visible>true</Visible>
+  <ShowInMenu>true</ShowInMenu>
+  <SortOrder>1</SortOrder>
+  <LastModified>2015-06-21T15:54:37.3829703+02:00</LastModified>
+  <Sections>
+    <PageSection>
+      <Key>content</Key>
+      <Items>
+        <ContentItem>
+          <Title>The sub content or Menu2</Title>
+          <Template>~/Views/Items/item.cshtml</Template>
+          <Content>Content&lt;br /&gt;&lt;b&gt;Content&lt;/b&gt;&lt;br /&gt;&lt;i&gt;&lt;u&gt;Content&lt;/u&gt;&lt;/i&gt;&lt;br /&gt;</Content>
+        </ContentItem>
+      </Items>
+    </PageSection>
+  </Sections>
+</SitePage>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SitePage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Url>404</Url>
+  <Title>404</Title>
+  <Template>~/Views/Pages/OneColumn.cshtml</Template>
+  <Layout>~/Views/_layout.cshtml</Layout>
+  <MetaTitle>Pagina niet gevonden : 404</MetaTitle>
+  <MetaDescription>Wapen van noordwijkerhout</MetaDescription>
+  <Visible>true</Visible>
+  <ShowInMenu>false</ShowInMenu>
+  <SortOrder>99</SortOrder>
+  <LastModified>2015-06-21T11:28:03.6885635+02:00</LastModified>
+  <Sections>
+    <PageSection>
+      <Key>content</Key>
+      <Items>
+        <ContentItem>
+          <Title>Page not found</Title>
+          <Template>~/Views/Items/item.cshtml</Template>
+          <Content>The page you requested was not found on the website&lt;br /&gt;</Content>
+        </ContentItem>
+      </Items>
+    </PageSection>
+  </Sections>
+</SitePage>

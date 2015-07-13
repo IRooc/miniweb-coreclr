@@ -1,0 +1,37 @@
+{
+	"version": "1.0.0-*",
+	"webroot": "wwwroot",
+	"exclude": [
+		"wwwroot"
+	],
+	"packExclude": [
+		"**.kproj",
+		"**.user",
+		"**.vspscc"
+	],
+	"dependencies": {
+		"Kestrel": "1.0.0-*",
+		"System.Linq": "4.0.0-*",
+		"Microsoft.AspNet.Authentication.Cookies": "1.0.0-*",
+		"Microsoft.AspNet.Diagnostics": "1.0.0-*",
+		"Microsoft.AspNet.Antiforgery": "1.0.0-*",
+		"Microsoft.AspNet.Mvc": "6.0.0-*",
+		"Microsoft.AspNet.Server.IIS": "1.0.0-*",
+		"Microsoft.AspNet.Server.WebListener": "1.0.0-*",
+		"Microsoft.AspNet.StaticFiles": "1.0.0-*",
+		"Microsoft.Framework.Logging.Console": "1.0.0-*",
+		"Microsoft.Framework.Configuration": "1.0.0-*",
+		"Microsoft.Framework.ConfigurationModel": "1.0.0-*",
+		"Microsoft.Framework.Configuration.Json": "1.0.0-*",
+		"MiniWeb.Core": "",
+		"MiniWeb.Storage.JsonStorage": "",
+		"MiniWeb.Storage.XmlStorage": ""
+	},
+	"commands": {
+		"web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5001",
+		"kestrel": "Microsoft.AspNet.Hosting --server Kestrel --server.urls http://localhost:5004"
+	},
+	"frameworks": {
+		"dnxcore50": { }
+	}
+}

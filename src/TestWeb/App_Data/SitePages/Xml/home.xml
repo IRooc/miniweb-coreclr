@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SitePage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Url>home</Url>
+  <Title>Home</Title>
+  <Template>~/Views/Pages/TwoColumn.cshtml</Template>
+  <Layout>~/Views/_layout.cshtml</Layout>
+  <MetaTitle>Home2</MetaTitle>
+  <MetaDescription>meta tekst3</MetaDescription>
+  <Visible>true</Visible>
+  <ShowInMenu>true</ShowInMenu>
+  <SortOrder>0</SortOrder>
+  <LastModified>2015-06-21T11:24:12.7120597+02:00</LastModified>
+  <Sections>
+    <PageSection>
+      <Key>content</Key>
+      <Items>
+        <ContentItem>
+          <Title>Home 2 title</Title>
+          <Template>~/Views/Items/item.cshtml</Template>
+          <Content>TE TES TE ST ESTESTES&lt;br /&gt; &lt;p class="intro"&gt;Test test&lt;/p&gt;</Content>
+        </ContentItem>
+      </Items>
+    </PageSection>
+    <PageSection>
+      <Key>aside</Key>
+      <Items>
+        <ContentItem>
+          <Title>Aside 1</Title>
+          <Template>~/Views/Items/aside.cshtml</Template>
+          <Content>Aside item1</Content>
+        </ContentItem>
+        <ContentItem>
+          <Title>Aside 2</Title>
+          <Template>~/Views/Items/aside.cshtml</Template>
+          <Content>Does it work?&lt;br /&gt;</Content>
+        </ContentItem>
+      </Items>
+    </PageSection>
+  </Sections>
+</SitePage>

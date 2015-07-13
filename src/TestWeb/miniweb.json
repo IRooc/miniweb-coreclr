@@ -1,0 +1,16 @@
+{
+	"MiniWeb": {
+		"Title": "New Title from Config",
+		"DefaultPage": "/home"
+	},
+	"Storage": {
+		"Users": {
+			"demo": "demo",
+			"test": "test123"
+		}
+	},
+	"Logging": {
+		"EnableConsole": true,
+		"EnableFile": false
+	}
+}
