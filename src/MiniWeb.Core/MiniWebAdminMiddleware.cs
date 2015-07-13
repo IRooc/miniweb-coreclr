@@ -35,10 +35,11 @@ namespace MiniWeb.Core
 
 				var resource = Path.GetFileName(path);
 				//temp fallback for linux
-				var filename = _hostingEnv.MapPath("/miniweb-resource/" + resource);
+				var filename = _hostingEnv.MapPath("~/miniweb-resource/" + resource);
 				//NOTE(RC) TEMP FIX FOR MAPPATH BUG https://github.com/aspnet/Hosting/issues/222
-				filename = filename.Replace("/~/", "/~/");
-            if (File.Exists(filename))
+				filename = filename.Replace("/~/", "/");
+				filename = filename.Replace("\\~\\", "\\");
+				if (File.Exists(filename))
 				{
 					await context.Response.SendFileAsync("/miniweb-resource/" + resource);
 					return;
