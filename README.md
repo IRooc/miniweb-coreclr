@@ -14,8 +14,12 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom taghelpers
 * custom middleware
 
-it currently runs on 1.0.0-beta6-12216 coreclr x64.
-Tested on windows, windows IoT and linux (ubuntu) wih some workarounds (remove "resource" line from Core project.json otherwise it won't build) 
+it currently runs on 1.0.0-beta6-12208 coreclr x64.
+Tested on windows, mac osx, linux (ubuntu) and windows IoT  
+
+with some workarounds voor mac and linux 
+* remove "resource" line from Core project.json otherwise it won't build
+* rename /wwwroot/miniweb-resourcefallback directory to /wwwroot/miniweb-resource for edit functionality 
 
 ## Example
 Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the TestWeb project for an example implementation. Make sure the basic bootstrap files ar in the wwwroot folder.
@@ -59,9 +63,9 @@ both store their files in the /App_Data/Sitepages folder
 
 ## TODO
 * Wait for embedded file fix in linux [https://github.com/aspnet/dnx/issues/2187](https://github.com/aspnet/dnx/issues/2187)
-	* temp linux workaround through admin middleware
+	* temp linux workaround through static files (remove the fallback from the wwwroot/miniweb-resourcefallback directory name)
 * Embedded admin view through virtualpathprovider oid
-* Open ID authentication
+* Open ID authentication possibility
 * Multiple edittypes
 * Better CSS and JS hooks for editing
 * Better image handling (enable picking existing images as well)
