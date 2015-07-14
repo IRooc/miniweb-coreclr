@@ -14,7 +14,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom taghelpers
 * custom middleware
 
-it currently runs on 1.0.0-beta6-12208 coreclr x64.
+it currently runs on ![coreclr x64](https://img.shields.io/myget/aspnetvnext/v/dnx-coreclr-win-x64.svg?style=flat).
 Tested on windows, mac osx, linux (ubuntu) and windows IoT  
 
 with some workarounds voor mac and linux 
