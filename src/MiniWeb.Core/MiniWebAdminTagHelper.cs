@@ -11,7 +11,7 @@ namespace MiniWeb.Core
 	[TargetElement("miniwebadmin")]
 	public class MiniWebAdminTagHelper : TagHelper
 	{
-		private const string MiniWebIgnoreAdminStartTagname = "miniweb-adminextra";
+		private const string MiniWebIgnoreAdminStartTagname = "ignoreadminstart";
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
