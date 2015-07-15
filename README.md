@@ -1,9 +1,5 @@
 # MiniWeb small CMS for coreclr
 
-Based on the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
-
-It needs bootstrap v3.2 for now for the admin menu to work
-
 ## What is miniweb
 Firstly an easy to use Simple CMS website that just needs page templates and content item templates in form of cshtml files
 
@@ -20,6 +16,10 @@ Tested on windows, mac osx, linux (ubuntu) and windows IoT
 with some workarounds voor mac and linux 
 * remove "resource" line from Core project.json otherwise it won't build
 * rename /wwwroot/miniweb-resourcefallback directory to /wwwroot/miniweb-resource for edit functionality 
+
+Based on the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
+
+It needs bootstrap v3.2 for now for the admin menu to work
 
 ## Example
 Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the TestWeb project for an example implementation. Make sure the basic bootstrap files ar in the wwwroot folder.
