@@ -11,14 +11,11 @@ using System.Threading.Tasks;
 namespace MiniWeb.Core
 {
 	[TargetElement(Attributes = MiniWebTemplateTagname)]
-	[TargetElement(Attributes = MiniWebPropertyTagname)]
 	[TargetElement(Attributes = MiniWebSectionTagname)]
 	public class MiniWebTagHelper : TagHelper
 	{
 
 		private const string MiniWebTemplateTagname = "miniweb-template";
-		private const string MiniWebPropertyTagname = "miniweb-prop";
-		private const string MiniWebEditTypeTagname = "miniweb-edittype";
 		private const string MiniWebSectionTagname = "miniweb-section";
 
 		[HtmlAttributeNotBound]
@@ -27,12 +24,6 @@ namespace MiniWeb.Core
 
 		[HtmlAttributeName(MiniWebTemplateTagname)]
 		public string Template { get; set; }
-
-		[HtmlAttributeName(MiniWebPropertyTagname)]
-		public string Property { get; set; }
-
-		[HtmlAttributeName(MiniWebEditTypeTagname)]
-		public string EditType { get; set; }
 
 		[HtmlAttributeName(MiniWebSectionTagname)]
 		public string Section { get; set; }
@@ -52,23 +43,10 @@ namespace MiniWeb.Core
 			{
 				if (!string.IsNullOrWhiteSpace(Template))
 					output.Attributes.Add("data-miniwebtemplate", Template);
-				if (!string.IsNullOrWhiteSpace(Property))
-					output.Attributes.Add("data-miniwebprop", Property);
 				if (!string.IsNullOrWhiteSpace(Section))
 					output.Attributes.Add("data-miniwebsection", Section);
-				if (!string.IsNullOrWhiteSpace(EditType))
-					output.Attributes.Add("data-miniwebedittype", EditType);
 			}
-
-			//fill property title and content on specified tags
-			if (!string.IsNullOrWhiteSpace(Property))
-			{
-				var view = ViewContext.View as RazorView;
-				var viewItem = view.RazorPage as RazorPage<ContentItem>;
-
-				output.Content.SetContent(viewItem.Model.GetValue(Property));
 			
-			}
 
 			//load the content items in the specified section
 			if (!string.IsNullOrWhiteSpace(Section))

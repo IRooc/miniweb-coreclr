@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebApicontroller : Controller
+	public class MiniWebApiController : Controller
 	{
 		private IMiniWebSite _webSite;
 
-		public MiniWebApicontroller(IMiniWebSite website)
+		public MiniWebApiController(IMiniWebSite website)
 		{
 			_webSite = website;
 		}

@@ -73,8 +73,7 @@
 	<script src="/scripts/bootstrap.min.js"></script>
 	<script src="/scripts/site.js" ></script>
 	
-	@if (MiniWebSite.IsAuthenticated(User)) {
-		@Html.Partial("/Views/_adminMenu.cshtml")
-	}
+	<miniwebadmin/>
+
 	</body>
 </html>

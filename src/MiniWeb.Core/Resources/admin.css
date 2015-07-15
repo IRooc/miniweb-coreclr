@@ -8,6 +8,7 @@
 
 #admin {
 	font: 12pt arial;
+	z-index: 5000;
 }
 
 	#admin .navbar-inner {
@@ -28,37 +29,7 @@
 		outline: 0;
 		white-space: nowrap;
 	}
-
-.miniweb.modal-dialog {
-	margin-top: 60px;
-}
-
-	#newContentAdd .modal-dialog .item-link {
-		margin: 10px;
-	}
-
-		#newContentAdd .modal-dialog .item-link span {
-			width: 100px;
-			display: inline-block;
-		}
-
-#showHiddenPages {
-	position: relative;
-	top: 5px;
-	left: 10px;
-}
-
-	#showHiddenPages label {
-		display: inline;
-		position: relative;
-		left: 4px;
-		font-weight: normal;
-	}
-
-#admin {
-	z-index: 5000;
-}
-
+	
 	#admin #tools {
 		position: relative;
 		top: 5px;
@@ -90,13 +61,47 @@
 			padding: 8px 1em;
 		}
 
+.miniweb.modal-dialog {
+	margin-top: 60px;
+}
+
+#newContentAdd .modal-dialog .item-link {
+	margin: 10px;
+}
+
+	#newContentAdd .modal-dialog .item-link span {
+		width: 100px;
+		display: inline-block;
+	}
+
+#showHiddenPages {
+	position: relative;
+	top: 5px;
+	left: 10px;
+}
+
+	#showHiddenPages label {
+		display: inline;
+		position: relative;
+		left: 4px;
+		font-weight: normal;
+	}
+
+body.miniweb-editing [data-miniwebtemplate] {
+	overflow: hidden;
+}
+
 [contenteditable] {
 	outline: thin dashed #ccc;
 	width: 100%;
 	display: inline-block;
 	min-height: 30px;
 }
-
+img[contenteditable] {
+	width: auto;
+	overflow:hidden;
+	display:block;
+}
 div[contenteditable] {
 	margin-bottom: 10px;
 }
@@ -106,59 +111,56 @@ div[contenteditable] {
 }
 
 [contenteditable]:before {
-	background:#f4f2df;
+	background: #f4f2df;
 	color: #777;
 	content: attr(data-miniwebprop) ": ";
 	white-space: nowrap;
 	margin: 0 5px 0 0;
 }
+
 div[contenteditable]:before {
-	display:block;
+	display: block;
 	margin: 0;
 }
-
-.admin #excerpt {
-	border: solid 1px #CCC;
-	padding: 10px;
-	margin-bottom: 20px;
-}
-
-	.admin #excerpt > div {
-		background-color: white;
-		color: black;
-	}
 
 .editor-toolbar .btn {
 	padding: 4px 8px;
 }
 
-.article-actions .btn.remove {
+.miniweb-template-actions .btn.remove {
 	color: darkred;
 	display: inline-block;
 }
 
-.article-actions .btn.articleDown,
-.article-actions .btn.articleUp {
+.miniweb-template-actions .btn.articleDown,
+.miniweb-template-actions .btn.articleUp {
 	color: black;
 }
 
-.miniweb-editing article {
+.miniweb-editing [data-miniwebtemplate] {
 	margin: 10px -10px !important;
 	padding: 10px;
 	border: 1px dotted green;
-	overflow: hidden; 
+	overflow: hidden;
 }
 
-article:first-of-type .article-actions .btn.articleUp {
+[data-miniwebtemplate]:first-child .miniweb-template-actions .btn.articleUp {
+	visibility: hidden;
+}
+/*last child is add content button*/
+[data-miniwebtemplate]:nth-last-child(2) .miniweb-template-actions .btn.articleDown {
 	visibility: hidden;
 }
 
-article:last-of-type .article-actions .btn.articleDown {
-	visibility: hidden;
+.miniweb-editprop {
+	display:none;
 }
 
+body.miniweb-editing .miniweb-editprop {
+	display:block;
+}
 
-aside > article.aside .editor-toolbar a {
+aside > [data-miniwebtemplate].aside .editor-toolbar a {
 	color: #428bca;
 	font-size: 10px;
 	padding: 4px;

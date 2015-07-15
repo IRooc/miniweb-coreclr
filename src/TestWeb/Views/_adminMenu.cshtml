@@ -172,7 +172,7 @@
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title" id="myModalHyperlinkLabel">Add hyperlink</h4>
 			</div>
-			<form class="form-horizontal" >
+			<form class="form-horizontal">
 				<div class="modal-body">
 					<div class="form-group">
 						<label for="url" class="col-sm-4 control-label">Internal URL</label>
@@ -234,11 +234,11 @@
 
 <div style="display: none">
 	@foreach (var s in MiniWebSite.ItemTemplates)
-{
+	{
 		<div id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">
 			@Html.Partial(s, MiniWeb.Core.ContentItem.DefaultItem(s))
 		</div>
-}
+	}
 </div>
 
 @Html.Raw((object)MiniWebSite.Antiforgery?.GetHtml(Context))
