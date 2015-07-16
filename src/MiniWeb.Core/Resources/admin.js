@@ -1,36 +1,23 @@
 /// <reference path="jquery.d.ts" />
 (function ($) {
-    $.fn.miniwebAdmin = function (userOption) {
-        var contentEditables, contentHtmlEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, createHyperLink = function (wysiwygObj) {
-            $('#addHyperLink .btn-primary').unbind('click');
-            $('#addHyperLink .btn-primary').bind('click', function () {
-                $('#addHyperLink').modal('hide');
-                var args = $('#addHyperLink #createInternalUrl').val();
-                if (args == '') {
-                    args = $('#addHyperLink #createLinkUrl').val();
-                }
-                $('#addHyperLink #createInternalUrl').val('');
-                $('#addHyperLink #createLinkUrl').val('http://');
-                wysiwygObj.restoreSelection();
-                wysiwygObj.me.focus();
-                document.execCommand("createLink", false, args);
-                wysiwygObj.updateToolbar();
-                wysiwygObj.saveSelection();
-            });
-            wysiwygObj.saveSelection();
-            $('#addHyperLink').modal();
-        }, editContent = function () {
+    $.fn.miniwebAdmin = function (userOptions) {
+        var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
+        var contentEditables, contentHtmlEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, editContent = function () {
             $('body').addClass('miniweb-editing');
             //reassign arrays so al new items are parsed
             contentEditables = $('[data-miniwebprop]');
             contentEditables.attr('contentEditable', true);
-            contentHtmlEditables = contentEditables.filter('[data-miniwebedittype=html]');
-            contentHtmlEditables.each(function (index) {
-                var thisTools = $('#tools').clone();
-                thisTools.attr('id', '').attr('data-role', 'editor-toolbar' + index).addClass('editor-toolbar');
-                $(this).before(thisTools);
-                $(this).wysiwyg({ hotKeys: {}, activeToolbarClass: "active", toolbarSelector: '[data-role=editor-toolbar' + index + ']', createLink: createHyperLink });
-            });
+            for (var i = 0; i < options.editTypes.length; i++) {
+                var editType = options.editTypes[i];
+                contentEditables.filter('[data-miniwebedittype=' + editType.key + ']').each(editType.editStart);
+            }
+            //contentHtmlEditables = contentEditables.filter('[data-miniwebedittype=html]');
+            //contentHtmlEditables.each(function (index) {
+            //	var thisTools = $('#tools').clone();
+            //	thisTools.attr('id', '').attr('data-role', 'editor-toolbar' + index).addClass('editor-toolbar');
+            //	$(this).before(thisTools);
+            //	$(this).wysiwyg({ hotKeys: {}, activeToolbarClass: "active", toolbarSelector: '[data-role=editor-toolbar' + index + ']', createLink: createHyperLink });
+            //});
             btnNew.attr("disabled", true);
             btnEdit.attr("disabled", true);
             btnSave.removeAttr("disabled");
@@ -41,7 +28,10 @@
         }, cancelEdit = function () {
             $('body').removeClass('miniweb-editing');
             contentEditables.removeAttr('contentEditable');
-            $(".editor-toolbar").remove();
+            for (var i = 0; i < options.editTypes.length; i++) {
+                var editType = options.editTypes[i];
+                contentEditables.filter('[data-miniwebedittype=' + editType.key + ']').each(editType.editEnd);
+            }
             btnCancel.focus();
             btnNew.removeAttr("disabled");
             btnEdit.removeAttr("disabled");
@@ -239,6 +229,41 @@
         //always cancel edit on refresh, stops remembering of firefox for inputs and stuff
         cancelEdit();
         return this;
+    };
+    $.fn.miniwebAdmin.defaults = {
+        createHyperLink: function (wysiwygObj) {
+            $('#addHyperLink .btn-primary').unbind('click');
+            $('#addHyperLink .btn-primary').bind('click', function () {
+                $('#addHyperLink').modal('hide');
+                var args = $('#addHyperLink #createInternalUrl').val();
+                if (args == '') {
+                    args = $('#addHyperLink #createLinkUrl').val();
+                }
+                $('#addHyperLink #createInternalUrl').val('');
+                $('#addHyperLink #createLinkUrl').val('http://');
+                wysiwygObj.restoreSelection();
+                wysiwygObj.me.focus();
+                document.execCommand("createLink", false, args);
+                wysiwygObj.updateToolbar();
+                wysiwygObj.saveSelection();
+            });
+            wysiwygObj.saveSelection();
+            $('#addHyperLink').modal();
+        },
+        editTypes: [
+            {
+                key: 'html',
+                editStart: function (index) {
+                    var thisTools = $('#tools').clone();
+                    thisTools.attr('id', '').attr('data-role', 'editor-toolbar' + index).addClass('editor-toolbar');
+                    $(this).before(thisTools);
+                    $(this).wysiwyg({ hotKeys: {}, activeToolbarClass: "active", toolbarSelector: '[data-role=editor-toolbar' + index + ']', createLink: $.fn.miniwebAdmin.defaults.createHyperLink });
+                },
+                editEnd: function (index) {
+                    $(".editor-toolbar").remove();
+                }
+            }
+        ]
     };
     $('#showHiddenPages input').click(function () {
         sessionStorage.setItem('showhiddenpages', $(this).is(':checked'));

@@ -70,9 +70,14 @@ namespace MiniWeb.Core
 				if (!string.IsNullOrWhiteSpace(EditType))
 					output.Attributes.Add("data-miniwebedittype", EditType);
 
-				foreach (var attr in EditAttributes)
+				if (EditAttributes.Any())
 				{
-					output.PostElement.AppendFormat("<div class=\"miniweb-editprop\" data-miniwebprop=\"{0}:{1}\">{2}</div>", Property, attr, output.Attributes[attr].Value);
+					output.PostElement.Append("<div class=\"miniweb-attributes\">");
+               foreach (var attr in EditAttributes)
+					{
+						output.PostElement.AppendFormat("<span data-miniwebprop=\"{0}:{1}\">{2}</span>", Property, attr, output.Attributes[attr].Value);
+					}
+					output.PostElement.Append("</div>");
 				}
 
 			}

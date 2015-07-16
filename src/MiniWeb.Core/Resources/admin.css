@@ -152,12 +152,21 @@ div[contenteditable]:before {
 	visibility: hidden;
 }
 
-.miniweb-editprop {
+.miniweb-attributes {
 	display:none;
+	padding: 5px 0 5px 24px;
+	margin: 5px 0;
+	background: #f9f9f9;
 }
 
-body.miniweb-editing .miniweb-editprop {
+body.miniweb-editing .miniweb-attributes {
 	display:block;
+}
+body.miniweb-editing .miniweb-attributes:before {
+	content: "\e144";
+	font-family: 'Glyphicons Halflings';
+	position: absolute;
+	left: 20px
 }
 
 aside > [data-miniwebtemplate].aside .editor-toolbar a {
