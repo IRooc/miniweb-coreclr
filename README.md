@@ -15,7 +15,7 @@ Tested on windows, mac osx, linux (ubuntu) and windows IoT
 
 with some workarounds voor mac and linux 
 * remove "resource" line from Core project.json otherwise it won't build
-* rename /wwwroot/miniweb-resourcefallback directory to /wwwroot/miniweb-resource for edit functionality 
+* make symlink from /src/MiniWeb.Core/Resources to /test/TestWeb/wwwroot/miniweb-resource for edit functionality 
 
 Based on the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
