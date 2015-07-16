@@ -10,7 +10,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom taghelpers
 * custom middleware
 
-it currently runs on ![coreclr x64](https://img.shields.io/myget/aspnetvnext/v/dnx-coreclr-win-x64.svg?style=flat).
+it currently runs on 1.0.0-beta6-12232 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT  
 
 with some workarounds voor mac and linux 
@@ -28,8 +28,8 @@ Page templates are stored in the /Views/Pages folder
 
 A page template example:
 ```HTML
-@using MiniWeb
-@model MiniWeb.SitePage
+@using MiniWeb.Core
+@model MiniWeb.Core.SitePage
 
 @{
 	Layout = Model.Layout;
@@ -45,7 +45,7 @@ Content items can be added to miniweb-section tags and should live in the /Views
 
 A content item example
 ```HTML
-@model MiniWeb.ContentItem
+@model MiniWeb.Core.ContentItem
 <article miniweb-template="@Model.Template" >
 	<h3 miniweb-prop="title"></h3>
 	<div miniweb-prop="content" miniweb-edittype="html"></div>
