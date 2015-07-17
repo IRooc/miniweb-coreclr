@@ -198,7 +198,7 @@ namespace MiniWeb.Core
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
 			Match match = Regex.Match(html, "(data-filename=\"([^\"]+)\"\\s+)(src|href)=\"(data:([^\"]+))\"?");
-         while (!string.IsNullOrEmpty(match.Value))
+         	while (!string.IsNullOrEmpty(match.Value))
 			{
 				string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
 				string filename = match.Groups[2].Value;

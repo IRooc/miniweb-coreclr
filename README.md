@@ -28,7 +28,6 @@ Page templates are stored in the /Views/Pages folder
 
 A page template example:
 ```HTML
-@using MiniWeb.Core
 @model MiniWeb.Core.SitePage
 
 @{

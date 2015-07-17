@@ -263,26 +263,6 @@
 		return this;
 	}
 	$.fn.miniwebAdmin.defaults = {
-		createHyperLink: function (wysiwygObj: any) {
-
-			$('#addHyperLink .btn-primary').unbind('click');
-			$('#addHyperLink .btn-primary').bind('click', function () {
-				$('#addHyperLink').modal('hide');
-				var args = $('#addHyperLink #createInternalUrl').val();
-				if (args == '') {
-					args = $('#addHyperLink #createLinkUrl').val();
-				}
-				$('#addHyperLink #createInternalUrl').val('');
-				$('#addHyperLink #createLinkUrl').val('http://');
-				wysiwygObj.restoreSelection();
-				wysiwygObj.me.focus();
-				document.execCommand("createLink", false, args);
-				wysiwygObj.updateToolbar();
-				wysiwygObj.saveSelection();
-			});
-			wysiwygObj.saveSelection()
-			$('#addHyperLink').modal();
-		},
 		editTypes: [
 			{
 				key: 'html',
@@ -290,10 +270,33 @@
 					var thisTools = $('#tools').clone();
 					thisTools.attr('id', '').attr('data-role', 'editor-toolbar' + index).addClass('editor-toolbar');
 					$(this).before(thisTools);
-					$(this).wysiwyg({ hotKeys: {}, activeToolbarClass: "active", toolbarSelector: '[data-role=editor-toolbar' + index + ']', createLink: $.fn.miniwebAdmin.defaults.createHyperLink });
+					$(this).wysiwyg({ hotKeys: {}, 
+						activeToolbarClass: "active", 
+						toolbarSelector: '[data-role=editor-toolbar' + index + ']', 
+						createLink: this.createHyperLink });
 				},
 				editEnd: function (index) {
 					$(".editor-toolbar").remove();
+				},
+				createHyperLink: function (wysiwygObj: any) {
+
+					$('#addHyperLink .btn-primary').unbind('click');
+					$('#addHyperLink .btn-primary').bind('click', function () {
+						$('#addHyperLink').modal('hide');
+						var args = $('#addHyperLink #createInternalUrl').val();
+						if (args == '') {
+							args = $('#addHyperLink #createLinkUrl').val();
+						}
+						$('#addHyperLink #createInternalUrl').val('');
+						$('#addHyperLink #createLinkUrl').val('http://');
+						wysiwygObj.restoreSelection();
+						wysiwygObj.me.focus();
+						document.execCommand("createLink", false, args);
+						wysiwygObj.updateToolbar();
+						wysiwygObj.saveSelection();
+					});
+					wysiwygObj.saveSelection();
+					$('#addHyperLink').modal();
 				}
 			}
 		]
