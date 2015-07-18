@@ -10,14 +10,14 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom taghelpers
 * custom middleware
 
-it currently runs on 1.0.0-beta6-12232 coreclr x64.
+it currently runs on  1.0.0-beta7-12255 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT  
 
 with some workarounds voor mac and linux 
 * remove "resource" line from Core project.json otherwise it won't build
 * make symlink from /src/MiniWeb.Core/Resources to /test/TestWeb/wwwroot/miniweb-resource for edit functionality 
 
-Based on the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
+Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
 It needs bootstrap v3.2 for now for the admin menu to work
 
@@ -52,6 +52,29 @@ A content item example
 </article>
 ```
 every tag can have a miniweb-prop attribute that will be stored in the content item, edittype is eiter single line or specified as html
+
+the minimal startup will be something like this:
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+	// Default services used by MiniWeb
+	services.AddAuthentication();
+	services.AddAntiforgery();
+	services.AddMvc();
+
+	//Setup miniweb injection
+	services.AddSingleton<IMiniWebStorage, MiniWebJsonStorage>();
+	services.AddSingleton<IMiniWebSite, MiniWebSite>();
+}
+public void Configure(IApplicationBuilder app)
+{
+	app.UseErrorPage();
+	app.UseStaticFiles();
+
+	//Registers the miniweb middleware and MVC Routes
+	app.UseMiniWebSite();
+}
+```
 
 ## Storage
 Currently there are two storage packages

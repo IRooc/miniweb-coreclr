@@ -6,6 +6,15 @@ namespace MiniWeb.Core
 	public static class MiniWebExtensions
 	{
 		/// <summary>
+		/// Registers the miniweb Mvc Routes with default config
+		/// </summary>
+		/// <param name="app"></param>
+		/// <returns></returns>
+		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app)
+		{
+			return UseMiniWebSite(app, new MiniWebConfiguration());
+		}
+		/// <summary>
 		/// Registers the miniweb Mvc Routes
 		/// </summary>
 		/// <param name="app"></param>

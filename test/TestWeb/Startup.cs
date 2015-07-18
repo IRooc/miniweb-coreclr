@@ -40,7 +40,7 @@ namespace aspnet5Web
 			services.AddSingleton<IMiniWebSite, MiniWebSite>();
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory, 
+		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, 
 									 IApplicationEnvironment appEnv, IOptions<MiniWebConfiguration> config)
 		{
 			// Add the loggers.

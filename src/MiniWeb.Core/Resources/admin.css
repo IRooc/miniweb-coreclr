@@ -95,7 +95,6 @@ body.miniweb-editing [data-miniwebtemplate] {
 	outline: thin dashed #ccc;
 	width: 100%;
 	display: inline-block;
-	min-height: 30px;
 }
 img[contenteditable] {
 	width: auto;
