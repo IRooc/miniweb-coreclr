@@ -267,10 +267,10 @@
     };
     $('#showHiddenPages input').click(function () {
         sessionStorage.setItem('showhiddenpages', $(this).is(':checked'));
-        $('.hiddenitem').toggle($(this).is(':checked'));
+        $('.miniweb-hidden-menu').toggle($(this).is(':checked'));
     });
     if (sessionStorage.getItem('showhiddenpages') === "true") {
-        $('.hiddenitem').toggle(true);
+        $('.miniweb-hidden-menu').toggle(true);
         $('#showHiddenPages input').attr('checked', 'checked');
     }
 })(jQuery);

@@ -20,7 +20,7 @@ namespace MiniWeb.Core
 			{
 				_webSite.ReloadPages();
 			}
-      }
+		}
 
 		public IActionResult Index()
 		{
@@ -74,15 +74,15 @@ namespace MiniWeb.Core
 			if (_webSite.Authenticate(username, password))
 			{
 				var claims = new[] {
-						  new Claim(ClaimTypes.Name, username),
-						  new Claim(ClaimTypes.Role, _webSite.Configuration.MiniWebCmsRoleValue)
-					 };
+					new Claim(ClaimTypes.Name, username),
+					new Claim(ClaimTypes.Role, _webSite.Configuration.MiniWebCmsRoleValue)
+				};
 
 				_webSite.Logger?.LogInformation($"signing in as :{username}");
 				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
 				var identity = new ClaimsIdentity(claims, IdentityOptions.ApplicationCookieAuthenticationType);
-            var principal = new ClaimsPrincipal(identity);
-            Context.Authentication.SignInAsync(_webSite.Configuration.AuthenticationScheme, principal).Wait();
+				var principal = new ClaimsPrincipal(identity);
+				Context.Authentication.SignInAsync(_webSite.Configuration.AuthenticationScheme, principal).Wait();
 
 				return Redirect("~" + _webSite.Configuration.DefaultPage);
 			}

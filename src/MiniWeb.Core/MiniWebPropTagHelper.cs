@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
@@ -17,6 +17,9 @@ namespace MiniWeb.Core
 		private const string MiniWebEditTypeTagname = "miniweb-edittype";
 		private const string MiniWebEditAttributesTagname = "miniweb-attributes";
 
+		private IMiniWebSite _webSite;
+		private IHtmlHelper _htmlHelper;
+
 		[HtmlAttributeNotBound]
 		[ViewContext]
 		public ViewContext ViewContext { get; set; }
@@ -30,7 +33,7 @@ namespace MiniWeb.Core
 		[HtmlAttributeName(MiniWebEditAttributesTagname)]
 		public string EditAttributeString { get; set; }
 
-      public string[] EditAttributes
+		public string[] EditAttributes
 		{
 			get
 			{
@@ -39,8 +42,6 @@ namespace MiniWeb.Core
 		}
 
 
-		private IMiniWebSite _webSite;
-		private IHtmlHelper _htmlHelper;
 		public MiniWebPropTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
 		{
 			_webSite = webSite;
@@ -57,9 +58,9 @@ namespace MiniWeb.Core
 
 				output.Content.SetContent(viewItem.Model.GetValue(Property));
 
-				foreach(var attr in EditAttributes)
+				foreach (var attr in EditAttributes)
 				{
-               output.Attributes[attr].Value = viewItem.Model.GetValue(Property + ":" + attr);
+					output.Attributes[attr].Value = viewItem.Model.GetValue(Property + ":" + attr);
 				}
 			}
 			//Set Content edit properties on tags when logged in
@@ -73,7 +74,7 @@ namespace MiniWeb.Core
 				if (EditAttributes.Any())
 				{
 					output.PostElement.Append("<div class=\"miniweb-attributes\">");
-               foreach (var attr in EditAttributes)
+					foreach (var attr in EditAttributes)
 					{
 						output.PostElement.AppendFormat("<span data-miniwebprop=\"{0}:{1}\">{2}</span>", Property, attr, output.Attributes[attr].Value);
 					}
@@ -82,7 +83,7 @@ namespace MiniWeb.Core
 
 			}
 
-			
+
 		}
 	}
 }

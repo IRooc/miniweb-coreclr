@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using System;
@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
-	[TargetElement("miniwebadmin")]
+	[TargetElement(MiniWebAdminTag)]
 	public class MiniWebAdminTagHelper : TagHelper
 	{
+		private const string MiniWebAdminTag = "miniwebadmin";
 		private const string MiniWebIgnoreAdminStartTagname = "ignoreadminstart";
 
 		[HtmlAttributeNotBound]
@@ -42,7 +43,7 @@ namespace MiniWeb.Core
 
 				if (!IgnoreAdminStart)
 				{
-					output.Content.Append("<script>$(function(){$('body').miniwebAdmin();});</script>");
+					output.Content.Append($"<script>$(function(){{$('{MiniWebAdminTag}').miniwebAdmin();}});</script>");
 				}
 			}
 			else

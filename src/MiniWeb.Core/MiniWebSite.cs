@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Antiforgery;
+using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
@@ -53,23 +53,23 @@ namespace MiniWeb.Core
 					Layout = Configuration.Layout,
 					Template = $"~{Configuration.PageTemplatePath}/OneColumn.cshtml",
 					Sections = new List<PageSection>()
-						  {
-								new PageSection()
-								{
-									 Key = "content",
-									 Items = new List<ContentItem>()
-									 {
-										  new ContentItem {
-											  Template = $"~{Configuration.ItemTemplatePath}/item.cshtml",
-											  Values =
-											  {
-												  ["title"] = "404",
-												  ["content"] = "Page not found"
-											  }
-										  }
-									 }
+					{
+						new PageSection()
+						{
+							Key = "content",
+							Items = new List<ContentItem>()
+							{
+								new ContentItem {
+									Template = $"~{Configuration.ItemTemplatePath}/item.cshtml",
+									Values =
+									{
+										["title"] = "404",
+										["content"] = "Page not found"
+									}
 								}
-						  },
+							}
+						}
+						},
 					Url = "404"
 				};
 			}
@@ -92,7 +92,7 @@ namespace MiniWeb.Core
 		}
 
 		public MiniWebSite(IHostingEnvironment env, IApplicationEnvironment appEnv, ILoggerFactory loggerfactory,
-								 IAntiforgery antiforgery, IMiniWebStorage storage, IOptions<MiniWebConfiguration> config)
+		IAntiforgery antiforgery, IMiniWebStorage storage, IOptions<MiniWebConfiguration> config)
 		{
 			Pages = Enumerable.Empty<SitePage>();
 
@@ -174,9 +174,9 @@ namespace MiniWeb.Core
 			if (storeImages)
 			{
 				//NOTE(RC): can this be done saner?
-				foreach(var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
+				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
 				{
-					for(var i =0; i < item.Values.Count; i++) 
+					for (var i = 0; i < item.Values.Count; i++)
 					{
 						var kv = item.Values.ElementAt(i);
 						item.Values[kv.Key] = SaveEmbeddedImages(item.Values[kv.Key]);
@@ -198,7 +198,7 @@ namespace MiniWeb.Core
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
 			Match match = Regex.Match(html, "(data-filename=\"([^\"]+)\"\\s+)(src|href)=\"(data:([^\"]+))\"?");
-         	while (!string.IsNullOrEmpty(match.Value))
+			while (!string.IsNullOrEmpty(match.Value))
 			{
 				string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
 				string filename = match.Groups[2].Value;
