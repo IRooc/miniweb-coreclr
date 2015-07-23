@@ -11,5 +11,5 @@ namespace MiniWeb.Core
 		void StoreSitePage(SitePage sitePage);
 		void DeleteSitePage(SitePage sitePage);
 		IEnumerable<SitePage> AllPages();
-	}
+	} 
 }

@@ -1,5 +1,7 @@
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.FileProviders;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
@@ -7,6 +9,9 @@ using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Runtime;
 using MiniWeb.Core;
 using MiniWeb.Storage;
+using System.Reflection;
+using Microsoft.Framework.Caching;
+using System;
 
 namespace aspnet5Web
 {
@@ -14,9 +19,11 @@ namespace aspnet5Web
 	public class Startup
 	{
 		public IConfiguration Configuration { get; set; }
+		public IApplicationEnvironment ApplicationEnvironment { get; set; }
 
-		public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
 		{
+			ApplicationEnvironment = appEnv;
 			// Setup configuration sources.
 			var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
 											.AddJsonFile("miniweb.json")
@@ -33,11 +40,10 @@ namespace aspnet5Web
 			services.AddAntiforgery();
 			services.AddMvc();
 
-			//Setup miniweb injection
-			services.Configure<MiniWebConfiguration>(Configuration.GetConfigurationSection("MiniWeb"));
-			services.Configure<MiniWebJsonStorageConfig>(Configuration.GetConfigurationSection("Storage"));
-			services.AddSingleton<IMiniWebStorage, MiniWebJsonStorage>();
-			services.AddSingleton<IMiniWebSite, MiniWebSite>();
+
+			services.ConfigureMiniWeb<MiniWebSite, MiniWebJsonStorage, MiniWebJsonStorageConfig>
+									(Configuration, ApplicationEnvironment);
+
 		}
 
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, 
@@ -48,9 +54,8 @@ namespace aspnet5Web
 				loggerfactory.AddConsole(LogLevel.Information);
 
 			if (Configuration.Get("Logging:EnableFile") == true.ToString())
-				loggerfactory.AddProvider(new Web.FileLoggerProvider(
-																	(category, logLevel) => logLevel >= LogLevel.Information,
-																	appEnv.ApplicationBasePath + "/logfile.txt"));
+				loggerfactory.AddProvider(new Web.FileLoggerProvider((category, logLevel) => logLevel >= LogLevel.Information,
+																	  appEnv.ApplicationBasePath + "/logfile.txt"));
 
 			app.UseErrorPage();
 			app.UseStaticFiles();
@@ -60,4 +65,6 @@ namespace aspnet5Web
 
 		}
 	}
+
+	
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using System;
@@ -35,11 +36,11 @@ namespace MiniWeb.Core
 			if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
 			{
 				output.SelfClosing = false;
-				//NOTE(RC): Make it work for now...
+				//add the own contents.
 				output.Content.SetContent(context.GetChildContentAsync().Result);
-
+				
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
-				output.PreContent.Append(_htmlHelper.Partial("~/Views/_adminMenu.cshtml").ToString());
+				output.PreContent.Append(_htmlHelper.Partial(MiniWebFileProvider.ADMIN_FILENAME).ToString());
 
 				if (!IgnoreAdminStart)
 				{

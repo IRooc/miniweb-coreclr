@@ -17,7 +17,7 @@
 
 	},
 
-	"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js",
+	"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",
 
 	"frameworks": {
 		"dnxcore50": {

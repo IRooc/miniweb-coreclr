@@ -1,5 +1,11 @@
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc.Razor;
+using Microsoft.Framework.Configuration;
+using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
+using Microsoft.Framework.Runtime;
 
 namespace MiniWeb.Core
 {
@@ -19,7 +25,7 @@ namespace MiniWeb.Core
 		/// </summary>
 		/// <param name="app"></param>
 		/// <returns></returns>
-		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config)
+		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config, ILogger logger = null)
 		{
 			app.UseCookieAuthentication(options =>
 			{
@@ -39,8 +45,27 @@ namespace MiniWeb.Core
 				routes.MapRoute("miniweblogout", config.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
 				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" });
 			});
+			
 			return app;
 		}
 
+		public static IServiceCollection ConfigureMiniWeb<T, U, V>(this IServiceCollection services, IConfiguration Configuration, IApplicationEnvironment ApplicationEnvironment)
+			where T : class, IMiniWebSite
+			where U : class, IMiniWebStorage
+			where V : class
+		{
+
+			//Setup miniweb injection
+			services.Configure<MiniWebConfiguration>(Configuration.GetConfigurationSection("MiniWeb"));
+			services.Configure<V>(Configuration.GetConfigurationSection("Storage"));
+			services.Configure<RazorViewEngineOptions>(options =>
+			{
+				//make sure embedded view is returned when needed
+				options.FileProvider = new MiniWebFileProvider(ApplicationEnvironment);
+			});
+			services.AddSingleton<IMiniWebStorage, U>();
+			services.AddSingleton<IMiniWebSite, T>();
+			return services;
+		}
 	}	
 }
