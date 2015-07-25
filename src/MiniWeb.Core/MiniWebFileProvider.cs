@@ -35,8 +35,12 @@ namespace MiniWeb.Core
 			var fileInfo = _physicalFileProvider.GetFileInfo(subpath);
 			if (subpath == ADMIN_FILENAME)
 			{
-				_logger?.LogInformation($"Embedded GetFileInfo {subpath}");
-				fileInfo = _embeddedFileProvider.GetFileInfo($"Resources/adminview.cshtml");
+				var embeddedfileInfo = _embeddedFileProvider.GetFileInfo($"Resources/adminview.cshtml");
+				if (embeddedfileInfo.Exists)
+				{
+					_logger?.LogInformation($"Embedded GetFileInfo {subpath}");
+					fileInfo = embeddedfileInfo;
+				}
 			}
 
 			return fileInfo;
