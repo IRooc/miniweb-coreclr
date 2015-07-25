@@ -10,9 +10,9 @@ namespace MiniWeb.Storage.JsonStorage
 {
     public static class MiniWebJsonStorageExtensions
 	{
-		public static IServiceCollection ConfigureMiniWebJsonStorage(this IServiceCollection services, IConfiguration Configuration)
+		public static IServiceCollection AddMiniWebJsonStorage(this IServiceCollection services, IConfiguration Configuration)
 		{
-			return services.ConfigureMiniWeb<MiniWebJsonStorage, MiniWebJsonStorageConfig>(Configuration);
+			return services.AddMiniWeb<MiniWebJsonStorage, MiniWebJsonStorageConfig>(Configuration);
         }
 	}
 }

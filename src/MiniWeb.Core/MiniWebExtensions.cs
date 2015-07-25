@@ -51,14 +51,14 @@ namespace MiniWeb.Core
 		}
 
 
-		public static IServiceCollection ConfigureMiniWeb<T,U>(this IServiceCollection services, IConfiguration Configuration)
+		public static IServiceCollection AddMiniWeb<T,U>(this IServiceCollection services, IConfiguration Configuration)
 			where T : class, IMiniWebStorage
 			where U : class, IMiniWebStorageConfiguration
 		{
-			return services.ConfigureMiniWeb<MiniWebSite, T, U>(Configuration);
+			return services.AddMiniWeb<MiniWebSite, T, U>(Configuration);
 		}
 
-		public static IServiceCollection ConfigureMiniWeb<T, U, V>(this IServiceCollection services, IConfiguration Configuration)
+		public static IServiceCollection AddMiniWeb<T, U, V>(this IServiceCollection services, IConfiguration Configuration)
 			where T : class, IMiniWebSite
 			where U : class, IMiniWebStorage
 			where V : class, IMiniWebStorageConfiguration

@@ -10,9 +10,9 @@ namespace MiniWeb.Storage.XmlStorage
 {
     public static class MiniWebXmlStorageExtensions
 	{
-		public static IServiceCollection ConfigureMiniWebXmlStorage(this IServiceCollection services, IConfiguration Configuration)
+		public static IServiceCollection AddMiniWebXmlStorage(this IServiceCollection services, IConfiguration Configuration)
 		{
-			return services.ConfigureMiniWeb<MiniWebXmlStorage, MiniWebXmlStorageConfig>(Configuration);
+			return services.AddMiniWeb<MiniWebXmlStorage, MiniWebXmlStorageConfig>(Configuration);
 		}
 	}
 }
