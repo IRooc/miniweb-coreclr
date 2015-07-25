@@ -29,7 +29,6 @@ Page templates are stored in the /Views/Pages folder
 A page template example:
 ```HTML
 @model MiniWeb.Core.SitePage
-
 @{
 	Layout = Model.Layout;
 }
@@ -55,6 +54,21 @@ every tag can have a miniweb-prop attribute that will be stored in the content i
 
 the minimal startup will be something like this:
 ```c#
+
+public IConfiguration Configuration { get; set; }
+
+public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+{
+	// Setup configuration sources.
+	var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+					.AddJsonFile("miniweb.json", optional: true)
+					.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
+					.AddEnvironmentVariables();
+					
+	//Remember Configuration for use in ConfigureServices
+	Configuration = configuration.Build();
+}
+
 public void ConfigureServices(IServiceCollection services)
 {
 	// Default services used by MiniWeb
@@ -62,17 +76,17 @@ public void ConfigureServices(IServiceCollection services)
 	services.AddAntiforgery();
 	services.AddMvc();
 
-	//Setup miniweb injection
-	services.AddSingleton<IMiniWebStorage, MiniWebJsonStorage>();
-	services.AddSingleton<IMiniWebSite, MiniWebSite>();
+	//Setup miniweb injection through one of the storage overrides
+	services.AddMiniWebJsonStorage(Configuration);
 }
 public void Configure(IApplicationBuilder app)
 {
+	// Default middleware used by MiniWeb
 	app.UseErrorPage();
 	app.UseStaticFiles();
 
 	//Registers the miniweb middleware and MVC Routes
-	app.UseMiniWebSite();
+	app.UseMiniWebSite(Configuration);
 }
 ```
 
@@ -86,10 +100,8 @@ both store their files in the /App_Data/Sitepages folder
 ## TODO
 * Wait for embedded file fix in linux [https://github.com/aspnet/dnx/issues/2187](https://github.com/aspnet/dnx/issues/2187)
 	* temp linux workaround through static files (remove the fallback from the wwwroot/miniweb-resourcefallback directory name)
-* Embedded admin view through virtualpathprovider oid
 * Open ID authentication possibility
 * Multiple edittypes
-* Better CSS and JS hooks for editing
 * Better image handling (enable picking existing images as well)
 * Wait for .net core release :D
 
