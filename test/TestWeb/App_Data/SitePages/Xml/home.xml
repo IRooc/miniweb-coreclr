@@ -1,40 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<SitePage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Url>home</Url>
-  <Title>Home</Title>
-  <Template>~/Views/Pages/TwoColumn.cshtml</Template>
-  <Layout>~/Views/_layout.cshtml</Layout>
-  <MetaTitle>Home2</MetaTitle>
-  <MetaDescription>meta tekst3</MetaDescription>
-  <Visible>true</Visible>
-  <ShowInMenu>true</ShowInMenu>
-  <SortOrder>0</SortOrder>
-  <LastModified>2015-06-21T11:24:12.7120597+02:00</LastModified>
-  <Sections>
-    <PageSection>
-      <Key>content</Key>
-      <Items>
-        <ContentItem>
-          <Title>Home 2 title</Title>
-          <Template>~/Views/Items/item.cshtml</Template>
-          <Content>TE TES TE ST ESTESTES&lt;br /&gt; &lt;p class="intro"&gt;Test test&lt;/p&gt;</Content>
-        </ContentItem>
-      </Items>
-    </PageSection>
-    <PageSection>
-      <Key>aside</Key>
-      <Items>
-        <ContentItem>
-          <Title>Aside 1</Title>
-          <Template>~/Views/Items/aside.cshtml</Template>
-          <Content>Aside item1</Content>
-        </ContentItem>
-        <ContentItem>
-          <Title>Aside 2</Title>
-          <Template>~/Views/Items/aside.cshtml</Template>
-          <Content>Does it work?&lt;br /&gt;</Content>
-        </ContentItem>
-      </Items>
-    </PageSection>
-  </Sections>
-</SitePage>
+<SitePage xmlns="http://schemas.datacontract.org/2004/07/MiniWeb.Core" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"><LastModified>2015-07-25T14:44:46.605155+02:00</LastModified><Layout>~/Views/_layout.cshtml</Layout><MetaDescription>Home</MetaDescription><MetaTitle>Home</MetaTitle><Sections><PageSection><Items><ContentItem><Template>~/Views/Items/item.cshtml</Template><Values xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><a:KeyValueOfstringstring><a:Key>title</a:Key><a:Value>Homepage</a:Value></a:KeyValueOfstringstring><a:KeyValueOfstringstring><a:Key>content</a:Key><a:Value>&lt;p&gt;
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean massa 
+libero, convallis vitae neque vitae, mattis fermentum mauris. Maecenas 
+consequat faucibus leo, vel aliquam mauris. Etiam ligula diam, fringilla
+ vel elit sit amet, accumsan pretium erat. Ut posuere quam at faucibus 
+iaculis. In dapibus enim eget velit auctor, at sodales sapien eleifend. 
+Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+ cubilia Curae; Etiam sed venenatis velit. Proin commodo ornare semper. 
+Fusce nec urna tincidunt, maximus eros vel, lacinia lacus. Donec at 
+neque blandit, rhoncus risus vitae, laoreet massa.
+&lt;/p&gt;
+&lt;p&gt;
+Etiam posuere nisi tincidunt risus fermentum suscipit. Sed pretium 
+auctor suscipit. Proin tempus sodales lobortis. Aenean ipsum nunc, 
+tincidunt ac sapien vulputate, dictum fermentum massa. Duis consequat 
+elementum justo, at condimentum nunc suscipit quis. Curabitur ornare, 
+quam vitae posuere cursus, urna nulla imperdiet quam, sed interdum lacus
+ dolor eu odio. Suspendisse in neque ut ex imperdiet dignissim id 
+aliquet odio. Quisque in purus ut est cursus auctor.
+&lt;/p&gt;
+&lt;p&gt;
+Sed molestie ut orci ac ullamcorper. Maecenas ullamcorper at neque vitae
+ iaculis. Aenean a rhoncus felis. Integer in orci sit amet nunc accumsan
+ bibendum. Pellentesque porta sodales purus at pulvinar. Pellentesque 
+venenatis urna risus, sed egestas nibh tincidunt a. Pellentesque in 
+iaculis mi, non luctus justo. Cras in maximus justo, sit amet 
+ullamcorper felis. Maecenas commodo sem id congue aliquam. Pellentesque 
+sollicitudin, orci id pretium dignissim, nisi odio ultrices lectus, sit 
+amet lacinia elit elit ut ante. Curabitur lacinia porttitor neque at 
+volutpat. Aenean lectus odio, luctus eget tristique at, vestibulum sit 
+amet metus. Nulla imperdiet pharetra nisl, a aliquet ante.
+&lt;/p&gt;</a:Value></a:KeyValueOfstringstring></Values></ContentItem></Items><Key>content</Key></PageSection></Sections><ShowInMenu>true</ShowInMenu><SortOrder>1</SortOrder><Template>~/Views/Pages/OneColumn.cshtml</Template><Title>Home</Title><Url>home</Url><Visible>true</Visible></SitePage>

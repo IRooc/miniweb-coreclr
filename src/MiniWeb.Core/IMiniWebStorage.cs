@@ -12,4 +12,8 @@ namespace MiniWeb.Core
 		void DeleteSitePage(SitePage sitePage);
 		IEnumerable<SitePage> AllPages();
 	} 
+	public interface IMiniWebStorageConfiguration
+	{
+
+	}
 }

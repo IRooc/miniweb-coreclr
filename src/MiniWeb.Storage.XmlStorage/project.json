@@ -1,8 +1,9 @@
 {
 	"version": "1.0.0",
-	
+
 	"dependencies": {
 		"System.Xml.XmlSerializer": "4.0.10-*",
+		"System.Runtime.Serialization.Xml": "4.0.10-*",
 		"Microsoft.AspNet.Hosting": "1.0.0-*",
 		"Microsoft.Framework.Logging": "1.0.0-*",
 		"Microsoft.Framework.Configuration": "1.0.0-*",

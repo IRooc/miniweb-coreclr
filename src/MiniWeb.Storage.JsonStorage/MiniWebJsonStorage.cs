@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace MiniWeb.Storage
+namespace MiniWeb.Storage.JsonStorage
 {
 	public class MiniWebJsonStorage : IMiniWebStorage
 	{
@@ -123,10 +123,4 @@ namespace MiniWeb.Storage
 		}
 	}
 
-	public class MiniWebJsonStorageConfig
-	{
-		public string SitePageFolder { get; set; } = "/App_Data/SitePages/Json/";
-		public string SitePageVersionFolder { get; set; } = "/App_Data/SitePages/versions/";
-		public Dictionary<string, string> Users { get; set; }
-	}
 }

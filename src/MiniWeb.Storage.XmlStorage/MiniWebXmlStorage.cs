@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
-namespace MiniWeb.Storage
+namespace MiniWeb.Storage.XmlStorage
 {
 	public class MiniWebXmlStorage : IMiniWebStorage
 	{
@@ -77,10 +79,10 @@ namespace MiniWeb.Storage
 
 		private void SerializeObject(string filename, object obj)
 		{
-			XmlSerializer xs = new XmlSerializer(obj.GetType());
+			var serializer = new DataContractSerializer(obj.GetType());
 			using (MemoryStream ms = new MemoryStream())
 			{
-				xs.Serialize(ms, obj);
+				serializer.WriteObject(ms, obj);
 				ms.Position = 0;
 				string fileContent = new StreamReader(ms).ReadToEnd();
 				if (File.Exists(filename))
@@ -94,11 +96,11 @@ namespace MiniWeb.Storage
 		{
 			try
 			{
-				XmlSerializer xs = new XmlSerializer(typeof(T));
+				var serializer = new DataContractSerializer(typeof(T));
 				using (var stream = new FileStream(filename, FileMode.Open))
 				{
 					stream.Position = 0;
-					T deserialized = (T)xs.Deserialize(stream);
+					T deserialized = (T)serializer.ReadObject(stream);
 
 					return deserialized;
 				}
@@ -132,10 +134,4 @@ namespace MiniWeb.Storage
 		}
 	}
 
-	public class MiniWebXmlStorageConfig
-	{
-		public string SitePageFolder { get; set; } = "/App_Data/SitePages/";
-		public string SitePageVersionFolder { get; set; } = "/App_Data/SitePages/versions/";
-		public Dictionary<string,string> Users { get; set; }
-	}
 }

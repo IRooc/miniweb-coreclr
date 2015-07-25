@@ -173,6 +173,8 @@ namespace MiniWeb.Core
 			}
 			if (storeImages)
 			{
+				//save current with base 64 so at least it's saved.
+				Storage.StoreSitePage(page);
 				//NOTE(RC): can this be done saner?
 				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
 				{

@@ -20,12 +20,13 @@ namespace MiniWeb.Core
 		{
 			return UseMiniWebSite(app, new MiniWebConfiguration());
 		}
+
 		/// <summary>
 		/// Registers the miniweb Mvc Routes
 		/// </summary>
 		/// <param name="app"></param>
 		/// <returns></returns>
-		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config, ILogger logger = null)
+		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config)
 		{
 			app.UseCookieAuthentication(options =>
 			{
@@ -49,20 +50,28 @@ namespace MiniWeb.Core
 			return app;
 		}
 
-		public static IServiceCollection ConfigureMiniWeb<T, U, V>(this IServiceCollection services, IConfiguration Configuration, IApplicationEnvironment ApplicationEnvironment)
+
+		public static IServiceCollection ConfigureMiniWeb<T,U>(this IServiceCollection services, IConfiguration Configuration)
+			where T : class, IMiniWebStorage
+			where U : class, IMiniWebStorageConfiguration
+		{
+			return services.ConfigureMiniWeb<MiniWebSite, T, U>(Configuration);
+		}
+
+		public static IServiceCollection ConfigureMiniWeb<T, U, V>(this IServiceCollection services, IConfiguration Configuration)
 			where T : class, IMiniWebSite
 			where U : class, IMiniWebStorage
-			where V : class
+			where V : class, IMiniWebStorageConfiguration
 		{
-
 			//Setup miniweb injection
-			services.Configure<MiniWebConfiguration>(Configuration.GetConfigurationSection("MiniWeb"));
 			services.Configure<V>(Configuration.GetConfigurationSection("Storage"));
-			services.Configure<RazorViewEngineOptions>(options =>
-			{
-				//make sure embedded view is returned when needed
-				options.FileProvider = new MiniWebFileProvider(ApplicationEnvironment);
-			});
+			services.Configure<MiniWebConfiguration>(Configuration.GetConfigurationSection("MiniWeb"));
+
+			//make sure embedded view is returned when needed
+			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();
+			services.Configure<RazorViewEngineOptions>(options => { options.FileProvider = new MiniWebFileProvider(appEnv); });
+
+
 			services.AddSingleton<IMiniWebStorage, U>();
 			services.AddSingleton<IMiniWebSite, T>();
 			return services;
