@@ -41,6 +41,11 @@ namespace MiniWeb.Core
 					_logger?.LogInformation($"Embedded GetFileInfo {subpath}");
 					fileInfo = embeddedfileInfo;
 				}
+				else if (!fileInfo.Exists)
+				{
+					//mac linux view workaround
+					fileInfo = _physicalFileProvider.GetFileInfo("/wwwroot" + subpath);
+				}
 			}
 
 			return fileInfo;
