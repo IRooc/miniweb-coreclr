@@ -10,16 +10,18 @@ using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
-    public class MiniWebFileProvider : IFileProvider
+	public class MiniWebFileProvider : IFileProvider
 	{
 		IFileProvider _physicalFileProvider;
-		ILogger _logger;
+		IFileProvider _embeddedFileProvider;
+        ILogger _logger;
 		public const string ADMIN_FILENAME = "/miniweb-resource/adminview.cshtml";
 
 		public MiniWebFileProvider(IApplicationEnvironment applicationEnvironment, ILogger logger = null)
 		{
 			_logger = logger;
 			_physicalFileProvider = new PhysicalFileProvider(applicationEnvironment.ApplicationBasePath);
+			_embeddedFileProvider = new EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
 		}
 
 		public IDirectoryContents GetDirectoryContents(string subpath)
@@ -30,14 +32,14 @@ namespace MiniWeb.Core
 
 		public IFileInfo GetFileInfo(string subpath)
 		{
-			_logger?.LogInformation($"GetFileInfo {subpath}");
+			var fileInfo = _physicalFileProvider.GetFileInfo(subpath);
 			if (subpath == ADMIN_FILENAME)
 			{
-				var provider = new EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
-				return provider.GetFileInfo($"Resources/adminview.cshtml");
+				_logger?.LogInformation($"Embedded GetFileInfo {subpath}");
+				fileInfo = _embeddedFileProvider.GetFileInfo($"Resources/adminview.cshtml");
 			}
 
-			return _physicalFileProvider.GetFileInfo(subpath);
+			return fileInfo;
 		}
 
 		public IExpirationTrigger Watch(string filter)
