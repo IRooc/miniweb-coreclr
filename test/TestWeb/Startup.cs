@@ -34,7 +34,7 @@ namespace aspnet5Web
 			services.AddAntiforgery();
 			services.AddMvc();
 
-			services.AddMiniWebJsonXmlStorage(Configuration);
+			services.AddMiniWebJsonStorage(Configuration);
 
 		}
 
