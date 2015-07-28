@@ -34,7 +34,7 @@ namespace MiniWeb.Core
 				var provider = new EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
 
 				var resource = Path.GetFileName(path);
-				
+
 				var fileInfo = provider.GetFileInfo($"Resources/{resource}");
 				if (fileInfo.Exists)
 				{

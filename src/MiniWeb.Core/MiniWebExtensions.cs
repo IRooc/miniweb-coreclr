@@ -46,12 +46,12 @@ namespace MiniWeb.Core
 				routes.MapRoute("miniweblogout", config.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
 				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" });
 			});
-			
+
 			return app;
 		}
 
 
-		public static IServiceCollection AddMiniWeb<T,U>(this IServiceCollection services, IConfiguration Configuration)
+		public static IServiceCollection AddMiniWeb<T, U>(this IServiceCollection services, IConfiguration Configuration)
 			where T : class, IMiniWebStorage
 			where U : class, IMiniWebStorageConfiguration
 		{
@@ -76,5 +76,5 @@ namespace MiniWeb.Core
 			services.AddSingleton<IMiniWebSite, T>();
 			return services;
 		}
-	}	
+	}
 }

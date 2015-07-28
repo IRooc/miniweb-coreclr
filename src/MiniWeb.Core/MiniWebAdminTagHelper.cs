@@ -38,7 +38,7 @@ namespace MiniWeb.Core
 				output.SelfClosing = false;
 				//add the own contents.
 				output.Content.SetContent(context.GetChildContentAsync().Result);
-				
+
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
 				output.PreContent.Append(_htmlHelper.Partial(MiniWebFileProvider.ADMIN_FILENAME).ToString());
 

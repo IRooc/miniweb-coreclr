@@ -72,7 +72,7 @@ namespace MiniWeb.Storage.XmlStorage
 			}
 			else
 			{
-				pages.Add(new SitePage { Title = MiniWebSite.AppEnvironment.ApplicationBasePath, Url = MiniWebSite.Configuration.DefaultPage});
+				pages.Add(new SitePage { Title = MiniWebSite.AppEnvironment.ApplicationBasePath, Url = MiniWebSite.Configuration.DefaultPage });
 			}
 			return pages;
 		}
@@ -89,9 +89,8 @@ namespace MiniWeb.Storage.XmlStorage
 					File.Delete(filename);
 				File.WriteAllText(filename, fileContent);
 			}
-
-
 		}
+
 		private T DeSerializeFile<T>(string filename)
 		{
 			try

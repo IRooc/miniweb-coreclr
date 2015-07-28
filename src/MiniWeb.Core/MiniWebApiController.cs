@@ -21,13 +21,13 @@ namespace MiniWeb.Core
 		{
 			return Content(_webSite.HostingEnvironment.EnvironmentName + " " + _webSite.AppEnvironment.ApplicationBasePath);
 		}
+
 		[HttpPost]
-		public async Task<IActionResult> SaveContent(string url, string items)
+		[ValidateAntiForgeryToken]
+		public IActionResult SaveContent(string url, string items)
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
-				await _webSite.Antiforgery.ValidateRequestAsync(Context);
-
 				SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 				if (page != null)
 				{
@@ -44,12 +44,11 @@ namespace MiniWeb.Core
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> SavePage(SitePage page)
+		[ValidateAntiForgeryToken]
+		public IActionResult SavePage(SitePage page)
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
-				await _webSite.Antiforgery.ValidateRequestAsync(Context);
-
 				//ignore move for now...
 				string oldUrl = Request.Form["OldUrl"] ?? page.Url;
 				if (oldUrl != page.Url)
@@ -72,18 +71,17 @@ namespace MiniWeb.Core
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> RemovePage(string url)
+		[ValidateAntiForgeryToken]
+		public IActionResult RemovePage(string url)
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
-				await _webSite.Antiforgery.ValidateRequestAsync(Context);
-
 				_webSite.Logger?.LogInformation($"remove {url}");
 				SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 				_webSite.DeleteSitePage(page);
 				return new JsonResult(new { result = true, url = page.BaseUrl });
 			}
 			return new JsonResult(new { result = false });
-		}		
+		}
 	}
 }

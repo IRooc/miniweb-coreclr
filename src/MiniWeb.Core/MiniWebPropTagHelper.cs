@@ -56,11 +56,11 @@ namespace MiniWeb.Core
 				var view = ViewContext.View as RazorView;
 				var viewItem = view.RazorPage as RazorPage<ContentItem>;
 
-				output.Content.SetContent(viewItem.Model.GetValue(Property));
+				output.Content.SetContent(viewItem.Model.GetValue(Property, context.GetChildContentAsync().Result?.ToString()));
 
 				foreach (var attr in EditAttributes)
 				{
-					output.Attributes[attr].Value = viewItem.Model.GetValue(Property + ":" + attr);
+					output.Attributes[attr].Value = viewItem.Model.GetValue(Property + ":" + attr, context.AllAttributes[attr]?.Value?.ToString());
 				}
 			}
 			//Set Content edit properties on tags when logged in

@@ -84,9 +84,8 @@ namespace MiniWeb.Storage.JsonStorage
 					File.Delete(filename);
 				File.WriteAllText(filename, fileContent);
 			}
-
-
 		}
+
 		private T DeSerializeFile<T>(string filename)
 		{
 			try

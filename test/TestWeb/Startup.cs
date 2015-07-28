@@ -16,7 +16,7 @@ namespace aspnet5Web
 	{
 		public IConfiguration Configuration { get; set; }
 
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+		public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
 		{
 			// Setup configuration sources.
 			var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
@@ -38,7 +38,7 @@ namespace aspnet5Web
 
 		}
 
-		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, 
+		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory,
 									 IApplicationEnvironment appEnv, IOptions<MiniWebConfiguration> config)
 		{
 			// Add the loggers.
@@ -57,6 +57,4 @@ namespace aspnet5Web
 
 		}
 	}
-
-	
 }

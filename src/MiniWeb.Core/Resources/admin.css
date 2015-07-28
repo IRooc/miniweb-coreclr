@@ -232,6 +232,10 @@ body.miniweb-editing .miniweb-insertcontent {
 		padding: 0 5px;
 	}
 
+	#admin #showHiddenPages label span{
+		display:none;
+	}
+
 }
 
 @media screen and (max-width: 767px) {
@@ -241,6 +245,7 @@ body.miniweb-editing .miniweb-insertcontent {
 
 	#admin .nav > li {
 		float: left;
+		padding: 0 5px;
 	}
 
 	#admin.navbar.navbar-default button {

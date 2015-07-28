@@ -47,7 +47,7 @@ namespace MiniWeb.Core
 
 			return bodyCss;
 		}
-		
+
 		public bool VisibleInMenu()
 		{
 			return Visible && ShowInMenu;
@@ -59,7 +59,7 @@ namespace MiniWeb.Core
 		public string Key { get; set; }
 		public List<ContentItem> Items { get; set; }
 	}
-	
+
 	public class ContentItem
 	{
 		public string Template { get; set; }
@@ -78,12 +78,7 @@ namespace MiniWeb.Core
 		{
 			return new ContentItem
 			{
-				Template = template,
-				Values =
-				{
-					["title"] = "[Title]",
-					["content"] = "[Content]"
-				}
+				Template = template			
 			};
 		}
 	}

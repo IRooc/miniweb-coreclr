@@ -83,42 +83,33 @@ namespace Web
 				builder.AppendLine();
 				if (bullet && isFirst)
 				{
-					builder.Append(' ', level * _indentation - 1)
-							 .Append('-');
+					builder.Append(' ', level * _indentation - 1).Append('-');
 				}
 				else
 				{
 					builder.Append(' ', level * _indentation);
 				}
-				builder.Append(kvp.Key)
-						 .Append(": ");
+				builder.Append(kvp.Key).Append(": ");
+
 				if (kvp.Value is IEnumerable && !(kvp.Value is string))
 				{
 					foreach (var value in (IEnumerable)kvp.Value)
 					{
 						if (value is ILogValues)
 						{
-							FormatLogValues(
-								 builder,
-								 (ILogValues)value,
-								 level + 1,
-								 bullet: true);
+							FormatLogValues(builder, (ILogValues)value, level + 1, bullet: true);
 						}
 						else
 						{
 							builder.AppendLine()
-									 .Append(' ', (level + 1) * _indentation)
-									 .Append(value);
+									.Append(' ', (level + 1) * _indentation)
+									.Append(value);
 						}
 					}
 				}
 				else if (kvp.Value is ILogValues)
 				{
-					FormatLogValues(
-						 builder,
-						 (ILogValues)kvp.Value,
-						 level + 1,
-						 bullet: false);
+					FormatLogValues(builder, (ILogValues)kvp.Value, level + 1, bullet: false);
 				}
 				else
 				{
