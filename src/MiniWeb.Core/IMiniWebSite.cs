@@ -2,8 +2,8 @@
 using System.Security.Claims;
 using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Hosting;
+using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Runtime;
 
 namespace MiniWeb.Core
 {

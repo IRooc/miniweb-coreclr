@@ -9,11 +9,11 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
+using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Runtime;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
 using MiniWeb.Storage.XmlStorage;
@@ -102,7 +102,10 @@ namespace aspnet5Web
 							//notification.Identity.AddClaims(claims);
 							var identity = new ClaimsIdentity(claims, IdentityOptions.ApplicationCookieAuthenticationType);
 							var principal = new ClaimsPrincipal(identity);
-							notification.HttpContext.Authentication.SignInAsync(notification.Options.SignInScheme, principal).Wait();
+							notification.Principal = principal;
+							//var identity = new ClaimsIdentity(claims, IdentityOptions.ApplicationCookieAuthenticationType);
+							//var principal = new ClaimsPrincipal(identity);
+							//notification.HttpContext.Authentication.SignInAsync(notification.Options.SignInScheme, principal).Wait();
 
 						}
 					}

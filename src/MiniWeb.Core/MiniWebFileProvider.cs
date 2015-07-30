@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNet.FileProviders;
 using Microsoft.Framework.Caching;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Dnx.Runtime;
 
 namespace MiniWeb.Core
 {

@@ -2,13 +2,13 @@ using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using Microsoft.Dnx.Runtime;
 
 namespace MiniWeb.Core
 {

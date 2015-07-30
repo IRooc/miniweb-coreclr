@@ -1,7 +1,6 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Runtime;
 using System;
 using System.Linq;
 using System.Security.Claims;
