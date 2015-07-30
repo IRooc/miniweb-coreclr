@@ -42,6 +42,7 @@ namespace MiniWeb.Core
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("miniwebapi", "miniweb-api/{action}", new { controller = "MiniWebApi" });
+				routes.MapRoute("miniwebsociallogin", config.LoginPath.Substring(1) + "soc", new { controller = "MiniWebPage", action = "SocialLogin" });
 				routes.MapRoute("miniweblogin", config.LoginPath.Substring(1), new { controller = "MiniWebPage", action = "Login" });
 				routes.MapRoute("miniweblogout", config.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
 				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" });

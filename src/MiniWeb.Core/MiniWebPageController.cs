@@ -5,6 +5,8 @@ using Microsoft.Framework.Runtime;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNet.Http.Authentication;
+using System.Collections.Generic;
 
 namespace MiniWeb.Core
 {
@@ -60,6 +62,12 @@ namespace MiniWeb.Core
 			return Index();
 		}
 
+		public IActionResult SocialLogin()
+		{
+
+			return View(_webSite.Configuration.LoginView, _webSite.PageLogin);
+		}
+
 		public IActionResult Login()
 		{
 			_webSite.Logger?.LogInformation("login action");
@@ -70,7 +78,16 @@ namespace MiniWeb.Core
 		public IActionResult Login(string username, string password, bool remember = false)
 		{
 			_webSite.Logger?.LogInformation("login post");
-
+			if (password == null && username == null)
+			{
+				var provider = Request.Form["provider"];
+				AuthenticationProperties properties = new AuthenticationProperties()
+				{
+					RedirectUri = "/miniweb/loginsoc"
+				};
+				properties.Items.Add("LoginProvider", provider);
+				return new ChallengeResult(provider, properties);
+			}
 			if (_webSite.Authenticate(username, password))
 			{
 				var claims = new[] {
@@ -89,5 +106,15 @@ namespace MiniWeb.Core
 
 			return View(_webSite.Configuration.LoginView, _webSite.PageLogin);
 		}
-	}
+		//[HttpPost]
+		//public IActionResult Login(string provider)
+		//{
+		//	AuthenticationProperties properties = new AuthenticationProperties()
+		//	{
+		//		RedirectUri = "/miniweb/login"
+		//	};
+  //          properties.Items.Add("LoginProvider", provider);
+		//	return new ChallengeResult(provider, properties);
+  //      }
+    }
 }
