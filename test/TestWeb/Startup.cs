@@ -109,7 +109,7 @@ namespace aspnet5Web
 			});
 
 			//Registers the miniweb middleware and MVC Routes
-			app.UseMiniWebSite(config.Options);
+			app.UseMiniWebSite(config.Options, false);
 
 		}
 	}

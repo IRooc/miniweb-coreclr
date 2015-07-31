@@ -23,7 +23,6 @@ namespace MiniWeb.Core
 
 		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app, MiniWebConfiguration config)
 		{
-			config.Authentication.CookieRegistered = true;
 			app.UseCookieAuthentication(options =>
 			{
 				options.LoginPath = new PathString(config.Authentication.LoginPath);
@@ -40,9 +39,9 @@ namespace MiniWeb.Core
 		/// </summary>
 		/// <param name="app"></param>
 		/// <returns></returns>
-		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config)
+		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config, bool registerCookieAuth = true)
 		{
-			if (!config.Authentication.CookieRegistered)
+			if (registerCookieAuth)
 			{
 				app.UseMiniWebSiteCookieAuth(config);
 			}

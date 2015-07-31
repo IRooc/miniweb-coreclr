@@ -20,7 +20,6 @@ namespace MiniWeb.Core
 
 	public class MiniWebAuthentication
 	{
-		public bool CookieRegistered { get; set; }
 		public string AuthenticationScheme { get; set; } = "MiniWebCms";
 		public string MiniWebCmsRoleValue { get; set; } = "MiniWebCmsRole";
 		public string LoginPath { get; set; } = "/miniweb/login";
