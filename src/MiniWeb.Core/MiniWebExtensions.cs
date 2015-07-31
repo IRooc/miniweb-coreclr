@@ -21,6 +21,20 @@ namespace MiniWeb.Core
 			return UseMiniWebSite(app, new MiniWebConfiguration());
 		}
 
+		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app, MiniWebConfiguration config)
+		{
+			config.Authentication.CookieRegistered = true;
+			app.UseCookieAuthentication(options =>
+			{
+				options.LoginPath = new PathString(config.Authentication.LoginPath);
+				options.LogoutPath = new PathString(config.Authentication.LogoutPath);
+				options.AuthenticationScheme = config.Authentication.AuthenticationScheme;
+				options.AutomaticAuthentication = true;
+
+			});
+			return app;
+		}
+
 		/// <summary>
 		/// Registers the miniweb Mvc Routes
 		/// </summary>
@@ -28,23 +42,19 @@ namespace MiniWeb.Core
 		/// <returns></returns>
 		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config)
 		{
-			app.UseCookieAuthentication(options =>
+			if (!config.Authentication.CookieRegistered)
 			{
-				options.LoginPath = new PathString(config.LoginPath);
-				options.LogoutPath = new PathString(config.LogoutPath);
-				options.AuthenticationScheme = config.AuthenticationScheme;
-				options.AutomaticAuthentication = true;
-
-			});
+				app.UseMiniWebSiteCookieAuth(config);
+			}
 
 			app.UseMiddleware<MiniWebAdminMiddleware>();
 
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("miniwebapi", "miniweb-api/{action}", new { controller = "MiniWebApi" });
-				routes.MapRoute("miniwebsociallogin", config.LoginPath.Substring(1) + "soc", new { controller = "MiniWebPage", action = "SocialLogin" });
-				routes.MapRoute("miniweblogin", config.LoginPath.Substring(1), new { controller = "MiniWebPage", action = "Login" });
-				routes.MapRoute("miniweblogout", config.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
+				routes.MapRoute("miniwebsociallogin", config.Authentication.SocialLoginPath.Substring(1), new { controller = "MiniWebPage", action = "SocialLogin" });
+				routes.MapRoute("miniweblogin", config.Authentication.LoginPath.Substring(1), new { controller = "MiniWebPage", action = "Login" });
+				routes.MapRoute("miniweblogout", config.Authentication.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
 				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" });
 			});
 

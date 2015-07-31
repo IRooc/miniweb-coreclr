@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNet.Http.Authentication;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
@@ -40,7 +41,7 @@ namespace MiniWeb.Core
 
 			if (_webSite.Configuration.RedirectToFirstSub && page.Pages.Any())
 			{
-				Response.Redirect(page.Pages.First().Url);
+				return Redirect(page.Pages.First().Url);
 			}
 			if (page.Url == "404")
 			{
@@ -51,22 +52,34 @@ namespace MiniWeb.Core
 		}
 
 		[HttpPost]
-		public IActionResult Logout(string returnUrl)
+		public async Task<IActionResult> Logout(string returnUrl)
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
-				Context.Authentication.SignOutAsync(_webSite.Configuration.AuthenticationScheme).Wait();
-				return Redirect("~" + returnUrl);
+				await Context.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
+				return Redirect(returnUrl);
 			}
 			return Index();
 		}
 
 		public IActionResult SocialLogin()
 		{
-
-			return View(_webSite.Configuration.LoginView, _webSite.PageLogin);
+			if (_webSite.IsAuthenticated(User))
+			{
+				return Redirect("~" + _webSite.Configuration.DefaultPage);
+			}
+			else
+			{
+				var provider = Request.Form["provider"];
+				AuthenticationProperties properties = new AuthenticationProperties()
+				{
+					RedirectUri = _webSite.Configuration.Authentication.SocialLoginPath
+				};
+				properties.Items.Add("LoginProvider", provider);
+				return new ChallengeResult(provider, properties);
+			}
 		}
-
+		
 		public IActionResult Login()
 		{
 			_webSite.Logger?.LogInformation("login action");
@@ -74,46 +87,26 @@ namespace MiniWeb.Core
 		}
 
 		[HttpPost]
-		public IActionResult Login(string username, string password, bool remember = false)
+		public async Task<IActionResult> Login(string username, string password, bool remember = false)
 		{
 			_webSite.Logger?.LogInformation("login post");
-			if (password == null && username == null)
-			{
-				var provider = Request.Form["provider"];
-				AuthenticationProperties properties = new AuthenticationProperties()
-				{
-					RedirectUri = "/miniweb/loginsoc"
-				};
-				properties.Items.Add("LoginProvider", provider);
-				return new ChallengeResult(provider, properties);
-			}
 			if (_webSite.Authenticate(username, password))
 			{
 				var claims = new[] {
 					new Claim(ClaimTypes.Name, username),
-					new Claim(ClaimTypes.Role, _webSite.Configuration.MiniWebCmsRoleValue)
+					new Claim(ClaimTypes.Role, _webSite.Configuration.Authentication.MiniWebCmsRoleValue)
 				};
 
 				_webSite.Logger?.LogInformation($"signing in as :{username}");
 				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
 				var identity = new ClaimsIdentity(claims, IdentityOptions.ApplicationCookieAuthenticationType);
 				var principal = new ClaimsPrincipal(identity);
-				Context.Authentication.SignInAsync(_webSite.Configuration.AuthenticationScheme, principal).Wait();
+				await Context.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
 
 				return Redirect("~" + _webSite.Configuration.DefaultPage);
 			}
 
 			return View(_webSite.Configuration.LoginView, _webSite.PageLogin);
 		}
-		//[HttpPost]
-		//public IActionResult Login(string provider)
-		//{
-		//	AuthenticationProperties properties = new AuthenticationProperties()
-		//	{
-		//		RedirectUri = "/miniweb/login"
-		//	};
-  //          properties.Items.Add("LoginProvider", provider);
-		//	return new ChallengeResult(provider, properties);
-  //      }
     }
 }

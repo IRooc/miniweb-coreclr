@@ -15,7 +15,7 @@
 			<li><button class="btn btn-link" id="newPage"><i class="glyphicon glyphicon-asterisk"></i> <span>New page</span></button></li>
 			<li class="divider"></li>
 			<li>
-				<form action="@MiniWebSite.Configuration.LogoutPath" method="post">
+				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
 					<input type="hidden" name="returnUrl" value="/@Model.Url" />
 					<button type="submit" title="Signed in as @User.Identity.Name" class="btn btn-link">
 						<span>Sign out&nbsp;</span><i class="glyphicon glyphicon-log-out"></i>

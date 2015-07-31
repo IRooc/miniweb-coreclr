@@ -62,25 +62,27 @@ namespace aspnet5Web
 			app.UseErrorPage();
 			app.UseStaticFiles();
 
-			app.UseOAuthAuthentication("MiniWebCms-Github", options =>
+			//Registers base cookie authentication method.
+			app.UseMiniWebSiteCookieAuth(config.Options);
+
+			//setup other authentications
+			app.UseOAuthAuthentication("Github-Account", options =>
 			{
+				options.Caption = "Login with GitHub account";
 				options.ClientId = "eb33fa51e5d1c57985da";
 				options.ClientSecret = "b7f4335d15f8f620fc6f15513a017670d43e1453";
-				options.CallbackPath = new PathString("/miniweb/loginsocial");
+				options.CallbackPath = new PathString("/miniweb/github-auth");
 				options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
 				options.TokenEndpoint = "https://github.com/login/oauth/access_token";
 				options.UserInformationEndpoint = "https://api.github.com/user";
-				options.ClaimsIssuer = "OAuth2-Github";
-				options.SignInScheme = config.Options.AuthenticationScheme;
+				//use cookieauthtype to make issignedin() works
+				options.ClaimsIssuer = IdentityOptions.ApplicationCookieAuthenticationType;
+				options.SaveTokensAsClaims = false;
+				options.SignInScheme = config.Options.Authentication.AuthenticationScheme;
 				options.Notifications = new OAuthAuthenticationNotifications()
 				{
-					OnApplyRedirect = context =>
-					{
-						context.Response.Redirect(context.RedirectUri);
-					},
 					OnAuthenticated = async notification =>
 					{
-						var cc = notification.Options;
 						var request = new HttpRequestMessage(HttpMethod.Get, notification.Options.UserInformationEndpoint);
 						request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", notification.AccessToken);
 						request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -89,28 +91,20 @@ namespace aspnet5Web
 						response.EnsureSuccessStatusCode();
 						var user = JObject.Parse(await response.Content.ReadAsStringAsync());
 
-						var userid = user.Value<string>("login");
-						if (userid == "IRooc")
+						var loginName = user.Value<string>("login");
+
+						//Check allowed users here
+						if (loginName == "IRooc")
 						{
 							var claims = new[] {
-								new Claim(ClaimTypes.Name, userid,
-								ClaimValueTypes.String, notification.Options.ClaimsIssuer),
-								new Claim(ClaimTypes.Role, "MiniWebCmsRole",
-								ClaimValueTypes.String, notification.Options.ClaimsIssuer)
-                            };
-							//notification.Options.
-							//notification.Identity.AddClaims(claims);
-							var identity = new ClaimsIdentity(claims, IdentityOptions.ApplicationCookieAuthenticationType);
-							var principal = new ClaimsPrincipal(identity);
-							notification.Principal = principal;
-							//var identity = new ClaimsIdentity(claims, IdentityOptions.ApplicationCookieAuthenticationType);
-							//var principal = new ClaimsPrincipal(identity);
-							//notification.HttpContext.Authentication.SignInAsync(notification.Options.SignInScheme, principal).Wait();
-
+								new Claim(ClaimTypes.Name, loginName,
+										  ClaimValueTypes.String, notification.Options.ClaimsIssuer),
+								new Claim(ClaimTypes.Role, config.Options.Authentication.MiniWebCmsRoleValue,
+										  ClaimValueTypes.String, notification.Options.ClaimsIssuer)
+							};
+							notification.Identity.AddClaims(claims);
 						}
 					}
-
-
 				};
 			});
 

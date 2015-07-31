@@ -138,7 +138,8 @@ namespace MiniWeb.Core
 
 		public bool IsAuthenticated(ClaimsPrincipal user)
 		{
-			if (user?.IsSignedIn() == true && user?.Claims?.Any(c => c.Type == ClaimTypes.Role && c.Value == Configuration.MiniWebCmsRoleValue) == true)
+			//TODO(RC) Create custom IsSignedIn with configuration of allowed authtypes
+			if (user?.IsSignedIn() == true && user?.Claims?.Any(c => c.Type == ClaimTypes.Role && c.Value == Configuration.Authentication.MiniWebCmsRoleValue) == true)
 			{
 				return true;
 			}
