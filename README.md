@@ -5,10 +5,11 @@ Firstly an easy to use Simple CMS website that just needs page templates and con
 
 Secondly it is an experiment with what .net coreclr can and can't do. I'm currently using
 * mvc and webapi
-* basic authentication
+* oAuth & basic authentication 
 * custom configuration
 * custom taghelpers
 * custom middleware
+* embedded Razor View
 
 it currently runs on  1.0.0-beta7-12255 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT  
@@ -19,7 +20,7 @@ with some workarounds voor mac and linux
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
-It needs bootstrap v3.2 for now for the admin menu to work
+It needs bootstrap v3.2 for now for the admin menu to work and a modified version of [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
 
 ## Example
 Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the TestWeb project for an example implementation. Make sure the basic bootstrap files ar in the wwwroot folder.

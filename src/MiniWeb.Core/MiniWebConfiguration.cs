@@ -25,6 +25,6 @@ namespace MiniWeb.Core
 		public string LoginPath { get; set; } = "/miniweb/login";
 		public string SocialLoginPath { get; set; } = "/miniweb/social-login";
 		public string LogoutPath { get; set; } = "/miniweb/logout";
-		
+		public string AuthenticationType { get; set; } = typeof(MiniWebAuthentication).Namespace + ".MiniWebAuth";
 	}
 }

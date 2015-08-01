@@ -1,14 +1,14 @@
-using Microsoft.AspNet.Antiforgery;
-using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using Microsoft.AspNet.Antiforgery;
+using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
 
 namespace MiniWeb.Core
 {
@@ -138,8 +138,8 @@ namespace MiniWeb.Core
 
 		public bool IsAuthenticated(ClaimsPrincipal user)
 		{
-			//TODO(RC) Create custom IsSignedIn with configuration of allowed authtypes
-			if (user?.IsSignedIn() == true && user?.Claims?.Any(c => c.Type == ClaimTypes.Role && c.Value == Configuration.Authentication.MiniWebCmsRoleValue) == true)
+			if (user?.Identities?.Any(i => i.AuthenticationType == Configuration.Authentication.AuthenticationType) == true &&
+			   user?.Claims?.Any(c => c.Type == ClaimTypes.Role && c.Value == Configuration.Authentication.MiniWebCmsRoleValue) == true)
 			{
 				return true;
 			}
@@ -148,7 +148,6 @@ namespace MiniWeb.Core
 
 		public bool Authenticate(string user, string password)
 		{
-			//TODO(RC) what to do about openid and such...
 			return Storage.Authenticate(user, password);
 		}
 

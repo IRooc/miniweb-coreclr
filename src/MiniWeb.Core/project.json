@@ -1,20 +1,17 @@
 {
 	"version": "1.0.0",
 	"dependencies": {
-		"Microsoft.AspNet.Antiforgery": "1.0.0-*",
 		"System.Runtime.Serialization.Primitives": "4.0.10-*",
 		"System.Xml.XmlSerializer": "4.0.10-*",
-		"Microsoft.AspNet.Identity": "3.0.0-*",
+		"Microsoft.AspNet.Antiforgery": "1.0.0-*",
 		"Microsoft.AspNet.Authentication.Cookies": "1.0.0-*",
 		"Microsoft.AspNet.DataProtection": "1.0.0-*",
+		"Microsoft.AspNet.FileProviders.Embedded": "1.0.0-*",
 		"Microsoft.AspNet.Hosting": "1.0.0-*",
 		"Microsoft.AspNet.Mvc": "6.0.0-*",
-		"Microsoft.AspNet.FileProviders.Embedded": "1.0.0-*",
-		"Microsoft.Framework.Logging": "1.0.0-*",
 		"Microsoft.Framework.Configuration": "1.0.0-*",
 		"Microsoft.Framework.Configuration.Json": "1.0.0-*",
-		"Newtonsoft.Json": "7.0.1-*"
-
+		"Microsoft.Framework.Logging": "1.0.0-*"
 	},
 
 	"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",

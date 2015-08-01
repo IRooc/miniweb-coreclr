@@ -62,11 +62,14 @@ namespace aspnet5Web
 			app.UseErrorPage();
 			app.UseStaticFiles();
 
+
+			var miniwebConfig = config.Options;
+
 			//Registers base cookie authentication method.
-			app.UseMiniWebSiteCookieAuth(config.Options);
+			app.UseMiniWebSiteCookieAuth(miniwebConfig);
 
 			//setup other authentications
-			app.UseOAuthAuthentication("Github-Account", options =>
+			app.UseOAuthAuthentication("Github-Account", (System.Action<OAuthAuthenticationOptions>)(options =>
 			{
 				options.Caption = "Login with GitHub account";
 				options.ClientId = "eb33fa51e5d1c57985da";
@@ -75,10 +78,9 @@ namespace aspnet5Web
 				options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
 				options.TokenEndpoint = "https://github.com/login/oauth/access_token";
 				options.UserInformationEndpoint = "https://api.github.com/user";
-				//use cookieauthtype to make issignedin() works
-				options.ClaimsIssuer = IdentityOptions.ApplicationCookieAuthenticationType;
+				options.ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType;
 				options.SaveTokensAsClaims = false;
-				options.SignInScheme = config.Options.Authentication.AuthenticationScheme;
+				options.SignInScheme = miniwebConfig.Authentication.AuthenticationScheme;
 				options.Notifications = new OAuthAuthenticationNotifications()
 				{
 					OnAuthenticated = async notification =>
@@ -99,17 +101,17 @@ namespace aspnet5Web
 							var claims = new[] {
 								new Claim(ClaimTypes.Name, loginName,
 										  ClaimValueTypes.String, notification.Options.ClaimsIssuer),
-								new Claim(ClaimTypes.Role, config.Options.Authentication.MiniWebCmsRoleValue,
+								new Claim(ClaimTypes.Role, miniwebConfig.Authentication.MiniWebCmsRoleValue,
 										  ClaimValueTypes.String, notification.Options.ClaimsIssuer)
 							};
 							notification.Identity.AddClaims(claims);
 						}
 					}
 				};
-			});
+			}));
 
 			//Registers the miniweb middleware and MVC Routes
-			app.UseMiniWebSite(config.Options, false);
+			app.UseMiniWebSite(miniwebConfig, false);
 
 		}
 	}

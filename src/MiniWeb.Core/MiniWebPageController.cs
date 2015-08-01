@@ -1,12 +1,9 @@
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.Logging;
-using System;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNet.Http.Authentication;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Http.Authentication;
+using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
 {
@@ -66,11 +63,13 @@ namespace MiniWeb.Core
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
+				_webSite.Logger?.LogInformation("Social login success");
 				return Redirect("~" + _webSite.Configuration.DefaultPage);
 			}
 			else
 			{
 				var provider = Request.Form["provider"];
+				_webSite.Logger?.LogInformation($"Social login {provider}");
 				AuthenticationProperties properties = new AuthenticationProperties()
 				{
 					RedirectUri = _webSite.Configuration.Authentication.SocialLoginPath
@@ -99,7 +98,7 @@ namespace MiniWeb.Core
 
 				_webSite.Logger?.LogInformation($"signing in as :{username}");
 				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
-				var identity = new ClaimsIdentity(claims, IdentityOptions.ApplicationCookieAuthenticationType);
+				var identity = new ClaimsIdentity(claims, _webSite.Configuration.Authentication.AuthenticationType);
 				var principal = new ClaimsPrincipal(identity);
 				await Context.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
 
