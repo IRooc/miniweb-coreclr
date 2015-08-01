@@ -20,7 +20,7 @@ with some workarounds voor mac and linux
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
-It needs bootstrap v3.2 for now for the admin menu to work and a modified version of [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
+It needs bootstrap v3.2 for now for the admin menu to work and contains a modified version of [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
 
 ## Example
 Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the TestWeb project for an example implementation. Make sure the basic bootstrap files ar in the wwwroot folder.
