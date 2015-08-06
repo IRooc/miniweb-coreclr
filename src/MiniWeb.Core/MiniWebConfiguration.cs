@@ -20,8 +20,8 @@ namespace MiniWeb.Core
 
 	public class MiniWebAuthentication
 	{
+		public const string MiniWebCmsRoleValue = "MiniWeb-CmsRole";
 		public string AuthenticationScheme { get; set; } = "MiniWebCms";
-		public string MiniWebCmsRoleValue { get; set; } = "MiniWebCmsRole";
 		public string LoginPath { get; set; } = "/miniweb/login";
 		public string SocialLoginPath { get; set; } = "/miniweb/social-login";
 		public string LogoutPath { get; set; } = "/miniweb/logout";

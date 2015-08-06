@@ -3,7 +3,7 @@
 		"Title": "New Title from Config",
 		"DefaultPage": "/home"
 	},
-	"Storage": {
+	"MiniWebStorage": {
 		"Users": {
 			"demo": "demo",
 			"test": "test123"

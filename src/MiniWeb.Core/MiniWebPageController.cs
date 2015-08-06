@@ -93,7 +93,7 @@ namespace MiniWeb.Core
 			{
 				var claims = new[] {
 					new Claim(ClaimTypes.Name, username),
-					new Claim(ClaimTypes.Role, _webSite.Configuration.Authentication.MiniWebCmsRoleValue)
+					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
 				};
 
 				_webSite.Logger?.LogInformation($"signing in as :{username}");

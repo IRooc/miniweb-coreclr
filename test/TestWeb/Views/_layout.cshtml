@@ -4,7 +4,7 @@
 
 <html>
 <head prefix="og: http://ogp.me/ns#">
-    <meta charset="utf-8" />
+	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
 	<title>@Model.MetaTitle - @MiniWebSite.Configuration.Title</title>
 	<meta name="description" content="@Model.MetaDescription" />
@@ -12,11 +12,11 @@
 	<link rel="stylesheet" href="/css/site.css" />
 	<link rel="dns-prefetch" href="http://gravatar.com/" />
 
-    <meta name="application-name" content="@MiniWebSite.Configuration.Title" />
-    <meta name="msapplication-TileColor" content="#ffffff" />
+	<meta name="application-name" content="@MiniWebSite.Configuration.Title" />
+	<meta name="msapplication-TileColor" content="#ffffff" />
 
-    <meta property="og:title" content="@Model.MetaTitle" />
-    <meta property="og:type" content="website" />
+	<meta property="og:title" content="@Model.MetaTitle" />
+	<meta property="og:type" content="website" />
 
 </head>
 <body class="@Model.GetBodyCss()">
@@ -67,13 +67,17 @@
 			<span>
 				Footer
 			</span>
+			@if (!MiniWebSite.IsAuthenticated(User))
+			{
+				<span class="pull-right"><a href="/miniweb/login"><i class="glyphicon glyphicon-log-in"></i> login</a></span>
+			}
 		</footer>
 	</div>
 	<script src="/scripts/jquery-2.0.2.js"></script>
 	<script src="/scripts/bootstrap.min.js"></script>
-	<script src="/scripts/site.js" ></script>
-	
-	<miniwebadmin/>
+	<script src="/scripts/site.js"></script>
 
-	</body>
+	<miniwebadmin />
+
+</body>
 </html>

@@ -1,15 +1,11 @@
-using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.OptionsModel;
-using MiniWeb.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Serialization;
 using System.Runtime.Serialization;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
+using MiniWeb.Core;
 
 namespace MiniWeb.Storage.XmlStorage
 {

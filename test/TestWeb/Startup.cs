@@ -1,14 +1,10 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
@@ -16,7 +12,6 @@ using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
-using MiniWeb.Storage.XmlStorage;
 using Newtonsoft.Json.Linq;
 
 namespace aspnet5Web
@@ -40,12 +35,12 @@ namespace aspnet5Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// Default services used by MiniWeb
-			services.AddAuthentication();
 			services.AddAntiforgery();
 			services.AddMvc();
 
 			services.AddMiniWebJsonStorage(Configuration);
 
+			
 		}
 
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory,
@@ -101,7 +96,7 @@ namespace aspnet5Web
 							var claims = new[] {
 								new Claim(ClaimTypes.Name, loginName,
 										  ClaimValueTypes.String, notification.Options.ClaimsIssuer),
-								new Claim(ClaimTypes.Role, miniwebConfig.Authentication.MiniWebCmsRoleValue,
+								new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue,
 										  ClaimValueTypes.String, notification.Options.ClaimsIssuer)
 							};
 							notification.Identity.AddClaims(claims);

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Razor;
@@ -74,13 +75,20 @@ namespace MiniWeb.Core
 			where V : class, IMiniWebStorageConfiguration
 		{
 			//Setup miniweb injection
-			services.Configure<V>(Configuration.GetConfigurationSection("Storage"));
+			services.Configure<V>(Configuration.GetConfigurationSection("MiniWebStorage"));
 			services.Configure<MiniWebConfiguration>(Configuration.GetConfigurationSection("MiniWeb"));
 
 			//make sure embedded view is returned when needed
 			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();
 			services.Configure<RazorViewEngineOptions>(options => { options.FileProvider = new MiniWebFileProvider(appEnv); });
 
+			services.ConfigureAuthorization(options =>
+			{
+				options.AddPolicy(MiniWebAuthentication.MiniWebCmsRoleValue, policyBuilder =>
+				{
+					policyBuilder.RequireClaim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue);
+				});
+			});
 
 			services.AddSingleton<IMiniWebStorage, U>();
 			services.AddSingleton<IMiniWebSite, T>();

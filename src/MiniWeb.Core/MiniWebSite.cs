@@ -139,7 +139,7 @@ namespace MiniWeb.Core
 		public bool IsAuthenticated(ClaimsPrincipal user)
 		{
 			if (user?.Identities?.Any(i => i.AuthenticationType == Configuration.Authentication.AuthenticationType) == true &&
-			   user?.Claims?.Any(c => c.Type == ClaimTypes.Role && c.Value == Configuration.Authentication.MiniWebCmsRoleValue) == true)
+			   user?.Claims?.Any(c => c.Type == ClaimTypes.Role && c.Value == MiniWebAuthentication.MiniWebCmsRoleValue) == true)
 			{
 				return true;
 			}
