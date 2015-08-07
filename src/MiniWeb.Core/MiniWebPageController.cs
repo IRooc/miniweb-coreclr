@@ -66,7 +66,7 @@ namespace MiniWeb.Core
 				_webSite.Logger?.LogInformation("Social login success");
 				return Redirect("~" + _webSite.Configuration.DefaultPage);
 			}
-			else
+			else if (Request.HasFormContentType)
 			{
 				var provider = Request.Form["provider"];
 				_webSite.Logger?.LogInformation($"Social login {provider}");
@@ -77,6 +77,7 @@ namespace MiniWeb.Core
 				properties.Items.Add("LoginProvider", provider);
 				return new ChallengeResult(provider, properties);
 			}
+			return Redirect(_webSite.PageLogin.Url);
 		}
 		
 		public IActionResult Login()

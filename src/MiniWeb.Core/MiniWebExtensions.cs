@@ -5,25 +5,20 @@ using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 
 namespace MiniWeb.Core
 {
 	public static class MiniWebExtensions
 	{
-		/// <summary>
-		/// Registers the miniweb Mvc Routes with default config
-		/// </summary>
-		/// <param name="app"></param>
-		/// <returns></returns>
-		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app)
+		public static MiniWebConfiguration GetMiniWebConfig(this IApplicationBuilder app)
 		{
-			return UseMiniWebSite(app, new MiniWebConfiguration());
+			return  app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Options;
 		}
 
-		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app, MiniWebConfiguration config)
+		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app)
 		{
+			MiniWebConfiguration config = app.GetMiniWebConfig();
 			app.UseCookieAuthentication(options =>
 			{
 				options.LoginPath = new PathString(config.Authentication.LoginPath);
@@ -40,11 +35,12 @@ namespace MiniWeb.Core
 		/// </summary>
 		/// <param name="app"></param>
 		/// <returns></returns>
-		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, MiniWebConfiguration config, bool registerCookieAuth = true)
+		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, bool registerCookieAuth = true)
 		{
+			MiniWebConfiguration config = app.GetMiniWebConfig();
 			if (registerCookieAuth)
 			{
-				app.UseMiniWebSiteCookieAuth(config);
+				app.UseMiniWebSiteCookieAuth();
 			}
 
 			app.UseMiddleware<MiniWebAdminMiddleware>();

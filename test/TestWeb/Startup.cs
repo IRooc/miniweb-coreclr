@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -9,7 +10,6 @@ using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
 using Newtonsoft.Json.Linq;
@@ -40,11 +40,10 @@ namespace aspnet5Web
 
 			services.AddMiniWebJsonStorage(Configuration);
 
-			
+
 		}
 
-		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory,
-									 IApplicationEnvironment appEnv, IOptions<MiniWebConfiguration> config)
+		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
 		{
 			// Add the loggers.
 			if (Configuration.Get("Logging:EnableConsole") == true.ToString())
@@ -58,24 +57,24 @@ namespace aspnet5Web
 			app.UseStaticFiles();
 
 
-			var miniwebConfig = config.Options;
+			var miniwebConfig = app.GetMiniWebConfig();
 
 			//Registers base cookie authentication method.
-			app.UseMiniWebSiteCookieAuth(miniwebConfig);
+			app.UseMiniWebSiteCookieAuth();
 
 			//setup other authentications
-			app.UseOAuthAuthentication("Github-Account", (System.Action<OAuthAuthenticationOptions>)(options =>
+			app.UseOAuthAuthentication("Github-Account", options =>
 			{
 				options.Caption = "Login with GitHub account";
-				options.ClientId = "eb33fa51e5d1c57985da";
-				options.ClientSecret = "b7f4335d15f8f620fc6f15513a017670d43e1453";
-				options.CallbackPath = new PathString("/miniweb/github-auth");
+				options.ClientId = Configuration["GithubAuth:ClientId"];
+				options.ClientSecret = Configuration["GithubAuth:ClientSecret"];
+				options.CallbackPath = new PathString(Configuration["GithubAuth:CallbackPath"]);
 				options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
 				options.TokenEndpoint = "https://github.com/login/oauth/access_token";
 				options.UserInformationEndpoint = "https://api.github.com/user";
 				options.ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType;
-				options.SaveTokensAsClaims = false;
 				options.SignInScheme = miniwebConfig.Authentication.AuthenticationScheme;
+				options.SaveTokensAsClaims = false;
 				options.Notifications = new OAuthAuthenticationNotifications()
 				{
 					OnAuthenticated = async notification =>
@@ -91,22 +90,21 @@ namespace aspnet5Web
 						var loginName = user.Value<string>("login");
 
 						//Check allowed users here
-						if (loginName == "IRooc")
+						var adminList = (Configuration["GithubAuth:AllowedAdmins"] ?? string.Empty).Split(',');
+						if (adminList?.Any(item => item == loginName) == true)
 						{
 							var claims = new[] {
-								new Claim(ClaimTypes.Name, loginName,
-										  ClaimValueTypes.String, notification.Options.ClaimsIssuer),
-								new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue,
-										  ClaimValueTypes.String, notification.Options.ClaimsIssuer)
+								new Claim(ClaimTypes.Name, loginName),
+								new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
 							};
 							notification.Identity.AddClaims(claims);
 						}
 					}
 				};
-			}));
+			});
 
-			//Registers the miniweb middleware and MVC Routes
-			app.UseMiniWebSite(miniwebConfig, false);
+			//Registers the miniweb middleware and MVC Routes, not not reregester cookieauth
+			app.UseMiniWebSite(false);
 
 		}
 	}
