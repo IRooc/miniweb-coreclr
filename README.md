@@ -11,10 +11,10 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom middleware
 * embedded Razor View
 
-it currently runs on  1.0.0-beta7-12255 coreclr x64.
-Tested on windows, mac osx, linux (ubuntu) and windows IoT  
+it currently runs on  1.0.0-beta7-12321 coreclr x64.
+Tested on windows, mac osx, linux (ubuntu) and windows IoT 
 
-with some workarounds voor mac and linux 
+with some workarounds voor mac and linux (on beta7-12321 coreclr on mac and linux seems broken...)
 * remove "resource" line from Core project.json otherwise it won't build
 * make symlink from /src/MiniWeb.Core/Resources to /test/TestWeb/wwwroot/miniweb-resource for edit functionality 
 
@@ -55,7 +55,6 @@ every tag can have a miniweb-prop attribute that will be stored in the content i
 
 the minimal startup will be something like this:
 ```c#
-
 public IConfiguration Configuration { get; set; }
 
 public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
@@ -80,6 +79,7 @@ public void ConfigureServices(IServiceCollection services)
 	//Setup miniweb injection through one of the storage overrides
 	services.AddMiniWebJsonStorage(Configuration);
 }
+
 public void Configure(IApplicationBuilder app)
 {
 	// Default middleware used by MiniWeb
@@ -87,7 +87,7 @@ public void Configure(IApplicationBuilder app)
 	app.UseStaticFiles();
 
 	//Registers the miniweb middleware and MVC Routes
-	app.UseMiniWebSite(Configuration);
+	app.UseMiniWebSite();
 }
 ```
 
@@ -96,12 +96,10 @@ Currently there are two storage packages
 * MiniWeb.Storage.JsonStorage
 * MiniWeb.Storage.XmlStorage
 
-both store their files in the /App_Data/Sitepages folder
+both are filesystem stores and store their files in the /App_Data/Sitepages folder
 
 ## TODO
 * Wait for embedded file fix in linux [https://github.com/aspnet/dnx/issues/2187](https://github.com/aspnet/dnx/issues/2187)
-	* temp linux workaround through static files (remove the fallback from the wwwroot/miniweb-resourcefallback directory name)
-* Open ID authentication possibility
 * Multiple edittypes
 * Better image handling (enable picking existing images as well)
 * Wait for .net core release :D
