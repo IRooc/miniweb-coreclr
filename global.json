@@ -1,8 +1,8 @@
 {
-"projects":["src","test/TestWeb"],
-"sdk": {
-"version": "1.0.0-beta7-12321",
-"architecture": "x64",
-"runtime": "coreclr"
-}
+	"projects": [ "src", "test/TestWeb" ],
+	"sdk": {
+		"version": "1.0.0-beta7-12328",
+		"architecture": "x64",
+		"runtime": "coreclr"
+	}
 }

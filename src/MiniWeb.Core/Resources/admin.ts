@@ -158,7 +158,7 @@
 				$.post('/miniweb-api/savecontent', {
 					url: $('#admin').attr('data-miniweb-path'),
 					items: JSON.stringify(items),
-					'__RequestVerificationToken': $('input[name=__RequestVerificationToken]').val()
+					'__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val()
 				}).done(function (data) {
 					if (data.result) {
 						showMessage(true, "The page was saved successfully");
@@ -175,7 +175,7 @@
 			},
 			savePage = function () {
 				var formArr = $(this).closest('form').serializeArray();
-				formArr.push({ name: '__RequestVerificationToken', value: $('input[name=__RequestVerificationToken]').val() });
+				formArr.push({ name: '__RequestVerificationToken', value: $('#miniweb-templates input[name=__RequestVerificationToken]').val() });
 				$.post("/miniweb-api/savepage",
 					formArr
 					).done(function (data) {
@@ -192,7 +192,7 @@
 			removePage = function () {
 				if (confirm('are you sure?')) {
 					$.post("/miniweb-api/removepage", {
-						'__RequestVerificationToken': $('input[name=__RequestVerificationToken]').val(),
+						'__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val(),
 						url: $('#admin').attr('data-miniweb-path')
 					}).done(function (data) {
 						showMessage(true, "The page was saved successfully");

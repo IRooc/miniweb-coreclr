@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
-using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Logging;
@@ -14,7 +13,6 @@ namespace MiniWeb.Core
 {
 	public class MiniWebSite : IMiniWebSite
 	{
-		public IAntiforgery Antiforgery { get; }
 		public IApplicationEnvironment AppEnvironment { get; }
 		public MiniWebConfiguration Configuration { get; }
 		public IHostingEnvironment HostingEnvironment { get; }
@@ -92,20 +90,19 @@ namespace MiniWeb.Core
 		}
 
 		public MiniWebSite(IHostingEnvironment env, IApplicationEnvironment appEnv, ILoggerFactory loggerfactory,
-		IAntiforgery antiforgery, IMiniWebStorage storage, IOptions<MiniWebConfiguration> config)
+								 IMiniWebStorage storage, IOptions<MiniWebConfiguration> config)
 		{
 			Pages = Enumerable.Empty<SitePage>();
 
 			AppEnvironment = appEnv;
 			HostingEnvironment = env;
-			Antiforgery = antiforgery;
 			Logger = SetupLogging(loggerfactory);
 			Storage = storage;
 			Configuration = config.Options;
 
 			//pass on self to storage module
 			//cannot inject because of circular reference.
-			storage.MiniWebSite = this;
+			Storage.MiniWebSite = this;
 
 		}
 
@@ -138,12 +135,7 @@ namespace MiniWeb.Core
 
 		public bool IsAuthenticated(ClaimsPrincipal user)
 		{
-			if (user?.Identities?.Any(i => i.AuthenticationType == Configuration.Authentication.AuthenticationType) == true &&
-			   user?.Claims?.Any(c => c.Type == ClaimTypes.Role && c.Value == MiniWebAuthentication.MiniWebCmsRoleValue) == true)
-			{
-				return true;
-			}
-			return false;
+			return user?.IsInRole(MiniWebAuthentication.MiniWebCmsRoleValue) == true;		
 		}
 
 		public bool Authenticate(string user, string password)
@@ -155,6 +147,7 @@ namespace MiniWeb.Core
 		{
 			Logger?.LogInformation("Reload pages");
 			Pages = Storage.AllPages().ToList();
+			//NOTE(RC): only two levels, recurse??
 			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 			foreach (var page in PageHierarchy)
 			{
@@ -173,7 +166,7 @@ namespace MiniWeb.Core
 			}
 			if (storeImages)
 			{
-				//save current with base 64 so at least it's saved.
+				//NOTE(RC): save current with base 64 so at least it's saved.
 				Storage.StoreSitePage(page);
 				//NOTE(RC): can this be done saner?
 				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))

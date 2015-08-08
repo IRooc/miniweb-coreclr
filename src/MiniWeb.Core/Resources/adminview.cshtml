@@ -232,16 +232,17 @@
 	</div>
 </div>
 
-<div style="display: none">
+<div id="miniweb-templates">
 	@foreach (var s in MiniWebSite.ItemTemplates)
 	{
 		<div id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">
 			@Html.Partial(s, MiniWeb.Core.ContentItem.DefaultItem(s))
 		</div>
 	}
+	@Html.AntiForgeryToken()
 </div>
 
-@Html.Raw((object)MiniWebSite.Antiforgery?.GetHtml(Context))
+
 <link rel="stylesheet" href="/miniweb-resource/admin.css" />
 <script src="/miniweb-resource/bootstrap-wysiwyg.js" defer></script>
 <script src="/miniweb-resource/admin.js" defer></script>

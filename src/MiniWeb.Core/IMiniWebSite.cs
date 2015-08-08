@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
-using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Logging;
@@ -9,7 +8,6 @@ namespace MiniWeb.Core
 {
 	public interface IMiniWebSite
 	{
-		IAntiforgery Antiforgery { get; }
 		IApplicationEnvironment AppEnvironment { get; }
 		IHostingEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }

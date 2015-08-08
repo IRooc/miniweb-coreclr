@@ -214,7 +214,9 @@ body.miniweb-editing .miniweb-insertcontent {
 	margin-top: 20px;
 }
 
-
+#miniweb-templates {
+	display:none;
+}
 
 
 

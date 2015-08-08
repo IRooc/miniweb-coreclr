@@ -15,12 +15,11 @@ namespace MiniWeb.Core
 		private const string MiniWebAdminTag = "miniwebadmin";
 		private const string MiniWebIgnoreAdminStartTagname = "ignoreadminstart";
 
-		[HtmlAttributeNotBound]
-		[ViewContext]
-		public ViewContext ViewContext { get; set; }
 		private IMiniWebSite _webSite;
 		private IHtmlHelper _htmlHelper;
 
+		[ViewContext]
+		public ViewContext ViewContext { get; set; }
 
 		[HtmlAttributeName(MiniWebIgnoreAdminStartTagname)]
 		public bool IgnoreAdminStart { get; set; }
