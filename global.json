@@ -1,7 +1,7 @@
 {
 	"projects": [ "src", "test/TestWeb" ],
 	"sdk": {
-		"version": "1.0.0-beta7-12328",
+		"version": "1.0.0-beta7-12335",
 		"architecture": "x64",
 		"runtime": "coreclr"
 	}

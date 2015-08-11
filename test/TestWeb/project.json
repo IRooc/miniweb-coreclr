@@ -10,6 +10,17 @@
 		"**.vspscc"
 	],
 	"dependencies": {
+		"System.Diagnostics.Process": "4.0.0-*",
+		"System.Linq.Queryable": "4.0.1-*",
+		"System.Diagnostics.TraceSource": "4.0.0-*",
+		"System.Security.Cryptography.Hashing": "4.0.0-*",
+		"System.Threading.Timer": "4.0.1-*",
+		"System.Net.NetworkInformation": "4.0.10-*",
+		"System.Net.Http": "4.0.0-*",
+		"System.Net.Http.WinHttpHandler": "4.0.0-*",
+
+
+
 		"Kestrel": "1.0.0-*",
 		"System.Linq": "4.0.0-*",
 		"Microsoft.AspNet.Authentication.OAuth": "1.0.0-*",
