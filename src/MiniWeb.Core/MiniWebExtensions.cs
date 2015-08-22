@@ -71,8 +71,8 @@ namespace MiniWeb.Core
 			where V : class, IMiniWebStorageConfiguration
 		{
 			//Setup miniweb injection
-			services.Configure<V>(Configuration.GetConfigurationSection("MiniWebStorage"));
-			services.Configure<MiniWebConfiguration>(Configuration.GetConfigurationSection("MiniWeb"));
+			services.Configure<V>(Configuration.GetSection("MiniWebStorage"));
+			services.Configure<MiniWebConfiguration>(Configuration.GetSection("MiniWeb"));
 
 			//make sure embedded view is returned when needed
 			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();

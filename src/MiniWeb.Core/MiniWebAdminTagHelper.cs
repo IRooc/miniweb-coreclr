@@ -34,7 +34,7 @@ namespace MiniWeb.Core
 		{
 			if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
 			{
-				output.SelfClosing = false;
+				output.TagMode = TagMode.StartTagAndEndTag;// SelfClosing = false;
 				//add the own contents.
 				output.Content.SetContent(context.GetChildContentAsync().Result);
 

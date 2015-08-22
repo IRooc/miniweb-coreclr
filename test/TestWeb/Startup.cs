@@ -46,10 +46,10 @@ namespace aspnet5Web
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
 		{
 			// Add the loggers.
-			if (Configuration.Get("Logging:EnableConsole") == true.ToString())
+			if (Configuration.GetSection("Logging:EnableConsole").Value == true.ToString())
 				loggerfactory.AddConsole(LogLevel.Information);
 
-			if (Configuration.Get("Logging:EnableFile") == true.ToString())
+			if (Configuration.GetSection("Logging:EnableFile").Value == true.ToString())
 				loggerfactory.AddProvider(new Web.FileLoggerProvider((category, logLevel) => logLevel >= LogLevel.Information,
 																	  appEnv.ApplicationBasePath + "/logfile.txt"));
 

@@ -133,6 +133,11 @@ namespace Web
 		{
 			return new FileLogger(name, _filter, _fileName);
 		}
+
+		public void Dispose()
+		{
+			
+		}
 	}
 }
 
