@@ -1,6 +1,7 @@
 /// <reference path="jquery.d.ts" />
 (function ($) {
     $.fn.miniwebAdmin = function (userOptions) {
+        var adminTag = $(this);
         var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
         var contentEditables, contentHtmlEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, editContent = function () {
             $('body').addClass('miniweb-editing');
@@ -197,7 +198,7 @@
                 $('input,textarea', newP).not('[type=hidden],[type=checkbox]').val('');
                 var parentUrl = $('#pageProperties input[name=Url]').val();
                 $('input[name=Url]', newP).val(parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1));
-                $('body').append(newP);
+                adminTag.append(newP);
                 $('#newPageProperties .btn-primary').bind('click', savePage);
             }
             $('#newPageProperties').modal();
