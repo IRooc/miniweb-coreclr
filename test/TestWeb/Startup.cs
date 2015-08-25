@@ -46,13 +46,16 @@ namespace aspnet5Web
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
 		{
 			// Add the loggers.
-			if (Configuration.GetSection("Logging:EnableConsole").Value == true.ToString())
+			if (Configuration.GetValue<bool>("Logging:EnableConsole"))
+			{
 				loggerfactory.AddConsole(LogLevel.Information);
+			}
 
-			if (Configuration.GetSection("Logging:EnableFile").Value == true.ToString())
-				loggerfactory.AddProvider(new Web.FileLoggerProvider((category, logLevel) => logLevel >= LogLevel.Information,
+			if (Configuration.GetValue<bool>("Logging:EnableFile"))
+			{
+				loggerfactory.AddProvider(new FileLoggerProvider((category, logLevel) => logLevel >= LogLevel.Information,
 																	  appEnv.ApplicationBasePath + "/logfile.txt"));
-
+			}
 			app.UseErrorPage();
 			app.UseStaticFiles();
 
@@ -106,6 +109,20 @@ namespace aspnet5Web
 			//Registers the miniweb middleware and MVC Routes, not not reregester cookieauth
 			app.UseMiniWebSite(false);
 
+		}
+	}
+
+	public static class ConfigExtensions {
+		public static T GetValue<T>(this IConfiguration configuration, string key)
+		{
+			try
+			{
+				return (T)System.Convert.ChangeType(configuration.GetSection(key).Value, typeof(T)); ;
+			}
+			catch
+			{
+				return default(T);
+			}
 		}
 	}
 }
