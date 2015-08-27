@@ -16,6 +16,8 @@ namespace MiniWeb.Core
 		public bool StoreVersions { get; set; } = false;
 
 		public MiniWebAuthentication Authentication { get; set; } = new MiniWebAuthentication();
+
+		public string LogCategoryName { get; set; } = "MiniWeb";
 	}
 
 	public class MiniWebAuthentication

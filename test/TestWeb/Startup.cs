@@ -10,6 +10,7 @@ using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
 using Newtonsoft.Json.Linq;
@@ -26,6 +27,7 @@ namespace aspnet5Web
 			// Setup configuration sources.
 			var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
 											.AddJsonFile("miniweb.json")
+											.AddJsonFile("githubauth.json")
 											.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
 											.AddEnvironmentVariables();
 
@@ -38,6 +40,7 @@ namespace aspnet5Web
 			services.AddAntiforgery();
 			services.AddMvc();
 
+			services.Configure<GithubAuthConfig>(Configuration.GetSection("GithubAuth"));
 			services.AddMiniWebJsonStorage(Configuration);
 
 
@@ -46,12 +49,12 @@ namespace aspnet5Web
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
 		{
 			// Add the loggers.
-			if (Configuration.GetValue<bool>("Logging:EnableConsole"))
+			if (Configuration.Value<bool>("Logging:EnableConsole"))
 			{
 				loggerfactory.AddConsole(LogLevel.Information);
 			}
 
-			if (Configuration.GetValue<bool>("Logging:EnableFile"))
+			if (Configuration.Value<bool>("Logging:EnableFile"))
 			{
 				loggerfactory.AddProvider(new FileLoggerProvider((category, logLevel) => logLevel >= LogLevel.Information,
 																	  appEnv.ApplicationBasePath + "/logfile.txt"));
@@ -66,12 +69,13 @@ namespace aspnet5Web
 			app.UseMiniWebSiteCookieAuth();
 
 			//setup other authentications
+			var githubConfig = app.GetConcreteOptions<GithubAuthConfig>();
 			app.UseOAuthAuthentication("Github-Account", options =>
 			{
 				options.Caption = "Login with GitHub account";
-				options.ClientId = Configuration["GithubAuth:ClientId"];
-				options.ClientSecret = Configuration["GithubAuth:ClientSecret"];
-				options.CallbackPath = new PathString(Configuration["GithubAuth:CallbackPath"]);
+				options.ClientId = githubConfig.ClientId;
+				options.ClientSecret = githubConfig.ClientSecret;
+				options.CallbackPath = new PathString(githubConfig.CallbackPath);
 				options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
 				options.TokenEndpoint = "https://github.com/login/oauth/access_token";
 				options.UserInformationEndpoint = "https://api.github.com/user";
@@ -93,7 +97,7 @@ namespace aspnet5Web
 						var loginName = user.Value<string>("login");
 
 						//Check allowed users here
-						var adminList = (Configuration["GithubAuth:AllowedAdmins"] ?? string.Empty).Split(',');
+						var adminList = (githubConfig.AllowedAdmins ?? string.Empty).Split(',');
 						if (adminList?.Any(item => item == loginName) == true)
 						{
 							var claims = new[] {
@@ -106,23 +110,37 @@ namespace aspnet5Web
 				};
 			});
 
-			//Registers the miniweb middleware and MVC Routes, not not reregester cookieauth
+			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
 			app.UseMiniWebSite(false);
 
 		}
 	}
 
-	public static class ConfigExtensions {
-		public static T GetValue<T>(this IConfiguration configuration, string key)
+	public static class ConfigExtensions
+	{
+		public static T GetConcreteOptions<T>(this IApplicationBuilder app) where T : class, new()
+		{
+			return app.ApplicationServices.GetRequiredService<IOptions<T>>().Options;
+		}
+
+		public static T Value<T>(this IConfiguration configuration, string key)
 		{
 			try
 			{
-				return (T)System.Convert.ChangeType(configuration.GetSection(key).Value, typeof(T)); ;
+				return (T)System.Convert.ChangeType(configuration[key], typeof(T)); ;
 			}
 			catch
 			{
 				return default(T);
 			}
 		}
+	}
+
+	public class GithubAuthConfig
+	{
+		public string ClientId { get; set; }
+		public string ClientSecret { get; set; }
+		public string CallbackPath { get; set; }
+		public string AllowedAdmins { get; set; }
 	}
 }

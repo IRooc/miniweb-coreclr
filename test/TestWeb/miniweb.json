@@ -12,11 +12,5 @@
 	"Logging": {
 		"EnableConsole": true,
 		"EnableFile": false
-	},
-	"GithubAuth": {
-		"ClientId": "eb33fa51e5d1c57985da",
-		"ClientSecret": "b7f4335d15f8f620fc6f15513a017670d43e1453",
-		"CallbackPath": "/miniweb/github-auth",
-		"AllowedAdmins": "IRooc"
 	}
 }

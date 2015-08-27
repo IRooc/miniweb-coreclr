@@ -96,9 +96,9 @@ namespace MiniWeb.Core
 
 			AppEnvironment = appEnv;
 			HostingEnvironment = env;
-			Logger = SetupLogging(loggerfactory);
-			Storage = storage;
 			Configuration = config.Options;
+			Storage = storage;
+			Logger = SetupLogging(loggerfactory);			
 
 			//pass on self to storage module
 			//cannot inject because of circular reference.
@@ -108,8 +108,11 @@ namespace MiniWeb.Core
 
 		private ILogger SetupLogging(ILoggerFactory loggerfactory)
 		{
-			//TODO(RC) Read settings from config
-			return loggerfactory.CreateLogger("MiniWeb");
+			if (!string.IsNullOrWhiteSpace(Configuration?.LogCategoryName))
+			{
+				return loggerfactory.CreateLogger(Configuration.LogCategoryName);
+			}
+			return null;
 		}
 
 		public SitePage GetPageByUrl(string url, bool editing = false)
