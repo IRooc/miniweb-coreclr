@@ -68,7 +68,7 @@ namespace MiniWeb.Core
 			}
 			else if (Request.HasFormContentType)
 			{
-				var provider = Request.Form["provider"];
+				var provider = Request.Form["provider"].ToString();
 				_webSite.Logger?.LogInformation($"Social login {provider}");
 				AuthenticationProperties properties = new AuthenticationProperties()
 				{
