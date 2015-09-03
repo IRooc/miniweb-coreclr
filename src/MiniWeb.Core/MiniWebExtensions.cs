@@ -18,12 +18,12 @@ namespace MiniWeb.Core
 
 		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app)
 		{
-			MiniWebConfiguration config = app.GetMiniWebConfig();
+			MiniWebAuthentication authConfig = app.GetMiniWebConfig().Authentication;
 			app.UseCookieAuthentication(options =>
 			{
-				options.LoginPath = new PathString(config.Authentication.LoginPath);
-				options.LogoutPath = new PathString(config.Authentication.LogoutPath);
-				options.AuthenticationScheme = config.Authentication.AuthenticationScheme;
+				options.LoginPath = new PathString(authConfig.LoginPath);
+				options.LogoutPath = new PathString(authConfig.LogoutPath);
+				options.AuthenticationScheme = authConfig.AuthenticationScheme;
 				options.AutomaticAuthentication = true;
 
 			});

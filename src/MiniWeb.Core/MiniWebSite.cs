@@ -225,10 +225,6 @@ namespace MiniWeb.Core
 			if (!string.IsNullOrWhiteSpace(originalFilename))
 			{
 				var originalDestFile = HostingEnvironment.MapPath(Configuration.ImageSavePath + originalFilename);
-				//NOTE(RC) TEMP FIX FOR MAPPATH BUG https://github.com/aspnet/Hosting/issues/222
-				originalDestFile = originalDestFile.Replace("\\~\\", "\\");
-				originalDestFile = originalDestFile.Replace("/~/", "/");
-				//TEMP FIX FOR MAPPATH BUG
 				if (!File.Exists(originalDestFile))
 				{
 					relative = Configuration.ImageSavePath + originalFilename;
@@ -241,17 +237,11 @@ namespace MiniWeb.Core
 				relative = relative.ToLowerInvariant();
 			}
 			string file = HostingEnvironment.MapPath(relative);
-
-			//NOTE(RC) TEMP FIX FOR MAPPATH BUG https://github.com/aspnet/Hosting/issues/222
-			file = file.Replace("\\~\\", "\\");
-			file = file.Replace("/~/", "/");
-			//TEMP FIX FOR MAPPATH BUG
-
 			File.WriteAllBytes(file, bytes);
 
-			//TODO(RC) fix Virtual Path idealy use something like VirtualPathUtility.ToAbsolute(relative);
-			var relativeSansTilde = relative.Substring(1);
-			return relativeSansTilde;
+			//TODO(RC) is this correct, path for browser to wwwroot;
+			var absolutepath = $"/{relative}";
+         return absolutepath;
 		}
 	}
 }
