@@ -11,12 +11,10 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom middleware
 * embedded Razor View
 
-it currently runs on  1.0.0-beta8-15120 coreclr x64.
-Tested on windows, mac osx, linux (ubuntu) and windows IoT 
+it currently runs on 1.0.0-beta7 for the beta7 branch, and 1.0.0-beta8-15530 coreclr x64.
 
-with some workarounds voor mac and linux (used until beta7)
-* remove "resource" line from Core project.json otherwise it won't build
-* make symlink from /src/MiniWeb.Core/Resources to /test/TestWeb/wwwroot/miniweb-resource for edit functionality 
+Tested on windows, mac osx, linux (ubuntu) and windows IoT 
+beta7 works fine on windows and mac, on linux embedded files larger than 4100 bytes won't work yet. [https://github.com/aspnet/FileSystem/issues/122](https://github.com/aspnet/FileSystem/issues/122)
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
