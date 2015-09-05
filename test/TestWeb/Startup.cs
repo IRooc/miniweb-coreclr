@@ -82,7 +82,7 @@ namespace aspnet5Web
 				options.ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType;
 				options.SignInScheme = miniwebConfig.Authentication.AuthenticationScheme;
 				options.SaveTokensAsClaims = false;
-				options.Notifications = new OAuthAuthenticationNotifications()
+				options.Events = new OAuthAuthenticationEvents()
 				{
 					OnAuthenticated = async notification =>
 					{
@@ -120,7 +120,7 @@ namespace aspnet5Web
 	{
 		public static T GetConcreteOptions<T>(this IApplicationBuilder app) where T : class, new()
 		{
-			return app.ApplicationServices.GetRequiredService<IOptions<T>>().Options;
+			return app.ApplicationServices.GetRequiredService<IOptions<T>>().Value;
 		}
 
 		public static T Value<T>(this IConfiguration configuration, string key)

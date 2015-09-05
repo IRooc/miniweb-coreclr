@@ -16,7 +16,7 @@ namespace MiniWeb.Storage.XmlStorage
 
 		public MiniWebXmlStorage(IOptions<MiniWebXmlStorageConfig> config)
 		{
-			StorageConfig = config.Options;
+			StorageConfig = config.Value;
 		}
 
 		public bool Authenticate(string username, string password)

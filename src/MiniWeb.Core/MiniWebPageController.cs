@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.ActionResults;
 using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
@@ -63,12 +64,12 @@ namespace MiniWeb.Core
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
-				_webSite.Logger?.LogInformation("Social login success");
+				_webSite.Logger?.LogInformation($"Social login success: {User.Identity.Name}");
 				return Redirect("~" + _webSite.Configuration.DefaultPage);
 			}
 			else if (Request.HasFormContentType)
 			{
-				var provider = Request.Form["provider"];
+				var provider = Request.Form["provider"].ToString();
 				_webSite.Logger?.LogInformation($"Social login {provider}");
 				AuthenticationProperties properties = new AuthenticationProperties()
 				{

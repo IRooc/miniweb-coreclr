@@ -96,7 +96,7 @@ namespace MiniWeb.Core
 
 			AppEnvironment = appEnv;
 			HostingEnvironment = env;
-			Configuration = config.Options;
+			Configuration = config.Value;
 			Storage = storage;
 			Logger = SetupLogging(loggerfactory);			
 

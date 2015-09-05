@@ -13,7 +13,7 @@ namespace MiniWeb.Core
 	{
 		public static MiniWebConfiguration GetMiniWebConfig(this IApplicationBuilder app)
 		{
-			return  app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Options;
+			return  app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
 		}
 
 		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app)
@@ -78,7 +78,7 @@ namespace MiniWeb.Core
 			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();
 			services.Configure<RazorViewEngineOptions>(options => { options.FileProvider = new MiniWebFileProvider(appEnv); });
 
-			services.ConfigureAuthorization(options =>
+			services.AddAuthorization(options =>
 			{
 				options.AddPolicy(MiniWebAuthentication.MiniWebCmsRoleValue, policyBuilder =>
 				{

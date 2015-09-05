@@ -18,7 +18,7 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public MiniWebJsonStorage(IOptions<MiniWebJsonStorageConfig> config)
 		{
-			StorageConfig = config.Options;
+			StorageConfig = config.Value;
 		}
 
 		public bool Authenticate(string username, string password)
