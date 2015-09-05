@@ -10,7 +10,7 @@ namespace MiniWeb.Core
 
 		public string PageTemplatePath { get; set; } = "/Views/Pages";
 		public string ItemTemplatePath { get; set; } = "/Views/Items";
-		public string ImageSavePath { get; set; } = "~/images/saved/";
+		public string ImageSavePath { get; set; } = "images/saved/";
 
 		public bool RedirectToFirstSub { get; set; } = false;
 		public bool StoreVersions { get; set; } = false;
