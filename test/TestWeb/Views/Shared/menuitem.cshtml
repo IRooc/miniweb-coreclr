@@ -1,0 +1,2 @@
+﻿@model MiniWeb.Core.SitePage
+<li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")"><a href="/@Model.Url">@Model.Title</a></li>

@@ -1,4 +1,5 @@
-﻿@using MiniWeb.Core
+﻿@model MiniWeb.Core.SitePage
+@using MiniWeb.Core
 @inject IMiniWebSite MiniWebSite
 <!DOCTYPE html>
 
@@ -34,30 +35,16 @@
 				</button>
 			</div>
 			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					@{
-						var subRoot = MiniWebSite.PageHierarchy.FirstOrDefault(p => Model.Url.StartsWith(p.Url + "/") || Model.Url == p.Url);
-						var url = subRoot != null ? subRoot.Url : null;
-					}
-					@foreach (var page in MiniWebSite.PageHierarchy.Where(p => p.VisibleInMenu() || MiniWebSite.IsAuthenticated(User)))
-					{
-						<li class="@(page.Url == url ? "active" : "") @(!page.ShowInMenu || !page.Visible ? "miniweb-hidden-menu" : "")"><a href="/@page.Url">@page.Title</a></li>
-					}
-				</ul>
+				<ul class="nav navbar-nav" miniweb-menu="/" miniweb-menu-template="/Views/Shared/menuitem.cshtml"></ul>
 			</div>
 		</div>
-		@if (subRoot != null && ((SitePage)subRoot).Pages.Any(p => p.VisibleInMenu()))
+		@*Do we show submenu?*@
+		@if (MiniWebSite.PageHierarchy.Any(p => Model.BaseUrl == p.Url))
 		{
 			<div role="navigation" class="submenu navbar navbar-default">
 				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						@foreach (var page in ((SitePage)subRoot).Pages.Where(p => p.VisibleInMenu() || MiniWebSite.IsAuthenticated(User)))
-						{
-							<li class="@(page.Url == Model.Url ? "active" : "") @(!page.ShowInMenu ? "miniweb-hidden-menu" : "")"><a href="/@page.Url">@page.Title</a></li>
-						}
-					</ul>
+					<ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl" miniweb-menu-template="/Views/Shared/menuitem.cshtml"></ul>
 				</div>
-				<!--/.nav-collapse -->
 			</div>
 		}
 		@RenderBody()
