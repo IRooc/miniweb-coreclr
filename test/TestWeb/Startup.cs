@@ -59,7 +59,7 @@ namespace aspnet5Web
 				loggerfactory.AddProvider(new FileLoggerProvider((category, logLevel) => logLevel >= LogLevel.Information,
 																	  appEnv.ApplicationBasePath + "/logfile.txt"));
 			}
-			app.UseErrorPage();
+			app.UseDeveloperExceptionPage();
 			app.UseStaticFiles();
 
 
@@ -70,19 +70,20 @@ namespace aspnet5Web
 
 			//setup other authentications
 			var githubConfig = app.GetConcreteOptions<GithubAuthConfig>();
-			app.UseOAuthAuthentication("Github-Account", options =>
+			app.UseOAuthAuthentication(new OAuthAuthenticationOptions 
 			{
-				options.Caption = "Login with GitHub account";
-				options.ClientId = githubConfig.ClientId;
-				options.ClientSecret = githubConfig.ClientSecret;
-				options.CallbackPath = new PathString(githubConfig.CallbackPath);
-				options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
-				options.TokenEndpoint = "https://github.com/login/oauth/access_token";
-				options.UserInformationEndpoint = "https://api.github.com/user";
-				options.ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType;
-				options.SignInScheme = miniwebConfig.Authentication.AuthenticationScheme;
-				options.SaveTokensAsClaims = false;
-				options.Events = new OAuthAuthenticationEvents()
+				AuthenticationScheme = "Github-Auth",
+				Caption = "Login with GitHub account",
+				ClientId = githubConfig.ClientId,
+				ClientSecret = githubConfig.ClientSecret,
+				CallbackPath = new PathString(githubConfig.CallbackPath),
+				AuthorizationEndpoint = "https://github.com/login/oauth/authorize",
+				TokenEndpoint = "https://github.com/login/oauth/access_token",
+				UserInformationEndpoint = "https://api.github.com/user",
+				ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType,
+				SignInScheme = miniwebConfig.Authentication.AuthenticationScheme,
+				SaveTokensAsClaims = false,
+				Events = new OAuthAuthenticationEvents()
 				{
 					OnAuthenticated = async notification =>
 					{
@@ -107,7 +108,7 @@ namespace aspnet5Web
 							notification.Identity.AddClaims(claims);
 						}
 					}
-				};
+				}
 			});
 
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
