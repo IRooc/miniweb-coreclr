@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Xml.Serialization;
 
 namespace MiniWeb.Core
 {
@@ -21,10 +20,10 @@ namespace MiniWeb.Core
 
 		public List<PageSection> Sections { get; set; }
 
-		[XmlIgnore, IgnoreDataMember]
+		[ IgnoreDataMember]
 		public IEnumerable<SitePage> Pages { get; set; }
 
-		[XmlIgnore, IgnoreDataMember]
+		[ IgnoreDataMember]
 		public SitePage Parent { get; set; }
 
 		public string BaseUrl
