@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
+using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
 {
-	[TargetElement(Attributes = MiniWebMenuAttributename)]
+	[HtmlTargetElement(Attributes = MiniWebMenuAttributename)]
 	public class MiniWebMenuTagHelper : TagHelper
 	{
 		private const string MiniWebMenuAttributename = "miniweb-menu";
@@ -36,7 +37,7 @@ namespace MiniWeb.Core
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
-			IEnumerable<SitePage> items;
+			var items = Enumerable.Empty<SitePage>();
 
 			if (MenuRoot == "/")
 			{
@@ -49,7 +50,7 @@ namespace MiniWeb.Core
 			}
 			else
 			{
-				items = Enumerable.Empty<SitePage>();
+				_webSite.Logger?.LogWarning($"No menuitems found for {MenuRoot}");				
 			}
 
 			if (items.Any())
@@ -57,7 +58,7 @@ namespace MiniWeb.Core
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
 				foreach (var page in items)
 				{
-					output.Content.Append(_htmlHelper.Partial(MenuItemTemplate, page).ToString());
+					output.Content.Append(_htmlHelper.Partial(MenuItemTemplate, page));
 				}
 			}
 			else

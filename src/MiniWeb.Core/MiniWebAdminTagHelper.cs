@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
-	[TargetElement(MiniWebAdminTag)]
+	[HtmlTargetElement(MiniWebAdminTag)]
 	public class MiniWebAdminTagHelper : TagHelper
 	{
 		private const string MiniWebAdminTag = "miniwebadmin";
@@ -34,16 +34,16 @@ namespace MiniWeb.Core
 		{
 			if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
 			{
-				output.TagMode = TagMode.StartTagAndEndTag;// SelfClosing = false;
+				output.TagMode = TagMode.StartTagAndEndTag;
 				//add the own contents.
 				output.Content.SetContent(context.GetChildContentAsync().Result);
 
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
-				output.PreContent.Append(_htmlHelper.Partial(MiniWebFileProvider.ADMIN_FILENAME).ToString());
+				output.PreContent.Append(_htmlHelper.Partial(MiniWebFileProvider.ADMIN_FILENAME));
 
 				if (!IgnoreAdminStart)
 				{
-					output.Content.Append($"<script>$(function(){{$('{MiniWebAdminTag}').miniwebAdmin();}});</script>");
+					output.Content.AppendEncoded($"<script>$(function(){{$('{MiniWebAdminTag}').miniwebAdmin();}});</script>");
 				}
 			}
 			else

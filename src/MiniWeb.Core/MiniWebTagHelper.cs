@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using Microsoft.Framework.WebEncoders;
 
 namespace MiniWeb.Core
 {
-	[TargetElement(Attributes = MiniWebTemplateTagname)]
-	[TargetElement(Attributes = MiniWebSectionTagname)]
+	[HtmlTargetElement(Attributes = MiniWebTemplateTagname)]
+	[HtmlTargetElement(Attributes = MiniWebSectionTagname)]
 	public class MiniWebTagHelper : TagHelper
 	{
 
@@ -56,7 +58,8 @@ namespace MiniWeb.Core
 				//get out the current ViewPage for the Model.
 				var view = ViewContext.View as RazorView;
 				var viewPage = view.RazorPage as RazorPage<SitePage>;
-				output.Content.SetContent(SectionContent(_htmlHelper, viewPage.Model, Section));
+				output.Content.Clear();
+				output.Content.AppendEncoded(SectionContent(_htmlHelper, viewPage.Model, Section));
 			}
 		}
 		private string SectionContent(IHtmlHelper html, SitePage sitepage, string section)
@@ -70,13 +73,14 @@ namespace MiniWeb.Core
 
 		private static string SectionContent(IHtmlHelper html, PageSection model)
 		{
-			StringBuilder result = new StringBuilder();
-
-			foreach (ContentItem item in model.Items)
+			using (StringWriter result = new StringWriter())
 			{
-				result.Append(html.Partial(item.Template, item));
+				foreach (ContentItem item in model.Items)
+				{
+					html.Partial(item.Template, item).WriteTo(result, HtmlEncoder.Default);
+				}
+				return result.ToString();
 			}
-			return result.ToString();
 		}
 	}
 }

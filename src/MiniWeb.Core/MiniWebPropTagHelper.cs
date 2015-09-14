@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
-	[TargetElement(Attributes = MiniWebPropertyTagname)]
+	[HtmlTargetElement(Attributes = MiniWebPropertyTagname)]
 	public class MiniWebPropTagHelper : TagHelper
 	{
 		private const string MiniWebPropertyTagname = "miniweb-prop";
@@ -55,8 +55,9 @@ namespace MiniWeb.Core
 			{
 				var view = ViewContext.View as RazorView;
 				var viewItem = view.RazorPage as RazorPage<ContentItem>;
-
-				output.Content.SetContent(viewItem.Model.GetValue(Property, context.GetChildContentAsync().Result?.ToString()));
+				var htmlContent = viewItem.Model.GetValue(Property, context.GetChildContentAsync().Result?.ToString());
+                output.Content.Clear();
+				output.Content.AppendEncoded(htmlContent);
 
 				foreach (var attr in EditAttributes)
 				{
@@ -73,12 +74,13 @@ namespace MiniWeb.Core
 
 				if (EditAttributes.Any())
 				{
-					output.PostElement.Append("<div class=\"miniweb-attributes\">");
+					output.PostElement.AppendEncoded("<div class=\"miniweb-attributes\">");
 					foreach (var attr in EditAttributes)
 					{
-						output.PostElement.AppendFormat("<span data-miniwebprop=\"{0}:{1}\">{2}</span>", Property, attr, output.Attributes[attr].Value);
+						var attrEditItem = string.Format("<span data-miniwebprop=\"{0}:{1}\">{2}</span>", Property, attr, output.Attributes[attr].Value);
+						output.PostElement.AppendEncoded(attrEditItem);
 					}
-					output.PostElement.Append("</div>");
+					output.PostElement.AppendEncoded("</div>");
 				}
 
 			}
