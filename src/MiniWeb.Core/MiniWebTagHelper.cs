@@ -66,17 +66,18 @@ namespace MiniWeb.Core
 		{
 			if (sitepage?.Sections?.Any(s => s?.Key == section) == true)
 			{
-				return SectionContent(html, sitepage.Sections.First(s => s.Key == section));
+				return SectionContent(html, sitepage, sitepage.Sections.First(s => s.Key == section));
 			}
 			return String.Empty;
 		}
 
-		private static string SectionContent(IHtmlHelper html, PageSection model)
+		private static string SectionContent(IHtmlHelper html, SitePage sitepage, PageSection model)
 		{
 			using (StringWriter result = new StringWriter())
 			{
 				foreach (ContentItem item in model.Items)
 				{
+					item.Page = sitepage;
 					html.Partial(item.Template, item).WriteTo(result, HtmlEncoder.Default);
 				}
 				return result.ToString();

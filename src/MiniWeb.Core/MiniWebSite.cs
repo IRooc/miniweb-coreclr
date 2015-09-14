@@ -151,12 +151,18 @@ namespace MiniWeb.Core
 		{
 			Logger?.LogInformation("Reload pages");
 			Pages = Storage.AllPages().ToList();
-			//NOTE(RC): only two levels, recurse??
+
 			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
-			foreach (var page in PageHierarchy)
+			foreach (var page in Pages)
 			{
 				string urlStart = page.Url + "/";
 				page.Pages = Pages.Where(p => p.Url.StartsWith(urlStart) && !p.Url.Replace(urlStart, "").Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
+				if (page.Url.Contains("/"))
+				{
+					//set parent
+					var parentUrl = page.Url.Substring(0, page.Url.LastIndexOf("/"));
+					page.Parent = Pages.FirstOrDefault(p => p.Url == parentUrl);
+				}
 			}
 		}
 

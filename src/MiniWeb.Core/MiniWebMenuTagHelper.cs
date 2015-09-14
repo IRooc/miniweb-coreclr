@@ -43,10 +43,9 @@ namespace MiniWeb.Core
 			{
 				items = _webSite.PageHierarchy.Where(p => p.VisibleInMenu() || _webSite.IsAuthenticated(ViewContext.HttpContext.User));
 			}
-			//NOTE(RC):Still only 2 levels root and sub see MiniWebSite.ReloadPages
-			else if (_webSite.PageHierarchy.Any(p => ("/" + p.Url) == MenuRoot))
+			else if (_webSite.Pages.Any(p => ("/" + p.Url) == MenuRoot))
 			{
-				items = _webSite.PageHierarchy.First(p => ("/" + p.Url) == MenuRoot).Pages;
+				items = _webSite.Pages.First(p => ("/" + p.Url) == MenuRoot).Pages;
 			}
 			else
 			{

@@ -20,10 +20,10 @@ namespace MiniWeb.Core
 
 		public List<PageSection> Sections { get; set; }
 
-		[ IgnoreDataMember]
+		[IgnoreDataMember]
 		public IEnumerable<SitePage> Pages { get; set; }
 
-		[ IgnoreDataMember]
+		[IgnoreDataMember]
 		public SitePage Parent { get; set; }
 
 		public string BaseUrl
@@ -61,6 +61,9 @@ namespace MiniWeb.Core
 
 	public class ContentItem
 	{
+		[IgnoreDataMember]
+		public SitePage Page { get; set; }
+
 		public string Template { get; set; }
 		public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
