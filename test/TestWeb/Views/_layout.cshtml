@@ -39,7 +39,7 @@
 			</div>
 		</div>
 		@*Do we show submenu?*@
-		@if (MiniWebSite.PageHierarchy.Any(p => Model.BaseUrl == p.Url))
+		@if (MiniWebSite.PageHierarchy.Any(p => Model.BaseUrl == p.Url && p.VisibleInMenu()))
 		{
 			<div role="navigation" class="submenu navbar navbar-default">
 				<div class="navbar-collapse collapse">

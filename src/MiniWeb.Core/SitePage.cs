@@ -75,6 +75,17 @@ namespace MiniWeb.Core
 			}
 			return defaultvalue;
 		}
+		public T Get<T>(string value, T defaultvalue = default(T))
+		{
+			try
+			{
+				return (T)System.Convert.ChangeType(GetValue(value, Convert.ToString(defaultvalue)), typeof(T)); ;
+			}
+			catch
+			{
+				return default(T);
+			}
+		}
 
 		public static ContentItem DefaultItem(string template)
 		{

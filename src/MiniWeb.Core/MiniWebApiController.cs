@@ -50,10 +50,9 @@ namespace MiniWeb.Core
 		public IActionResult SavePage(SitePage page)
 		{
 			//ignore move for now...
-			string oldUrl = Request.Form["OldUrl"].ToString() ?? page.Url;
-			if (oldUrl != page.Url)
+			if (Request.Form.ContainsKey("OldUrl") && Request.Form["OldUrl"].ToString() != page.Url)
 			{
-				string message = $"Moving pages not allowed yet, tried to move {oldUrl} to new location: {page.Url}";
+				string message = $"Moving pages not allowed yet, tried to move {Request.Form["OldUrl"]} to new location: {page.Url}";
 				_webSite.Logger?.LogError(message);
 				return new JsonResult(new { result = false, message = message });
 			}

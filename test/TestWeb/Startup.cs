@@ -135,6 +135,10 @@ namespace aspnet5Web
 				return default(T);
 			}
 		}
+		public static string GetFirstContent(this SitePage page, string key)
+		{
+			return page.Sections.FirstOrDefault()?.Items.FirstOrDefault()?.Values[key];
+		}
 	}
 
 	public class GithubAuthConfig

@@ -1,0 +1,33 @@
+﻿@model MiniWeb.Core.ContentItem
+<article miniweb-template="@Model.Template">
+    <h1 miniweb-prop="blogTitle">Blog</h1>
+    <p miniweb-prop="pageSize" class="miniweb-editonly">4</p>
+</article>
+
+@if (Model.Page != null)
+{
+	 //just a blog example
+	 var pageSize = Model.Get<int>("pageSize", 2);
+	 var pages = Model.Page.Pages;
+	 var pageIndex = Convert.ToInt32(Context.Request.Query.Where(v => v.Key == "page").Select(v => v.Value.ToString()).FirstOrDefault() ?? "0");
+	 @foreach (var page in pages.OrderByDescending(p => p.LastModified).Skip(pageIndex * pageSize).Take(pageSize))
+	 {
+        <article>
+            <h2><a href="@page.Url">@(page.Sections.FirstOrDefault()?.Items.FirstOrDefault()?.Values["title"])</a></h2>
+            <p>
+					 @Html.Raw(page.Sections.FirstOrDefault()?.Items.FirstOrDefault()?.Values["content"])
+				</p>
+        </article>
+    }
+	 if (pages.Count() > pageIndex * pageSize)
+	 {
+		  if (pageIndex > 0)
+		  {
+            <a href="@(Model.Page.Url)?page=@(pageIndex-1)">&laquo;Newer Posts</a>
+		  }
+		  if (pageIndex + 1 < pages.Count() / pageSize)
+		  {
+				<a href="@(Model.Page.Url)?page=@(pageIndex + 1)">Older Posts&raquo;</a>
+		  }
+	 }
+}

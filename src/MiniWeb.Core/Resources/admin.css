@@ -217,6 +217,9 @@ body.miniweb-editing .miniweb-insertcontent {
 #miniweb-templates {
 	display:none;
 }
+body.miniweb-editing .miniweb-editonly {
+	display:block;
+}
 
 
 
