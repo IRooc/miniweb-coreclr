@@ -11,7 +11,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom middleware
 * embedded Razor View
 
-it currently runs on  1.0.0-beta8-15613 coreclr x64.
+it currently runs on  1.0.0-beta8-15616 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT 
 
 with some workarounds voor mac and linux (used until beta7)
@@ -51,7 +51,12 @@ A content item example
 	<div miniweb-prop="other" miniweb-edittype="html"></div>
 </article>
 ```
-every tag can have a miniweb-prop attribute that will be stored in the content item, edittype is eiter single line or specified as html
+every tag can have a miniweb-prop attribute that will be stored in the content item, edittype is eiter single line or specified as html. 
+For this to work the miniweb taghelpers need to be registered for instance in the /Views/_ViewImports.cshtml
+```HTML
+@addTagHelper "MiniWeb.Core.*, MiniWeb.Core"
+```
+
 
 the minimal startup will be something like this:
 ```c#
@@ -59,7 +64,7 @@ public IConfiguration Configuration { get; set; }
 
 public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
 {
-	// Setup configuration sources.
+	// Setup configuration sources, not needed if defaults are used
 	var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
 					.AddJsonFile("miniweb.json", optional: true)
 					.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
@@ -75,13 +80,14 @@ public void ConfigureServices(IServiceCollection services)
 	services.AddAntiforgery();
 	services.AddMvc();
 
+    //registers miniweb and json storage provider
 	services.AddMiniWebJsonStorage(Configuration);
 }
 
 public void Configure(IApplicationBuilder app)
 {
 	// Default middleware used by MiniWeb
-	app.UseErrorPage();
+	app.UseDeveloperExceptionPage();
 	app.UseStaticFiles();
 
 	//Registers the miniweb middleware and MVC Routes

@@ -70,7 +70,7 @@ namespace aspnet5Web
 
 			//setup other authentications
 			var githubConfig = app.GetConcreteOptions<GithubAuthConfig>();
-			app.UseOAuthAuthentication(new OAuthAuthenticationOptions 
+			app.UseOAuthAuthentication(new OAuthOptions 
 			{
 				AuthenticationScheme = "Github-Auth",
 				Caption = "Login with GitHub account",
@@ -83,7 +83,7 @@ namespace aspnet5Web
 				ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType,
 				SignInScheme = miniwebConfig.Authentication.AuthenticationScheme,
 				SaveTokensAsClaims = false,
-				Events = new OAuthAuthenticationEvents()
+				Events = new OAuthEvents()
 				{
 					OnAuthenticated = async notification =>
 					{
