@@ -16,6 +16,7 @@ namespace MiniWeb.Core
 		public bool Visible { get; set; }
 		public bool ShowInMenu { get; set; }
 		public int SortOrder { get; set; }
+		public DateTime Created { get; set; }
 		public DateTime LastModified { get; set; }
 
 		public List<PageSection> Sections { get; set; }
@@ -26,6 +27,10 @@ namespace MiniWeb.Core
 		[IgnoreDataMember]
 		public SitePage Parent { get; set; }
 
+		[IgnoreDataMember]
+		public string UrlSuffix { get; set; }
+
+		[IgnoreDataMember]
 		public string BaseUrl
 		{
 			get

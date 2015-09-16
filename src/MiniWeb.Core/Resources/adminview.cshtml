@@ -150,6 +150,7 @@
 							<div class="input-group">
 								<span class="input-group-addon">/</span>
 								<input type="text" class="form-control" id="url" name="Url" placeholder="url" value="@Model.Url">
+                        <span class="input-group-addon">.@MiniWebSite.Configuration.PageExtension</span>
 							</div>
 						</div>
 					</div>
@@ -163,7 +164,6 @@
 		</div>
 	</div>
 </div>
-
 
 <div class="modal fade" id="addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
 	<div class="modal-dialog miniweb">
@@ -183,7 +183,7 @@
 									<option value="">Choose url or enter custom</option>
 									@foreach (var page in MiniWebSite.Pages)
 									{
-										<option value="/@page.Url">@page.Title (/@page.Url)</option>
+										<option value="@(MiniWebSite.GetPageUrl(page))">@page.Title (/@page.Url)</option>
 									}
 								</select>
 							</div>
@@ -241,7 +241,6 @@
 	}
 	@Html.AntiForgeryToken()
 </div>
-
 
 <link rel="stylesheet" href="/miniweb-resource/admin.css" />
 <script src="/miniweb-resource/bootstrap-wysiwyg.js" defer></script>

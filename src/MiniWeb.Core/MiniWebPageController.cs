@@ -22,15 +22,14 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public IActionResult Index()
+		public IActionResult Index(string url)
 		{
 			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");
 			if (Request.Query["reloadpages"] == "true")
 			{
 				_webSite.ReloadPages();
 			}
-			var url = Request.Path.Value;
-			if (url == string.Empty || url == "/")
+			if (string.IsNullOrWhiteSpace(url) || url == "/")
 			{
 				_webSite.Logger?.LogVerbose("Homepage");
 				url = _webSite.Configuration.DefaultPage;
@@ -57,7 +56,7 @@ namespace MiniWeb.Core
 				await Context.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
 				return Redirect(returnUrl);
 			}
-			return Index();
+			return Index(_webSite.Configuration.DefaultPage);
 		}
 
 		public IActionResult SocialLogin()
@@ -65,7 +64,7 @@ namespace MiniWeb.Core
 			if (_webSite.IsAuthenticated(User))
 			{
 				_webSite.Logger?.LogInformation($"Social login success: {User.Identity.Name}");
-				return Redirect("~" + _webSite.Configuration.DefaultPage);
+				return Redirect(_webSite.Configuration.DefaultPage);
 			}
 			else if (Request.HasFormContentType)
 			{

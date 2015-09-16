@@ -1,4 +1,5 @@
 ﻿@model MiniWeb.Core.ContentItem
+@inject MiniWeb.Core.IMiniWebSite MiniWebSite
 <article miniweb-template="@Model.Template">
     <h1 miniweb-prop="blogTitle">Blog</h1>
     <p miniweb-prop="pageSize" class="miniweb-editonly">4</p>
@@ -6,28 +7,37 @@
 
 @if (Model.Page != null)
 {
-	 //just a blog example
+	<p>@Model.Page.UrlSuffix</p>
+	 //just a blog example 
+	 //add pages under the sitepage where this content items is added to show all subs
+	 //TODO: Loads of stuff like what to do about the content item page
+	 //		show only exerpt etc
 	 var pageSize = Model.Get<int>("pageSize", 2);
 	 var pages = Model.Page.Pages;
-	 var pageIndex = Convert.ToInt32(Context.Request.Query.Where(v => v.Key == "page").Select(v => v.Value.ToString()).FirstOrDefault() ?? "0");
-	 @foreach (var page in pages.OrderByDescending(p => p.LastModified).Skip(pageIndex * pageSize).Take(pageSize))
+	 var pageIndex = Convert.ToInt32((string)Context.Request.Query["page"] ?? "0");
+	 var shownPages = pages.OrderByDescending(p => p.LastModified).Skip(pageIndex * pageSize).Take(pageSize);
+	
+	 
+	 @foreach (var page in shownPages)
 	 {
+		var firstContentItem = page.Sections.FirstOrDefault(s => s.Key == "content")?.Items.FirstOrDefault(s => s .Template == "~/Views/Items/blogitem.cshtml");
         <article>
-            <h2><a href="@page.Url">@(page.Sections.FirstOrDefault()?.Items.FirstOrDefault()?.Values["title"])</a></h2>
-            <p>
-					 @Html.Raw(page.Sections.FirstOrDefault()?.Items.FirstOrDefault()?.Values["content"])
-				</p>
+            <h2><a href="@(MiniWebSite.GetPageUrl(page))">@(firstContentItem?.GetValue("title"))</a></h2>
+				<p>@@ @page.Created</p>
+            <div>
+				 @Html.Raw(firstContentItem?.GetValue("content"))
+			</div>
         </article>
-    }
+     }
 	 if (pages.Count() > pageIndex * pageSize)
 	 {
+		  if (pageIndex + 1 < pages.Count() / (float)pageSize)
+		  {
+			<a href="@(MiniWebSite.GetPageUrl(Model.Page))?page=@(pageIndex + 1)">&laquo;Older Posts</a>
+		  }
 		  if (pageIndex > 0)
 		  {
-            <a href="@(Model.Page.Url)?page=@(pageIndex-1)">&laquo;Newer Posts</a>
-		  }
-		  if (pageIndex + 1 < pages.Count() / pageSize)
-		  {
-				<a href="@(Model.Page.Url)?page=@(pageIndex + 1)">Older Posts&raquo;</a>
+            <a href="@(MiniWebSite.GetPageUrl(Model.Page))?page=@(pageIndex-1)">Newer Posts&raquo;</a>
 		  }
 	 }
 }

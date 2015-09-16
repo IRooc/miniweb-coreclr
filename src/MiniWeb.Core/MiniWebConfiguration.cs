@@ -4,6 +4,7 @@ namespace MiniWeb.Core
 	{
 		public string Title { get; set; } = "MiniWeb by Rooc";
 		public string DefaultPage { get; set; } = "/home";
+		public string PageExtension { get; set; } = "html";
 
 		public string Layout { get; set; } = "~/Views/_layout.cshtml";
 		public string LoginView { get; set; } = "~/Views/login.cshtml";

@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc.ActionResults;
+using System;
 
 namespace MiniWeb.Core
 {
@@ -62,6 +63,9 @@ namespace MiniWeb.Core
 			if (oldPage != null)
 			{
 				page.Sections = oldPage.Sections;
+			} else
+			{
+				page.Created = DateTime.Now;
 			}
 			_webSite.SaveSitePage(page);
 			return new JsonResult(new { result = true, url = page.Url });

@@ -1,0 +1,8 @@
+﻿@model MiniWeb.Core.ContentItem
+@inject MiniWeb.Core.IMiniWebSite MiniWebSite
+<a href="@MiniWebSite.GetPageUrl(Model.Page?.Parent)">Back to overview</a>
+<article miniweb-template="@Model.Template">
+	<h2 miniweb-prop="title">Enter title</h2>
+    <p>@@ @Model.Page?.Created</p>
+	<div miniweb-prop="content" miniweb-edittype="html">Enter content</div>
+</article>

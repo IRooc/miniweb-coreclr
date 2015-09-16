@@ -14,7 +14,6 @@
 				<div class="alert alert-danger" role="alert">
 					@ViewBag.ErrorMessage
 				</div>
-
 			}
 
 			<div class="form-group">
@@ -37,13 +36,13 @@
 	</form>
 
 
-	@if (Context.Authentication.GetAuthenticationSchemes().Any(s => s.AuthenticationScheme != "MiniWebCms"))
+	@if (Context.Authentication.GetAuthenticationSchemes().Any(s => s.AuthenticationScheme != MiniWebSite.Configuration.Authentication.AuthenticationScheme))
 	{
 		<form action="@MiniWebSite.Configuration.Authentication.SocialLoginPath" method="post" class="col-md-5 col-md-offset-3 form-horizontal" role="form">
 			<hr />
 			<fieldset>
 				<h4>Use another service to log in.</h4>
-				@foreach (var type in Context.Authentication.GetAuthenticationSchemes().Where(s => s.AuthenticationScheme != "MiniWebCms"))
+				@foreach (var type in Context.Authentication.GetAuthenticationSchemes().Where(s => s.AuthenticationScheme != MiniWebSite.Configuration.Authentication.AuthenticationScheme))
 				{
 					<button type="submit" class="btn btn-default" name="provider" value="@type.AuthenticationScheme" title="@type.Caption">@type.Caption</button>
 				}

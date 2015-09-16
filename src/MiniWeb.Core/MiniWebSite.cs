@@ -99,7 +99,7 @@ namespace MiniWeb.Core
 			HostingEnvironment = env;
 			Configuration = config.Value;
 			Storage = storage;
-			Logger = SetupLogging(loggerfactory);			
+			Logger = SetupLogging(loggerfactory);
 
 			//pass on self to storage module
 			//cannot inject because of circular reference.
@@ -119,9 +119,19 @@ namespace MiniWeb.Core
 		public SitePage GetPageByUrl(string url, bool editing = false)
 		{
 			Logger?.LogVerbose($"Finding page {url}");
+			var suffix = string.Empty;
 			if (url?.StartsWith("/") == true)
 			{
 				url = url.Substring(1);
+			}
+			if (!string.IsNullOrWhiteSpace(Configuration.PageExtension) && url.Contains(Configuration.PageExtension))
+			{
+				string urlPattern = $"^(.*?)\\.{Configuration.PageExtension}(.*?)$";
+				Match match = Regex.Match(url, urlPattern);
+				if (match.Success) {
+					url = match.Groups[1].Value;
+					suffix = match.Groups[2].Value;
+				}
 			}
 
 			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? Storage.GetSitePageByUrl(url) ?? Page404;
@@ -134,12 +144,26 @@ namespace MiniWeb.Core
 			{
 				Logger?.LogInformation($"Found page [{foundPage.Url}] from url: [{url}]");
 			}
+			foundPage.UrlSuffix = suffix;
 			return foundPage;
+		}
+
+		public string GetPageUrl(SitePage page)
+		{
+			if (page == null)
+			{
+				return "/";
+			}
+			if (string.IsNullOrWhiteSpace(Configuration.PageExtension))
+			{
+				return $"/{page.Url}";
+			}
+			return $"/{page.Url}.{Configuration.PageExtension}";
 		}
 
 		public bool IsAuthenticated(ClaimsPrincipal user)
 		{
-			return user?.IsInRole(MiniWebAuthentication.MiniWebCmsRoleValue) == true;		
+			return user?.IsInRole(MiniWebAuthentication.MiniWebCmsRoleValue) == true;
 		}
 
 		public bool Authenticate(string user, string password)
@@ -248,7 +272,7 @@ namespace MiniWeb.Core
 
 			//TODO(RC) is this correct, path for browser to wwwroot;
 			var absolutepath = $"/{relative}";
-         return absolutepath;
+			return absolutepath;
 		}
 	}
 }
