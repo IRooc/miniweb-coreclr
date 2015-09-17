@@ -45,7 +45,7 @@ namespace MiniWeb.Core
 			}
 			else if (_webSite.Pages.Any(p => ("/" + p.Url) == MenuRoot))
 			{
-				items = _webSite.Pages.First(p => ("/" + p.Url) == MenuRoot).Pages;
+				items = _webSite.Pages.First(p => ("/" + p.Url) == MenuRoot).Pages.Where(p => p.VisibleInMenu() || _webSite.IsAuthenticated(ViewContext.HttpContext.User));
 			}
 			else
 			{
