@@ -17,8 +17,7 @@ namespace MiniWeb.Core
 		private const string MiniWebEditTypeTagname = "miniweb-edittype";
 		private const string MiniWebEditAttributesTagname = "miniweb-attributes";
 
-		private IMiniWebSite _webSite;
-		private IHtmlHelper _htmlHelper;
+		private readonly IMiniWebSite _webSite;
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
@@ -42,10 +41,9 @@ namespace MiniWeb.Core
 		}
 
 
-		public MiniWebPropTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
+		public MiniWebPropTagHelper(IMiniWebSite webSite)
 		{
 			_webSite = webSite;
-			_htmlHelper = helper;
 		}
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)

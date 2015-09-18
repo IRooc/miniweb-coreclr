@@ -14,17 +14,14 @@ namespace MiniWeb.Core
 {
 	public class MiniWebAdminMiddleware
 	{
-
 		private readonly RequestDelegate _next;
 		private readonly IMiniWebSite _miniWebSite;
-		private readonly IHostingEnvironment _hostingEnv;
 		private readonly EmbeddedFileProvider _provider;
 
-		public MiniWebAdminMiddleware(RequestDelegate next, IMiniWebSite miniWeb, IHostingEnvironment hostingEnv)
+		public MiniWebAdminMiddleware(RequestDelegate next, IMiniWebSite miniWeb)
 		{
 			_miniWebSite = miniWeb;
 			_next = next;
-			_hostingEnv = hostingEnv;
 			_provider = new EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
 		}
 

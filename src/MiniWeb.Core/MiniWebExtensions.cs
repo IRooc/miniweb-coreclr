@@ -70,7 +70,7 @@ namespace MiniWeb.Core
 			where U : class, IMiniWebStorage
 			where V : class, IMiniWebStorageConfiguration
 		{
-			//Setup miniweb injection
+			//Setup miniweb configuration
 			services.Configure<V>(Configuration.GetSection("MiniWebStorage"));
 			services.Configure<MiniWebConfiguration>(Configuration.GetSection("MiniWeb"));
 
@@ -86,6 +86,7 @@ namespace MiniWeb.Core
 				});
 			});
 
+			//Setup miniweb injection
 			services.AddSingleton<IMiniWebStorage, U>();
 			services.AddSingleton<IMiniWebSite, T>();
 			return services;

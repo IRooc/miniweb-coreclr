@@ -16,8 +16,8 @@ namespace MiniWeb.Core
 		private const string MiniWebMenuAttributename = "miniweb-menu";
 		private const string MiniWebItemTemplate = "miniweb-menu-template";
 
-		private IMiniWebSite _webSite;
-		private IHtmlHelper _htmlHelper;
+		private readonly IMiniWebSite _webSite;
+		private readonly IHtmlHelper _htmlHelper;
 
 		[HtmlAttributeNotBound]
 		[ViewContext]

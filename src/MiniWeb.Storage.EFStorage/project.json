@@ -1,0 +1,23 @@
+{
+	"version": "1.0.0",
+	"dependencies": {
+		"Microsoft.AspNet.Hosting": "1.0.0-*",
+		"Microsoft.Framework.Logging": "1.0.0-*",
+		"Microsoft.Framework.Configuration": "1.0.0-*",
+		"Microsoft.Framework.ConfigurationModel": "1.0.0-*",
+		"Microsoft.Framework.Configuration.Json": "1.0.0-*",
+		"EntityFramework.Core": "7.0.0-*",
+		"EntityFramework.SqlServer": "7.0.0-*",
+		"EntityFramework.Commands": "7.0.0-*",
+		"MiniWeb.Core": ""
+
+	},
+	"commands": {
+		"ef": "EntityFramework.Commands"
+	},
+
+	"frameworks": {
+		"dnxcore50": {
+		}
+	}
+}

@@ -30,8 +30,8 @@ namespace MiniWeb.Core
 		[HtmlAttributeName(MiniWebSectionTagname)]
 		public string Section { get; set; }
 
-		private IMiniWebSite _webSite;
-		private IHtmlHelper _htmlHelper;
+		private readonly IMiniWebSite _webSite;
+		private readonly IHtmlHelper _htmlHelper;
 		public MiniWebTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
 		{
 			_webSite = webSite;

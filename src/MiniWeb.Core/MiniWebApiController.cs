@@ -80,7 +80,7 @@ namespace MiniWeb.Core
 			_webSite.Logger?.LogInformation($"remove {url}");
 			SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 			_webSite.DeleteSitePage(page);
-			return new JsonResult(new { result = true, url = page.BaseUrl });
+			return new JsonResult(new { result = true, url = page.BaseUrl == page.Url ? _webSite.Configuration.DefaultPage : page.BaseUrl });
 		}
 	}
 }

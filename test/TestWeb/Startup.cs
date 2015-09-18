@@ -12,6 +12,7 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
+using MiniWeb.Storage.EFStorage;
 using MiniWeb.Storage.JsonStorage;
 using Newtonsoft.Json.Linq;
 
@@ -41,7 +42,7 @@ namespace aspnet5Web
 			services.AddMvc();
 
 			services.Configure<GithubAuthConfig>(Configuration.GetSection("GithubAuth"));
-			services.AddMiniWebJsonStorage(Configuration);
+			services.AddMiniWebEFStorage(Configuration);
 
 
 		}

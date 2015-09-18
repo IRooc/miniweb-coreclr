@@ -12,9 +12,9 @@ namespace MiniWeb.Core
 {
 	public class MiniWebFileProvider : IFileProvider
 	{
-		IFileProvider _physicalFileProvider;
-		IFileProvider _embeddedFileProvider;
-		ILogger _logger;
+		readonly IFileProvider _physicalFileProvider;
+		readonly IFileProvider _embeddedFileProvider;
+		readonly ILogger _logger;
 		public const string ADMIN_FILENAME = "/miniweb-resource/adminview.cshtml";
 
 		public MiniWebFileProvider(IApplicationEnvironment applicationEnvironment, ILogger logger = null)

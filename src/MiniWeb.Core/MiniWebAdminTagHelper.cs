@@ -15,8 +15,8 @@ namespace MiniWeb.Core
 		private const string MiniWebAdminTag = "miniwebadmin";
 		private const string MiniWebIgnoreAdminStartTagname = "ignoreadminstart";
 
-		private IMiniWebSite _webSite;
-		private IHtmlHelper _htmlHelper;
+		private readonly IMiniWebSite _webSite;
+		private readonly IHtmlHelper _htmlHelper;
 
 		[ViewContext]
 		public ViewContext ViewContext { get; set; }

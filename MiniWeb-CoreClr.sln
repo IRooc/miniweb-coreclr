@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MiniWeb.Storage.XmlStorage", "src\MiniWeb.Storage.XmlStorage\MiniWeb.Storage.XmlStorage.xproj", "{A5D12571-5214-4B71-8814-9452260F2A0F}"
 EndProject
@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{09F9F350
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TestWeb", "test\TestWeb\TestWeb.xproj", "{8831D81D-3E48-4053-9885-51D6AEA57746}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MiniWeb.Storage.EFStorage", "src\MiniWeb.Storage.EFStorage\MiniWeb.Storage.EFStorage.xproj", "{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{8831D81D-3E48-4053-9885-51D6AEA57746}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8831D81D-3E48-4053-9885-51D6AEA57746}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8831D81D-3E48-4053-9885-51D6AEA57746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
