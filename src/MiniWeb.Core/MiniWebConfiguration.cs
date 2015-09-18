@@ -3,7 +3,7 @@ namespace MiniWeb.Core
 	public class MiniWebConfiguration
 	{
 		public string Title { get; set; } = "MiniWeb by Rooc";
-		public string DefaultPage { get; set; } = "/home";
+		public string DefaultPage { get; set; } = "/home.html";
 		public string PageExtension { get; set; } = "html";
 
 		public string Layout { get; set; } = "~/Views/_layout.cshtml";
@@ -25,9 +25,9 @@ namespace MiniWeb.Core
 	{
 		public const string MiniWebCmsRoleValue = "MiniWeb-CmsRole";
 		public string AuthenticationScheme { get; set; } = "MiniWebCms";
-		public string LoginPath { get; set; } = "/miniweb/login";
-		public string SocialLoginPath { get; set; } = "/miniweb/social-login";
-		public string LogoutPath { get; set; } = "/miniweb/logout";
+		public string LoginPath { get; set; } = "/miniweb/login.html";
+		public string SocialLoginPath { get; set; } = "/miniweb/social-login.html";
+		public string LogoutPath { get; set; } = "/miniweb/logout.html";
 		public string AuthenticationType { get; set; } = typeof(MiniWebAuthentication).Namespace + ".MiniWebAuth";
 	}
 }

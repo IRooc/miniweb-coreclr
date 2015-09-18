@@ -84,7 +84,7 @@ namespace MiniWeb.Core
 					Layout = Configuration.Layout,
 					Template = $"~{Configuration.PageTemplatePath}/OneColumn.cshtml",
 					Sections = new List<PageSection>(),
-					Url = "/miniweb/login",
+					Url = "miniweb/login",
 					Visible = true
 				};
 			}

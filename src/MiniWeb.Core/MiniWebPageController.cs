@@ -11,7 +11,7 @@ namespace MiniWeb.Core
 
 	public class MiniWebPageController : Controller
 	{
-		private IMiniWebSite _webSite;
+		private readonly IMiniWebSite _webSite;
 
 		public MiniWebPageController(IMiniWebSite website)
 		{
@@ -53,6 +53,7 @@ namespace MiniWeb.Core
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
+				_webSite.Logger?.LogInformation($"Logout {User.Identity.Name} and goto {returnUrl}");
 				await Context.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
 				return Redirect(returnUrl);
 			}
@@ -106,7 +107,7 @@ namespace MiniWeb.Core
 				var principal = new ClaimsPrincipal(identity);
 				await Context.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
 
-				return Redirect("~" + _webSite.Configuration.DefaultPage);
+				return Redirect(_webSite.Configuration.DefaultPage);
 			}
 			ViewBag.ErrorMessage = $"Failed to login as {username}";
 			return Login();

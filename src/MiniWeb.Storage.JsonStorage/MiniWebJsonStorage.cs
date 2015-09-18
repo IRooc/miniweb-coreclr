@@ -68,10 +68,6 @@ namespace MiniWeb.Storage.JsonStorage
 					pages.Add(DeSerializeFile<SitePage>(page));
 				}
 			}
-			else
-			{
-				pages.Add(new SitePage { Title = MiniWebSite.AppEnvironment.ApplicationBasePath, Url = MiniWebSite.Configuration.DefaultPage });
-			}
 			return pages;
 		}
 

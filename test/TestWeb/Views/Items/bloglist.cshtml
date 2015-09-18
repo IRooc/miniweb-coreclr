@@ -15,7 +15,7 @@
 	 var pageSize = Model.Get<int>("pageSize", 2);
 	 var pages = Model.Page.Pages;
 	 var pageIndex = Convert.ToInt32((string)Context.Request.Query["page"] ?? "0");
-	 var shownPages = pages.OrderByDescending(p => p.LastModified).Skip(pageIndex * pageSize).Take(pageSize);
+	 var shownPages = pages.OrderByDescending(p => p.Created).Skip(pageIndex * pageSize).Take(pageSize);
 	
 	 
 	 @foreach (var page in shownPages)

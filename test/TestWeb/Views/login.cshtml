@@ -6,7 +6,7 @@
 	Layout = "~/Views/_layout.cshtml";
 }
 <div>
-	<form action="@Model.Url" method="post" role="form" class="col-md-5 col-md-offset-3 miniweb-login" id="login">
+	<form action="@MiniWebSite.GetPageUrl(Model)" method="post" role="form" class="col-md-5 col-md-offset-3 miniweb-login" id="login">
 		<fieldset>
 			<h1 class="text-center">Sign in</h1>
 			@if (ViewBag.ErrorMessage != null)

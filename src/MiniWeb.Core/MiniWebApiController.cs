@@ -14,7 +14,7 @@ namespace MiniWeb.Core
 {
 	public class MiniWebApiController : Controller
 	{
-		private IMiniWebSite _webSite;
+		private readonly IMiniWebSite _webSite;
 
 		public MiniWebApiController(IMiniWebSite website)
 		{
@@ -66,6 +66,7 @@ namespace MiniWeb.Core
 			} else
 			{
 				page.Created = DateTime.Now;
+				//TODO(RC): Add default content here maybe based on template?
 			}
 			_webSite.SaveSitePage(page);
 			return new JsonResult(new { result = true, url = page.Url });

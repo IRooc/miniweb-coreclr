@@ -1,7 +1,7 @@
 {
 	"MiniWeb": {
 		"Title": "New Title from Config",
-		"DefaultPage": "/home"
+		"DefaultPage": "/home.html"
 	},
 	"MiniWebStorage": {
 		"Users": {
