@@ -11,7 +11,6 @@ namespace MiniWeb.Storage.EFStorage
 	public class MiniWebEFDbContext : DbContext
 	{
 		public DbSet<DbSitePage> Pages { get; set; }
-		public DbSet<DbPageSection> Sections { get; set; }
 		public DbSet<DbContentItem> ContentItems { get; set; }
 
 		private MiniWebEFStorageConfig Configuration { get; set; }
@@ -24,8 +23,7 @@ namespace MiniWeb.Storage.EFStorage
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			builder.Entity<DbSitePage>().Key(s => s.Url);
-			builder.Entity<DbPageSection>().Key(s => s.Key);
-			builder.Entity<DbContentItem>().Key(c => c.Id);
+			builder.Entity<DbContentItem>().Key(c => new { c.Sortorder, c.SectionKey});
 			base.OnModelCreating(builder);
 		}
 	}
@@ -45,27 +43,21 @@ namespace MiniWeb.Storage.EFStorage
 		public DateTime Created { get; set; }
 		public DateTime LastModified { get; set; }
 
-		public List<DbPageSection> Sections { get; set; } 
-	}
-
-	public class DbPageSection
-	{
-		public string Key { get; set; }
-		public List<DbContentItem> ContenItems { get; set; }
-
-		public string DbPageUrl { get; set; }
-		public DbSitePage DbPage { get; set; }
+		public List<DbContentItem> Items { get; set; } 
 
 	}
+
 
 	public class DbContentItem
 	{
-		public Guid Id { get; set; }
+		public int Sortorder { get; set; }
+		public string SectionKey { get; set; }
+
 		public string Template { get; set; }
 		public string Values { get; set; } 
 
 
-		public string DbPageSectionKey { get; set; }
-		public DbPageSection Section { get; set; }
+		public string PageUrl { get; set; }
+		public DbSitePage Page { get; set; }
 	}
 }

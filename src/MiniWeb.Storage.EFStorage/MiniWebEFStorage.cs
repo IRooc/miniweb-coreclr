@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata.Internal;
 using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
@@ -22,14 +23,18 @@ namespace MiniWeb.Storage.EFStorage
 
 		public IEnumerable<SitePage> AllPages()
 		{
+
 			if (Context.Pages.Any())
-				return Context.Pages.Select(p => GetSitePage(p));
-			return new List<SitePage>() {GetSitePage(new DbSitePage())};
+			{
+				var pages = Context.Pages.Include(p => p.Items).ToList();
+				return pages.Select(GetSitePage);
+			}
+			return new List<SitePage>() {MiniWebSite.Page404};
 		}
 
 		private static SitePage GetSitePage(DbSitePage p)
 		{
-			return new SitePage()
+			var sitePage = new SitePage()
 			{
 				Url = p.Url,
 				Created = p.Created,
@@ -41,17 +46,19 @@ namespace MiniWeb.Storage.EFStorage
 				SortOrder = p.SortOrder,
 				Template = p.Template,
 				Title = p.Title,
-				Visible = p.Visible,
-				Sections = (p.Sections?.Select(s => new PageSection()
+				Visible = p.Visible
+			};
+			sitePage.Sections = p.Items?.GroupBy(i => i.SectionKey).Select(g => new PageSection()
 				{
-					Key = s.Key,
-					Items = s.ContenItems?.Select(i => new ContentItem()
+					Key = g.Key,
+					Items = g.Select(i => new ContentItem()
 					{
 						Template = i.Template,
+						Page = sitePage,
 						Values = JsonConvert.DeserializeObject<Dictionary<string, string>>(i.Values)
 					}).ToList() ?? new List<ContentItem>()
-				}).ToList()) ?? new List<PageSection>()
-			};
+				}).ToList() ?? new List<PageSection>();
+			return sitePage;
 		}
 
 		public bool Authenticate(string username, string password)
@@ -61,6 +68,7 @@ namespace MiniWeb.Storage.EFStorage
 
 		public void DeleteSitePage(SitePage sitePage)
 		{
+			Context.RemoveRange(Context.ContentItems.Where(c => c.PageUrl == sitePage.Url));
 			Context.Remove(Context.Pages.First(p => p.Url == sitePage.Url));
 			Context.SaveChanges();
 		}
@@ -75,7 +83,6 @@ namespace MiniWeb.Storage.EFStorage
 			var oldPage = Context.Pages.FirstOrDefault(p => p.Url == sitePage.Url);
 			if (oldPage != null)
 			{
-				oldPage.Url = sitePage.Url;
 				oldPage.Template = sitePage.Template;
 				oldPage.Layout = sitePage.Layout;
 				oldPage.Title = sitePage.Title;
@@ -86,16 +93,23 @@ namespace MiniWeb.Storage.EFStorage
 				oldPage.ShowInMenu = sitePage.ShowInMenu;
 				oldPage.SortOrder = sitePage.SortOrder;
 				oldPage.Visible = sitePage.Visible;
-				oldPage.Sections = sitePage.Sections?.Select(s => new DbPageSection()
+				Context.Pages.Update(oldPage);
+
+				Context.ContentItems.RemoveRange(Context.ContentItems.Where(c => c.PageUrl == sitePage.Url));
+				//todo(rc): can this be done without?
+				Context.SaveChanges();
+				Context.ChangeTracker.AcceptAllChanges();
+				foreach (var section in sitePage.Sections.Where(s => s.Items.Any()))
 				{
-					Key = s.Key,
-					ContenItems = s.Items?.Select(i => new DbContentItem()
+					Context.ContentItems.AddRange(section.Items.Select((i, ix) => new DbContentItem()
 					{
 						Template = i.Template,
-						Values = string.Empty
-					}).ToList()
-				}).ToList();
-				Context.Pages.Update(oldPage);
+						PageUrl = sitePage.Url,
+						SectionKey = section.Key,
+						Sortorder = ix + 1,
+						Values = JsonConvert.SerializeObject(i.Values)
+					}));
+				}
 			}
 			else
 			{

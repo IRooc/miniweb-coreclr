@@ -29,45 +29,29 @@ namespace MiniWeb.Storage.EFStorage.Migrations
                     table.PrimaryKey("PK_DbSitePage", x => x.Url);
                 });
             migrationBuilder.CreateTable(
-                name: "DbPageSection",
-                columns: table => new
-                {
-                    Key = table.Column<string>(nullable: false),
-                    DbPageUrl = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DbPageSection", x => x.Key);
-                    table.ForeignKey(
-                        name: "FK_DbPageSection_DbSitePage_DbPageUrl",
-                        column: x => x.DbPageUrl,
-                        principalTable: "DbSitePage",
-                        principalColumn: "Url");
-                });
-            migrationBuilder.CreateTable(
                 name: "DbContentItem",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    DbPageSectionKey = table.Column<string>(nullable: true),
+                    Sortorder = table.Column<int>(nullable: false),
+                    SectionKey = table.Column<string>(nullable: false),
+                    PageUrl = table.Column<string>(nullable: true),
                     Template = table.Column<string>(nullable: true),
                     Values = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DbContentItem", x => x.Id);
+                    table.PrimaryKey("PK_DbContentItem", x => new { x.Sortorder, x.SectionKey });
                     table.ForeignKey(
-                        name: "FK_DbContentItem_DbPageSection_DbPageSectionKey",
-                        column: x => x.DbPageSectionKey,
-                        principalTable: "DbPageSection",
-                        principalColumn: "Key");
+                        name: "FK_DbContentItem_DbSitePage_PageUrl",
+                        column: x => x.PageUrl,
+                        principalTable: "DbSitePage",
+                        principalColumn: "Url");
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable("DbContentItem");
-            migrationBuilder.DropTable("DbPageSection");
             migrationBuilder.DropTable("DbSitePage");
         }
     }

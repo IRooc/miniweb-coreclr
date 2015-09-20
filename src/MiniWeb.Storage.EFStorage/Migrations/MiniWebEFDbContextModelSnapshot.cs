@@ -18,25 +18,17 @@ namespace MiniWeb.Storage.EFStorage.Migrations
 
             modelBuilder.Entity("MiniWeb.Storage.EFStorage.DbContentItem", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Sortorder");
 
-                    b.Property<string>("DbPageSectionKey");
+                    b.Property<string>("SectionKey");
+
+                    b.Property<string>("PageUrl");
 
                     b.Property<string>("Template");
 
                     b.Property<string>("Values");
 
-                    b.Key("Id");
-                });
-
-            modelBuilder.Entity("MiniWeb.Storage.EFStorage.DbPageSection", b =>
-                {
-                    b.Property<string>("Key");
-
-                    b.Property<string>("DbPageUrl");
-
-                    b.Key("Key");
+                    b.Key("Sortorder", "SectionKey");
                 });
 
             modelBuilder.Entity("MiniWeb.Storage.EFStorage.DbSitePage", b =>
@@ -68,16 +60,9 @@ namespace MiniWeb.Storage.EFStorage.Migrations
 
             modelBuilder.Entity("MiniWeb.Storage.EFStorage.DbContentItem", b =>
                 {
-                    b.Reference("MiniWeb.Storage.EFStorage.DbPageSection")
-                        .InverseCollection()
-                        .ForeignKey("DbPageSectionKey");
-                });
-
-            modelBuilder.Entity("MiniWeb.Storage.EFStorage.DbPageSection", b =>
-                {
                     b.Reference("MiniWeb.Storage.EFStorage.DbSitePage")
                         .InverseCollection()
-                        .ForeignKey("DbPageUrl");
+                        .ForeignKey("PageUrl");
                 });
         }
     }
