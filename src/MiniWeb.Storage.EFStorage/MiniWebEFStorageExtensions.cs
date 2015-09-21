@@ -18,7 +18,7 @@ namespace MiniWeb.Storage.EFStorage
 		public static IServiceCollection AddMiniWebEFStorage<T>(this IServiceCollection services, IConfiguration configuration)
 			where T : class, IMiniWebSite
 		{
-			services.AddEntityFramework().AddSqlServer().AddDbContext<MiniWebEFDbContext>(options => options.UseSqlServer("data source=sqldev2k12;user id=MiniWebTest;password=MiniWebTest;initial catalog=MiniWebTest"));
+			services.AddEntityFramework().AddSqlServer().AddDbContext<MiniWebEFDbContext>();
 			return services.AddMiniWeb<T, MiniWebEFStorage, MiniWebEFStorageConfig>(configuration);
 		}
 	}

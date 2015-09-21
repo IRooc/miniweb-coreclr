@@ -20,10 +20,16 @@ namespace MiniWeb.Storage.EFStorage
 			Configuration = options.Value;
 		}
 
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.UseSqlServer(Configuration.Connectionstring);
+            base.OnConfiguring(optionsBuilder);
+		}
+
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			builder.Entity<DbSitePage>().Key(s => s.Url);
-			builder.Entity<DbContentItem>().Key(c => new { c.Sortorder, c.SectionKey});
+			builder.Entity<DbContentItem>().Key(c => new { c.PageUrl, c.Sortorder, c.SectionKey});
 			base.OnModelCreating(builder);
 		}
 	}

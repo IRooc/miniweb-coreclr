@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata.Internal;
+using Microsoft.Data.Entity.Query;
 using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 using Newtonsoft.Json;
@@ -23,11 +24,9 @@ namespace MiniWeb.Storage.EFStorage
 
 		public IEnumerable<SitePage> AllPages()
 		{
-
 			if (Context.Pages.Any())
 			{
-				var pages = Context.Pages.Include(p => p.Items).ToList();
-				return pages.Select(GetSitePage);
+				return Context.Pages.Include(p => p.Items).Select(GetSitePage);
 			}
 			return new List<SitePage>() {MiniWebSite.Page404};
 		}
@@ -95,19 +94,22 @@ namespace MiniWeb.Storage.EFStorage
 				oldPage.Visible = sitePage.Visible;
 				Context.Pages.Update(oldPage);
 
-				Context.ContentItems.RemoveRange(Context.ContentItems.Where(c => c.PageUrl == sitePage.Url));
 				//todo(rc): can this be done without?
+				Context.RemoveRange(Context.ContentItems.Where(c => c.PageUrl == sitePage.Url));
 				Context.SaveChanges();
-				Context.ChangeTracker.AcceptAllChanges();
+
+				//need to clear because items are removed but still in page.items collection
+				oldPage.Items.Clear();
+
 				foreach (var section in sitePage.Sections.Where(s => s.Items.Any()))
 				{
-					Context.ContentItems.AddRange(section.Items.Select((i, ix) => new DbContentItem()
+					Context.AddRange(section.Items.Select((item, index) => new DbContentItem()
 					{
-						Template = i.Template,
+						Template = item.Template,
 						PageUrl = sitePage.Url,
 						SectionKey = section.Key,
-						Sortorder = ix + 1,
-						Values = JsonConvert.SerializeObject(i.Values)
+						Sortorder = index + 1,
+						Values = JsonConvert.SerializeObject(item.Values)
 					}));
 				}
 			}
@@ -128,6 +130,17 @@ namespace MiniWeb.Storage.EFStorage
 					Visible = sitePage.Visible
 				};
 				Context.Pages.Add(dbPage);
+				foreach (var section in sitePage.Sections.Where(s => s.Items.Any()))
+				{
+					Context.AddRange(section.Items.Select((item, index) => new DbContentItem()
+					{
+						Template = item.Template,
+						PageUrl = sitePage.Url,
+						SectionKey = section.Key,
+						Sortorder = index + 1,
+						Values = JsonConvert.SerializeObject(item.Values)
+					}));
+				}
 			}
 			Context.SaveChanges();
 		}

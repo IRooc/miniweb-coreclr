@@ -32,15 +32,15 @@ namespace MiniWeb.Storage.EFStorage.Migrations
                 name: "DbContentItem",
                 columns: table => new
                 {
+                    PageUrl = table.Column<string>(nullable: false),
                     Sortorder = table.Column<int>(nullable: false),
                     SectionKey = table.Column<string>(nullable: false),
-                    PageUrl = table.Column<string>(nullable: true),
                     Template = table.Column<string>(nullable: true),
                     Values = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DbContentItem", x => new { x.Sortorder, x.SectionKey });
+                    table.PrimaryKey("PK_DbContentItem", x => new { x.PageUrl, x.Sortorder, x.SectionKey });
                     table.ForeignKey(
                         name: "FK_DbContentItem_DbSitePage_PageUrl",
                         column: x => x.PageUrl,

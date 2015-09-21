@@ -8,7 +8,7 @@ using MiniWeb.Storage.EFStorage;
 namespace MiniWeb.Storage.EFStorage.Migrations
 {
     [DbContext(typeof(MiniWebEFDbContext))]
-    [Migration("20150920112020_First")]
+    [Migration("20150921201618_First")]
     partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,17 +19,17 @@ namespace MiniWeb.Storage.EFStorage.Migrations
 
             modelBuilder.Entity("MiniWeb.Storage.EFStorage.DbContentItem", b =>
                 {
+                    b.Property<string>("PageUrl");
+
                     b.Property<int>("Sortorder");
 
                     b.Property<string>("SectionKey");
-
-                    b.Property<string>("PageUrl");
 
                     b.Property<string>("Template");
 
                     b.Property<string>("Values");
 
-                    b.Key("Sortorder", "SectionKey");
+                    b.Key("PageUrl", "Sortorder", "SectionKey");
                 });
 
             modelBuilder.Entity("MiniWeb.Storage.EFStorage.DbSitePage", b =>

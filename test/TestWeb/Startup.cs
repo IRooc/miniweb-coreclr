@@ -112,6 +112,8 @@ namespace aspnet5Web
 				}
 			});
 
+			app.ApplicationServices.GetRequiredService<MiniWebEFDbContext>().Database.EnsureCreated();
+
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
 			app.UseMiniWebSite(false);
 

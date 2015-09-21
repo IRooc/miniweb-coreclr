@@ -27,15 +27,12 @@ namespace MiniWeb.Storage.EFStorage
 		{
 			services.AddEntityFramework()
 				.AddSqlServer()
-				.AddDbContext<MiniWebEFDbContext>(options =>
-				{
-					options.UseSqlServer("data source=sqldev2k12;user id=MiniWebTest;password=MiniWebTest;initial catalog=MiniWebTest");
-				});
+				.AddDbContext<MiniWebEFDbContext>();
 		}
 
-		public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
+		public void Configure(IApplicationBuilder app)
 		{
-			var db = serviceProvider.GetRequiredService<MiniWebEFDbContext>();
+			var db = app.ApplicationServices.GetRequiredService<MiniWebEFDbContext>();
 			db.Database.EnsureCreated();
 			
 		}

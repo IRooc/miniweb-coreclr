@@ -51,7 +51,7 @@ namespace MiniWeb.Core
 		public IActionResult SavePage(SitePage page)
 		{
 			//ignore move for now...
-			if (Request.Form.ContainsKey("OldUrl") && Request.Form["OldUrl"].ToString() != page.Url)
+			if (Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != page.Url)
 			{
 				string message = $"Moving pages not allowed yet, tried to move {Request.Form["OldUrl"]} to new location: {page.Url}";
 				_webSite.Logger?.LogError(message);
@@ -63,10 +63,26 @@ namespace MiniWeb.Core
 			if (oldPage != null)
 			{
 				page.Sections = oldPage.Sections;
-			} else
+			}
+			else
 			{
 				page.Created = DateTime.Now;
+
 				//TODO(RC): Add default content here maybe based on template?
+				//page.Sections = new List<PageSection>() {
+				//	new PageSection()
+				//	{
+				//		Key = "content",
+				//		Items = new List<ContentItem>()
+				//		{
+				//			new ContentItem()
+				//			{
+				//				Template = "~/Views/Items/item.cshtml",
+				//				Values = new Dictionary<string, string>()
+				//			}
+				//		}
+				//	}
+				//};
 			}
 			_webSite.SaveSitePage(page);
 			return new JsonResult(new { result = true, url = page.Url });
@@ -80,7 +96,7 @@ namespace MiniWeb.Core
 			_webSite.Logger?.LogInformation($"remove {url}");
 			SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 			_webSite.DeleteSitePage(page);
-			return new JsonResult(new { result = true, url = page.BaseUrl == page.Url ? _webSite.Configuration.DefaultPage : page.BaseUrl });
+			return new JsonResult(new { result = true, url = "/" + page.BaseUrl == page.Url ? _webSite.Configuration.DefaultPage : page.BaseUrl });
 		}
 	}
 }
