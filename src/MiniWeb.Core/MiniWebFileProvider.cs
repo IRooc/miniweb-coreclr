@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Dnx.Runtime;
+using Microsoft.Framework.Primitives;
 
 namespace MiniWeb.Core
 {
@@ -46,7 +47,7 @@ namespace MiniWeb.Core
 			return fileInfo;
 		}
 
-		public IExpirationTrigger Watch(string filter)
+		public IChangeToken Watch(string filter)
 		{
 			_logger?.LogInformation($"Watch {filter}");
 			if (filter == ADMIN_FILENAME)
@@ -60,7 +61,7 @@ namespace MiniWeb.Core
 		/// <summary>
 		/// gotten from NoobTrigger example in Microsoft.AspNet.FileProviders 
 		/// </summary>
-		internal class IgnoreTrigger : IExpirationTrigger
+		internal class IgnoreTrigger : IChangeToken
 		{
 			public static IgnoreTrigger Singleton { get; } = new IgnoreTrigger();
 
@@ -68,17 +69,19 @@ namespace MiniWeb.Core
 			{
 			}
 
-			public bool ActiveExpirationCallbacks
+			
+
+			public bool HasChanged
 			{
 				get { return false; }
 			}
 
-			public bool IsExpired
+			public bool ActiveChangeCallbacks
 			{
 				get { return false; }
 			}
-
-			public IDisposable RegisterExpirationCallback(Action<object> callback, object state)
+			
+			public IDisposable RegisterChangeCallback(Action<object> callback, object state)
 			{
 				throw new InvalidOperationException("Trigger does not support registering change notifications.");
 			}

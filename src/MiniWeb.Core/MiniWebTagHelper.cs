@@ -9,9 +9,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Framework.WebEncoders;
+using Microsoft.AspNet.Mvc.ViewFeatures;
+using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 
 namespace MiniWeb.Core
 {
+	[HtmlTargetElement(Attributes = "mytag-demo")]
+	public class MyTagDemoTagHelper : TagHelper
+	{
+		[HtmlAttributeName("mytag-demo")]
+		public string MyTag { get; set; }
+
+		public override void Process(TagHelperContext context, TagHelperOutput output)
+		{
+			output.Attributes.Add("data-mytagvalue", MyTag);
+		}
+	}
+
 	[HtmlTargetElement(Attributes = MiniWebTemplateTagname)]
 	[HtmlTargetElement(Attributes = MiniWebSectionTagname)]
 	public class MiniWebTagHelper : TagHelper
