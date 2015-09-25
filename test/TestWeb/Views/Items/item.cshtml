@@ -1,6 +1,5 @@
 ﻿@model MiniWeb.Core.ContentItem
-@Model.Template
-<article miniweb-template="~/Views/Items/item.cshtml">
+<article miniweb-template="@Model.Template">
 	<h2 miniweb-prop="title">Enter title</h2>
 	<div miniweb-prop="content" miniweb-edittype="html">Enter content</div>
 </article>

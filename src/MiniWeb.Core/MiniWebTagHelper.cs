@@ -14,23 +14,10 @@ using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 
 namespace MiniWeb.Core
 {
-	[HtmlTargetElement(Attributes = "mytag-demo")]
-	public class MyTagDemoTagHelper : TagHelper
-	{
-		[HtmlAttributeName("mytag-demo")]
-		public string MyTag { get; set; }
-
-		public override void Process(TagHelperContext context, TagHelperOutput output)
-		{
-			output.Attributes.Add("data-mytagvalue", MyTag);
-		}
-	}
-
 	[HtmlTargetElement(Attributes = MiniWebTemplateTagname)]
 	[HtmlTargetElement(Attributes = MiniWebSectionTagname)]
 	public class MiniWebTagHelper : TagHelper
 	{
-
 		private const string MiniWebTemplateTagname = "miniweb-template";
 		private const string MiniWebSectionTagname = "miniweb-section";
 
