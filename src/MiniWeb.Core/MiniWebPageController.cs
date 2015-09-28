@@ -53,7 +53,7 @@ namespace MiniWeb.Core
 			if (_webSite.IsAuthenticated(User))
 			{
 				_webSite.Logger?.LogInformation($"Logout {User.Identity.Name} and goto {returnUrl}");
-				await Context.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
+				await HttpContext.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
 				return Redirect(returnUrl);
 			}
 			return Index(_webSite.Configuration.DefaultPage);
@@ -104,7 +104,7 @@ namespace MiniWeb.Core
 				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
 				var identity = new ClaimsIdentity(claims, _webSite.Configuration.Authentication.AuthenticationType);
 				var principal = new ClaimsPrincipal(identity);
-				await Context.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
+				await HttpContext.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
 
 				return Redirect(_webSite.Configuration.DefaultPage);
 			}

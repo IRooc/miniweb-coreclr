@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using Microsoft.AspNet.Cryptography.KeyDerivation;
+using Microsoft.AspNet.Identity;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata.Internal;
 using Microsoft.Data.Entity.Query;
@@ -13,12 +16,10 @@ namespace MiniWeb.Storage.EFStorage
 	public class MiniWebEFStorage : IMiniWebStorage
 	{
 		private MiniWebEFDbContext Context { get; set; } 
-		private MiniWebEFStorageConfig StorageConfig { get; }
 		public IMiniWebSite MiniWebSite { get; set; }
 
-		public MiniWebEFStorage(IOptions<MiniWebEFStorageConfig> config, MiniWebEFDbContext context)
+		public MiniWebEFStorage(MiniWebEFDbContext context)
 		{
-			StorageConfig = config.Value;
 			Context = context;
 		}
 
@@ -62,7 +63,34 @@ namespace MiniWeb.Storage.EFStorage
 
 		public bool Authenticate(string username, string password)
 		{
-			throw new NotImplementedException();
+			RandomNumberGenerator _rng = RandomNumberGenerator.Create();
+			//var hashpassword = hashpassword(password, _rng, KeyDerivationPrf.HMACSHA512, 0, )
+			return false;
+		}
+
+		private static byte[] HashPasswordV3(string password, RandomNumberGenerator rng, KeyDerivationPrf prf, int iterCount, int saltSize, int numBytesRequested)
+		{
+			// Produce a version 3 (see comment above) text hash.
+			byte[] salt = new byte[saltSize];
+			rng.GetBytes(salt);
+			byte[] subkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, numBytesRequested);
+
+			var outputBytes = new byte[13 + salt.Length + subkey.Length];
+			outputBytes[0] = 0x01; // format marker
+			WriteNetworkByteOrder(outputBytes, 1, (uint)prf);
+			WriteNetworkByteOrder(outputBytes, 5, (uint)iterCount);
+			WriteNetworkByteOrder(outputBytes, 9, (uint)saltSize);
+			Buffer.BlockCopy(salt, 0, outputBytes, 13, salt.Length);
+			Buffer.BlockCopy(subkey, 0, outputBytes, 13 + saltSize, subkey.Length);
+			return outputBytes;
+		}
+
+		private static void WriteNetworkByteOrder(byte[] buffer, int offset, uint value)
+		{
+			buffer[offset + 0] = (byte)(value >> 24);
+			buffer[offset + 1] = (byte)(value >> 16);
+			buffer[offset + 2] = (byte)(value >> 8);
+			buffer[offset + 3] = (byte)(value >> 0);
 		}
 
 		public void DeleteSitePage(SitePage sitePage)

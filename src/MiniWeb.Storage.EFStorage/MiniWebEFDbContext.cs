@@ -12,6 +12,7 @@ namespace MiniWeb.Storage.EFStorage
 	{
 		public DbSet<DbSitePage> Pages { get; set; }
 		public DbSet<DbContentItem> ContentItems { get; set; }
+		public DbSet<DbUser> Users { get; set; }
 
 		private MiniWebEFStorageConfig Configuration { get; set; }
 
@@ -28,8 +29,9 @@ namespace MiniWeb.Storage.EFStorage
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			builder.Entity<DbSitePage>().Key(s => s.Url);
-			builder.Entity<DbContentItem>().Key(c => new { c.PageUrl, c.Sortorder, c.SectionKey});
+			builder.Entity<DbSitePage>().HasKey(s => s.Url);
+			builder.Entity<DbContentItem>().HasKey(c => new { c.PageUrl, c.Sortorder, c.SectionKey});
+			builder.Entity<DbUser>().HasKey(u => u.UserName);
 			base.OnModelCreating(builder);
 		}
 	}
@@ -61,9 +63,16 @@ namespace MiniWeb.Storage.EFStorage
 
 		public string Template { get; set; }
 		public string Values { get; set; } 
-
-
+		
 		public string PageUrl { get; set; }
 		public DbSitePage Page { get; set; }
+	}
+
+	public class DbUser
+	{
+		public string UserName { get; set; }
+		public string Password { get; set; }
+		public string Salt { get; set; }
+		public bool Active { get; set; }
 	}
 }

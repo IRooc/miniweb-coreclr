@@ -26,11 +26,12 @@ namespace aspnet5Web
 		public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
 		{
 			// Setup configuration sources.
-			var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
-											.AddJsonFile("miniweb.json")
-											.AddJsonFile("githubauth.json")
-											.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
-											.AddEnvironmentVariables();
+			var configuration = new ConfigurationBuilder()
+								.SetBasePath(appEnv.ApplicationBasePath)
+								.AddJsonFile("miniweb.json")
+								.AddJsonFile("githubauth.json")
+								.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
+								.AddEnvironmentVariables();
 
 			Configuration = configuration.Build();
 		}
@@ -74,7 +75,7 @@ namespace aspnet5Web
 			app.UseOAuthAuthentication(new OAuthOptions 
 			{
 				AuthenticationScheme = "Github-Auth",
-				Caption = "Login with GitHub account",
+				DisplayName = "Login with GitHub account",
 				ClientId = githubConfig.ClientId,
 				ClientSecret = githubConfig.ClientSecret,
 				CallbackPath = new PathString(githubConfig.CallbackPath),
@@ -86,7 +87,7 @@ namespace aspnet5Web
 				SaveTokensAsClaims = false,
 				Events = new OAuthEvents()
 				{
-					OnAuthenticated = async notification =>
+					OnCreatingTicket = async notification =>
 					{
 						var request = new HttpRequestMessage(HttpMethod.Get, notification.Options.UserInformationEndpoint);
 						request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", notification.AccessToken);
