@@ -34,7 +34,7 @@ namespace MiniWeb.Storage.EFStorage
 		{
 			var db = app.ApplicationServices.GetRequiredService<MiniWebEFDbContext>();
 			db.Database.EnsureCreated();
-			
+
 		}
 	}
 }
