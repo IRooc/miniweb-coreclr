@@ -63,15 +63,9 @@ namespace MiniWeb.Storage.EFStorage
 
 		public bool Authenticate(string username, string password)
 		{
-			return false;
-		}
-
-		private static void WriteNetworkByteOrder(byte[] buffer, int offset, uint value)
-		{
-			buffer[offset + 0] = (byte)(value >> 24);
-			buffer[offset + 1] = (byte)(value >> 16);
-			buffer[offset + 2] = (byte)(value >> 8);
-			buffer[offset + 3] = (byte)(value >> 0);
+			//TODO(RC):Fix hashing and stuff...
+			var user = Context.Users.FirstOrDefault(u => u.UserName == username && u.Active);
+			return user?.Password == password;
 		}
 
 		public void DeleteSitePage(SitePage sitePage)
