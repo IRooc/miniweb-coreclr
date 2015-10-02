@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc.ViewFeatures;
+using Microsoft.Framework.WebEncoders;
 
 namespace MiniWeb.Core
 {
@@ -54,7 +55,7 @@ namespace MiniWeb.Core
 			{
 				var view = ViewContext.View as RazorView;
 				var viewItem = view.RazorPage as RazorPage<ContentItem>;
-				var htmlContent = viewItem.Model.GetValue(Property, context.GetChildContentAsync().Result?.ToString());
+				var htmlContent = viewItem.Model.GetValue(Property, context.GetChildContentAsync().Result?.GetContent(HtmlEncoder.Default));
                 output.Content.Clear();
 				output.Content.AppendEncoded(htmlContent);
 

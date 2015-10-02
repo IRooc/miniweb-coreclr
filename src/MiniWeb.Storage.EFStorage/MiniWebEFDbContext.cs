@@ -24,13 +24,13 @@ namespace MiniWeb.Storage.EFStorage
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseSqlServer(Configuration.Connectionstring);
-            base.OnConfiguring(optionsBuilder);
+			base.OnConfiguring(optionsBuilder);
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			builder.Entity<DbSitePage>().HasKey(s => s.Url);
-			builder.Entity<DbContentItem>().HasKey(c => new { c.PageUrl, c.Sortorder, c.SectionKey});
+			builder.Entity<DbContentItem>().HasKey(c => new { c.PageUrl, c.Sortorder, c.SectionKey });
 			builder.Entity<DbUser>().HasKey(u => u.UserName);
 			base.OnModelCreating(builder);
 		}
@@ -51,7 +51,7 @@ namespace MiniWeb.Storage.EFStorage
 		public DateTime Created { get; set; }
 		public DateTime LastModified { get; set; }
 
-		public List<DbContentItem> Items { get; set; } 
+		public List<DbContentItem> Items { get; set; }
 
 	}
 
@@ -62,8 +62,8 @@ namespace MiniWeb.Storage.EFStorage
 		public string SectionKey { get; set; }
 
 		public string Template { get; set; }
-		public string Values { get; set; } 
-		
+		public string Values { get; set; }
+
 		public string PageUrl { get; set; }
 		public DbSitePage Page { get; set; }
 	}

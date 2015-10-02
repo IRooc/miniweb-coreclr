@@ -15,7 +15,7 @@ namespace MiniWeb.Storage.EFStorage
 {
 	public class MiniWebEFStorage : IMiniWebStorage
 	{
-		private MiniWebEFDbContext Context { get; set; } 
+		private MiniWebEFDbContext Context { get; set; }
 		public IMiniWebSite MiniWebSite { get; set; }
 
 		public MiniWebEFStorage(MiniWebEFDbContext context)
@@ -29,7 +29,7 @@ namespace MiniWeb.Storage.EFStorage
 			{
 				return Context.Pages.Include(p => p.Items).Select(GetSitePage);
 			}
-			return new List<SitePage>() {MiniWebSite.Page404};
+			return new List<SitePage>() { MiniWebSite.Page404 };
 		}
 
 		private static SitePage GetSitePage(DbSitePage p)
@@ -49,15 +49,15 @@ namespace MiniWeb.Storage.EFStorage
 				Visible = p.Visible
 			};
 			sitePage.Sections = p.Items?.GroupBy(i => i.SectionKey).Select(g => new PageSection()
+			{
+				Key = g.Key,
+				Items = g.Select(i => new ContentItem()
 				{
-					Key = g.Key,
-					Items = g.Select(i => new ContentItem()
-					{
-						Template = i.Template,
-						Page = sitePage,
-						Values = JsonConvert.DeserializeObject<Dictionary<string, string>>(i.Values)
-					}).ToList() ?? new List<ContentItem>()
-				}).ToList() ?? new List<PageSection>();
+					Template = i.Template,
+					Page = sitePage,
+					Values = JsonConvert.DeserializeObject<Dictionary<string, string>>(i.Values)
+				}).ToList() ?? new List<ContentItem>()
+			}).ToList() ?? new List<PageSection>();
 			return sitePage;
 		}
 
