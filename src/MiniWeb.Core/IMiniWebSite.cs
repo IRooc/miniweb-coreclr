@@ -29,5 +29,6 @@ namespace MiniWeb.Core
 		bool IsAuthenticated(ClaimsPrincipal user);
 		void ReloadPages();
 		void SaveSitePage(SitePage page, bool storeImages = false);
+		List<PageSection> GetDefaultContentForTemplate(string template);
 	}
 }

@@ -158,7 +158,7 @@
             formArr.push({ name: '__RequestVerificationToken', value: $('#miniweb-templates input[name=__RequestVerificationToken]').val() });
             $.post("/miniweb-api/savepage", formArr).done(function (data) {
                 if (data && data.result) {
-                    document.location.href = '/' + data.url;
+                    document.location.href = data.url;
                 }
                 else {
                     showMessage(false, data.message);
@@ -175,7 +175,7 @@
                 }).done(function (data) {
                     showMessage(true, "The page was saved successfully");
                     setTimeout(function () {
-                        document.location.href = '/' + data.url;
+                        document.location.href = data.url;
                     }, 1500);
                 }).fail(function (data) {
                     var message = data.responseText.match('\<div class=\"titleerror\"\>([^\<]+)\</div\>');

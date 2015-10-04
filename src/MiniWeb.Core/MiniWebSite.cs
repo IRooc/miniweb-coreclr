@@ -128,7 +128,8 @@ namespace MiniWeb.Core
 			{
 				string urlPattern = $"^(.*?)\\.{Configuration.PageExtension}(.*?)$";
 				Match match = Regex.Match(url, urlPattern);
-				if (match.Success) {
+				if (match.Success)
+				{
 					url = match.Groups[1].Value;
 					suffix = match.Groups[2].Value;
 				}
@@ -221,6 +222,35 @@ namespace MiniWeb.Core
 			Logger?.LogInformation($"Deleting page {page.Url}");
 			Storage.DeleteSitePage(page);
 			ReloadPages();
+		}
+
+		public List<PageSection> GetDefaultContentForTemplate(string template)
+		{
+			//TODO(RC): Add default content here maybe based on template?
+			//page.Sections = new List<PageSection>() {
+			//	new PageSection()
+			//	{
+			//		Key = "content",
+			//		Items = new List<ContentItem>()
+			//		{
+			//			new ContentItem()
+			//			{
+			//				Template = "~/Views/Items/item.cshtml",
+			//				Values = new Dictionary<string, string>()
+			//			}
+			//		}
+			//	}
+			//};
+			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => t.Template == template);
+			return defaultContent?.Content?.Select(c => new PageSection()
+			{
+				Key = c.Section,
+				Items = c.Items?.Select(i => new ContentItem()
+				{
+					Template = i,
+					Values = new Dictionary<string, string>()
+				}).ToList()
+			}).ToList();
 		}
 
 		private string SaveEmbeddedImages(string html)

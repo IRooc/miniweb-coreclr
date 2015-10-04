@@ -66,25 +66,10 @@ namespace MiniWeb.Core
 			else
 			{
 				page.Created = DateTime.Now;
-
-				//TODO(RC): Add default content here maybe based on template?
-				//page.Sections = new List<PageSection>() {
-				//	new PageSection()
-				//	{
-				//		Key = "content",
-				//		Items = new List<ContentItem>()
-				//		{
-				//			new ContentItem()
-				//			{
-				//				Template = "~/Views/Items/item.cshtml",
-				//				Values = new Dictionary<string, string>()
-				//			}
-				//		}
-				//	}
-				//};
+				page.Sections = _webSite.GetDefaultContentForTemplate(page.Template);				
 			}
 			_webSite.SaveSitePage(page);
-			return new JsonResult(new { result = true, url = page.Url });
+			return new JsonResult(new { result = true, url = _webSite.GetPageUrl(page) });
 		}
 
 		[HttpPost]
@@ -95,7 +80,8 @@ namespace MiniWeb.Core
 			_webSite.Logger?.LogInformation($"remove {url}");
 			SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 			_webSite.DeleteSitePage(page);
-			return new JsonResult(new { result = true, url = "/" + page.BaseUrl == page.Url ? _webSite.Configuration.DefaultPage : page.BaseUrl });
+			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
+            return new JsonResult(new { result = true, url = redirectUrl });
 		}
 	}
 }

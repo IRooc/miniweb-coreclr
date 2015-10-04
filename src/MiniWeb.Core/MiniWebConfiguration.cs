@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace MiniWeb.Core
 {
 	public class MiniWebConfiguration
@@ -16,9 +18,22 @@ namespace MiniWeb.Core
 		public bool RedirectToFirstSub { get; set; } = false;
 		public bool StoreVersions { get; set; } = false;
 
+		public List<DefaultContent> DefaultContent { get; set; } = new List<DefaultContent>();
+
 		public MiniWebAuthentication Authentication { get; set; } = new MiniWebAuthentication();
 
 		public string LogCategoryName { get; set; } = "MiniWeb";
+	}
+
+	public class DefaultContent
+	{
+		public string Template { get; set; }
+		public List<SectionContent> Content { get; set; } = new List<SectionContent>();
+	}
+	public class SectionContent
+	{
+		public string Section { get; set; }
+		public List<string> Items { get; set; } = new List<string>();
 	}
 
 	public class MiniWebAuthentication

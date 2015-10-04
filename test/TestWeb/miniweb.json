@@ -1,7 +1,13 @@
 {
 	"MiniWeb": {
 		"Title": "New Title from Config",
-		"DefaultPage": "/home.html"
+		"DefaultPage": "/home.html",
+		"DefaultContent": [
+			{
+				"Template": "~/Views/Pages/OneColumn.cshtml",
+				"Content": [ { "Section": "content", "Items": [ "~/Views/Items/item.cshtml","~/Views/Items/href.cshtml"] } ]
+			}
+		]
 	},
 	"MiniWebStorage": {
 		"Users": {
