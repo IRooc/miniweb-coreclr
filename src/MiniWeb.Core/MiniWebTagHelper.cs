@@ -1,16 +1,12 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using System;
+using System.Linq;
+using System.IO;
+using Microsoft.AspNet.Mvc.ViewFeatures;
+using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using Microsoft.Framework.WebEncoders;
-using Microsoft.AspNet.Mvc.ViewFeatures;
-using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 
 namespace MiniWeb.Core
 {
@@ -58,9 +54,14 @@ namespace MiniWeb.Core
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
 				//get out the current ViewPage for the Model.
 				var view = ViewContext.View as RazorView;
-				var viewPage = view.RazorPage as RazorPage<SitePage>;
+				var viewPage = view?.RazorPage as RazorPage<SitePage>;
 				output.Content.Clear();
-				output.Content.AppendEncoded(SectionContent(_htmlHelper, viewPage.Model, Section));
+
+				if (viewPage != null)
+				{
+					var sectionContent = SectionContent(_htmlHelper, viewPage.Model, Section);
+					output.Content.AppendEncoded(sectionContent);
+				}
 			}
 		}
 		private string SectionContent(IHtmlHelper html, SitePage sitepage, string section)

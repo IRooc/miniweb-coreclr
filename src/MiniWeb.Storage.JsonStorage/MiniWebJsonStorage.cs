@@ -1,13 +1,11 @@
-using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.OptionsModel;
-using MiniWeb.Core;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
+using MiniWeb.Core;
+using Newtonsoft.Json;
 
 namespace MiniWeb.Storage.JsonStorage
 {

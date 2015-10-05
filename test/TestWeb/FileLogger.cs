@@ -1,10 +1,7 @@
-﻿using Microsoft.Framework.Logging;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Framework.Logging;
 
 namespace aspnet5Web
 {

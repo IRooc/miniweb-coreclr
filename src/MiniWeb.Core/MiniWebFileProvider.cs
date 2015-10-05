@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNet.FileProviders;
-using Microsoft.Framework.Caching;
-using Microsoft.Framework.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Primitives;
+using Microsoft.AspNet.FileProviders;
+using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
 {
@@ -68,8 +64,6 @@ namespace MiniWeb.Core
 			private IgnoreTrigger()
 			{
 			}
-
-			
 
 			public bool HasChanged
 			{

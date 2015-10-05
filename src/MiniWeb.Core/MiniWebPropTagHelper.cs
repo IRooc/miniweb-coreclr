@@ -1,13 +1,9 @@
-using Microsoft.AspNet.Mvc;
+using System;
+using System.Linq;
+using Microsoft.AspNet.Mvc.ViewFeatures;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc.ViewFeatures;
 using Microsoft.Framework.WebEncoders;
 
 namespace MiniWeb.Core
@@ -82,10 +78,7 @@ namespace MiniWeb.Core
 					}
 					output.PostElement.AppendEncoded("</div>");
 				}
-
 			}
-
-
 		}
 	}
 }

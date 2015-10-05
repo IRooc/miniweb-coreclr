@@ -31,9 +31,10 @@ namespace MiniWeb.Core
 		}
 
 		/// <summary>
-		/// Registers the miniweb Mvc Routes
+		/// Registers the miniweb Mvc Routes and Custom Middleware
 		/// </summary>
 		/// <param name="app"></param>
+		/// <param name="registerCookieAuth"></param>
 		/// <returns></returns>
 		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, bool registerCookieAuth = true)
 		{
@@ -58,21 +59,21 @@ namespace MiniWeb.Core
 		}
 
 
-		public static IServiceCollection AddMiniWeb<T, U>(this IServiceCollection services, IConfiguration Configuration)
-			where T : class, IMiniWebStorage
-			where U : class, IMiniWebStorageConfiguration
+		public static IServiceCollection AddMiniWeb<T1, T2>(this IServiceCollection services, IConfiguration configuration)
+			where T1 : class, IMiniWebStorage
+			where T2 : class, IMiniWebStorageConfiguration
 		{
-			return services.AddMiniWeb<MiniWebSite, T, U>(Configuration);
+			return services.AddMiniWeb<MiniWebSite, T1, T2>(configuration);
 		}
 
-		public static IServiceCollection AddMiniWeb<T, U, V>(this IServiceCollection services, IConfiguration Configuration)
-			where T : class, IMiniWebSite
-			where U : class, IMiniWebStorage
-			where V : class, IMiniWebStorageConfiguration
+		public static IServiceCollection AddMiniWeb<T1, T2, T3>(this IServiceCollection services, IConfiguration configuration)
+			where T1 : class, IMiniWebSite
+			where T2 : class, IMiniWebStorage
+			where T3 : class, IMiniWebStorageConfiguration
 		{
 			//Setup miniweb configuration
-			services.Configure<V>(Configuration.GetSection("MiniWebStorage"));
-			services.Configure<MiniWebConfiguration>(Configuration.GetSection("MiniWeb"));
+			services.Configure<T3>(configuration.GetSection("MiniWebStorage"));
+			services.Configure<MiniWebConfiguration>(configuration.GetSection("MiniWeb"));
 
 			//make sure embedded view is returned when needed
 			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();
@@ -87,8 +88,8 @@ namespace MiniWeb.Core
 			});
 
 			//Setup miniweb injection
-			services.AddSingleton<IMiniWebStorage, U>();
-			services.AddSingleton<IMiniWebSite, T>();
+			services.AddSingleton<IMiniWebStorage, T2>();
+			services.AddSingleton<IMiniWebSite, T1>();
 			return services;
 		}
 	}

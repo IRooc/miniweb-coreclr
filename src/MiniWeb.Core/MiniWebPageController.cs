@@ -7,7 +7,6 @@ using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
 {
-
 	public class MiniWebPageController : Controller
 	{
 		private readonly IMiniWebSite _webSite;
@@ -46,6 +45,15 @@ namespace MiniWeb.Core
 
 			return View(page.Template, page);
 		}
+		
+		public IActionResult Login()
+		{
+			_webSite.Logger?.LogInformation("login action");
+			var page = _webSite.PageLogin;
+			ViewBag.CurrentUrl = page.Url;
+
+			return View(_webSite.Configuration.LoginView, page);
+		}
 
 		[HttpPost]
 		public async Task<IActionResult> Logout(string returnUrl)
@@ -66,7 +74,7 @@ namespace MiniWeb.Core
 				_webSite.Logger?.LogInformation($"Social login success: {User.Identity.Name}");
 				return Redirect(_webSite.Configuration.DefaultPage);
 			}
-			else if (Request.HasFormContentType)
+			if (Request.HasFormContentType)
 			{
 				var provider = Request.Form["provider"].ToString();
 				_webSite.Logger?.LogInformation($"Social login {provider}");
@@ -77,16 +85,7 @@ namespace MiniWeb.Core
 				properties.Items.Add("LoginProvider", provider);
 				return new ChallengeResult(provider, properties);
 			}
-			return Redirect(_webSite.PageLogin.Url);
-		}
-		
-		public IActionResult Login()
-		{
-			_webSite.Logger?.LogInformation("login action");
-			var page = _webSite.PageLogin;
-			ViewBag.CurrentUrl = page.Url;
-
-			return View(_webSite.Configuration.LoginView, page);
+			return Login();
 		}
 
 		[HttpPost]

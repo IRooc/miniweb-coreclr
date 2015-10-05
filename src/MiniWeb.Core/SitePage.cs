@@ -68,7 +68,6 @@ namespace MiniWeb.Core
 	{
 		[IgnoreDataMember]
 		public SitePage Page { get; set; }
-
 		public string Template { get; set; }
 		public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
@@ -80,11 +79,12 @@ namespace MiniWeb.Core
 			}
 			return defaultvalue;
 		}
+
 		public T Get<T>(string value, T defaultvalue = default(T))
 		{
 			try
 			{
-				return (T)System.Convert.ChangeType(GetValue(value, Convert.ToString(defaultvalue)), typeof(T)); ;
+				return (T)Convert.ChangeType(GetValue(value, Convert.ToString(defaultvalue)), typeof(T));
 			}
 			catch
 			{

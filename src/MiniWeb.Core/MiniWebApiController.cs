@@ -1,13 +1,9 @@
-using Microsoft.AspNet.FileProviders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Logging;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Authorization;
-using System;
 
 namespace MiniWeb.Core
 {
@@ -65,6 +61,7 @@ namespace MiniWeb.Core
 			}
 			else
 			{
+				//new page
 				page.Created = DateTime.Now;
 				page.Sections = _webSite.GetDefaultContentForTemplate(page.Template);				
 			}

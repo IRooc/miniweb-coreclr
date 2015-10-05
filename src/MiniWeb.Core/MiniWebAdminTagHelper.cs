@@ -1,13 +1,7 @@
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Razor;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.AspNet.Razor.Runtime.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNet.Mvc.ViewFeatures;
+using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 
 namespace MiniWeb.Core
 {

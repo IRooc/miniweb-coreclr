@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using Microsoft.AspNet.Cryptography.KeyDerivation;
-using Microsoft.AspNet.Identity;
 using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Metadata.Internal;
-using Microsoft.Data.Entity.Query;
-using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 using Newtonsoft.Json;
 

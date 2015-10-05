@@ -13,7 +13,6 @@ using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 using MiniWeb.Storage.EFStorage;
-using MiniWeb.Storage.JsonStorage;
 using Newtonsoft.Json.Linq;
 
 namespace aspnet5Web
@@ -138,10 +137,6 @@ namespace aspnet5Web
 			{
 				return default(T);
 			}
-		}
-		public static string GetFirstContent(this SitePage page, string key)
-		{
-			return page.Sections.FirstOrDefault()?.Items.FirstOrDefault()?.Values[key];
 		}
 	}
 

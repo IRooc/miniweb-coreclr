@@ -50,6 +50,7 @@ namespace MiniWeb.Core
 					MetaTitle = "Page Not Found : 404",
 					Layout = Configuration.Layout,
 					Template = $"~{Configuration.PageTemplatePath}/OneColumn.cshtml",
+					Visible = true,
 					Sections = new List<PageSection>()
 					{
 						new PageSection()
@@ -104,7 +105,6 @@ namespace MiniWeb.Core
 			//pass on self to storage module
 			//cannot inject because of circular reference.
 			Storage.MiniWebSite = this;
-
 		}
 
 		private ILogger SetupLogging(ILoggerFactory loggerfactory)
@@ -226,22 +226,7 @@ namespace MiniWeb.Core
 
 		public List<PageSection> GetDefaultContentForTemplate(string template)
 		{
-			//TODO(RC): Add default content here maybe based on template?
-			//page.Sections = new List<PageSection>() {
-			//	new PageSection()
-			//	{
-			//		Key = "content",
-			//		Items = new List<ContentItem>()
-			//		{
-			//			new ContentItem()
-			//			{
-			//				Template = "~/Views/Items/item.cshtml",
-			//				Values = new Dictionary<string, string>()
-			//			}
-			//		}
-			//	}
-			//};
-			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => t.Template == template);
+			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template,template) == 0);
 			return defaultContent?.Content?.Select(c => new PageSection()
 			{
 				Key = c.Section,
@@ -280,7 +265,7 @@ namespace MiniWeb.Core
 			int index = base64.IndexOf("base64,", StringComparison.Ordinal) + 7;
 			return Convert.FromBase64String(base64.Substring(index));
 		}
-		public string SaveFileToDisk(byte[] bytes, string extension, string originalFilename)
+		private string SaveFileToDisk(byte[] bytes, string extension, string originalFilename)
 		{
 			string relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + extension.Trim('.');
 			if (!string.IsNullOrWhiteSpace(originalFilename))

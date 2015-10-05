@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.FileProviders;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
-using Microsoft.Framework.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.FileProviders;
+using Microsoft.AspNet.Http;
+using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
 {
