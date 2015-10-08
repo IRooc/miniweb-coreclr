@@ -2,9 +2,9 @@
 	"version": "1.0.0",
 	"dependencies": {
 		"Microsoft.AspNet.Hosting": "1.0.0-*",
-		"Microsoft.Framework.Logging": "1.0.0-*",
-		"Microsoft.Framework.Configuration": "1.0.0-*",
-		"Microsoft.Framework.Configuration.Json": "1.0.0-*",
+		"Microsoft.Extensions.Logging": "1.0.0-*",
+		"Microsoft.Extensions.Configuration": "1.0.0-*",
+		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"MiniWeb.Core": ""
 
 	},

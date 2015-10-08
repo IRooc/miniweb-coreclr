@@ -1,5 +1,5 @@
-﻿using Microsoft.Framework.Configuration;
-using Microsoft.Framework.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MiniWeb.Core;
 
 namespace MiniWeb.Storage.XmlStorage

@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Framework.DependencyInjection;
 
 namespace MiniWeb.Storage.EFStorage
 {
 	public class Startup
 	{
-		public Microsoft.Framework.Configuration.IConfiguration Config { get; set; }
+		public IConfiguration Config { get; set; }
 
 		public Startup(IHostingEnvironment env)
 		{

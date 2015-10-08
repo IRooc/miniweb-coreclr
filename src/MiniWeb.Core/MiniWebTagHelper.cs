@@ -6,7 +6,7 @@ using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
-using Microsoft.Framework.WebEncoders;
+using Microsoft.Extensions.WebEncoders;
 
 namespace MiniWeb.Core
 {

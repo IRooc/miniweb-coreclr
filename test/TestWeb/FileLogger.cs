@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Text;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace aspnet5Web
 {

@@ -18,7 +18,7 @@
 	 var shownPages = pages.OrderByDescending(p => p.Created).Skip(pageIndex * pageSize).Take(pageSize);
 	
 	 
-	 @foreach (var page in shownPages)
+	 foreach (var page in shownPages)
 	 {
 		var firstContentItem = page.Sections.FirstOrDefault(s => s.Key == "content")?.Items.FirstOrDefault(s => s .Template == "~/Views/Items/blogitem.cshtml");
         <article>

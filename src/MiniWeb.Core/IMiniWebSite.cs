@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace MiniWeb.Core
 {
