@@ -7,7 +7,7 @@
 		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"EntityFramework.Core": "7.0.0-*",
-		"EntityFramework.SqlServer": "7.0.0-*",
+		"EntityFramework.MicrosoftSqlServer": "7.0.0-*",
 		"EntityFramework.Commands": "7.0.0-*",
 		"MiniWeb.Core": "",
 		"Microsoft.AspNet.Cryptography.KeyDerivation": "1.0.0-*",

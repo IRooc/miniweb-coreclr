@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Framework.DependencyInjection;
 
 namespace MiniWeb.Storage.EFStorage
 {
