@@ -1,18 +1,15 @@
 {
 	"version": "1.0.0",
 	"dependencies": {
-		"Microsoft.AspNet.Hosting": "1.0.0-*",
-		"Microsoft.Extensions.Logging": "1.0.0-*",
-		"Microsoft.Extensions.Configuration": "1.0.0-*",
-		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
-		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
-		"EntityFramework.Core": "7.0.0-*",
-		"EntityFramework.MicrosoftSqlServer": "7.0.0-*",
-		"EntityFramework.Commands": "7.0.0-*",
-		"MiniWeb.Core": "",
-		"Microsoft.AspNet.Cryptography.KeyDerivation": "1.0.0-*",
-		"System.Security.Cryptography.Algorithms": "4.0.0-*",
-		"Microsoft.AspNet.Identity": "3.0.0-*"
+		"Microsoft.AspNet.Hosting": "1.0.0-beta8-15685",
+		"Microsoft.Framework.Logging": "1.0.0-beta8-15623",
+		"Microsoft.Framework.Configuration": "1.0.0-beta8-15638",
+		"Microsoft.Framework.DependencyInjection": "1.0.0-beta8-15623",
+		"Microsoft.Framework.Configuration.Json": "1.0.0-beta8-15638",
+		"EntityFramework.Core": "7.0.0-beta8-15840",
+		"EntityFramework.SqlServer": "7.0.0-beta8-15840",
+		"EntityFramework.Commands": "7.0.0-beta8-15840",
+		"MiniWeb.Core": "" 
 
 	},
 	"commands": {

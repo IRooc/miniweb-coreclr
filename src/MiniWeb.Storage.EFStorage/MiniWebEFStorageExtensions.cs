@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Framework.Configuration;
+using Microsoft.Framework.DependencyInjection;
 using MiniWeb.Core;
 
 namespace MiniWeb.Storage.EFStorage

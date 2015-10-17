@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 
 namespace MiniWeb.Storage.EFStorage

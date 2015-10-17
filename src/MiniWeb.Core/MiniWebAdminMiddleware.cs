@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.FileProviders;
 using Microsoft.AspNet.Http;
-using Microsoft.Extensions.Logging;
+using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
 {

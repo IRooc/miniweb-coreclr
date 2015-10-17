@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.Dnx.Runtime;
-using Microsoft.Extensions.Primitives;
+using Microsoft.Framework.Primitives;
 using Microsoft.AspNet.FileProviders;
-using Microsoft.Extensions.Logging;
+using Microsoft.Framework.Logging;
 
 namespace MiniWeb.Core
 {

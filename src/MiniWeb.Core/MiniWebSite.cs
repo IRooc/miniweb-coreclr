@@ -6,8 +6,8 @@ using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
 
 namespace MiniWeb.Core
 {

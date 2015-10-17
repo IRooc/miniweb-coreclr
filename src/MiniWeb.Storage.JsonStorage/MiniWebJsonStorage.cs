@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
 using MiniWeb.Core;
 using Newtonsoft.Json;
 
