@@ -42,7 +42,7 @@ namespace aspnet5Web
 			services.AddMvc();
 
 			services.Configure<GithubAuthConfig>(Configuration.GetSection("GithubAuth"));
-			services.AddMiniWebEFStorage(Configuration);
+			services.AddMiniWebEFSqlServerStorage(Configuration);
 		}
 
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
