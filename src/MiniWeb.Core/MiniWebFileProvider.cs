@@ -4,6 +4,7 @@ using Microsoft.Dnx.Runtime;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNet.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
 {

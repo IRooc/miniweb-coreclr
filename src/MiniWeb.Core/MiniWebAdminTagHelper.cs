@@ -2,6 +2,7 @@ using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNet.Mvc.ViewFeatures;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
+using Microsoft.AspNet.Razor.TagHelpers;
 
 namespace MiniWeb.Core
 {
@@ -32,14 +33,14 @@ namespace MiniWeb.Core
 			{
 				output.TagMode = TagMode.StartTagAndEndTag;
 				//add the own contents.
-				output.Content.SetContent(context.GetChildContentAsync().Result);
+				output.Content.SetContent(output.GetChildContentAsync().Result);
 
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
 				output.PreContent.Append(_htmlHelper.Partial(MiniWebFileProvider.ADMIN_FILENAME));
 
 				if (!IgnoreAdminStart)
 				{
-					output.Content.AppendEncoded($"<script>$(function(){{$('{MiniWebAdminTag}').miniwebAdmin();}});</script>");
+					output.Content.AppendHtml($"<script>$(function(){{$('{MiniWebAdminTag}').miniwebAdmin();}});</script>");
 				}
 			}
 			else

@@ -5,6 +5,7 @@ using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.AspNet.Razor.TagHelpers;
 
 namespace MiniWeb.Core
 {
@@ -51,9 +52,9 @@ namespace MiniWeb.Core
 			{
 				var view = ViewContext.View as RazorView;
 				var viewItem = view.RazorPage as RazorPage<ContentItem>;
-				var htmlContent = viewItem.Model.GetValue(Property, context.GetChildContentAsync().Result?.GetContent(HtmlEncoder.Default));
+				var htmlContent = viewItem.Model.GetValue(Property, output.GetChildContentAsync().Result?.GetContent(HtmlEncoder.Default));
                 output.Content.Clear();
-				output.Content.AppendEncoded(htmlContent);
+				output.Content.AppendHtml(htmlContent);
 
 				foreach (var attr in EditAttributes)
 				{
@@ -70,13 +71,13 @@ namespace MiniWeb.Core
 
 				if (EditAttributes.Any())
 				{
-					output.PostElement.AppendEncoded("<div class=\"miniweb-attributes\">");
+					output.PostElement.AppendHtml("<div class=\"miniweb-attributes\">");
 					foreach (var attr in EditAttributes)
 					{
 						var attrEditItem = string.Format("<span data-miniwebprop=\"{0}:{1}\">{2}</span>", Property, attr, output.Attributes[attr].Value);
-						output.PostElement.AppendEncoded(attrEditItem);
+						output.PostElement.AppendHtml(attrEditItem);
 					}
-					output.PostElement.AppendEncoded("</div>");
+					output.PostElement.AppendHtml("</div>");
 				}
 			}
 		}

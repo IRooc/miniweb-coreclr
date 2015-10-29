@@ -7,6 +7,7 @@ using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.AspNet.Razor.TagHelpers;
 
 namespace MiniWeb.Core
 {
@@ -60,7 +61,7 @@ namespace MiniWeb.Core
 				if (viewPage != null)
 				{
 					var sectionContent = SectionContent(_htmlHelper, viewPage.Model, Section);
-					output.Content.AppendEncoded(sectionContent);
+					output.Content.AppendHtml(sectionContent);
 				}
 			}
 		}

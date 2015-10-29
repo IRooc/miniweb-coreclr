@@ -8,6 +8,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
 {

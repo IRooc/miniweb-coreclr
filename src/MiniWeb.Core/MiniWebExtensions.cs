@@ -6,6 +6,7 @@ using Microsoft.Dnx.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
 {
@@ -24,7 +25,7 @@ namespace MiniWeb.Core
 				options.LoginPath = new PathString(authConfig.LoginPath);
 				options.LogoutPath = new PathString(authConfig.LogoutPath);
 				options.AuthenticationScheme = authConfig.AuthenticationScheme;
-				options.AutomaticAuthentication = true;
+				options.AutomaticAuthenticate = true;
 
 			});
 			return app;
