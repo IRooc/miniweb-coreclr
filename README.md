@@ -11,7 +11,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom middleware
 * embedded Razor View
 
-it currently runs on  1.0.0-beta8-15616 coreclr x64.
+it currently runs on  1.0.0-rc2-1612 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT 
 
 with some workarounds voor mac and linux (used until beta7)
@@ -29,6 +29,7 @@ Page templates are stored in the /Views/Pages folder
 
 A page template example:
 ```HTML
+@addTagHelper MiniWeb.Core.*, MiniWeb.Core
 @model MiniWeb.Core.SitePage
 @{
 	Layout = Model.Layout;
@@ -44,6 +45,7 @@ Content items can be added to miniweb-section tags and should live in the /Views
 
 A content item example
 ```HTML
+@addTagHelper MiniWeb.Core.*, MiniWeb.Core
 @model MiniWeb.Core.ContentItem
 <article miniweb-template="@Model.Template" >
 	<h3 miniweb-prop="title"></h3>
@@ -96,14 +98,14 @@ public void Configure(IApplicationBuilder app)
 ```
 
 ## Storage
-Currently there are two storage packages
+Currently there are three storage packages
 * MiniWeb.Storage.JsonStorage
 * MiniWeb.Storage.XmlStorage
+* MiniWeb.Storage.EFStorage (SqlServer)
 
-both are filesystem stores and store their files in the /App_Data/Sitepages folder
+The first two are filesystem stores and store their files in the /App_Data/Sitepages folder
 
 ## TODO
-* Wait for embedded file fix in linux/mac [https://github.com/aspnet/dnx/issues/2661](https://github.com/aspnet/dnx/issues/2661)
 * Multiple edittypes
 * Extra Storage Provider examples (documentdb, sql)
 * Better image handling (enable picking existing images as well)
