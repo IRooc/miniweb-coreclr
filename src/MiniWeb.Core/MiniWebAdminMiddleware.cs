@@ -25,7 +25,7 @@ namespace MiniWeb.Core
 		{
 			var path = context.Request.Path.Value;
 			//TODO(RC): fix application paths with ~/
-			if (_miniWebSite.IsAuthenticated(context.User) && path.StartsWith("/miniweb-resource/"))
+			if (_miniWebSite.IsAuthenticated(context.User) && path.StartsWith(_miniWebSite.Configuration.EmbeddedResourcePath))
 			{
 				var resource = Path.GetFileName(path);
 

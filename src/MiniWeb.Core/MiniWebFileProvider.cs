@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.AspNet.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.Extensions.OptionsModel;
 
 namespace MiniWeb.Core
 {
@@ -13,13 +14,16 @@ namespace MiniWeb.Core
 		readonly IFileProvider _physicalFileProvider;
 		readonly IFileProvider _embeddedFileProvider;
 		readonly ILogger _logger;
-		public const string ADMIN_FILENAME = "/miniweb-resource/adminview.cshtml";
+		readonly String _embeddedFilePath;
 
-		public MiniWebFileProvider(IApplicationEnvironment applicationEnvironment, ILogger logger = null)
+		public const string ADMIN_FILENAME = "adminview.cshtml";
+
+		public MiniWebFileProvider(IApplicationEnvironment applicationEnvironment, String embeddedFilePath, ILogger logger = null)
 		{
 			_logger = logger;
 			_physicalFileProvider = new PhysicalFileProvider(applicationEnvironment.ApplicationBasePath);
 			_embeddedFileProvider = new EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
+			_embeddedFilePath = embeddedFilePath;
 		}
 
 		public IDirectoryContents GetDirectoryContents(string subpath)
@@ -31,7 +35,7 @@ namespace MiniWeb.Core
 		public IFileInfo GetFileInfo(string subpath)
 		{
 			var fileInfo = _physicalFileProvider.GetFileInfo(subpath);
-			if (subpath == ADMIN_FILENAME)
+			if (subpath == _embeddedFilePath + ADMIN_FILENAME)
 			{
 				fileInfo = _embeddedFileProvider.GetFileInfo($"Resources/adminview.cshtml");
 				if (!fileInfo.Exists)
@@ -47,7 +51,7 @@ namespace MiniWeb.Core
 		public IChangeToken Watch(string filter)
 		{
 			_logger?.LogInformation($"Watch {filter}");
-			if (filter == ADMIN_FILENAME)
+			if (filter == _embeddedFilePath + ADMIN_FILENAME)
 			{
 				return IgnoreTrigger.Singleton;
 			}

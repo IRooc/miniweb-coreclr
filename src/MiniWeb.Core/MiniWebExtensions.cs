@@ -76,9 +76,12 @@ namespace MiniWeb.Core
 			services.Configure<T3>(configuration.GetSection("MiniWebStorage"));
 			services.Configure<MiniWebConfiguration>(configuration.GetSection("MiniWeb"));
 
+			//how to do this in ConfigureServices??
+			string embeddedFilePath = configuration.GetSection("MiniWeb:EmbeddedResourcePath")?.Value ?? new MiniWebConfiguration().EmbeddedResourcePath;
+
 			//make sure embedded view is returned when needed
 			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();
-			services.Configure<RazorViewEngineOptions>(options => { options.FileProvider = new MiniWebFileProvider(appEnv); });
+			services.Configure<RazorViewEngineOptions>(options => { options.FileProvider = new MiniWebFileProvider(appEnv, embeddedFilePath); });
 
 			services.AddAuthorization(options =>
 			{

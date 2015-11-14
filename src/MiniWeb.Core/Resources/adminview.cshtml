@@ -242,6 +242,6 @@
 	@Html.AntiForgeryToken()
 </div>
 
-<link rel="stylesheet" href="/miniweb-resource/admin.css" />
-<script src="/miniweb-resource/bootstrap-wysiwyg.js" defer></script>
-<script src="/miniweb-resource/admin.js" defer></script>
+<link rel="stylesheet" href="@(MiniWebSite.Configuration.EmbeddedResourcePath)admin.css" />
+<script src="@(MiniWebSite.Configuration.EmbeddedResourcePath)bootstrap-wysiwyg.js" defer></script>
+<script src="@(MiniWebSite.Configuration.EmbeddedResourcePath)admin.js" defer></script>

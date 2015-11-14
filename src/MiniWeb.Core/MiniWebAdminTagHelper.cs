@@ -36,7 +36,7 @@ namespace MiniWeb.Core
 				output.Content.SetContent(output.GetChildContentAsync().Result);
 
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
-				output.PreContent.Append(_htmlHelper.Partial(MiniWebFileProvider.ADMIN_FILENAME));
+				output.PreContent.Append(_htmlHelper.Partial(_webSite.Configuration.EmbeddedResourcePath + MiniWebFileProvider.ADMIN_FILENAME));
 
 				if (!IgnoreAdminStart)
 				{

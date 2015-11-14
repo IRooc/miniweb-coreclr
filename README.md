@@ -11,7 +11,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom middleware
 * embedded Razor View
 
-it currently runs on  1.0.0-rc2-1612 coreclr x64.
+it currently runs on  1.0.0-rc2-16177 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT 
 
 with some workarounds voor mac and linux (used until beta7)
