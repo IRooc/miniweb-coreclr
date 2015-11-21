@@ -11,7 +11,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom middleware
 * embedded Razor View
 
-it currently runs on  1.0.0-beta8-15616 coreclr x64.
+it currently runs on  1.0.0-rc1-final coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT 
 
 with some workarounds voor mac and linux (used until beta7)
@@ -99,11 +99,11 @@ public void Configure(IApplicationBuilder app)
 Currently there are two storage packages
 * MiniWeb.Storage.JsonStorage
 * MiniWeb.Storage.XmlStorage
+* MiniWeb.Storage.EFStorage (using SQL not tested on *nix)
 
 both are filesystem stores and store their files in the /App_Data/Sitepages folder
 
 ## TODO
-* Wait for embedded file fix in linux/mac [https://github.com/aspnet/dnx/issues/2661](https://github.com/aspnet/dnx/issues/2661)
 * Multiple edittypes
 * Extra Storage Provider examples (documentdb, sql)
 * Better image handling (enable picking existing images as well)
