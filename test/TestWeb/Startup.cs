@@ -64,7 +64,7 @@ namespace aspnet5Web
 
 			var miniwebConfig = app.GetMiniWebConfig();
 
-			//Registers base cookie authentication method.
+			//Registers base cookie authentication method. Do this when you need to register "other" authentications
 			app.UseMiniWebSiteCookieAuth();
 
 			//setup other authentications

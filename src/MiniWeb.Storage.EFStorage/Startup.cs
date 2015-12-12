@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MiniWeb.Storage.EFStorage
 {
+	///Only used for the commands...
 	public class Startup
 	{
 		public IConfiguration Config { get; set; }
