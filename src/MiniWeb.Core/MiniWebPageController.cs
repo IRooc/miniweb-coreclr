@@ -29,7 +29,7 @@ namespace MiniWeb.Core
 			}
 			if (string.IsNullOrWhiteSpace(url) || url == "/")
 			{
-				_webSite.Logger?.LogVerbose("Homepage");
+				_webSite.Logger?.LogDebug("Homepage");
 				url = _webSite.Configuration.DefaultPage;
 			}
 			SitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));

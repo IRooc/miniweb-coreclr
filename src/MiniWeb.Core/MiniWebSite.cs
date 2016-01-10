@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
@@ -119,7 +119,7 @@ namespace MiniWeb.Core
 
 		public SitePage GetPageByUrl(string url, bool editing = false)
 		{
-			Logger?.LogVerbose($"Finding page {url}");
+			Logger?.LogDebug($"Finding page {url}");
 			var suffix = string.Empty;
 			if (url?.StartsWith("/") == true)
 			{

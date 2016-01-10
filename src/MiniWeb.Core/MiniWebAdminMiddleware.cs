@@ -41,7 +41,7 @@ namespace MiniWeb.Core
 						{
 							contentType = "application/javascript";
 						}
-						_miniWebSite.Logger?.LogVerbose($"Embedded: {resource}");
+						_miniWebSite.Logger?.LogDebug($"Embedded: {resource}");
 						context.Response.ContentType = contentType;
 						await context.Response.WriteAsync(reader.ReadToEnd());
 					}

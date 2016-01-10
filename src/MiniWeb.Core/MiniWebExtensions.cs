@@ -5,7 +5,7 @@ using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
