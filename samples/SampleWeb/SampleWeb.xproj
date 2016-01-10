@@ -16,7 +16,7 @@
     <AssemblyName>Web</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <RootNamespace>Web</RootNamespace>
+    <RootNamespace>SampleWeb</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>

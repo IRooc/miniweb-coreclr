@@ -9,13 +9,13 @@ using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.Extensions.Options;
 using MiniWeb.Core;
 using MiniWeb.Storage.EFStorage;
 using Newtonsoft.Json.Linq;
 
-namespace aspnet5Web
+namespace SampleWeb
 {
 
 	public class Startup
@@ -113,6 +113,7 @@ namespace aspnet5Web
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
 			app.UseEFMiniWebSite(false);
 		}
+
 	}
 
 	public static class ConfigExtensions

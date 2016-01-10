@@ -3,7 +3,7 @@ using System.Collections;
 using System.Text;
 using Microsoft.Extensions.Logging;
 
-namespace aspnet5Web
+namespace SampleWeb
 {
 	public class FileLogger : ILogger
 	{

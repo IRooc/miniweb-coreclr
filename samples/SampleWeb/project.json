@@ -10,11 +10,11 @@
 		"**.vspscc"
 	],
 	"dependencies": {
-		"Microsoft.AspNet.Server.Kestrel": "1.0.0-*",
 		"System.Linq": "4.0.1-*",
 		"Microsoft.AspNet.Authentication.OAuth": "1.0.0-*",
 		"Microsoft.AspNet.Authentication.Cookies": "1.0.0-*",
 		"Microsoft.AspNet.Diagnostics": "1.0.0-*",
+		"Microsoft.AspNet.Hosting": "1.0.0-*",
 		"Microsoft.AspNet.Identity": "3.0.0-*",
 		"Microsoft.AspNet.Mvc": "6.0.0-*",
 		"Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-*",
@@ -24,16 +24,17 @@
 		"Microsoft.Extensions.Logging.Console": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
+		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"MiniWeb.Core": "",
 		"MiniWeb.Storage.JsonStorage": "",
 		"MiniWeb.Storage.XmlStorage": "",
 		"MiniWeb.Storage.EFStorage": ""
 	},
-	"commands": {
-		"kestrel": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.Kestrel --server.urls http://localhost:5001"
-	},
 	"frameworks": {
 		"dnxcore50": { }
+	},
+	"commands": {
+		"web": "Microsoft.AspNet.Server.Kestrel"
 	}
 }
