@@ -1,3 +1,4 @@
+using Microsoft.AspNet.Html;
 using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNet.Mvc.ViewFeatures;
 using Microsoft.AspNet.Mvc.Rendering;
@@ -36,7 +37,10 @@ namespace MiniWeb.Core
 				output.Content.SetContent(output.GetChildContentAsync().Result);
 
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
-				output.PreContent.Append(_htmlHelper.Partial(_webSite.Configuration.EmbeddedResourcePath + MiniWebFileProvider.ADMIN_FILENAME));
+				//admin content
+				var content = _htmlHelper.Partial(_webSite.Configuration.EmbeddedResourcePath + MiniWebFileProvider.ADMIN_FILENAME);
+
+				output.PreContent.AppendHtml(content);
 
 				if (!IgnoreAdminStart)
 				{

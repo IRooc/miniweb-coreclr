@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Microsoft.Dnx.Runtime;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNet.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -52,20 +51,20 @@ namespace MiniWeb.Core
 			_logger?.LogInformation($"Watch {filter}");
 			if (filter == _embeddedFilePath + ADMIN_FILENAME)
 			{
-				return IgnoreTrigger.Singleton;
+				return IgnoreChangeToken.Instance;
 			}
 			return _physicalFileProvider.Watch(filter);
 		}
 
 
 		/// <summary>
-		/// gotten from NoobTrigger example in Microsoft.AspNet.FileProviders 
+		/// gotten from NoopChangeToken example in Microsoft.AspNet.FileProviders 
 		/// </summary>
-		internal class IgnoreTrigger : IChangeToken
+		internal class IgnoreChangeToken : IChangeToken
 		{
-			public static IgnoreTrigger Singleton { get; } = new IgnoreTrigger();
+			public static IgnoreChangeToken Instance { get; } = new IgnoreChangeToken();
 
-			private IgnoreTrigger()
+			private IgnoreChangeToken()
 			{
 			}
 
@@ -81,7 +80,21 @@ namespace MiniWeb.Core
 			
 			public IDisposable RegisterChangeCallback(Action<object> callback, object state)
 			{
-				throw new InvalidOperationException("Trigger does not support registering change notifications.");
+				//ignore this call,
+				return EmptyDisposable.Instance;
+			}
+		}
+
+		internal class EmptyDisposable : IDisposable
+		{
+			public static EmptyDisposable Instance { get; } = new EmptyDisposable();
+
+			private EmptyDisposable()
+			{
+			}
+
+			public void Dispose()
+			{
 			}
 		}
 	}

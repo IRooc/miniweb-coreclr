@@ -18,9 +18,11 @@
 		"Microsoft.AspNet.Identity": "3.0.0-*",
 		"Microsoft.AspNet.Mvc": "6.0.0-*",
 		"Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-*",
+		"Microsoft.AspNet.Server.Kestrel": "1.0.0-*",
 		"Microsoft.AspNet.Server.IIS": "1.0.0-*",
 		"Microsoft.AspNet.Server.WebListener": "1.0.0-*",
 		"Microsoft.AspNet.StaticFiles": "1.0.0-*",
+		"Microsoft.AspNet.IISPlatformHandler": "1.0.0-*",
 		"Microsoft.Extensions.Logging.Console": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
@@ -35,6 +37,7 @@
 		"dnxcore50": { }
 	},
 	"commands": {
-		"web": "Microsoft.AspNet.Server.Kestrel"
+  		"SampleWeb": "SampleWeb",
+  		"web": "SampleWeb"
 	}
 }

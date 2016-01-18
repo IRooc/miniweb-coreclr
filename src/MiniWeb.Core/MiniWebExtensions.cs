@@ -20,12 +20,12 @@ namespace MiniWeb.Core
 		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app)
 		{
 			MiniWebAuthentication authConfig = app.GetMiniWebConfig().Authentication;
-			app.UseCookieAuthentication(options =>
+			app.UseCookieAuthentication(new CookieAuthenticationOptions()
 			{
-				options.LoginPath = new PathString(authConfig.LoginPath);
-				options.LogoutPath = new PathString(authConfig.LogoutPath);
-				options.AuthenticationScheme = authConfig.AuthenticationScheme;
-				options.AutomaticAuthenticate = true;
+				LoginPath = new PathString(authConfig.LoginPath),
+				LogoutPath = new PathString(authConfig.LogoutPath),
+				AuthenticationScheme = authConfig.AuthenticationScheme,
+				AutomaticAuthenticate = true
 
 			});
 			return app;
@@ -81,7 +81,7 @@ namespace MiniWeb.Core
 
 			//make sure embedded view is returned when needed
 			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();
-			services.Configure<RazorViewEngineOptions>(options => { options.FileProvider = new MiniWebFileProvider(appEnv, embeddedFilePath); });
+			services.Configure<RazorViewEngineOptions>(options => { options.FileProviders.Insert(0, new MiniWebFileProvider(appEnv, embeddedFilePath)); });
 
 			services.AddAuthorization(options =>
 			{

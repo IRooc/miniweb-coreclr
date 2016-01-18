@@ -11,19 +11,15 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom middleware
 * embedded Razor View
 
-it currently runs on  1.0.0-rc2-16177 coreclr x64.
+it currently runs on  1.0.0-rc2-16357 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT 
-
-with some workarounds voor mac and linux (used until beta7)
-* remove "resource" line from Core project.json otherwise it won't build
-* make symlink from /src/MiniWeb.Core/Resources to /test/TestWeb/wwwroot/miniweb-resource for edit functionality 
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
 It needs bootstrap v3.2 for now for the admin menu to work and contains a modified version of [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
 
 ## Example
-Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the TestWeb project for an example implementation. Make sure the basic bootstrap files ar in the wwwroot folder.
+Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the samples/SampleWeb project for an example implementation. Make sure the basic bootstrap files are in the wwwroot folder.
 
 Page templates are stored in the /Views/Pages folder
 
@@ -95,6 +91,20 @@ public void Configure(IApplicationBuilder app)
 	//Registers the miniweb middleware and MVC Routes
 	app.UseMiniWebSite();
 }
+
+public static void Main(string[] args)
+{
+    
+	var host = new WebHostBuilder()
+       			.UseDefaultConfiguration(args)
+     			.UseServer("Microsoft.AspNet.Server.Kestrel")
+			    .UseUrls("http://localhost:5001")
+			    .UseStartup<Startup>() // Startup is the name of the Startup class 
+			    .Build();
+
+	host.Run();
+}
+
 ```
 
 ## Storage

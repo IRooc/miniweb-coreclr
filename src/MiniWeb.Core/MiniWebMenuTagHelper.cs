@@ -55,7 +55,7 @@ namespace MiniWeb.Core
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
 				foreach (var page in items)
 				{
-					output.Content.Append(_htmlHelper.Partial(MenuItemTemplate, page));
+					output.Content.AppendHtml(_htmlHelper.Partial(MenuItemTemplate, page));
 				}
 			}
 			else
