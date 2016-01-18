@@ -1,14 +1,22 @@
 {
 	"version": "1.0.0-*",
 	"webroot": "wwwroot",
-	"exclude": [
-		"wwwroot"
-	],
 	"packExclude": [
 		"**.kproj",
 		"**.user",
 		"**.vspscc"
 	],
+	"compilationOptions": {              
+		"emitEntryPoint": true,
+		"preserveCompilationContext": true
+	},  
+
+	"content": [
+		"wwwroot/**/*",
+		"Views/**/*",
+		"miniweb.json",
+		"githubauth.json"
+	],	
 	"dependencies": {
 		"System.Linq": "4.0.1-*",
 		"Microsoft.AspNet.Authentication.OAuth": "1.0.0-*",
