@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNet.Html;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.ViewFeatures;
 using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
@@ -8,14 +10,37 @@ using Microsoft.Extensions.Logging;
 
 namespace MiniWeb.Core
 {
+	public class MiniWebMenuContext
+	{
+		public IHtmlContent ItemTemplate;
+	}
+
+	[HtmlTargetElement("miniweb-menuitem")]
+	public class MiniWebMenuItemTagHelper : TagHelper
+	{
+		public override async void Process(TagHelperContext context, TagHelperOutput output)
+		{
+			if (!context.Items.ContainsKey(typeof(MiniWebMenuContext)))
+			{
+				throw new InvalidOperationException($"Can only be used inside a tag with the {MiniWebMenuTagHelper.MiniWebMenuAttributename} attribute set");
+			}
+			else
+			{
+				var modalContext = (MiniWebMenuContext)context.Items[typeof(MiniWebMenuContext)];
+				modalContext.ItemTemplate = await output.GetChildContentAsync();
+				output.SuppressOutput();
+			}
+		}
+	}
+
 	[HtmlTargetElement(Attributes = MiniWebMenuAttributename)]
+	[RestrictChildren("miniweb-menuitem")]
 	public class MiniWebMenuTagHelper : TagHelper
 	{
-		private const string MiniWebMenuAttributename = "miniweb-menu";
+		internal const string MiniWebMenuAttributename = "miniweb-menu";
 		private const string MiniWebItemTemplate = "miniweb-menu-template";
 
 		private readonly IMiniWebSite _webSite;
-		private readonly IHtmlHelper _htmlHelper;
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
@@ -27,14 +52,17 @@ namespace MiniWeb.Core
 		[HtmlAttributeName(MiniWebItemTemplate)]
 		public string MenuItemTemplate { get; set; }
 
-		public MiniWebMenuTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
+		public MiniWebMenuTagHelper(IMiniWebSite webSite)
 		{
 			_webSite = webSite;
-			_htmlHelper = helper;
 		}
 
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		public override async void Process(TagHelperContext context, TagHelperOutput output)
 		{
+			//setup context
+			MiniWebMenuContext menuContext = new MiniWebMenuContext();
+			context.Items.Add(typeof(MiniWebMenuContext), menuContext);
+
 			var items = Enumerable.Empty<SitePage>();
 
 			if (MenuRoot == "/")
@@ -47,16 +75,26 @@ namespace MiniWeb.Core
 			}
 			else
 			{
-				_webSite.Logger?.LogWarning($"No menuitems found for {MenuRoot}");				
+				_webSite.Logger?.LogWarning($"No menuitems found for {MenuRoot}");
 			}
 
 			if (items.Any())
 			{
-				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
+				//remember the current model
+				object currentModel = ViewContext.ViewData.Model;
 				foreach (var page in items)
 				{
-					output.Content.AppendHtml(_htmlHelper.Partial(MenuItemTemplate, page));
+					//override the model to the current child page
+					ViewContext.ViewData.Model = page;
+
+					//render child without cached results.
+					await output.GetChildContentAsync(false);
+
+					//get the current parsed ItemTemplate form the context
+					output.Content.AppendHtml(menuContext.ItemTemplate);
 				}
+				//reste the current model
+				ViewContext.ViewData.Model = currentModel;
 			}
 			else
 			{

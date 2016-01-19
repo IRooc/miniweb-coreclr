@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using MiniWeb.Core;
 using MiniWeb.Storage.EFStorage;
 using Newtonsoft.Json.Linq;
+using MiniWeb.Storage.JsonStorage;
 
 namespace SampleWeb
 {
@@ -42,7 +43,8 @@ namespace SampleWeb
 			services.AddMvc();
 
 			services.Configure<GithubAuthConfig>(Configuration.GetSection("GithubAuth"));
-			services.AddMiniWebEFSqlServerStorage(Configuration);
+			//services.AddMiniWebEFSqlServerStorage(Configuration);
+			services.AddMiniWebJsonStorage(Configuration);
 		}
 
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
@@ -111,7 +113,8 @@ namespace SampleWeb
 			});
 
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
-			app.UseEFMiniWebSite(false);
+			//app.UseEFMiniWebSite(false);
+			app.UseMiniWebSite(false);
 		}
 
 	}

@@ -5,66 +5,78 @@
 
 <html>
 <head prefix="og: http://ogp.me/ns#">
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width" />
-	<title>@Model.MetaTitle - @MiniWebSite.Configuration.Title</title>
-	<meta name="description" content="@Model.MetaDescription" />
-	<link rel="stylesheet" href="/css/bootstrap-3.0.0.css" />
-	<link rel="stylesheet" href="/css/site.css" />
-	<link rel="dns-prefetch" href="http://gravatar.com/" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.MetaTitle - @MiniWebSite.Configuration.Title</title>
+    <meta name="description" content="@Model.MetaDescription" />
+    <link rel="stylesheet" href="/css/bootstrap-3.0.0.css" />
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="dns-prefetch" href="http://gravatar.com/" />
 
-	<meta name="application-name" content="@MiniWebSite.Configuration.Title" />
-	<meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="application-name" content="@MiniWebSite.Configuration.Title" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
 
-	<meta property="og:title" content="@Model.MetaTitle" />
-	<meta property="og:type" content="website" />
+    <meta property="og:title" content="@Model.MetaTitle" />
+    <meta property="og:type" content="website" />
 
 </head>
 <body class="@Model.GetBodyCss()">
-	<div class="container">
-		<header role="banner">
-			HEADER
-		</header>
-		<div role="navigation" class="mainmenu navbar navbar-default">
-			<div class="navbar-header">
-				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav" miniweb-menu="/" miniweb-menu-template="/Views/Shared/menuitem.cshtml"></ul>
-			</div>
-		</div>
-		@*Do we show submenu?*@
-		@if (MiniWebSite.Pages.Any(p => Model.BaseUrl == p.Url && p.Pages.Any(s=> s.VisibleInMenu())))
-		{
-			<div role="navigation" class="submenu navbar navbar-default">
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl" miniweb-menu-template="/Views/Shared/menuitem.cshtml"></ul>
-				</div>
-			</div>
-		}
-		@RenderBody()
-	</div>
-	<div class="container">
-		<footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
-			<span>
-				Footer
-			</span>
-			@if (!MiniWebSite.IsAuthenticated(User))
+    <div class="container">
+        <header role="banner">
+            HEADER
+        </header>
+        <div role="navigation" class="mainmenu navbar navbar-default">
+            <div class="navbar-header">
+                <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" miniweb-menu="/">
+                    <miniweb-menuitem>
+                        <li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
+                            <a href="@(MiniWebSite.GetPageUrl(Model))">@Model.Title</a>
+                        </li>
+                    </miniweb-menuitem>
+                </ul>
+            </div>
+        </div>
+        @*Do we show submenu?*@
+        @if (MiniWebSite.ShowSubMenuForPage(Model))
+		  {
+            <div role="navigation" class="submenu navbar navbar-default">
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl">
+                        <miniweb-menuitem>
+                            <li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
+                                <a href="@(MiniWebSite.GetPageUrl(Model))">@Model.Title</a>
+                            </li>
+                        </miniweb-menuitem>
+                    </ul>
+                </div>
+            </div>
+		  }
+        @RenderBody()
+    </div>
+    <div class="container">
+        <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+            <span>
+                Footer
+            </span>
+            @if (!MiniWebSite.IsAuthenticated(User))
 			{
-				<span class="pull-right"><a href="@MiniWebSite.Configuration.Authentication.LoginPath"><i class="glyphicon glyphicon-log-in"></i> login</a></span>
+                <span class="pull-right"><a href="@MiniWebSite.Configuration.Authentication.LoginPath"><i class="glyphicon glyphicon-log-in"></i> login</a></span>
 			}
-		</footer>
-	</div>
-	<script src="/scripts/jquery-2.0.2.js"></script>
-	<script src="/scripts/bootstrap.min.js"></script>
-	<script src="/scripts/site.js"></script>
+        </footer>
+    </div>
+    <script src="/scripts/jquery-2.0.2.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <script src="/scripts/site.js"></script>
 
-	<miniwebadmin />
+    <miniwebadmin />
 
 </body>
 </html>

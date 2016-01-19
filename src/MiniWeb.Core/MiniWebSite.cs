@@ -239,6 +239,11 @@ namespace MiniWeb.Core
 			}).ToList();
 		}
 
+		public bool ShowSubMenuForPage(SitePage page)
+		{
+			return Pages.Any(p => page.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu()));
+		}
+
 		private string SaveEmbeddedImages(string html)
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
