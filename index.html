@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Miniweb asp.net core by IRooc</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Miniweb asp.net core</h1>
+        <h2>An easy to use Simple CMS website that just needs page templates and content item templates in form of cshtml files. Runs on asp.net core</h2>
+        <a href="https://github.com/IRooc/miniweb-coreclr" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="miniweb-small-cms-for-aspnet-core" class="anchor" href="#miniweb-small-cms-for-aspnet-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MiniWeb small CMS for asp.net core</h1>
+
+<h2>
+<a id="what-is-miniweb" class="anchor" href="#what-is-miniweb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is miniweb</h2>
+
+<p>Firstly an easy to use Simple CMS website that just needs page templates and content item templates in form of cshtml files</p>
+
+<p>Secondly it is an experiment with what .net coreclr can and can't do. I'm currently using</p>
+
+<ul>
+<li>mvc and webapi</li>
+<li>oAuth &amp; basic authentication </li>
+<li>custom configuration</li>
+<li>custom taghelpers</li>
+<li>custom middleware</li>
+<li>embedded Razor View</li>
+</ul>
+
+<p>it currently runs on  1.0.0-rc1-final coreclr x64.
+Tested on windows, mac osx, linux (ubuntu) and windows IoT </p>
+
+<p>with some workarounds voor mac and linux (used until beta7)</p>
+
+<ul>
+<li>remove "resource" line from Core project.json otherwise it won't build</li>
+<li>make symlink from /src/MiniWeb.Core/Resources to /test/TestWeb/wwwroot/miniweb-resource for edit functionality </li>
+</ul>
+
+<p>Inspired by the <a href="https://github.com/madskristensen/miniblog">MiniBlog</a> package by Mats Kristensen.</p>
+
+<p>It needs bootstrap v3.2 for now for the admin menu to work and contains a modified version of <a href="http://github.com/mindmup/bootstrap-wysiwyg">bootstrap-wysiwyg</a>  </p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+<p>Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the TestWeb project for an example implementation. Make sure the basic bootstrap files ar in the wwwroot folder.</p>
+
+<p>Page templates are stored in the /Views/Pages folder</p>
+
+<p>A page template example:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>@model MiniWeb.Core.SitePage
+@{
+    Layout = Model.Layout;
+}
+&lt;<span class="pl-ent">div</span> <span class="pl-e">role</span>=<span class="pl-s"><span class="pl-pds">"</span>main<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>col-sm-9<span class="pl-pds">"</span></span> <span class="pl-e">miniweb-section</span>=<span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>&gt;
+&lt;/<span class="pl-ent">div</span>&gt;
+
+&lt;<span class="pl-ent">aside</span> <span class="pl-e">role</span>=<span class="pl-s"><span class="pl-pds">"</span>complementary<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>col-sm-3<span class="pl-pds">"</span></span> <span class="pl-e">miniweb-section</span>=<span class="pl-s"><span class="pl-pds">"</span>aside<span class="pl-pds">"</span></span>&gt;
+&lt;/<span class="pl-ent">aside</span>&gt;</pre></div>
+
+<p>Content items can be added to miniweb-section tags and should live in the /Views/Items folder</p>
+
+<p>A content item example</p>
+
+<div class="highlight highlight-text-html-basic"><pre>@model MiniWeb.Core.ContentItem
+&lt;<span class="pl-ent">article</span> <span class="pl-e">miniweb-template</span>=<span class="pl-s"><span class="pl-pds">"</span>@Model.Template<span class="pl-pds">"</span></span> &gt;
+    &lt;<span class="pl-ent">h3</span> <span class="pl-e">miniweb-prop</span>=<span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">h3</span>&gt;
+    &lt;<span class="pl-ent">div</span> <span class="pl-e">miniweb-prop</span>=<span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span> <span class="pl-e">miniweb-edittype</span>=<span class="pl-s"><span class="pl-pds">"</span>html<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">div</span>&gt;
+    &lt;<span class="pl-ent">div</span> <span class="pl-e">miniweb-prop</span>=<span class="pl-s"><span class="pl-pds">"</span>other<span class="pl-pds">"</span></span> <span class="pl-e">miniweb-edittype</span>=<span class="pl-s"><span class="pl-pds">"</span>html<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">div</span>&gt;
+&lt;/<span class="pl-ent">article</span>&gt;</pre></div>
+
+<p>every tag can have a miniweb-prop attribute that will be stored in the content item, edittype is eiter single line or specified as html. 
+For this to work the miniweb taghelpers need to be registered for instance in the /Views/_ViewImports.cshtml</p>
+
+<div class="highlight highlight-text-html-basic"><pre>@addTagHelper "MiniWeb.Core.*, MiniWeb.Core"</pre></div>
+
+<p>the minimal startup will be something like this:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">public</span> IConfiguration Configuration { <span class="pl-k">get</span>; <span class="pl-k">set</span>; }
+
+<span class="pl-k">public</span> Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+{
+    <span class="pl-c">// Setup configuration sources, not needed if defaults are used</span>
+    <span class="pl-k">var</span> configuration = <span class="pl-k">new</span> ConfigurationBuilder(appEnv.ApplicationBasePath)
+                    .AddJsonFile(<span class="pl-s"><span class="pl-pds">"</span>miniweb.json<span class="pl-pds">"</span></span>, optional: <span class="pl-c1">true</span>)
+                    .AddJsonFile($<span class="pl-s"><span class="pl-pds">"</span>miniweb.{env.EnvironmentName}.json<span class="pl-pds">"</span></span>, optional: <span class="pl-c1">true</span>)
+                    .AddEnvironmentVariables();
+
+    <span class="pl-c">//Remember Configuration for use in ConfigureServices</span>
+    Configuration = configuration.Build();
+}
+
+<span class="pl-k">public</span> <span class="pl-k">void</span> ConfigureServices(IServiceCollection services)
+{
+    <span class="pl-c">// Default services used by MiniWeb</span>
+    services.AddAntiforgery();
+    services.AddMvc();
+
+    <span class="pl-c">//registers miniweb and json storage provider</span>
+    services.AddMiniWebJsonStorage(Configuration);
+}
+
+<span class="pl-k">public</span> <span class="pl-k">void</span> Configure(IApplicationBuilder app)
+{
+    <span class="pl-c">// Default middleware used by MiniWeb</span>
+    app.UseDeveloperExceptionPage();
+    app.UseStaticFiles();
+
+    <span class="pl-c">//Registers the miniweb middleware and MVC Routes</span>
+    app.UseMiniWebSite();
+}</pre></div>
+
+<h2>
+<a id="storage" class="anchor" href="#storage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Storage</h2>
+
+<p>Currently there are two storage packages</p>
+
+<ul>
+<li>MiniWeb.Storage.JsonStorage</li>
+<li>MiniWeb.Storage.XmlStorage</li>
+<li>MiniWeb.Storage.EFStorage (using SQL not tested on *nix)</li>
+</ul>
+
+<p>both are filesystem stores and store their files in the /App_Data/Sitepages folder</p>
+
+<h2>
+<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>Multiple edittypes</li>
+<li>Extra Storage Provider examples (documentdb, sql)</li>
+<li>Better image handling (enable picking existing images as well)</li>
+<li>Upgrade to new bootstrap</li>
+<li>Setup integration with clientside packages (bower grunt and so on)</li>
+<li>Wait for .net core release :D</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/IRooc/miniweb-coreclr/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/IRooc/miniweb-coreclr/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/IRooc/miniweb-coreclr"></a> is maintained by <a href="https://github.com/IRooc">IRooc</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
