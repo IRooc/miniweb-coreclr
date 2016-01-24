@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.PlatformAbstractions;
 using MiniWeb.Core;
-using MiniWeb.Storage.EFStorage;
+using MiniWeb.Storage.JsonStorage;
 using Newtonsoft.Json.Linq;
 
 namespace aspnet5Web
@@ -42,7 +42,7 @@ namespace aspnet5Web
 			services.AddMvc();
 
 			services.Configure<GithubAuthConfig>(Configuration.GetSection("GithubAuth"));
-			services.AddMiniWebEFSqlServerStorage(Configuration);
+			services.AddMiniWebJsonStorage(Configuration);
 		}
 
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
@@ -111,7 +111,7 @@ namespace aspnet5Web
 			});
 
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
-			app.UseEFMiniWebSite(false);
+			app.UseMiniWebSite(false);
 		}
 	}
 
