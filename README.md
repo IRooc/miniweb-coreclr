@@ -10,6 +10,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * custom taghelpers
 * custom middleware
 * embedded Razor View
+* [embedded assets](http://irooc.github.io/miniweb-coreclr/embedded-assets.html) (css/js)
 
 it currently runs on  1.0.0-rc2-16357 coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT 
