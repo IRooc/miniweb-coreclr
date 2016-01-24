@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Miniweb asp.net core by IRooc</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1><a href="index.html">Miniweb asp.net core</a></h1>
+        <h2>Embed resources in your assembly and serve them on runtime</h2>
+        <a href="https://github.com/IRooc/miniweb-coreclr" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1><a id="miniweb-small-cms-for-aspnet-core" class="anchor" href="#miniweb-small-cms-for-aspnet-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Embed assets in your assembly</h1>
+<p>In MiniWeb the MiniWeb.Core package has 4 files that are served with the project within the assembly as embedded files.</p>
+<p>To embed assets into you assembly/package you need to do two things:
+<ul><li> first register the assets in the project.json</li>
+<li> serve the assets when requested</li></ul>
+</p>
+<h2>Register assets in project.json</h2>
+<p>To register you assets as "embedded" into your assembly add the following lines to your project.json file</p>
+
+<div class="highlight highlight-text-html-basic"><pre>
+"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",
+</pre>
+</div>
+<p>Here four files are embedded into the assembly on build which can then be read on runtime from the assembly</p>
+<p>You can use file globbing inhere to register whole folders if needed, but as in this example you can just register the files needed for your project</p>
+
+<h2>Serve the assets when requested</h2>
+<p>To serve the assets when requested you need to write a Custom Middleware layer that is registered (in MiniWeb's case) before the "serve all" Mvc route that handles everything. </p>
+<p>This Custom Middleware should handle the requests to a custom path you monitor that handles the embedded files. Let's say "miniweb-embedded" in this case. The Custom Middleware should then implement the
+Invoke(HttpContext context) method and check for the path and then serve the request.
+</p>
+<p>In the project.json you need to register a dependency on "Microsoft.AspNet.FileProviders.Embedded"
+<div class="highlight highlight-source-cs">
+<pre>
+<span class="pl-k">using</span> ....
+<span class="pl-k">using</span> Microsoft.AspNet.FileProviders<span class="pl-k">;</span><span class="pl-c">// Needed to read the embedded files</span>
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">CustomMiddleware</span>
+{
+    <span class="pl-k">public</span> Invoke(HttpContext context)
+    {
+        <span class="pl-k">var</span> path = context.Request.Path.Value;
+        <span class="pl-k">if</span> (path.StartsWith(<span class="pl-s"><span class="pl-pds">"</span>/miniweb-embedded/<span class="pl-pds">"</span></span>))
+        {
+            <span class="pl-k">var</span> provider = <span class="pl-k">new</span> EmbeddedFileProvider(<span class="pl-c1">this</span>.GetType().GetTypeInfo().Assembly, 
+                                                    <span class="pl-c1">this</span>.GetType().Namespace);
+            <span class="pl-k">var</span> filename = Path.GetFileName(path);
+            
+            <span class="pl-k">var</span> fileInfo = provider.GetFileInfo($<span class="pl-s"><span class="pl-pds">"</span>Resources/{filename}<span class="pl-pds">"</span></span>);
+
+            <span class="pl-k">if</span> (fileInfo.Exists)        
+            {
+                <span class="pl-k">using</span> (<span class="pl-k">var</span> stream = fileInfo.CreateReadStream())
+                {
+                    <span class="pl-k">var</span> reader = <span class="pl-k">new</span> StreamReader(stream);
+                    <span class="pl-k">await</span> context.Response.WriteAsync(reader.ReadToEnd());
+                }                
+            }
+            <span class="pl-k">else</span>
+            {
+                context.Response.StatusCode = <span class="pl-c1">404</span>;
+            }
+        }
+        <span class="pl-k">else</span>
+        {
+            <span class="pl-k">await</span> _next(context);
+        }
+    }
+}
+</pre>
+</div>
+<p>Here the embedded resource is requested when the path starts with the "/miniweb-embedded/" path and it does the following</p>
+<ul>
+    <li>Check the path if it starts with "/miniweb-embedded/"</li>
+    <li>Create a EmbeddedFileProvider for the current assembly, make sure this is the same assembly the resources are embedded in ofcourse. Also this is best done in the MiddleWare constructor only once so the provider can be reused</li>
+    <li>Try to get the file from the embedded resources, in this example the resources were in the folder Resrouces/.. internally so append the filename to that folder and get the FileInfo object</li>
+    <li>If the FileInfo object returns and Existing file then return the response. In this case you should maybe also set the appropriate headers like ContentType and Cache headers and such</li>
+    <li>Otherwise return a 404 exception</li>
+    <li>If the path did not start with the "/miniweb-embedded/" folder pass the call on to the next in line<li>
+    
+</ul>
+<h2>Remarks</h2>
+To use this middleware you need to register it in the Startup Configure call which is done like this:
+<div class="highlight highlight-source-cs">
+<pre>
+app.UseMiddleware&lt;CustomMiddleware&gt;();
+</pre>
+</div>
+<p>If you want to embed a Razor View this process is not enough, because Razor Views are compiled on the fly on startup. To support this you need to setup a FileProvider on the RazorViewEngineOptions in the ConfigureServices Startup method. This will be explained in another page<p>
+<p>Thanks,</p>
+<p>Rooc</p>
+</section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/IRooc/miniweb-coreclr/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/IRooc/miniweb-coreclr/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/IRooc/miniweb-coreclr"></a> is maintained by <a href="https://github.com/IRooc">IRooc</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>

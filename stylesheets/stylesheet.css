@@ -476,6 +476,9 @@ header h2 {
   color: #9ddcff;
   letter-spacing: 0;
 }
+header h1 a {
+  color: #fff;
+}
 
 .inner {
   position: relative;
