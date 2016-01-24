@@ -20,7 +20,7 @@
     <header>
       <div class="inner">
         <h1><a href="index.html">Miniweb asp.net core</a></h1>
-        <h2>Embed resources in your assembly and serve them on runtime</h2>
+        <h2>Embed assets in your assembly and serve them on runtime</h2>
         <a href="https://github.com/IRooc/miniweb-coreclr" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
@@ -103,7 +103,10 @@ Invoke(HttpContext context) method and check for the path and then serve the req
 To use this middleware you need to register it in the Startup Configure call which is done like this:
 <div class="highlight highlight-source-cs">
 <pre>
-app.UseMiddleware&lt;CustomMiddleware&gt;();
+<span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">Configure</span>(<span class="pl-k">IApplicationBuilder</span> <span class="pl-smi">app</span>)
+{
+    app.UseMiddleware&lt;CustomMiddleware&gt;();
+}
 </pre>
 </div>
 <p>If you want to embed a Razor View this process is not enough, because Razor Views are compiled on the fly on startup. To support this you need to setup a FileProvider on the RazorViewEngineOptions in the ConfigureServices Startup method. This will be explained in another page<p>
