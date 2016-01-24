@@ -8,15 +8,11 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * oAuth & basic authentication 
 * custom configuration
 * custom taghelpers
-* custom middleware
+* [embedded assets through custom middleware](http://irooc.github.io/miniweb-coreclr/embedded-assets.html)
 * embedded Razor View
 
 it currently runs on  1.0.0-rc1-final coreclr x64.
 Tested on windows, mac osx, linux (ubuntu) and windows IoT 
-
-with some workarounds voor mac and linux (used until beta7)
-* remove "resource" line from Core project.json otherwise it won't build
-* make symlink from /src/MiniWeb.Core/Resources to /test/TestWeb/wwwroot/miniweb-resource for edit functionality 
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
@@ -105,7 +101,7 @@ both are filesystem stores and store their files in the /App_Data/Sitepages fold
 
 ## TODO
 * Multiple edittypes
-* Extra Storage Provider examples (documentdb, sql)
+* Extra Storage Provider examples (documentdb)
 * Better image handling (enable picking existing images as well)
 * Upgrade to new bootstrap
 * Setup integration with clientside packages (bower grunt and so on)

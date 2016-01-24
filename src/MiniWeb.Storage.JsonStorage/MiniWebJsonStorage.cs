@@ -62,7 +62,7 @@ namespace MiniWeb.Storage.JsonStorage
 				string[] pageFiles = Directory.GetFiles(MiniWebSite.AppEnvironment.ApplicationBasePath + StorageConfig.SitePageFolder, "*.json");
 				foreach (string page in pageFiles)
 				{
-					MiniWebSite.Logger?.LogVerbose($"Loading page from disc {page}");
+					MiniWebSite.Logger?.LogDebug($"Loading page from disc {page}");
 					pages.Add(DeSerializeFile<SitePage>(page));
 				}
 			}
