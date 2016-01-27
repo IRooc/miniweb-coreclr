@@ -12,7 +12,6 @@
 	},
 
 	"frameworks": {
-		"dnxcore50": {
-		}
+		"dnxcore50": { }
 	}
 }
