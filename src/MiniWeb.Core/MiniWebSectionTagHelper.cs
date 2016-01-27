@@ -3,34 +3,27 @@ using System.Linq;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Text.Encodings.Web;
 
 namespace MiniWeb.Core
 {
-	[HtmlTargetElement(Attributes = MiniWebTemplateTagname)]
 	[HtmlTargetElement(Attributes = MiniWebSectionTagname)]
-	public class MiniWebTagHelper : TagHelper
+	public class MiniWebSectionTagHelper : TagHelper
 	{
-		private const string MiniWebTemplateTagname = "miniweb-template";
 		private const string MiniWebSectionTagname = "miniweb-section";
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
 		public ViewContext ViewContext { get; set; }
 
-		[HtmlAttributeName(MiniWebTemplateTagname)]
-		public string Template { get; set; }
-
 		[HtmlAttributeName(MiniWebSectionTagname)]
 		public string Section { get; set; }
 
 		private readonly IMiniWebSite _webSite;
 		private readonly IHtmlHelper _htmlHelper;
-		public MiniWebTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
+		public MiniWebSectionTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
 		{
 			_webSite = webSite;
 			_htmlHelper = helper;
@@ -38,19 +31,15 @@ namespace MiniWeb.Core
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
-			//Set Content edit properties on tags when logged in
-			if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
-			{
-				if (!string.IsNullOrWhiteSpace(Template))
-					output.Attributes.Add("data-miniwebtemplate", Template);
-				if (!string.IsNullOrWhiteSpace(Section))
-					output.Attributes.Add("data-miniwebsection", Section);
-			}
-			
-
 			//load the content items in the specified section
 			if (!string.IsNullOrWhiteSpace(Section))
 			{
+				//Set Content edit properties on tags when logged in
+				if (_webSite?.IsAuthenticated(ViewContext.HttpContext.User) == true)
+				{
+					output.Attributes.Add("data-miniwebsection", Section);
+				}
+
 				//contextualize the HtmlHelper for the current ViewContext
 				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
 				//get out the current ViewPage for the Model.
