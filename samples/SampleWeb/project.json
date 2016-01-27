@@ -16,36 +16,34 @@
 		"Views/**/*",
 		"miniweb.json",
 		"githubauth.json"
-	],	
+	],
 	"dependencies": {
-		"System.Linq": "4.0.1-*",
-		"Microsoft.AspNet.Authentication.OAuth": "1.0.0-*",
-		"Microsoft.AspNet.Authentication.Cookies": "1.0.0-*",
-		"Microsoft.AspNet.Diagnostics": "1.0.0-*",
-		"Microsoft.AspNet.Hosting": "1.0.0-*",
-		"Microsoft.AspNet.Identity": "3.0.0-*",
-		"Microsoft.AspNet.Mvc": "6.0.0-*",
-		"Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-*",
-		"Microsoft.AspNet.Server.Kestrel": "1.0.0-*",
-		"Microsoft.AspNet.Server.IIS": "1.0.0-*",
-		"Microsoft.AspNet.Server.WebListener": "1.0.0-*",
-		"Microsoft.AspNet.StaticFiles": "1.0.0-*",
-		"Microsoft.AspNet.IISPlatformHandler": "1.0.0-*",
-		"Microsoft.Extensions.Logging.Console": "1.0.0-*",
+		"Microsoft.AspNetCore.Antiforgery": "1.0.0-*",
+		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
+		"Microsoft.AspNetCore.Authentication.OAuth": "1.0.0-*",
+		"Microsoft.AspNetCore.Diagnostics": "1.0.0-*",
+		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
+		"Microsoft.AspNetCore.Identity": "1.0.0-*",
+		"Microsoft.AspNetCore.IISPlatformHandler": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
+		"Microsoft.AspNetCore.Server.Kestrel": "1.0.0-*",
+		"Microsoft.AspNetCore.StaticFiles": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
-		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
-		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
+		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
+		"Microsoft.Extensions.Logging.Console": "1.0.0-*",
+		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
 		"MiniWeb.Core": "",
+		"MiniWeb.Storage.EFStorage": "",
 		"MiniWeb.Storage.JsonStorage": "",
 		"MiniWeb.Storage.XmlStorage": "",
-		"MiniWeb.Storage.EFStorage": ""
+		"System.Linq": "4.0.1-*"
 	},
 	"frameworks": {
 		"dnxcore50": { }
 	},
 	"commands": {
-  		"SampleWeb": "SampleWeb",
   		"web": "SampleWeb"
 	}
 }

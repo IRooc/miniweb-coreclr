@@ -4,7 +4,6 @@
 	"dependencies": {
 		"System.Xml.XmlSerializer": "4.0.10-*",
 		"System.Runtime.Serialization.Xml": "4.0.10-*",
-		"Microsoft.AspNet.Hosting": "1.0.0-*",
 		"Microsoft.Extensions.Logging": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",

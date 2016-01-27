@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.Extensions.Primitives;
-using Microsoft.AspNet.FileProviders;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 

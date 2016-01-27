@@ -1,16 +1,20 @@
 {
 	"version": "1.0.0",
 	"dependencies": {
-		"System.Runtime.Serialization.Primitives": "4.0.10-*",
-		"Microsoft.AspNet.Authentication.Cookies": "1.0.0-*",
-		"Microsoft.AspNet.DataProtection": "1.0.0-*",
-		"Microsoft.AspNet.FileProviders.Embedded": "1.0.0-*",
-		"Microsoft.AspNet.Hosting": "1.0.0-*",
-		"Microsoft.AspNet.Mvc": "6.0.0-*",
+		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
+		"Microsoft.AspNetCore.DataProtection": "1.0.0-*",
+		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
+		"Microsoft.AspNetCore.Html.Abstractions": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.Razor": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.Core": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-*",
+		"Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
+		"Microsoft.Extensions.FileProviders.Embedded": "1.0.0-*",
+		"Microsoft.Extensions.Logging": "1.0.0-*",
 		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
-		"Microsoft.Extensions.Logging": "1.0.0-*"
+		"System.Runtime.Serialization.Primitives": "4.0.10-*"
 	},
 
 	"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",

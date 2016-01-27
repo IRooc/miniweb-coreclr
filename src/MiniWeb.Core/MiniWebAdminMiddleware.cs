@@ -1,9 +1,8 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.FileProviders;
-using Microsoft.AspNet.Http;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace MiniWeb.Core
