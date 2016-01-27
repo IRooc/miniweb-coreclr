@@ -636,7 +636,7 @@ form {
   margin-bottom: 8px;
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 22px;
-  font-weight: bold;
+  font-weight: normal;
   color: #474747;
   text-indent: 4px;
 }
@@ -652,7 +652,7 @@ form {
   margin-bottom: 8px;
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: normal;
   color: #474747;
   text-indent: 3px;
 }
