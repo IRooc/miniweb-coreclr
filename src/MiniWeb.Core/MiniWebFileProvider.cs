@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
-using Microsoft.Extensions.Primitives;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.Extensions.Primitives;
 
 namespace MiniWeb.Core
 {

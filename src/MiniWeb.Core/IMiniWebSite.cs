@@ -25,7 +25,7 @@ namespace MiniWeb.Core
 		void DeleteSitePage(SitePage page);
 		SitePage GetPageByUrl(string url, bool editing = false);
 		string GetPageUrl(SitePage page);
-        bool Authenticate(string user, string password);
+		bool Authenticate(string user, string password);
 		bool IsAuthenticated(ClaimsPrincipal user);
 		void ReloadPages();
 		void SaveSitePage(SitePage page, bool storeImages = false);

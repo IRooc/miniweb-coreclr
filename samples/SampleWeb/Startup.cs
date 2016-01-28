@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.PlatformAbstractions;
 using MiniWeb.Core;
-using Newtonsoft.Json.Linq;
 using MiniWeb.Storage.JsonStorage;
+using Newtonsoft.Json.Linq;
 
 namespace SampleWeb
 {
