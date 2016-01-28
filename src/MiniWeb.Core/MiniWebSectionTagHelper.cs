@@ -28,7 +28,7 @@ namespace MiniWeb.Core
 		{
 			_webSite = webSite;
 			_htmlHelper = helper;
-      }
+		}
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{

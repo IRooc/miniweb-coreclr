@@ -70,7 +70,7 @@ namespace SampleWeb
 
 			//setup other authentications
 			var githubConfig = app.GetConcreteOptions<GithubAuthConfig>();
-			app.UseOAuthAuthentication(new OAuthOptions 
+			app.UseOAuthAuthentication(new OAuthOptions
 			{
 				AuthenticationScheme = "Github-Auth",
 				DisplayName = "Login with GitHub account",

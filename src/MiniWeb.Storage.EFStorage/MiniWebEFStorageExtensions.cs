@@ -11,7 +11,7 @@ namespace MiniWeb.Storage.EFStorage
 		{
 			return services.AddMiniWebEFSqlServerStorage<MiniWebSite>(configuration);
 		}
-		
+
 		public static IServiceCollection AddMiniWebEFSqlServerStorage<T>(this IServiceCollection services, IConfiguration configuration)
 			where T : class, IMiniWebSite
 		{

@@ -22,14 +22,14 @@ namespace MiniWeb.Core
 		public MiniWebTemplateTagHelper(IMiniWebSite webSite)
 		{
 			_webSite = webSite;
-      }
+		}
 
 		public override void Process(TagHelperContext context, TagHelperOutput output)
 		{
 			//Set Content edit properties on tags when logged in
 			if (!string.IsNullOrWhiteSpace(Template) && _webSite?.IsAuthenticated(ViewContext.HttpContext.User) == true)
-			{ 
-					output.Attributes.Add("data-miniwebtemplate", Template);
+			{
+				output.Attributes.Add("data-miniwebtemplate", Template);
 			}
 		}
 	}

@@ -226,7 +226,7 @@ namespace MiniWeb.Core
 
 		public List<PageSection> GetDefaultContentForTemplate(string template)
 		{
-			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template,template) == 0);
+			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template, template) == 0);
 			return defaultContent?.Content?.Select(c => new PageSection()
 			{
 				Key = c.Section,

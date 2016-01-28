@@ -45,7 +45,7 @@ namespace MiniWeb.Core
 
 			return View(page.Template, page);
 		}
-		
+
 		public IActionResult Login()
 		{
 			_webSite.Logger?.LogInformation("login action");
@@ -110,5 +110,5 @@ namespace MiniWeb.Core
 			ViewBag.ErrorMessage = $"Failed to login as {username}";
 			return Login();
 		}
-    }
+	}
 }

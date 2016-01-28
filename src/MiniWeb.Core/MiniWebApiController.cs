@@ -63,7 +63,7 @@ namespace MiniWeb.Core
 			{
 				//new page
 				page.Created = DateTime.Now;
-				page.Sections = _webSite.GetDefaultContentForTemplate(page.Template);				
+				page.Sections = _webSite.GetDefaultContentForTemplate(page.Template);
 			}
 			_webSite.SaveSitePage(page);
 			return new JsonResult(new { result = true, url = _webSite.GetPageUrl(page) });
@@ -78,7 +78,7 @@ namespace MiniWeb.Core
 			SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 			_webSite.DeleteSitePage(page);
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
-            return new JsonResult(new { result = true, url = redirectUrl });
+			return new JsonResult(new { result = true, url = redirectUrl });
 		}
 	}
 }

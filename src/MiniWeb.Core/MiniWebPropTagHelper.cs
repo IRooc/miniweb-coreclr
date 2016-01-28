@@ -52,7 +52,7 @@ namespace MiniWeb.Core
 				var view = ViewContext.View as RazorView;
 				var viewItem = view.RazorPage as RazorPage<ContentItem>;
 				var htmlContent = viewItem.Model.GetValue(Property, output.GetChildContentAsync().Result?.GetContent(HtmlEncoder.Default));
-                output.Content.Clear();
+				output.Content.Clear();
 				output.Content.AppendHtml(htmlContent);
 
 				foreach (var attr in EditAttributes)

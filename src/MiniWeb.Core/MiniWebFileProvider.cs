@@ -77,7 +77,7 @@ namespace MiniWeb.Core
 			{
 				get { return false; }
 			}
-			
+
 			public IDisposable RegisterChangeCallback(Action<object> callback, object state)
 			{
 				//ignore this call,

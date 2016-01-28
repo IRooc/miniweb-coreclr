@@ -13,7 +13,7 @@ namespace MiniWeb.Core
 	{
 		public static MiniWebConfiguration GetMiniWebConfig(this IApplicationBuilder app)
 		{
-			return  app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
+			return app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
 		}
 
 		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app)

@@ -96,7 +96,7 @@ namespace MiniWeb.Core
 		{
 			return new ContentItem
 			{
-				Template = template			
+				Template = template
 			};
 		}
 	}
