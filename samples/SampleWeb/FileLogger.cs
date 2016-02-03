@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 
@@ -30,45 +31,9 @@ namespace SampleWeb
 			return _filter(_name, logLevel);
 		}
 
-		public void Log(LogLevel logLevel, int eventId, object state, Exception exception, Func<object, Exception, string> formatter)
+		private void FormatLogValues(StringBuilder builder, IReadOnlyList<KeyValuePair<string, object>> logValues, int level, bool bullet)
 		{
-			if (!IsEnabled(logLevel))
-			{
-				return;
-			}
-			var message = string.Empty;
-			var values = state as ILogValues;
-			if (formatter != null)
-			{
-				message = formatter(state, exception);
-			}
-			else if (values != null)
-			{
-				var builder = new StringBuilder();
-				FormatLogValues(builder, values, level: 1, bullet: false);
-				message = builder.ToString();
-				if (exception != null)
-				{
-					message += Environment.NewLine + exception;
-				}
-			}
-			else
-			{
-				message = LogFormatter.Formatter(state, exception);
-			}
-			if (string.IsNullOrEmpty(message))
-			{
-				return;
-			}
-			lock (_lock)
-			{
-				System.IO.File.AppendAllText(_filename, message + "\n");
-			}
-		}
-
-		private void FormatLogValues(StringBuilder builder, ILogValues logValues, int level, bool bullet)
-		{
-			var values = logValues.GetValues();
+			var values = logValues;
 			if (values == null)
 			{
 				return;
@@ -91,9 +56,9 @@ namespace SampleWeb
 				{
 					foreach (var value in (IEnumerable)kvp.Value)
 					{
-						if (value is ILogValues)
+						if (value is IReadOnlyList<KeyValuePair<string, object>>)
 						{
-							FormatLogValues(builder, (ILogValues)value, level + 1, bullet: true);
+							FormatLogValues(builder, (IReadOnlyList<KeyValuePair<string, object>>)value, level + 1, bullet: true);
 						}
 						else
 						{
@@ -103,15 +68,52 @@ namespace SampleWeb
 						}
 					}
 				}
-				else if (kvp.Value is ILogValues)
+				else if (kvp.Value is IReadOnlyList<KeyValuePair<string, object>>)
 				{
-					FormatLogValues(builder, (ILogValues)kvp.Value, level + 1, bullet: false);
+					FormatLogValues(builder, (IReadOnlyList<KeyValuePair<string, object>>)kvp.Value, level + 1, bullet: false);
 				}
 				else
 				{
 					builder.Append(kvp.Value);
 				}
 				isFirst = false;
+			}
+		}
+		
+
+		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+		{
+			if (!IsEnabled(logLevel))
+			{
+				return;
+			}
+			var message = string.Empty;
+			var values = state as IReadOnlyList<KeyValuePair<string, object>>;
+			if (formatter != null)
+			{
+				message = formatter(state, exception);
+			}
+			else if (values != null)
+			{
+				var builder = new StringBuilder();
+				FormatLogValues(builder, values, level: 1, bullet: false);
+				message = builder.ToString();
+				if (exception != null)
+				{
+					message += Environment.NewLine + exception;
+				}
+			}
+			else
+			{
+				message = Microsoft.Framework.Logging.LogFormatter.Formatter(state, exception);
+			}
+			if (string.IsNullOrEmpty(message))
+			{
+				return;
+			}
+			lock (_lock)
+			{
+				System.IO.File.AppendAllText(_filename, message + "\n");
 			}
 		}
 	}
