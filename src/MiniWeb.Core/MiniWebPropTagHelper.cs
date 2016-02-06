@@ -56,7 +56,7 @@ namespace MiniWeb.Core
 
 				foreach (var attr in EditAttributes)
 				{
-					output.Attributes[attr].Value = viewItem.Model.GetValue(Property + ":" + attr, context.AllAttributes[attr]?.Value?.ToString());
+					output.Attributes.SetAttribute(attr, viewItem.Model.GetValue(Property + ":" + attr, context.AllAttributes[attr]?.Value?.ToString()));
 				}
 			}
 			//Set Content edit properties on tags when logged in
