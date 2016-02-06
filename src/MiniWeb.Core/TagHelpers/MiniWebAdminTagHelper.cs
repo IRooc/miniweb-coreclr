@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace MiniWeb.Core
+namespace MiniWeb.Core.TagHelpers
 {
 	[HtmlTargetElement(MiniWebAdminTag)]
 	public class MiniWebAdminTagHelper : TagHelper

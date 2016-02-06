@@ -51,7 +51,8 @@ namespace MiniWeb.Core
 				routes.MapRoute("miniwebsociallogin", config.Authentication.SocialLoginPath.Substring(1), new { controller = "MiniWebPage", action = "SocialLogin" });
 				routes.MapRoute("miniweblogin", config.Authentication.LoginPath.Substring(1), new { controller = "MiniWebPage", action = "Login" });
 				routes.MapRoute("miniweblogout", config.Authentication.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
-				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" }, constraints: new { url = $".*?\\.{config.PageExtension}(\\?.*)?" });
+				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" }, 
+													 constraints: new { url = $".*?\\.{config.PageExtension}(\\?.*)?" });
 			});
 
 			return app;

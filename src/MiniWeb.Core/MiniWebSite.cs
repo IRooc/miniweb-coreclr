@@ -265,11 +265,13 @@ namespace MiniWeb.Core
 			}
 			return html;
 		}
+
 		private byte[] ConvertToBytes(string base64)
 		{
 			int index = base64.IndexOf("base64,", StringComparison.Ordinal) + 7;
 			return Convert.FromBase64String(base64.Substring(index));
 		}
+
 		private string SaveFileToDisk(byte[] bytes, string extension, string originalFilename)
 		{
 			string relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + extension.Trim('.');

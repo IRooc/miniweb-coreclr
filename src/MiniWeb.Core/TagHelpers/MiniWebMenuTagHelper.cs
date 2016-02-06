@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Logging;
 
-namespace MiniWeb.Core
+namespace MiniWeb.Core.TagHelpers
 {
 	public class MiniWebMenuContext
 	{
@@ -88,10 +88,10 @@ namespace MiniWeb.Core
 					//render child without cached results.
 					await output.GetChildContentAsync(false);
 
-					//get the current parsed ItemTemplate form the context
+					//get the current parsed ItemTemplate from the context
 					output.Content.AppendHtml(menuContext.ItemTemplate);
 				}
-				//reste the current model
+				//reset the current model
 				ViewContext.ViewData.Model = currentModel;
 			}
 			else

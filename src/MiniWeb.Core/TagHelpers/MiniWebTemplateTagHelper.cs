@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace MiniWeb.Core
+namespace MiniWeb.Core.TagHelpers
 {
 	[HtmlTargetElement(Attributes = MiniWebTemplateTagname)]
 	public class MiniWebTemplateTagHelper : TagHelper
@@ -15,7 +15,6 @@ namespace MiniWeb.Core
 
 		[HtmlAttributeName(MiniWebTemplateTagname)]
 		public string Template { get; set; }
-
 
 		private readonly IMiniWebSite _webSite;
 

@@ -36,6 +36,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav" miniweb-menu="/">
+						  <!--model here is the Child SitePage that is rendered currently so Model is still a SitePage but the "wrong" one ...-->
                     <miniweb-menuitem>
                         <li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
                             <a href="@(MiniWebSite.GetPageUrl(Model))">@Model.Title</a>
@@ -50,6 +51,7 @@
             <div role="navigation" class="submenu navbar navbar-default">
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl">
+                        <!--model here is the Child SitePage that is rendered currently so Model is still a SitePage but the "wrong" one ...-->
                         <miniweb-menuitem>
                             <li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
                                 <a href="@(MiniWebSite.GetPageUrl(Model))">@Model.Title</a>

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MiniWeb.Core
 {
+	[Authorize(MiniWebAuthentication.MiniWebCmsRoleValue)]
 	public class MiniWebApiController : Controller
 	{
 		private readonly IMiniWebSite _webSite;
@@ -16,6 +17,7 @@ namespace MiniWeb.Core
 			_webSite = website;
 		}
 
+		[AllowAnonymous]
 		public IActionResult DebugInfo()
 		{
 			return Content(_webSite.HostingEnvironment.EnvironmentName + " " + _webSite.AppEnvironment.ApplicationBasePath);
@@ -23,7 +25,6 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[Authorize(MiniWebAuthentication.MiniWebCmsRoleValue)]
 		public IActionResult SaveContent(string url, string items)
 		{
 			SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
@@ -42,7 +43,6 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[Authorize(MiniWebAuthentication.MiniWebCmsRoleValue)]
 		public IActionResult SavePage(SitePage page)
 		{
 			//ignore move for now...
@@ -71,7 +71,6 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[Authorize(MiniWebAuthentication.MiniWebCmsRoleValue)]
 		public IActionResult RemovePage(string url)
 		{
 			_webSite.Logger?.LogInformation($"remove {url}");

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace MiniWeb.Core
+namespace MiniWeb.Core.TagHelpers
 {
 	[HtmlTargetElement(Attributes = MiniWebSectionTagname)]
 	public class MiniWebSectionTagHelper : TagHelper

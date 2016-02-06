@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace MiniWeb.Core
+namespace MiniWeb.Core.TagHelpers
 {
 	[HtmlTargetElement(Attributes = MiniWebPropertyTagname)]
 	public class MiniWebPropTagHelper : TagHelper
