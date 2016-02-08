@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Razor;
+using Microsoft.AspNet.Routing;
+using Microsoft.AspNet.Routing.Constraints;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,8 +14,30 @@ using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
 {
+	public class MiniWebRouteConstraint : IRouteConstraint
+	{
+
+		private RegexRouteConstraint _regexConstaint;
+		public MiniWebRouteConstraint(string regex)
+		{
+			_regexConstaint = new RegexRouteConstraint(regex);
+		}
+
+		public bool Match(HttpContext httpContext, IRouter route, string routeKey, IDictionary<string, object> values, RouteDirection routeDirection)
+		{
+			object routeValue;
+
+			if (values.TryGetValue(routeKey, out routeValue))
+			{
+				return routeValue == null || _regexConstaint.Match(httpContext, route, routeKey, values, routeDirection);
+			}
+			return false;
+		}
+	}
+
 	public static class MiniWebExtensions
 	{
+
 		public static MiniWebConfiguration GetMiniWebConfig(this IApplicationBuilder app)
 		{
 			return  app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
@@ -53,7 +79,7 @@ namespace MiniWeb.Core
 				routes.MapRoute("miniwebsociallogin", config.Authentication.SocialLoginPath.Substring(1), new { controller = "MiniWebPage", action = "SocialLogin" });
 				routes.MapRoute("miniweblogin", config.Authentication.LoginPath.Substring(1), new { controller = "MiniWebPage", action = "Login" });
 				routes.MapRoute("miniweblogout", config.Authentication.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
-				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" }, constraints: new { url = $".*?\\.{config.PageExtension}(\\?.*)?" });
+				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" }, constraints: new { url = new MiniWebRouteConstraint($".*?\\.{config.PageExtension}(\\?.*)?") });
 			});
 
 			return app;
