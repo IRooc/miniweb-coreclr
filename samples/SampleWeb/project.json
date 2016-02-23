@@ -9,40 +9,40 @@
 	"compilationOptions": {              
 		"emitEntryPoint": true,
 		"preserveCompilationContext": true
-	},  
+	},
 
 	"content": [
 		"wwwroot/**/*",
 		"Views/**/*",
+		"App_Data/**/*",
 		"miniweb.json",
 		"githubauth.json"
 	],
 	"dependencies": {
-		"Microsoft.AspNetCore.Antiforgery": "1.0.0-*",
-		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
-		"Microsoft.AspNetCore.Authentication.OAuth": "1.0.0-*",
-		"Microsoft.AspNetCore.Diagnostics": "1.0.0-*",
-		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
-		"Microsoft.AspNetCore.Identity": "1.0.0-*",
-		"Microsoft.AspNetCore.IISPlatformHandler": "1.0.0-*",
-		"Microsoft.AspNetCore.Mvc": "1.0.0-*",
-		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
-		"Microsoft.AspNetCore.Server.Kestrel": "1.0.0-*",
-		"Microsoft.AspNetCore.StaticFiles": "1.0.0-*",
+		"Microsoft.AspNetCore.Antiforgery": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Authentication.OAuth": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Hosting": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Identity": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.IISPlatformHandler": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Mvc": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-*",
+		"Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
 		"Microsoft.Extensions.Logging.Console": "1.0.0-*",
-		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
+		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-*",
 		"Microsoft.Framework.Logging": "1.0.0-*",
 		"MiniWeb.Core": "",
-		"MiniWeb.Storage.EFStorage": "",
-		"MiniWeb.Storage.JsonStorage": "",
-		"MiniWeb.Storage.XmlStorage": "",
-		"System.Linq": "4.0.1-*"
+		"MiniWeb.Storage.JsonStorage": ""
 	},
 	"frameworks": {
-		"dnxcore50": { }
+		"dnxcore50": {
+			"imports": "portable-net451+win8"
+		}
 	},
 	"commands": {
   		"web": "SampleWeb"
