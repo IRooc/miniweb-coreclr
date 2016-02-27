@@ -14,11 +14,12 @@
 		"MiniWeb.Core": "",
 		"System.Security.Cryptography.Algorithms": "4.0.0-*"
 	},
-	"commands": {
-		"ef": "EntityFramework.Commands"
-	},
-
 	"frameworks": {
-		"dnxcore50": { }
+		"dnxcore50": {
+			"imports": "portable-net451+win8",
+			"dependencies": {
+				"NETStandard.Library": "1.0.0-*"
+			}
+		}
 	}
 }

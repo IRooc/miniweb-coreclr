@@ -14,8 +14,7 @@
 		"Microsoft.Extensions.FileProviders.Embedded": "1.0.0-rc2-*",
 		"Microsoft.Extensions.Logging": "1.0.0-*",
 		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-*",
-		"System.Runtime.Serialization.Primitives": "4.1.0-*",
-		"Microsoft.NETCore.Platforms": "1.0.1-rc2-*"
+		"System.Runtime.Serialization.Primitives": "4.1.0-*"
 	},
 
 	"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",
@@ -23,7 +22,10 @@
 	"frameworks": {
 
 		"dnxcore50": {
-			"imports": "portable-net451+win8"
+			"imports": "portable-net451+win8",
+			"dependencies": {
+				"NETStandard.Library": "1.0.0-*"
+			}
 		}
 	}
 }
