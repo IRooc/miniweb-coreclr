@@ -19,6 +19,12 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+# intelli-rider
+.idea/
+*.iml
+
+
+
 # Roslyn cache directories
 *.ide/
 
