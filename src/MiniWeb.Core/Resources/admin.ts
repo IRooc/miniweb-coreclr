@@ -300,6 +300,33 @@
 				editEnd: function (index) {
 					$(".editor-toolbar").remove();
 				}
+			},
+			{
+				key: 'url',
+				editStart: function (index) {
+					$(this).addClass('miniweb-url-edit').click(function () {
+						var $el = $(this);
+						var curHref = $el.text();
+						if (curHref.indexOf('http') == 0) {
+							$('#addHyperLink #createLinkUrl').val(curHref);
+						} else {
+							$('#addHyperLink #createInternalUrl').val(curHref);
+						}
+						$('#addHyperLink .btn-primary').unbind('click');
+						$('#addHyperLink .btn-primary').bind('click', function () {
+							var newHref = $('#addHyperLink #createInternalUrl').val();
+							if (newHref == '') {
+								newHref = $('#addHyperLink #createLinkUrl').val();
+							}
+							$el.text(newHref);
+							$('#addHyperLink').modal('hide');
+						});
+						$('#addHyperLink').modal();
+					});
+				},
+				editEnd: function (index) {
+					$(this).removeClass('miniweb-url-edit');
+				}
 			}
 		]
 	};

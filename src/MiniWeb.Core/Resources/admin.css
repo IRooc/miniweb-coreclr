@@ -102,6 +102,7 @@ miniwebadmin .miniweb.modal-dialog {
 
 body.miniweb-editing [data-miniwebtemplate] {
 	overflow: hidden;
+	padding: 1px;
 }
 
 body.miniweb-editing [contenteditable] {

@@ -56,15 +56,26 @@ namespace MiniWeb.Core
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Logout(string returnUrl)
+		public async Task<IActionResult> Login(string username, string password, bool remember = false)
 		{
-			if (_webSite.IsAuthenticated(User))
+			_webSite.Logger?.LogInformation("login post");
+			if (_webSite.Authenticate(username, password))
 			{
-				_webSite.Logger?.LogInformation($"Logout {User.Identity.Name} and goto {returnUrl}");
-				await HttpContext.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
-				return Redirect(returnUrl);
+				var claims = new[] {
+					new Claim(ClaimTypes.Name, username),
+					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
+				};
+
+				_webSite.Logger?.LogInformation($"signing in as :{username}");
+				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
+				var identity = new ClaimsIdentity(claims, _webSite.Configuration.Authentication.AuthenticationType);
+				var principal = new ClaimsPrincipal(identity);
+				await HttpContext.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
+
+				return Redirect(_webSite.Configuration.DefaultPage);
 			}
-			return Index(_webSite.Configuration.DefaultPage);
+			ViewBag.ErrorMessage = $"Failed to login as {username}";
+			return Login();
 		}
 
 		public IActionResult SocialLogin()
@@ -89,26 +100,15 @@ namespace MiniWeb.Core
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Login(string username, string password, bool remember = false)
+		public async Task<IActionResult> Logout(string returnUrl)
 		{
-			_webSite.Logger?.LogInformation("login post");
-			if (_webSite.Authenticate(username, password))
+			if (_webSite.IsAuthenticated(User))
 			{
-				var claims = new[] {
-					new Claim(ClaimTypes.Name, username),
-					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
-				};
-
-				_webSite.Logger?.LogInformation($"signing in as :{username}");
-				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
-				var identity = new ClaimsIdentity(claims, _webSite.Configuration.Authentication.AuthenticationType);
-				var principal = new ClaimsPrincipal(identity);
-				await HttpContext.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
-
-				return Redirect(_webSite.Configuration.DefaultPage);
+				_webSite.Logger?.LogInformation($"Logout {User.Identity.Name} and goto {returnUrl}");
+				await HttpContext.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
+				return Redirect(returnUrl);
 			}
-			ViewBag.ErrorMessage = $"Failed to login as {username}";
-			return Login();
+			return Index(_webSite.Configuration.DefaultPage);
 		}
     }
 }

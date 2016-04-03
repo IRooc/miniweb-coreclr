@@ -146,7 +146,6 @@ namespace MiniWeb.Core
 			{
 				Logger?.LogInformation($"Found page [{foundPage.Url}] from url: [{url}]");
 			}
-			foundPage.UrlSuffix = suffix;
 			return foundPage;
 		}
 
@@ -227,7 +226,7 @@ namespace MiniWeb.Core
 
 		public List<PageSection> GetDefaultContentForTemplate(string template)
 		{
-			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template,template) == 0);
+			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template, template) == 0);
 			return defaultContent?.Content?.Select(c => new PageSection()
 			{
 				Key = c.Section,
@@ -238,12 +237,17 @@ namespace MiniWeb.Core
 				}).ToList()
 			}).ToList();
 		}
+		
+		public bool ShowSubMenuForPage(SitePage page)
+		{
+			return Pages.Any(p => page.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu()));
+		}
 
 		private string SaveEmbeddedImages(string html)
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
 			Match match = Regex.Match(html, "(data-filename=\"([^\"]+)\"\\s+)(src|href)=\"(data:([^\"]+))\"?");
-			while (!string.IsNullOrEmpty(match.Value))
+			while (!string.IsNullOrEmpty(match?.Value))
 			{
 				string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
 				string filename = match.Groups[2].Value;
@@ -261,11 +265,13 @@ namespace MiniWeb.Core
 			}
 			return html;
 		}
+
 		private byte[] ConvertToBytes(string base64)
 		{
 			int index = base64.IndexOf("base64,", StringComparison.Ordinal) + 7;
 			return Convert.FromBase64String(base64.Substring(index));
 		}
+
 		private string SaveFileToDisk(byte[] bytes, string extension, string originalFilename)
 		{
 			string relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + extension.Trim('.');

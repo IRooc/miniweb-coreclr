@@ -26,10 +26,7 @@ namespace MiniWeb.Core
 
 		[IgnoreDataMember]
 		public SitePage Parent { get; set; }
-
-		[IgnoreDataMember]
-		public string UrlSuffix { get; set; }
-
+		
 		[IgnoreDataMember]
 		public string BaseUrl
 		{

@@ -31,5 +31,7 @@ namespace MiniWeb.Core
 		void ReloadPages();
 		void SaveSitePage(SitePage page, bool storeImages = false);
 		List<PageSection> GetDefaultContentForTemplate(string template);
+
+		bool ShowSubMenuForPage(SitePage page);
 	}
 }
