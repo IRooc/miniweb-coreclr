@@ -1,18 +1,26 @@
 {
 	"version": "1.0.0",
+    "compilationOptions": {
+        "preserveCompilationContext": true,
+        "emitEntryPoint": false,
+    		"debugType": "portable"
+    },
 	"dependencies": {
+ 		"Microsoft.NETCore.App": {
+       	    	"type": "platform",
+         	   	"version": "1.0.0-rc2-23931"
+        	},
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"Microsoft.Extensions.Logging": "1.0.0-*",
-		"MiniWeb.Core": ""
+		"MiniWeb.Core": "1.0.0"
 	},
 
 	"frameworks": {
-		"dnxcore50": {
-			"imports": "portable-net451+win8",
-			"dependencies": {
-				"NETStandard.Library": "1.0.0-*"
-			}
-		}
-	}
+      "netcoreapp1.0": {
+        "imports": [
+        "portable-net45+wp80+win8+wpa81+dnxcore50"
+        ]
+      }
+    }
 }

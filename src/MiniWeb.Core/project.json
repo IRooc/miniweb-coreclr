@@ -1,31 +1,38 @@
 {
 	"version": "1.0.0",
+    "compilationOptions": {
+        "preserveCompilationContext": true,
+        "emitEntryPoint": false,
+    		"debugType": "portable"
+    },
 	"dependencies": {
-		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.DataProtection": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Hosting": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Html.Abstractions": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Mvc.Core": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Mvc.Razor": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Razor.Runtime": "1.0.0-rc2-*",
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0-rc2-23931"
+    },
+		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
+		"Microsoft.AspNetCore.DataProtection": "1.0.0-*",
+		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
+		"Microsoft.AspNetCore.Html.Abstractions": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.Core": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-*",
+		"Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
-		"Microsoft.Extensions.FileProviders.Embedded": "1.0.0-rc2-*",
+		"Microsoft.Extensions.FileProviders.Embedded": "1.0.0-*",
 		"Microsoft.Extensions.Logging": "1.0.0-*",
-		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-*",
-		"System.Runtime.Serialization.Primitives": "4.1.0-*"
+		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
+		"System.Runtime.Serialization.Primitives": "4.1.1-*"
 	},
 
 	"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",
 
 	"frameworks": {
-
-		"dnxcore50": {
-			"imports": "portable-net451+win8",
-			"dependencies": {
-				"NETStandard.Library": "1.0.0-*"
-			}
-		}
-	}
+      "netcoreapp1.0": {
+        "imports": [
+        "portable-net45+wp80+win8+wpa81+dnxcore50"
+        ]
+      }
+    }
 }

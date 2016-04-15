@@ -42,7 +42,7 @@ namespace MiniWeb.Core.TagHelpers
 				}
 
 				//contextualize the HtmlHelper for the current ViewContext
-				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
+				(_htmlHelper as IViewContextAware)?.Contextualize(ViewContext);
 				//get out the current ViewPage for the Model.
 				var view = ViewContext.View as RazorView;
 				var viewPage = view?.RazorPage as RazorPage<SitePage>;

@@ -32,9 +32,9 @@ namespace MiniWeb.Core.TagHelpers
 			{
 				output.TagMode = TagMode.StartTagAndEndTag;
 				//add the own contents.
-				output.Content.SetContent(output.GetChildContentAsync().Result);
+				output.Content.AppendHtml(output.GetChildContentAsync().Result);
 
-				(_htmlHelper as ICanHasViewContext)?.Contextualize(ViewContext);
+				(_htmlHelper as IViewContextAware )?.Contextualize(ViewContext);
 				//admin content
 				var content = _htmlHelper.Partial(_webSite.Configuration.EmbeddedResourcePath + MiniWebFileProvider.ADMIN_FILENAME);
 

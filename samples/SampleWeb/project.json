@@ -8,7 +8,8 @@
 	],
 	"compilationOptions": {              
 		"emitEntryPoint": true,
-		"preserveCompilationContext": true
+		"preserveCompilationContext": true,
+    		"debugType": "portable"
 	},
 
 	"content": [
@@ -18,36 +19,35 @@
 		"miniweb.json",
 		"githubauth.json"
 	],
-	"dependencies": {
-		"Microsoft.AspNetCore.Antiforgery": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Authentication.OAuth": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Hosting": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Identity": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.IISPlatformHandler": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Mvc": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-*",
-		"Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-*",
+	"dependencies": {    
+		"Microsoft.NETCore.App": {
+			"type": "platform",
+			"version": "1.0.0-rc2-23931"
+		},
+		"Microsoft.AspNetCore.Antiforgery": "1.0.0-*",
+		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
+		"Microsoft.AspNetCore.Authentication.OAuth": "1.0.0-*",
+		"Microsoft.AspNetCore.Diagnostics": "1.0.0-*",
+		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
+		"Microsoft.AspNetCore.Identity": "1.0.0-*",
+		"Microsoft.AspNetCore.IISPlatformHandler": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc": "1.0.0-*",
+		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
+		"Microsoft.AspNetCore.Server.Kestrel": "1.0.0-*",
+		"Microsoft.AspNetCore.StaticFiles": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
 		"Microsoft.Extensions.Logging.Console": "1.0.0-*",
-		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-*",
-		"Microsoft.Framework.Logging": "1.0.0-*",
-		"MiniWeb.Core": "",
-		"MiniWeb.Storage.JsonStorage": ""
+		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
+		"MiniWeb.Core": "*",
+		"MiniWeb.Storage.JsonStorage": "*"
 	},
 	"frameworks": {
-		"dnxcore50": {
-			"imports": "portable-net451+win8",
-			"dependencies": {
-				"NETStandard.Library": "1.0.0-*"
-			}
-		}
-	},
-	"commands": {
-  		"web": "SampleWeb"
-	}
+      "netcoreapp1.0": {
+        "imports": [
+        "portable-net45+wp80+win8+wpa81+dnxcore50"
+        ]
+      }
+    }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿
+using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
 namespace SampleWeb
@@ -9,11 +11,12 @@ namespace SampleWeb
 		public static void Main(string[] args)
 		{
 			var host = new WebHostBuilder()
-						.UseDefaultConfiguration(args)
-						.UseServer("Microsoft.AspNetCore.Server.Kestrel")
+                        .UseKestrel()
+                        .UseContentRoot(Directory.GetCurrentDirectory())
+                        .UseDefaultHostingConfiguration(args)
 						.UseUrls("http://localhost:5001")
-						.UseStartup<Startup>()
-						.Build();
+                        .UseStartup<Startup>()
+                        .Build();
 
 			host.Run();
 		}

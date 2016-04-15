@@ -54,11 +54,6 @@ namespace SampleWeb
 				loggerfactory.AddConsole(LogLevel.Information);
 			}
 
-			if (Configuration.Value<bool>("Logging:EnableFile"))
-			{
-				loggerfactory.AddProvider(new FileLoggerProvider((category, logLevel) => logLevel >= LogLevel.Information,
-																	  appEnv.ApplicationBasePath + "/logfile.txt"));
-			}
 			app.UseDeveloperExceptionPage();
 			app.UseStaticFiles();
 
@@ -82,7 +77,6 @@ namespace SampleWeb
 				UserInformationEndpoint = "https://api.github.com/user",
 				ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType,
 				SignInScheme = miniwebConfig.Authentication.AuthenticationScheme,
-				SaveTokensAsClaims = false,
 				Events = new OAuthEvents()
 				{
 					OnCreatingTicket = async notification =>

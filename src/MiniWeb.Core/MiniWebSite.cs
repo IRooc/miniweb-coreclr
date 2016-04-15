@@ -277,7 +277,7 @@ namespace MiniWeb.Core
 			string relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + extension.Trim('.');
 			if (!string.IsNullOrWhiteSpace(originalFilename))
 			{
-				var originalDestFile = HostingEnvironment.MapPath(Configuration.ImageSavePath + originalFilename);
+				var originalDestFile = Path.Combine(HostingEnvironment.WebRootPath, Configuration.ImageSavePath, originalFilename);
 				if (!File.Exists(originalDestFile))
 				{
 					relative = Configuration.ImageSavePath + originalFilename;
@@ -289,7 +289,7 @@ namespace MiniWeb.Core
 				}
 				relative = relative.ToLowerInvariant();
 			}
-			string file = HostingEnvironment.MapPath(relative);
+			string file = Path.Combine(HostingEnvironment.WebRootPath, relative);
 			File.WriteAllBytes(file, bytes);
 
 			//TODO(RC) is this correct, path for browser to wwwroot;
