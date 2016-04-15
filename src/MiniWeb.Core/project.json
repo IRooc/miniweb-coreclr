@@ -14,6 +14,7 @@
 		"Microsoft.AspNetCore.DataProtection": "1.0.0-*",
 		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
 		"Microsoft.AspNetCore.Html.Abstractions": "1.0.0-*",
+		"Microsoft.AspNetCore.Routing": "1.0.0-*",
 		"Microsoft.AspNetCore.Mvc.Core": "1.0.0-*",
 		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
 		"Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-*",

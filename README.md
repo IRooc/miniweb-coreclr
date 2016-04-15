@@ -8,7 +8,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * oAuth & basic authentication 
 * custom configuration
 * custom taghelpers
-* custom middleware
+* [embedded assets through custom middleware](http://irooc.github.io/miniweb-coreclr/embedded-assets.html)
 * embedded Razor View
 * [embedded assets](http://irooc.github.io/miniweb-coreclr/embedded-assets.html) (css/js)
 
@@ -118,7 +118,7 @@ The first two are filesystem stores and store their files in the /App_Data/Sitep
 
 ## TODO
 * Multiple edittypes
-* Extra Storage Provider examples (documentdb, sql)
+* Extra Storage Provider examples (documentdb)
 * Better image handling (enable picking existing images as well)
 * Upgrade to new bootstrap
 * Setup integration with clientside packages (bower grunt and so on)

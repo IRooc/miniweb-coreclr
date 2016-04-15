@@ -57,7 +57,13 @@ namespace MiniWeb.Core.TagHelpers
 
 				foreach (var attr in EditAttributes)
 				{
-					output.Attributes.SetAttribute(attr, viewItem.Model.GetValue(Property + ":" + attr, context.AllAttributes[attr]?.Value?.ToString()));
+					var curAttr = attr;
+					var attrEls = attr.Split('|');
+					if (attrEls.Length > 1)
+					{
+						curAttr = attrEls[0];
+					}
+					output.Attributes.SetAttribute(curAttr, viewItem.Model.GetValue(Property + ":" + curAttr, context.AllAttributes[attr]?.Value?.ToString()));
 				}
 			}
 			//Set Content edit properties on tags when logged in
@@ -73,7 +79,15 @@ namespace MiniWeb.Core.TagHelpers
 					output.PostElement.AppendHtml("<div class=\"miniweb-attributes\">");
 					foreach (var attr in EditAttributes)
 					{
-						var attrEditItem = string.Format("<span data-miniwebprop=\"{0}:{1}\">{2}</span>", Property, attr, output.Attributes[attr].Value);
+						var curAttr = attr;
+						var curType = string.Empty;
+						var attrEls = attr.Split('|');
+						if (attrEls.Length > 1)
+						{
+							curAttr = attrEls[0];
+							curType = $" data-miniwebedittype=\"{attrEls[1]}\"";
+                        }
+						var attrEditItem = string.Format("<span data-miniwebprop=\"{0}:{1}\" {3}>{2}</span>", Property, curAttr, output.Attributes[curAttr].Value, curType);
 						output.PostElement.AppendHtml(attrEditItem);
 					}
 					output.PostElement.AppendHtml("</div>");
