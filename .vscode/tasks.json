@@ -8,7 +8,7 @@
 	"tasks": [
 		{
 			"taskName": "build",
-			"args": [ ],
+			"args": ["./samples/SampleWeb"],
 			"isBuildCommand": true,
 			"showOutput": "always",
 			"problemMatcher": "$msCompile"

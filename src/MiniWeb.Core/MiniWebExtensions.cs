@@ -19,7 +19,7 @@ namespace MiniWeb.Core
 		public MiniWebRouteConstraint(string extension)
 		{
 			if (!string.IsNullOrEmpty(extension)){
-				_regexConstaint = new RegexRouteConstraint(".*?\\.{extension}(\\?.*)?");
+				_regexConstaint = new RegexRouteConstraint($".*?\\.{extension}(\\?.*)?");
 			}
 		}
 
