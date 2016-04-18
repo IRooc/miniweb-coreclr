@@ -12,20 +12,17 @@ namespace SampleWeb
 
 		public static void Main(string[] args)
 		{
+			var contentRoot = PlatformServices.Default.Application.ApplicationBasePath;
+			
 			var host = new WebHostBuilder()
-                        .UseKestrel()
-                        .UseContentRoot(GetApplicationPath("wwwroot"))
-                        .UseDefaultHostingConfiguration(args)
+						.UseKestrel()
+						.UseContentRoot(contentRoot)
+						.UseDefaultHostingConfiguration(args)
 						.UseUrls("http://localhost:5001")
-                        .UseStartup<Startup>()
-                        .Build();
+						.UseStartup<Startup>()
+						.Build();
 
 			host.Run();
 		}
-		private static string GetApplicationPath(string relativePath)
-        {
-            var applicationBasePath = PlatformServices.Default.Application.ApplicationBasePath;
-            return Path.GetFullPath(Path.Combine(applicationBasePath, relativePath));
-        }
 	}
 }
