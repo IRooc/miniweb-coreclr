@@ -12,8 +12,8 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * embedded Razor View
 * [embedded assets](http://irooc.github.io/miniweb-coreclr/embedded-assets.html) (css/js)
 
-it currently runs on  1.0.0-rc2-16357 coreclr x64.
-Tested on windows, mac osx, linux (ubuntu) and windows IoT 
+it currently runs on  1.0.0-rc2-24008 coreclr x64.
+Tested on windows, mac osx, linux (ubuntu)
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
@@ -101,7 +101,7 @@ public static void Main(string[] args)
 	var host = new WebHostBuilder()
 				.UseKestrel()
 				//if Directory.GetCurrentDirectory() is used the application should be run from the base path 
-				// and cannot be started from a different folder..
+				// and cannot be started from a different folder, ie dotnet run -p samples/SampleWeb 
 				.UseContentRoot(PlatformServices.Default.Application.ApplicationBasePath)
 				.UseDefaultHostingConfiguration(args)
 				.UseUrls("http://localhost:5001")
