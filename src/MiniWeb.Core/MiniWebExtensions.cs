@@ -1,6 +1,7 @@
 using System;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
@@ -89,14 +90,14 @@ namespace MiniWeb.Core
 		}
 
 
-		public static IServiceCollection AddMiniWeb<T1, T2>(this IServiceCollection services, IConfiguration configuration)
+		public static IServiceCollection AddMiniWeb<T1, T2>(this IServiceCollection services, IConfigurationRoot configuration)
 			where T1 : class, IMiniWebStorage
 			where T2 : class, IMiniWebStorageConfiguration
 		{
 			return services.AddMiniWeb<MiniWebSite, T1, T2>(configuration);
 		}
 
-		public static IServiceCollection AddMiniWeb<T1, T2, T3>(this IServiceCollection services, IConfiguration configuration)
+		public static IServiceCollection AddMiniWeb<T1, T2, T3>(this IServiceCollection services, IConfigurationRoot configuration)
 			where T1 : class, IMiniWebSite
 			where T2 : class, IMiniWebStorage
 			where T3 : class, IMiniWebStorageConfiguration
@@ -104,12 +105,16 @@ namespace MiniWeb.Core
 			//Setup miniweb configuration
 			services.Configure<T3>(configuration.GetSection("MiniWebStorage"));
 			services.Configure<MiniWebConfiguration>(configuration.GetSection("MiniWeb"));
+			
+			//get the config locally
+			var config = new MiniWebConfiguration();
+			configuration.GetSection("MiniWeb").Bind(config);
 
 			//how to do this in ConfigureServices??
-			string embeddedFilePath = configuration.GetSection("MiniWeb:EmbeddedResourcePath")?.Value ?? new MiniWebConfiguration().EmbeddedResourcePath;
+			string embeddedFilePath = config.EmbeddedResourcePath;
 
 			//make sure embedded view is returned when needed
-			var appEnv = services.BuildServiceProvider().GetService<IApplicationEnvironment>();
+			var appEnv = services.BuildServiceProvider().GetService<IHostingEnvironment>();
 			services.Configure<RazorViewEngineOptions>(options => { options.FileProviders.Insert(0, new MiniWebFileProvider(appEnv, embeddedFilePath)); });
 
 			services.AddAuthorization(options =>

@@ -8,7 +8,6 @@ namespace MiniWeb.Core
 {
 	public interface IMiniWebSite
 	{
-		IApplicationEnvironment AppEnvironment { get; }
 		IHostingEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }
 

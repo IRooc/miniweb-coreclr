@@ -59,12 +59,13 @@ For this to work the miniweb taghelpers need to be registered for instance in th
 
 the minimal startup will be something like this:
 ```c#
-public IConfiguration Configuration { get; set; }
+public IConfigurationRoot Configuration { get; set; }
 
-public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+public Startup(IHostingEnvironment env)
 {
 	// Setup configuration sources, not needed if defaults are used
-	var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+	var configuration = new ConfigurationBuilder()
+					.SetBasePath(env.ContentRootPath)
 					.AddJsonFile("miniweb.json", optional: true)
 					.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
 					.AddEnvironmentVariables();
@@ -93,15 +94,19 @@ public void Configure(IApplicationBuilder app)
 	app.UseMiniWebSite();
 }
 
+//Main entrypoint
 public static void Main(string[] args)
 {
     
 	var host = new WebHostBuilder()
-       			.UseDefaultConfiguration(args)
-     			.UseServer("Microsoft.AspNet.Server.Kestrel")
-			    .UseUrls("http://localhost:5001")
-			    .UseStartup<Startup>() // Startup is the name of the Startup class 
-			    .Build();
+				.UseKestrel()
+				//if Directory.GetCurrentDirectory() is used the application should be run from the base path 
+				// and cannot be started from a different folder..
+				.UseContentRoot(PlatformServices.Default.Application.ApplicationBasePath)
+				.UseDefaultHostingConfiguration(args)
+				.UseUrls("http://localhost:5001")
+				.UseStartup<Startup>()
+				.Build();
 
 	host.Run();
 }

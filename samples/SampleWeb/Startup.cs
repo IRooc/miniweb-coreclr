@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
@@ -18,15 +17,15 @@ using Newtonsoft.Json.Linq;
 namespace SampleWeb
 {
 
-	public class Startup
+    public class Startup
 	{
-		public IConfiguration Configuration { get; set; }
+		public IConfigurationRoot Configuration { get; set; }
 
-		public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+		public Startup(IHostingEnvironment env)
 		{
 			// Setup configuration sources.
 			var configuration = new ConfigurationBuilder()
-								.SetBasePath(appEnv.ApplicationBasePath)
+								.SetBasePath(env.ContentRootPath)
 								.AddJsonFile("miniweb.json")
 								.AddJsonFile("githubauth.json")
 								.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
@@ -41,12 +40,11 @@ namespace SampleWeb
 			services.AddAntiforgery();
 			services.AddMvc();
 
-			services.Configure<GithubAuthConfig>(Configuration.GetSection("GithubAuth"));
 			//services.AddMiniWebEFSqlServerStorage(Configuration);
 			services.AddMiniWebJsonStorage(Configuration);
 		}
 
-		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory, IApplicationEnvironment appEnv)
+		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory)
 		{
 			// Add the loggers.
 			if (Configuration.Value<bool>("Logging:EnableConsole"))
@@ -64,7 +62,8 @@ namespace SampleWeb
 			app.UseMiniWebSiteCookieAuth();
 
 			//setup other authentications
-			var githubConfig = app.GetConcreteOptions<GithubAuthConfig>();
+			var githubConfig = new GithubAuthConfig();
+			Configuration.GetSection("GithubAuth").Bind(githubConfig);
 			app.UseOAuthAuthentication(new OAuthOptions
 			{
 				AuthenticationScheme = "Github-Auth",
@@ -114,11 +113,6 @@ namespace SampleWeb
 
 	public static class ConfigExtensions
 	{
-		public static T GetConcreteOptions<T>(this IApplicationBuilder app) where T : class, new()
-		{
-			return app.ApplicationServices.GetRequiredService<IOptions<T>>().Value;
-		}
-
 		public static T Value<T>(this IConfiguration configuration, string key)
 		{
 			try

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -16,10 +17,10 @@ namespace MiniWeb.Core
 
 		public const string ADMIN_FILENAME = "adminview.cshtml";
 
-		public MiniWebFileProvider(IApplicationEnvironment applicationEnvironment, String embeddedFilePath, ILogger logger = null)
+		public MiniWebFileProvider(IHostingEnvironment hostingEnv, String embeddedFilePath, ILogger logger = null)
 		{
 			_logger = logger;
-			_physicalFileProvider = new PhysicalFileProvider(applicationEnvironment.ApplicationBasePath);
+			_physicalFileProvider = new PhysicalFileProvider(hostingEnv.ContentRootPath);
 			_embeddedFileProvider = new EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
 			_embeddedFilePath = embeddedFilePath;
 		}

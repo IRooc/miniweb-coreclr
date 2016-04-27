@@ -13,7 +13,6 @@ namespace MiniWeb.Core
 {
 	public class MiniWebSite : IMiniWebSite
 	{
-		public IApplicationEnvironment AppEnvironment { get; }
 		public MiniWebConfiguration Configuration { get; }
 		public IHostingEnvironment HostingEnvironment { get; }
 
@@ -26,7 +25,7 @@ namespace MiniWeb.Core
 		{
 			get
 			{
-				string basePath = AppEnvironment.ApplicationBasePath;
+				string basePath = HostingEnvironment.ContentRootPath;
 				return System.IO.Directory.GetFiles(basePath + Configuration.PageTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
 			}
 		}
@@ -35,7 +34,7 @@ namespace MiniWeb.Core
 		{
 			get
 			{
-				string basePath = AppEnvironment.ApplicationBasePath;
+				string basePath = HostingEnvironment.ContentRootPath;
 				return System.IO.Directory.GetFiles(basePath + Configuration.ItemTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
 			}
 		}
@@ -91,12 +90,11 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public MiniWebSite(IHostingEnvironment env, IApplicationEnvironment appEnv, ILoggerFactory loggerfactory,
+		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory,
 								 IMiniWebStorage storage, IOptions<MiniWebConfiguration> config)
 		{
 			Pages = Enumerable.Empty<SitePage>();
 
-			AppEnvironment = appEnv;
 			HostingEnvironment = env;
 			Configuration = config.Value;
 			Storage = storage;

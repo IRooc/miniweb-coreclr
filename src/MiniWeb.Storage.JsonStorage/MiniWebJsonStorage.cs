@@ -57,9 +57,9 @@ namespace MiniWeb.Storage.JsonStorage
 		public IEnumerable<SitePage> AllPages()
 		{
 			List<SitePage> pages = new List<SitePage>();
-			if (Directory.Exists(MiniWebSite.AppEnvironment.ApplicationBasePath + StorageConfig.SitePageFolder))
+			if (Directory.Exists(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder))
 			{
-				string[] pageFiles = Directory.GetFiles(MiniWebSite.AppEnvironment.ApplicationBasePath + StorageConfig.SitePageFolder, "*.json");
+				string[] pageFiles = Directory.GetFiles(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder, "*.json");
 				foreach (string page in pageFiles)
 				{
 					MiniWebSite.Logger?.LogDebug($"Loading page from disc {page}");
@@ -104,14 +104,14 @@ namespace MiniWeb.Storage.JsonStorage
 		{
 			string name = url.Replace('/', '~') + ".json";
 			name = name.TrimStart('~');
-			name = MiniWebSite.AppEnvironment.ApplicationBasePath + StorageConfig.SitePageFolder + name;
+			name = MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder + name;
 			return name;
 		}
 		private string GetSitePageVersionFileName(string url)
 		{
 			string name = url.Replace('/', '~') + ".json";
 			name = name.TrimStart('~');
-			name = MiniWebSite.AppEnvironment.ApplicationBasePath + StorageConfig.SitePageVersionFolder + name;
+			name = MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageVersionFolder + name;
 			return name;
 		}
 	}
