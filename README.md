@@ -4,12 +4,12 @@
 Firstly an easy to use Simple CMS website that just needs page templates and content item templates in form of cshtml files
 
 Secondly it is an experiment with what .net coreclr can and can't do. I'm currently using
-* mvc and webapi
+* [mvc and webapi](http://irooc.github.io/miniweb-coreclr/mvc-api.html)
 * oAuth & basic authentication 
 * custom configuration
 * custom taghelpers
 * [embedded assets through custom middleware](http://irooc.github.io/miniweb-coreclr/embedded-assets.html)
-* embedded Razor View
+* [embedded Razor View](http://irooc.github.io/miniweb-coreclr/embedded-razorviews.html)
 * [embedded assets](http://irooc.github.io/miniweb-coreclr/embedded-assets.html) (css/js)
 
 it currently runs on  1.0.0-rc2-24008 coreclr x64.

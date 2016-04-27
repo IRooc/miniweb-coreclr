@@ -3,7 +3,6 @@ using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Primitives;
 
 namespace MiniWeb.Core
@@ -33,18 +32,11 @@ namespace MiniWeb.Core
 
 		public IFileInfo GetFileInfo(string subpath)
 		{
-			var fileInfo = _physicalFileProvider.GetFileInfo(subpath);
 			if (subpath == _embeddedFilePath + ADMIN_FILENAME)
 			{
-				fileInfo = _embeddedFileProvider.GetFileInfo($"Resources/adminview.cshtml");
-				if (!fileInfo.Exists)
-				{
-					//mac linux view workaround
-					fileInfo = _physicalFileProvider.GetFileInfo("/wwwroot" + subpath);
-				}
-			}
-
-			return fileInfo;
+				return _embeddedFileProvider.GetFileInfo($"Resources/{ADMIN_FILENAME}");
+			} 
+			return  _physicalFileProvider.GetFileInfo(subpath);
 		}
 
 		public IChangeToken Watch(string filter)
@@ -52,51 +44,10 @@ namespace MiniWeb.Core
 			_logger?.LogInformation($"Watch {filter}");
 			if (filter == _embeddedFilePath + ADMIN_FILENAME)
 			{
-				return IgnoreChangeToken.Instance;
+				return _embeddedFileProvider.Watch(filter);
 			}
 			return _physicalFileProvider.Watch(filter);
 		}
 
-
-		/// <summary>
-		/// gotten from NoopChangeToken example in Microsoft.AspNet.FileProviders 
-		/// </summary>
-		internal class IgnoreChangeToken : IChangeToken
-		{
-			public static IgnoreChangeToken Instance { get; } = new IgnoreChangeToken();
-
-			private IgnoreChangeToken()
-			{
-			}
-
-			public bool HasChanged
-			{
-				get { return false; }
-			}
-
-			public bool ActiveChangeCallbacks
-			{
-				get { return false; }
-			}
-
-			public IDisposable RegisterChangeCallback(Action<object> callback, object state)
-			{
-				//ignore this call,
-				return EmptyDisposable.Instance;
-			}
-		}
-
-		internal class EmptyDisposable : IDisposable
-		{
-			public static EmptyDisposable Instance { get; } = new EmptyDisposable();
-
-			private EmptyDisposable()
-			{
-			}
-
-			public void Dispose()
-			{
-			}
-		}
 	}
 }
