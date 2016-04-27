@@ -30,71 +30,66 @@
         <section id="main-content">
           <h1><a id="miniweb-small-cms-for-aspnet-core" class="anchor" href="#miniweb-small-cms-for-aspnet-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Embedded razor views in your assembly</h1>
 <p>To embed Razor Views into your assembly you not only need the same setupt as normal assets in the project.json file<p>
-	<div class="highlight highlight-text-html-basic"><pre>
-"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",
+    <div class="highlight highlight-text-html-basic"><pre>
+<span class="pl-s">"resource"</span>: <span class="pl-s">"Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml"</span>,
 </pre>
 </div>
 <p>But you also need to wrap the PhysicalFileProvider the RazorViewEngine uses in an EmbeddedFileProvider that either serves your embedded file or lets the PhysicalFileProvider handle it further. You can create an EmbeddedFileProvider that falls back to the PhysicalFileProvider like this:
-	<div class="highlight highlight-text-html-basic">
-		<pre>
+    <div class="highlight highlight-text-html-basic">
+        <pre>
 <span class="pl-k">using</span> ....
 <span class="pl-k">using</span> Microsoft.Extensions.FileProviders<span class="pl-k">;</span>
 
 <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">MiniWebFileProvider</span> : <span class="pl-k">IFileProvider</span>
 {
-	<span class="pl-k">readonly</span> <span class="pl-en">IFileProvider</span> _physicalFileProvider;
-	<span class="pl-k">readonly</span> <span class="pl-en">IFileProvider</span> _embeddedFileProvider;
-	<span class="pl-k">readonly</span> <span class="pl-en">String</span> _embeddedFilePath;
-	
-	<span class="pl-k">public</span> MiniWebFileProvider(<span class="pl-k">IHostingEnvironment</span> hostingEnv, <span class="pl-k">string</span> embeddedFilePath)
-	{
-		<span class="pl-c">// Point the PhysicalFileProvider to the ContentRootPath of your application so it can find the Physical Views there</span>
-		_physicalFileProvider = <span class="pl-k">new</span> PhysicalFileProvider(hostingEnv.ContentRootPath);
-		<span class="pl-c">// Set the Assembly and Namespace of the embedded Razor Views that need to be served, in this case the current assembly</span>
-		_embeddedFileProvider = <span class="pl-k">new</span> EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
-		<span class="pl-c">// Set the path to listen to for the embedded files so you can differentiate between Physical en Embedded based on folder and filename</span>
-		_embeddedFilePath = embeddedFilePath;
-	}
-	
-	<span class="pl-k">public</span> IDirectoryContents GetDirectoryContents(<span class="pl-k">string</span> subpath)
-	{
-		<span class="pl-k">return</span> _physicalFileProvider.GetDirectoryContents(subpath);
-	}
-	
-	<span class="pl-k">public</span> IFileInfo GetFileInfo(<span class="pl-k">string</span> filepath)
-	{
-		<span class="pl-k">IFileInfo</span> fileinfo;
-		<span class="pl-c">// In this example only listen to one filename from the specified listening folder</span>
-		<span class="pl-k">if</span> (subpath == _embeddedFilePath + "adminview.cshtml")
-		{
-			<span class="pl-c">// If so serve the embedded file (note the path is different in the embedded file that in the listening file, also make sure it is Case Correct because of Linux</span>
-			fileInfo = _embeddedFileProvider.GetFileInfo($"Resources/adminview.cshtml");
-		}
-		<span class="pl-k">else</span>
-		{
-			<span class="pl-c">// Otherwise server the physical file</span>
-			fileInfo = _physicalFileProvider.GetFileInfo(subpath);
-		}
-		<span class="pl-k">return</span> fileinfo;
-	}
-	
-	<span class="pl-c">// Required overload, the EmbeddedFileProvider Watch just ignores the call for the embedded files.</span>
-	<span class="pl-k">public</span> IChangeToken Watch(string filter)
-	{
-		if (filter == _embeddedFilePath + "adminview.cshtml")
-		{
-			return _embeddedFileProvider.Watch(filter);
-		}
-		return _physicalFileProvider.Watch(filter);
-	}
+    <span class="pl-k">readonly</span> <span class="pl-en">IFileProvider</span> _physicalFileProvider;
+    <span class="pl-k">readonly</span> <span class="pl-en">IFileProvider</span> _embeddedFileProvider;
+    <span class="pl-k">readonly</span> <span class="pl-en">string</span> _embeddedFilePath;
+    
+    <span class="pl-k">public</span> MiniWebFileProvider(<span class="pl-k">IHostingEnvironment</span> hostingEnv, <span class="pl-k">string</span> embeddedFilePath)
+    {
+        <span class="pl-c">// Point the PhysicalFileProvider to the ContentRootPath of your application so it can find the Physical Views there</span>
+        _physicalFileProvider = <span class="pl-k">new</span> PhysicalFileProvider(hostingEnv.ContentRootPath);
+        <span class="pl-c">// Set the Assembly and Namespace of the embedded Razor Views that need to be served, in this case the current assembly</span>
+        _embeddedFileProvider = <span class="pl-k">new</span> EmbeddedFileProvider(this.GetType().GetTypeInfo().Assembly, this.GetType().Namespace);
+        <span class="pl-c">// Set the path to listen to for the embedded files so you can differentiate between Physical en Embedded based on folder and filename</span>
+        _embeddedFilePath = embeddedFilePath;
+    }
+    
+    <span class="pl-k">public</span> <span class="pl-en">IDirectoryContents</span> GetDirectoryContents(<span class="pl-k">string</span> subpath)
+    {
+        <span class="pl-k">return</span> _physicalFileProvider.GetDirectoryContents(subpath);
+    }
+    
+    <span class="pl-k">public</span> <span class="pl-en">IFileInfo</span> GetFileInfo(<span class="pl-k">string</span> filepath)
+    {
+        <span class="pl-c">// In this example only listen to one filename from the specified listening folder</span>
+        <span class="pl-k">if</span> (subpath == _embeddedFilePath + <span class="pl-s">"adminview.cshtml"</span>)
+        {
+            <span class="pl-c">// If so serve the embedded file (note the path is different in the embedded file that in the listening file, also make sure it is Case Correct because of Linux</span>
+            <span class="pl-k">return</span>  _embeddedFileProvider.GetFileInfo(<span class="pl-s">$"Resources/adminview.cshtml"</span>);
+        }
+        <span class="pl-k">return</span>  _physicalFileProvider.GetFileInfo(subpath);
+        
+    }
+    
+    <span class="pl-c">// Required overload, the EmbeddedFileProvider Watch just ignores the call for the embedded files.</span>
+    <span class="pl-k">public</span> <span class="pl-en">IChangeToken</span> Watch(<span class="pl-k">string</span> filter)
+    {
+        if (filter == _embeddedFilePath + <span class="pl-s">"adminview.cshtml"</span>)
+        {
+            return _embeddedFileProvider.Watch(filter);
+        }
+        return _physicalFileProvider.Watch(filter);
+    }
 }
-		</pre>
+        </pre>
 </div>
 <p>
-	So the main takeway is that you can listen for the file on a different path than the embedded path itself which is a good idea. This way you can make the listening path configurable so it will never clash with the paths fo the application that is uses the embedded views. 
-	</p><p>
-	I don't think you need the GetDirectoryContens overload but you could easily implement it to switch on the filepath, and for serving multiple files you could try to find the in the embedded files by filename and return the specific FileInfo from that.
-	</p>
+    So the main takeway is that you can listen for the file on a different path than the embedded path itself which is a good idea. This way you can make the listening path configurable so it will never clash with the paths fo the application that is uses the embedded views. 
+    </p><p>
+    I don't think you need the GetDirectoryContens overload but you could easily implement it to switch on the filepath, and for serving multiple files you could try to find the in the embedded files by filename and return the specific FileInfo from that.
+    </p>
 <p>Thanks,</p>
 <p>Rooc</p>
 </section>
