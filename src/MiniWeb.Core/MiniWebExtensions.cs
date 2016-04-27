@@ -114,8 +114,10 @@ namespace MiniWeb.Core
 			string embeddedFilePath = config.EmbeddedResourcePath;
 
 			//make sure embedded view is returned when needed
-			var hostingEnv = services.BuildServiceProvider().GetService<IHostingEnvironment>();
-			services.Configure<RazorViewEngineOptions>(options => { options.FileProviders.Insert(0, new MiniWebFileProvider(hostingEnv, embeddedFilePath)); });
+			services.Configure<RazorViewEngineOptions>(options => 
+			{ 
+				options.FileProviders.Insert(0, new MiniWebFileProvider(embeddedFilePath)); 
+			});
 
 			services.AddAuthorization(options =>
 			{
