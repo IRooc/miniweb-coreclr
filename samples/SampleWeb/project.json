@@ -6,23 +6,20 @@
 		"**.user",
 		"**.vspscc"
 	],
-	"compilationOptions": {              
+	"buildOptions": {              
 		"emitEntryPoint": true,
-		"preserveCompilationContext": true,
-    		"debugType": "portable"
+		"preserveCompilationContext": true
 	},
 
-	"content": [
-		"wwwroot/**/*",
-		"Views/**/*",
-		"App_Data/**/*",
-		"miniweb.json",
-		"githubauth.json"
-	],
-	"dependencies": {    
+  "publishOptions": {
+    "include": [ "wwwroot", "Views", "App_Data" ],
+	"includeFiles":["miniweb.json", "githubauth.json"]
+  },
+	
+	"dependencies": {   
 		"Microsoft.NETCore.App": {
-			"type": "platform",
-			"version": "1.0.0-rc2-24008"
+			"version": "1.0.0-rc2-3002659",
+			"type": "platform"
 		},
 		"Microsoft.AspNetCore.Antiforgery": "1.0.0-*",
 		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
@@ -36,6 +33,8 @@
 		"Microsoft.AspNetCore.Server.Kestrel": "1.0.0-*",
 		"Microsoft.AspNetCore.StaticFiles": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
+    	"Microsoft.Extensions.Configuration.CommandLine": "1.0.0-*",
+        "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
 		"Microsoft.Extensions.Logging.Console": "1.0.0-*",

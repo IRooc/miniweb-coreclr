@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
 
 namespace SampleWeb
@@ -9,11 +10,16 @@ namespace SampleWeb
 
 		public static void Main(string[] args)
 		{
-			var host = new WebHostBuilder()
+			var config = new ConfigurationBuilder()
+							 .AddCommandLine(args)
+							 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+							 .Build();
+
+            var host = new WebHostBuilder()
+                .UseConfiguration(config)
                         .UseKestrel()
                         .UseContentRoot(PlatformServices.Default.Application.ApplicationBasePath)
-                        .UseDefaultHostingConfiguration(args)
-						.UseUrls("http://localhost:5001")
+                        .UseUrls("http://localhost:5001")
                         .UseStartup<Startup>()
                         .Build();
 

@@ -1,14 +1,14 @@
 {
 	"version": "1.0.0",
-	"compilationOptions": {
+	"buildOptions": {
 		"preserveCompilationContext": true,
-		"emitEntryPoint": false,
-		"debugType": "portable"
+		"emitEntryPoint": false
+		
 	},
 	"dependencies": {
 		"Microsoft.NETCore.App": {
-			"type": "platform",
-			"version": "1.0.0-rc2-24008"
+			"version": "1.0.0-rc2-3002659",
+			"type": "platform"
 		},
 		"Microsoft.AspNetCore.Cryptography.KeyDerivation": "1.0.0-*",
 		"Microsoft.AspNetCore.Hosting": "1.0.0-*",

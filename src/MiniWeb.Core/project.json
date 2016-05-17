@@ -1,15 +1,17 @@
 {
 	"version": "1.0.0",
-    "compilationOptions": {
-        "preserveCompilationContext": true,
-        "emitEntryPoint": false,
-    		"debugType": "portable"
-    },
+	"buildOptions": {
+		"preserveCompilationContext": true,
+		"emitEntryPoint": false,
+		"embed": {
+			"include": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml"
+		}
+	},
 	"dependencies": {
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.0-rc2-24008"
-    },
+		"Microsoft.NETCore.App": {
+			"version": "1.0.0-rc2-3002659",
+			"type": "platform"
+		},
 		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
 		"Microsoft.AspNetCore.DataProtection": "1.0.0-*",
 		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
@@ -26,14 +28,13 @@
 		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
 		"System.Runtime.Serialization.Primitives": "4.1.1-*"
 	},
-
-	"resource": "Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml",
-
 	"frameworks": {
-      "netcoreapp1.0": {
-        "imports": [
-        "portable-net45+wp80+win8+wpa81+dnxcore50"
-        ]
-      }
-    }
+		"netcoreapp1.0": {
+			"imports": [
+				"portable-dnxcore50+net45+win8+wp8+wpa81",
+				"portable-net45+win8+wpa81",
+				"dotnet5.6"
+			]
+		}
+	}
 }
