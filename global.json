@@ -1,7 +1,4 @@
 {
-	"projects": [ "src", "samples/SampleWeb" ],
-	"sdk": {
-		"version": "1.0.0-rc2-002426"
-	}
+	"projects": [ "src", "samples/SampleWeb" ]
 	
 }
