@@ -11,7 +11,7 @@ namespace MiniWeb.Core
 		IHostingEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }
 
-		IMiniWebStorage Storage { get; }
+		IMiniWebContentStorage Storage { get; }
 		MiniWebConfiguration Configuration { get; }
 
 		IEnumerable<SitePage> Pages { get; set; }

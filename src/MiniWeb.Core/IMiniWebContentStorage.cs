@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace MiniWeb.Core
 {
-	public interface IMiniWebStorage
+	public interface IMiniWebContentStorage
 	{
 		//Set explicitly to avoid circular dependency injection
 		IMiniWebSite MiniWebSite { get; set; }
@@ -11,9 +11,5 @@ namespace MiniWeb.Core
 		void StoreSitePage(SitePage sitePage);
 		void DeleteSitePage(SitePage sitePage);
 		IEnumerable<SitePage> AllPages();
-	}
-	public interface IMiniWebStorageConfiguration
-	{
-
 	}
 }

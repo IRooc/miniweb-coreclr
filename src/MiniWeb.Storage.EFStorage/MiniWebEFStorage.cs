@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace MiniWeb.Storage.EFStorage
 {
-	public class MiniWebEFStorage : IMiniWebStorage
+	public class MiniWebEFStorage : IMiniWebContentStorage
 	{
 		private MiniWebEFDbContext Context { get; set; }
 		public IMiniWebSite MiniWebSite { get; set; }

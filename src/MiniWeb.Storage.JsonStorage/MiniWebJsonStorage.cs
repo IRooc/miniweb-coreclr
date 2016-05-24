@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace MiniWeb.Storage.JsonStorage
 {
-	public class MiniWebJsonStorage : IMiniWebStorage
+	public class MiniWebJsonStorage : IMiniWebContentStorage
 	{
 		private MiniWebJsonStorageConfig StorageConfig { get; }
 		public IMiniWebSite MiniWebSite { get; set; }

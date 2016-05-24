@@ -9,7 +9,7 @@ using MiniWeb.Core;
 
 namespace MiniWeb.Storage.XmlStorage
 {
-	public class MiniWebXmlStorage : IMiniWebStorage
+	public class MiniWebXmlStorage : IMiniWebContentStorage
 	{
 		private MiniWebXmlStorageConfig StorageConfig { get; }
 		public IMiniWebSite MiniWebSite { get; set; }

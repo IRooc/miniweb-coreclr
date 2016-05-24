@@ -91,7 +91,7 @@ namespace MiniWeb.Core
 
 
 		public static IServiceCollection AddMiniWeb<T1, T2>(this IServiceCollection services, IConfigurationRoot configuration)
-			where T1 : class, IMiniWebStorage
+			where T1 : class, IMiniWebContentStorage
 			where T2 : class, IMiniWebStorageConfiguration
 		{
 			return services.AddMiniWeb<MiniWebSite, T1, T2>(configuration);
@@ -99,7 +99,7 @@ namespace MiniWeb.Core
 
 		public static IServiceCollection AddMiniWeb<T1, T2, T3>(this IServiceCollection services, IConfigurationRoot configuration)
 			where T1 : class, IMiniWebSite
-			where T2 : class, IMiniWebStorage
+			where T2 : class, IMiniWebContentStorage
 			where T3 : class, IMiniWebStorageConfiguration
 		{
 			//Setup miniweb configuration
@@ -128,7 +128,7 @@ namespace MiniWeb.Core
 			});
 
 			//Setup miniweb injection
-			services.AddSingleton<IMiniWebStorage, T2>();
+			services.AddSingleton<IMiniWebContentStorage, T2>();
 			services.AddSingleton<IMiniWebSite, T1>();
 			return services;
 		}

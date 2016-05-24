@@ -17,7 +17,7 @@ namespace MiniWeb.Core
 		public IHostingEnvironment HostingEnvironment { get; }
 
 		public ILogger Logger { get; }
-		public IMiniWebStorage Storage { get; }
+		public IMiniWebContentStorage Storage { get; }
 
 		public IEnumerable<SitePage> PageHierarchy { get; set; }
 		public IEnumerable<SitePage> Pages { get; set; }
@@ -91,7 +91,7 @@ namespace MiniWeb.Core
 		}
 
 		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory,
-								 IMiniWebStorage storage, IOptions<MiniWebConfiguration> config)
+								 IMiniWebContentStorage storage, IOptions<MiniWebConfiguration> config)
 		{
 			Pages = Enumerable.Empty<SitePage>();
 
