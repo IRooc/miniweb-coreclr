@@ -276,25 +276,28 @@
             {
                 key: 'url',
                 editStart: function (index) {
-                    $(this).addClass('miniweb-url-edit').click(function () {
+                    $(this).addClass('miniweb-url-edit').click(function (e) {
                         var $el = $(this);
-                        var curHref = $el.text();
-                        if (curHref.indexOf('http') == 0) {
-                            $('#addHyperLink #createLinkUrl').val(curHref);
-                        }
-                        else {
-                            $('#addHyperLink #createInternalUrl').val(curHref);
-                        }
-                        $('#addHyperLink .btn-primary').unbind('click');
-                        $('#addHyperLink .btn-primary').bind('click', function () {
-                            var newHref = $('#addHyperLink #createInternalUrl').val();
-                            if (newHref == '') {
-                                newHref = $('#addHyperLink #createLinkUrl').val();
+                        //only trigger on :after click...
+                        if (e.offsetX > this.offsetWidth) {
+                            var curHref = $el.text();
+                            if (curHref.indexOf('http') == 0) {
+                                $('#addHyperLink #createLinkUrl').val(curHref);
                             }
-                            $el.text(newHref);
-                            $('#addHyperLink').modal('hide');
-                        });
-                        $('#addHyperLink').modal();
+                            else {
+                                $('#addHyperLink #createInternalUrl').val(curHref);
+                            }
+                            $('#addHyperLink .btn-primary').unbind('click');
+                            $('#addHyperLink .btn-primary').bind('click', function () {
+                                var newHref = $('#addHyperLink #createInternalUrl').val();
+                                if (newHref == '') {
+                                    newHref = $('#addHyperLink #createLinkUrl').val();
+                                }
+                                $el.text(newHref);
+                                $('#addHyperLink').modal('hide');
+                            });
+                            $('#addHyperLink').modal();
+                        }
                     });
                 },
                 editEnd: function (index) {

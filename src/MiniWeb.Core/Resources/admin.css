@@ -135,7 +135,18 @@ body.miniweb-editing div[contenteditable]:before {
 	display: block;
 	margin: 0;
 }
-
+/*http://jsfiddle.net/wC2p7/1/ */
+body.miniweb-editing .miniweb-url-edit[contenteditable] {
+    width: 95%;
+}
+body.miniweb-editing .miniweb-url-edit[contenteditable]::after {
+  content: "\e135";
+  font-family: "Glyphicons Halflings";
+  cursor:pointer;
+  float: right;
+  left: 95%;
+  position: absolute;
+}
 body.miniweb-editing .editor-toolbar .btn {
 	padding: 4px 8px;
 }
