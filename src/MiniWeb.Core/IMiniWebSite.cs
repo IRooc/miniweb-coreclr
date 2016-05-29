@@ -10,9 +10,9 @@ namespace MiniWeb.Core
 	{
 		IHostingEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }
-
-		IMiniWebContentStorage Storage { get; }
 		MiniWebConfiguration Configuration { get; }
+
+		IMiniWebContentStorage ContentStorage { get; }
 
 		IEnumerable<SitePage> Pages { get; set; }
 		IEnumerable<SitePage> PageHierarchy { get; set; }
@@ -24,12 +24,17 @@ namespace MiniWeb.Core
 		void DeleteSitePage(SitePage page);
 		SitePage GetPageByUrl(string url, bool editing = false);
 		string GetPageUrl(SitePage page);
-		bool Authenticate(string user, string password);
-		bool IsAuthenticated(ClaimsPrincipal user);
-		void ReloadPages();
 		void SaveSitePage(SitePage page, bool storeImages = false);
+		void ReloadPages();
 		List<PageSection> GetDefaultContentForTemplate(string template);
 
-		bool ShowSubMenuForPage(SitePage page);
+		IEnumerable<Asset> Assets { get; set; }
+		void DeleteAsset(Asset asset);
+		void SaveAsset(Asset asset);
+		void ReloadAssets();
+
+		bool Authenticate(string user, string password);
+		bool IsAuthenticated(ClaimsPrincipal user);
+
 	}
 }

@@ -17,7 +17,7 @@ namespace MiniWeb.Core
 		public IHostingEnvironment HostingEnvironment { get; }
 
 		public ILogger Logger { get; }
-		public IMiniWebContentStorage Storage { get; }
+		public IMiniWebContentStorage ContentStorage { get; }
 
 		public IEnumerable<SitePage> PageHierarchy { get; set; }
 		public IEnumerable<SitePage> Pages { get; set; }
@@ -90,19 +90,18 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory,
-								 IMiniWebContentStorage storage, IOptions<MiniWebConfiguration> config)
+		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IOptions<MiniWebConfiguration> config)
 		{
 			Pages = Enumerable.Empty<SitePage>();
 
 			HostingEnvironment = env;
 			Configuration = config.Value;
-			Storage = storage;
+			ContentStorage = storage;
 			Logger = SetupLogging(loggerfactory);
 
 			//pass on self to storage module
 			//cannot inject because of circular reference.
-			Storage.MiniWebSite = this;
+			ContentStorage.MiniWebSite = this;
 		}
 
 		private ILogger SetupLogging(ILoggerFactory loggerfactory)
@@ -133,7 +132,7 @@ namespace MiniWeb.Core
 				}
 			}
 
-			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? Storage.GetSitePageByUrl(url) ?? Page404;
+			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? ContentStorage.GetSitePageByUrl(url) ?? Page404;
 			var foundPage = pageByUrl.Visible || editing ? pageByUrl : Page404;
 			if (foundPage == Page404)
 			{
@@ -166,13 +165,13 @@ namespace MiniWeb.Core
 
 		public bool Authenticate(string user, string password)
 		{
-			return Storage.Authenticate(user, password);
+			return ContentStorage.Authenticate(user, password);
 		}
 
 		public void ReloadPages()
 		{
 			Logger?.LogInformation("Reload pages");
-			Pages = Storage.AllPages().ToList();
+			Pages = ContentStorage.AllPages().ToList();
 
 			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 			foreach (var page in Pages)
@@ -199,7 +198,7 @@ namespace MiniWeb.Core
 			if (storeImages)
 			{
 				//NOTE(RC): save current with base 64 so at least it's saved.
-				Storage.StoreSitePage(page);
+				ContentStorage.StoreSitePage(page);
 				//NOTE(RC): can this be done saner?
 				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
 				{
@@ -210,14 +209,14 @@ namespace MiniWeb.Core
 					}
 				}
 			}
-			Storage.StoreSitePage(page);
+			ContentStorage.StoreSitePage(page);
 			ReloadPages();
 		}
 
 		public void DeleteSitePage(SitePage page)
 		{
 			Logger?.LogInformation($"Deleting page {page.Url}");
-			Storage.DeleteSitePage(page);
+			ContentStorage.DeleteSitePage(page);
 			ReloadPages();
 		}
 
@@ -234,10 +233,20 @@ namespace MiniWeb.Core
 				}).ToList()
 			}).ToList();
 		}
+
 		
-		public bool ShowSubMenuForPage(SitePage page)
+		public IEnumerable<Asset> Assets { get; set; }
+		public void DeleteAsset(Asset asset)
 		{
-			return Pages.Any(p => page.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu()));
+
+		}
+		public void SaveAsset(Asset asset)
+		{
+
+		}
+		public void ReloadAssets()
+		{
+
 		}
 
 		private string SaveEmbeddedImages(string html)
