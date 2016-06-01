@@ -1,5 +1,5 @@
 ﻿@inject MiniWeb.Core.IMiniWebSite MiniWebSite
-@model MiniWeb.Core.SitePage
+@model MiniWeb.Core.ISitePage
 @{
 	var isPublished = Model.Visible;
 	var path = Model.Url;
@@ -236,7 +236,7 @@
 	@foreach (var s in MiniWebSite.ItemTemplates)
 	{
 		<div id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">
-			@Html.Partial(s, MiniWeb.Core.ContentItem.DefaultItem(s))
+			@Html.Partial(s, MiniWebSite.DummyContent(s))
 		</div>
 	}
 	@Html.AntiForgeryToken()

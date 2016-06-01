@@ -45,7 +45,7 @@ namespace MiniWeb.Core.TagHelpers
 				(_htmlHelper as IViewContextAware)?.Contextualize(ViewContext);
 				//get out the current ViewPage for the Model.
 				var view = ViewContext.View as RazorView;
-				var viewPage = view?.RazorPage as RazorPage<SitePage>;
+				var viewPage = view?.RazorPage as RazorPage<ISitePage>;
 				output.Content.Clear();
 
 				if (viewPage != null)
@@ -55,7 +55,7 @@ namespace MiniWeb.Core.TagHelpers
 				}
 			}
 		}
-		private string SectionContent(IHtmlHelper html, SitePage sitepage, string section)
+		private string SectionContent(IHtmlHelper html, ISitePage sitepage, string section)
 		{
 			if (sitepage?.Sections?.Any(s => s?.Key == section) == true)
 			{
@@ -64,11 +64,11 @@ namespace MiniWeb.Core.TagHelpers
 			return String.Empty;
 		}
 
-		private static string SectionContent(IHtmlHelper html, SitePage sitepage, PageSection model)
+		private static string SectionContent(IHtmlHelper html, ISitePage sitepage, IPageSection model)
 		{
 			using (StringWriter result = new StringWriter())
 			{
-				foreach (ContentItem item in model.Items)
+				foreach (var item in model.Items)
 				{
 					item.Page = sitepage;
 					html.Partial(item.Template, item).WriteTo(result, HtmlEncoder.Default);

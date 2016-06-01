@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MiniWeb.Core
@@ -8,7 +9,6 @@ namespace MiniWeb.Core
 		public string DefaultPage { get; set; } = "/home.html";
 		public string PageExtension { get; set; } = "html";
 
-		public string Layout { get; set; } = "~/Views/_layout.cshtml";
 		public string LoginView { get; set; } = "~/Views/login.cshtml";
 
 		public string PageTemplatePath { get; set; } = "/Views/Pages";
@@ -35,6 +35,25 @@ namespace MiniWeb.Core
 	{
 		public string Section { get; set; }
 		public List<string> Items { get; set; } = new List<string>();
+	}
+
+	public class DummyContentItem : IContentItem
+	{
+		public ISitePage Page { get; set; }
+
+		public string Template { get; set; }
+
+		public Dictionary<string, string> Values { get; set; }
+
+		public string GetValue(string value, string defaultvalue = "")
+		{
+			return defaultvalue;
+		}
+
+		public T Get<T>(string value, T defaultvalue = default(T))
+		{
+			return defaultvalue;
+		}
 	}
 
 	public class MiniWebAuthentication

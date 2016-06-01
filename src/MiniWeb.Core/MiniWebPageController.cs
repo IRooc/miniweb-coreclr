@@ -38,7 +38,7 @@ namespace MiniWeb.Core
 				_webSite.Logger?.LogDebug("Homepage");
 				url = _webSite.Configuration.DefaultPage;
 			}
-			SitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
+			ISitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
 			ViewBag.CurrentUrl = page.Url;
 			if (_webSite.Configuration.RedirectToFirstSub && page.Pages.Any())
 			{
@@ -55,7 +55,7 @@ namespace MiniWeb.Core
 		public IActionResult Login()
 		{
 			_webSite.Logger?.LogInformation("login action");
-			var page = _webSite.PageLogin;
+			var page = _webSite.ContentStorage.MiniWebLoginPage;
 			ViewBag.CurrentUrl = page.Url;
 
 			return View(_webSite.Configuration.LoginView, page);

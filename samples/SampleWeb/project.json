@@ -6,17 +6,26 @@
 		"**.user",
 		"**.vspscc"
 	],
-	"buildOptions": {              
+	"runtimeOptions": {
+		"configProperties": {
+			"System.GC.Server": true
+		}
+	},
+	"buildOptions": {
 		"emitEntryPoint": true,
-		"preserveCompilationContext": true
+		"preserveCompilationContext": true,
+
+		"copyToOutput": {
+			"include": [ "wwwroot", "Views", "App_Data" ],
+			"includeFiles": [ "miniweb.json", "githubauth.json" ]
+		},
+		"publishOptions": {
+			"include": [ "wwwroot", "Views", "App_Data" ],
+			"includeFiles": [ "miniweb.json", "githubauth.json" ]
+		}
 	},
 
-  "publishOptions": {
-    "include": [ "wwwroot", "Views", "App_Data" ],
-	"includeFiles":["miniweb.json", "githubauth.json"]
-  },
-	
-	"dependencies": {   
+	"dependencies": {
 		"Microsoft.NETCore.App": {
 			"version": "1.0.0-rc2-3002659",
 			"type": "platform"
@@ -33,20 +42,22 @@
 		"Microsoft.AspNetCore.Server.Kestrel": "1.0.0-*",
 		"Microsoft.AspNetCore.StaticFiles": "1.0.0-*",
 		"Microsoft.Extensions.Configuration": "1.0.0-*",
-    	"Microsoft.Extensions.Configuration.CommandLine": "1.0.0-*",
-        "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-*",
+		"Microsoft.Extensions.Configuration.CommandLine": "1.0.0-*",
+		"Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-*",
 		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
 		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
 		"Microsoft.Extensions.Logging.Console": "1.0.0-*",
 		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
 		"MiniWeb.Core": "*",
-		"MiniWeb.Storage.JsonStorage": "*"
+		"MiniWeb.Storage.JsonStorage": "*",
+		"MiniWeb.Storage.XmlStorage": "*",
+		"MiniWeb.AssetStorage.FileSystem": "*"
 	},
 	"frameworks": {
-      "netcoreapp1.0": {
-        "imports": [
-        "portable-net45+wp80+win8+wpa81+dnxcore50"
-        ]
-      }
-    }
+		"netcoreapp1.0": {
+			"imports": [
+				"portable-net45+wp80+win8+wpa81+dnxcore50"
+			]
+		}
+	}
 }

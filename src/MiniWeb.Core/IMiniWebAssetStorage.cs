@@ -11,18 +11,25 @@ namespace MiniWeb.Core
 		//Set explicitly to avoid circular dependency injection
 		IMiniWebSite MiniWebSite { get; set; }
 
-		IEnumerable<Asset> Assets { get; set; }
+		IEnumerable<IAsset> GetAllAssets();
 		
-		void StoreAsset(Asset asset);
-		void DeleteAsset(Asset asset);
-
-		Asset CreateAsset(byte[] bytes, string fullFilePath);
+		void StoreAsset(IAsset asset);
+		void DeleteAsset(IAsset asset);
+		
+		IAsset CreateAsset(string fileName, byte[] bytes, string virtualFolder = null);
+		IAsset CreateAsset(string fileName, string base64String, string virtualFolder = null);
     }
 
-	public class Asset
+	public enum AssetType
 	{
-		public FileInfo Info { get; set; }
-		public string VirtualPath { get; }
-		public string Type { get; set; }
+		Image,
+		File
+	}
+
+	public interface IAsset
+	{
+		FileInfo Info { get; }
+		string VirtualPath { get; set; }
+		AssetType Type{ get; set; }
 	}
 }

@@ -1,4 +1,4 @@
-<SitePage xmlns="http://schemas.datacontract.org/2004/07/MiniWeb.Core" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"><LastModified>2015-07-25T14:44:46.605155+02:00</LastModified><Layout>~/Views/_layout.cshtml</Layout><MetaDescription>Home</MetaDescription><MetaTitle>Home</MetaTitle><Sections><PageSection><Items><ContentItem><Template>~/Views/Items/item.cshtml</Template><Values xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><a:KeyValueOfstringstring><a:Key>title</a:Key><a:Value>Homepage</a:Value></a:KeyValueOfstringstring><a:KeyValueOfstringstring><a:Key>content</a:Key><a:Value>&lt;p&gt;
+<XmlSitePage xmlns="http://schemas.datacontract.org/2004/07/MiniWeb.Storage.XmlStorage" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"><LastModified>2015-07-25T14:44:46.605155+02:00</LastModified><Layout>~/Views/_layout.cshtml</Layout><MetaDescription>Home</MetaDescription><MetaTitle>Home</MetaTitle><Sections><PageSection><Items><ContentItem><Template>~/Views/Items/item.cshtml</Template><Values xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><a:KeyValueOfstringstring><a:Key>title</a:Key><a:Value>Homepage</a:Value></a:KeyValueOfstringstring><a:KeyValueOfstringstring><a:Key>content</a:Key><a:Value>&lt;p&gt;
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean massa 
 libero, convallis vitae neque vitae, mattis fermentum mauris. Maecenas 
 consequat faucibus leo, vel aliquam mauris. Etiam ligula diam, fringilla
@@ -29,4 +29,4 @@ sollicitudin, orci id pretium dignissim, nisi odio ultrices lectus, sit
 amet lacinia elit elit ut ante. Curabitur lacinia porttitor neque at 
 volutpat. Aenean lectus odio, luctus eget tristique at, vestibulum sit 
 amet metus. Nulla imperdiet pharetra nisl, a aliquet ante.
-&lt;/p&gt;</a:Value></a:KeyValueOfstringstring></Values></ContentItem></Items><Key>content</Key></PageSection></Sections><ShowInMenu>true</ShowInMenu><SortOrder>1</SortOrder><Template>~/Views/Pages/OneColumn.cshtml</Template><Title>Home</Title><Url>home</Url><Visible>true</Visible></SitePage>
+&lt;/p&gt;</a:Value></a:KeyValueOfstringstring></Values></ContentItem></Items><Key>content</Key></PageSection></Sections><ShowInMenu>true</ShowInMenu><SortOrder>1</SortOrder><Template>~/Views/Pages/OneColumn.cshtml</Template><Title>Home</Title><Url>home</Url><Visible>true</Visible></XmlSitePage>

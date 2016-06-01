@@ -50,7 +50,7 @@ namespace MiniWeb.Core.TagHelpers
 			if (!string.IsNullOrWhiteSpace(Property))
 			{
 				var view = ViewContext.View as RazorView;
-				var viewItem = view.RazorPage as RazorPage<ContentItem>;
+				var viewItem = view.RazorPage as RazorPage<IContentItem>;
 				var htmlContent = viewItem.Model.GetValue(Property, output.GetChildContentAsync().Result?.GetContent(HtmlEncoder.Default));
 				output.Content.Clear();
 				output.Content.AppendHtml(htmlContent);

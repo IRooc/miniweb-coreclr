@@ -14,23 +14,23 @@ namespace MiniWeb.Core
 
 		IMiniWebContentStorage ContentStorage { get; }
 
-		IEnumerable<SitePage> Pages { get; set; }
-		IEnumerable<SitePage> PageHierarchy { get; set; }
+		IEnumerable<ISitePage> Pages { get; set; }
+		IEnumerable<ISitePage> PageHierarchy { get; set; }
 		IEnumerable<string> PageTemplates { get; }
 		IEnumerable<string> ItemTemplates { get; }
-		SitePage PageLogin { get; }
-		SitePage Page404 { get; }
 
-		void DeleteSitePage(SitePage page);
-		SitePage GetPageByUrl(string url, bool editing = false);
-		string GetPageUrl(SitePage page);
-		void SaveSitePage(SitePage page, bool storeImages = false);
+		void DeleteSitePage(ISitePage page);
+		ISitePage GetPageByUrl(string url, bool editing = false);
+		string GetPageUrl(ISitePage page);
+		void SaveSitePage(ISitePage page, bool storeImages = false);
 		void ReloadPages();
-		List<PageSection> GetDefaultContentForTemplate(string template);
 
-		IEnumerable<Asset> Assets { get; set; }
-		void DeleteAsset(Asset asset);
-		void SaveAsset(Asset asset);
+		IContentItem DummyContent(string template);
+
+		List<IPageSection> GetDefaultContentForTemplate(string template);
+		IEnumerable<IAsset> Assets { get; set; }
+		void DeleteAsset(IAsset asset);
+		void SaveAsset(IAsset asset);
 		void ReloadAssets();
 
 		bool Authenticate(string user, string password);

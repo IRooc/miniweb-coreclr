@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MiniWeb.Storage.XmlStorage", "src\MiniWeb.Storage.XmlStorage\MiniWeb.Storage.XmlStorage.xproj", "{A5D12571-5214-4B71-8814-9452260F2A0F}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SampleWeb", "samples\SampleWeb\SampleWeb.xproj", "{8831D81D-3E48-4053-9885-51D6AEA57746}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MiniWeb.Storage.EFStorage", "src\MiniWeb.Storage.EFStorage\MiniWeb.Storage.EFStorage.xproj", "{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MiniWeb.AssetStorage.FileSystem", "src\MiniWeb.AssetStorage.FileSystem\MiniWeb.AssetStorage.FileSystem.xproj", "{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +70,14 @@ Global
 		{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}.Release|x64.ActiveCfg = Release|Any CPU
 		{1B11B2D8-14C0-40B8-8B9F-E69E241B83C7}.Release|x64.Build.0 = Release|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Debug|x64.Build.0 = Debug|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Release|x64.ActiveCfg = Release|Any CPU
+		{B796A43D-283B-48D9-8AC8-C6ECDD0B64B3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

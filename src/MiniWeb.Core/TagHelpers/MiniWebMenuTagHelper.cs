@@ -61,7 +61,7 @@ namespace MiniWeb.Core.TagHelpers
 			MiniWebMenuContext menuContext = new MiniWebMenuContext();
 			context.Items.Add(typeof(MiniWebMenuContext), menuContext);
 
-			var items = Enumerable.Empty<SitePage>();
+			var items = Enumerable.Empty<ISitePage>();
 
 			if (MenuRoot == "/")
 			{

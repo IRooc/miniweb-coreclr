@@ -27,11 +27,11 @@ namespace MiniWeb.Core
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)
 		{
-			SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
+			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 			if (page != null)
 			{
 				_webSite.Logger?.LogInformation($"save PAGE found {page.Url}");
-				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<PageSection>>(items);
+				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items);
 				page.Sections.Clear();
 				page.Sections.AddRange(newSections);
 
@@ -43,7 +43,7 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SavePage(SitePage page)
+		public IActionResult SavePage(ISitePage page)
 		{
 			//ignore move for now...
 			if (Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != page.Url)
@@ -54,7 +54,7 @@ namespace MiniWeb.Core
 			}
 
 			//keep sections only change page properties
-			SitePage oldPage = _webSite.Pages.FirstOrDefault(p => p.Url == page.Url);
+			ISitePage oldPage = _webSite.Pages.FirstOrDefault(p => p.Url == page.Url);
 			if (oldPage != null)
 			{
 				page.Sections = oldPage.Sections;
@@ -74,7 +74,7 @@ namespace MiniWeb.Core
 		public IActionResult RemovePage(string url)
 		{
 			_webSite.Logger?.LogInformation($"remove {url}");
-			SitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
+			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
 			_webSite.DeleteSitePage(page);
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
 			return new JsonResult(new { result = true, url = redirectUrl });

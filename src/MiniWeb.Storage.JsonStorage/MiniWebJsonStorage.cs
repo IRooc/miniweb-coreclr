@@ -24,18 +24,18 @@ namespace MiniWeb.Storage.JsonStorage
 			return StorageConfig.Users.Any(u => string.Compare(u.Key, username, true) == 0 && string.Compare(u.Value, password) == 0);
 		}
 
-		public SitePage GetSitePageByUrl(string url)
+		public ISitePage GetSitePageByUrl(string url)
 		{
 			string name = GetSitePageFileName(url.ToLowerInvariant());
 			if (File.Exists(name))
 			{
-				return DeSerializeFile<SitePage>(name);
+				return DeSerializeFile<JsonSitePage>(name);
 			}
 			return null;
 		}
 
 
-		public void StoreSitePage(SitePage sitePage)
+		public void StoreSitePage(ISitePage sitePage)
 		{
 			string name = GetSitePageFileName(sitePage.Url.ToLowerInvariant());
 			if (MiniWebSite.Configuration.StoreVersions && File.Exists(name))
@@ -48,25 +48,89 @@ namespace MiniWeb.Storage.JsonStorage
 			SerializeObject(name, sitePage);
 		}
 
-		public void DeleteSitePage(SitePage sitePage)
+		public void DeleteSitePage(ISitePage sitePage)
 		{
 			string name = GetSitePageFileName(sitePage.Url.ToLowerInvariant());
 			File.Delete(name);
 		}
 
-		public IEnumerable<SitePage> AllPages()
+		public IEnumerable<ISitePage> AllPages()
 		{
-			List<SitePage> pages = new List<SitePage>();
+			List<JsonSitePage> pages = new List<JsonSitePage>();
 			if (Directory.Exists(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder))
 			{
 				string[] pageFiles = Directory.GetFiles(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder, "*.json");
 				foreach (string page in pageFiles)
 				{
 					MiniWebSite.Logger?.LogDebug($"Loading page from disc {page}");
-					pages.Add(DeSerializeFile<SitePage>(page));
+					pages.Add(DeSerializeFile<JsonSitePage>(page));
 				}
 			}
 			return pages;
+		}
+		
+		public List<IPageSection> GetDefaultSectionContent(DefaultContent defaultContent)
+		{
+			return defaultContent?.Content?.Select(c => new PageSection()
+			{
+				Key = c.Section,
+				Items = c.Items?.Select(i => new ContentItem()
+				{
+					Template = i,
+					Values = new Dictionary<string, string>()
+				}).ToList<IContentItem>()
+			}).ToList<IPageSection>();
+		}
+		
+		public ISitePage MiniWeb404Page
+		{
+			get
+			{
+				return AllPages().FirstOrDefault(p => p.Url == "404") ?? new JsonSitePage()
+				{
+					Title = "Page Not Found : 404",
+					MetaTitle = "Page Not Found : 404",
+					Layout = StorageConfig.Layout,
+					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+					Visible = true,
+					Sections = new List<IPageSection>()
+					{
+						new PageSection()
+						{
+							Key = "content",
+							Items = new List<IContentItem>()
+							{
+								new ContentItem {
+									Template = $"~{StorageConfig.ItemTemplatePath}/item.cshtml",
+									Values =
+									{
+										["title"] = "404",
+										["content"] = "Page not found"
+									}
+								}
+							}
+						}
+						},
+					Url = "404"
+				};
+			}
+		}
+
+		public ISitePage MiniWebLoginPage
+		{
+			get
+			{
+				return new JsonSitePage()
+				{
+					Title = "Login",
+					MetaTitle = "Login",
+					Layout = StorageConfig.Layout,
+					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+					Sections = new List<IPageSection>(),
+					Url = "miniweb/login",
+					Visible = true
+				};
+			}
 		}
 
 		private void SerializeObject(string filename, object obj)
@@ -85,12 +149,12 @@ namespace MiniWeb.Storage.JsonStorage
 			try
 			{
 				string jsonString = File.ReadAllText(filename);
-				return JsonConvert.DeserializeObject<T>(jsonString);
+				return JsonConvert.DeserializeObject<T>(jsonString, new InterfaceConverter());
 
 			}
 			catch (Exception ex)
 			{
-				MiniWebSite.Logger?.LogWarning($"Could not deserialize file: {filename}", ex);
+				MiniWebSite.Logger?.LogWarning($"Could not deserialize file: {filename} exception {ex.Message}");
 				return default(T);
 			}
 

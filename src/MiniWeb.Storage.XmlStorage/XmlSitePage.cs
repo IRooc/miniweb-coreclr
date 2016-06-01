@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using MiniWeb.Core;
+using Newtonsoft.Json;
 
-namespace MiniWeb.Core
+namespace MiniWeb.Storage.XmlStorage
 {
-	public class SitePage
+
+	public class XmlSitePage : ISitePage
 	{
 		public string Url { get; set; }
 		public string Title { get; set; }
@@ -19,14 +22,14 @@ namespace MiniWeb.Core
 		public DateTime Created { get; set; }
 		public DateTime LastModified { get; set; }
 
-		public List<PageSection> Sections { get; set; }
+		public List<IPageSection> Sections { get; set; }
 
 		[IgnoreDataMember]
-		public IEnumerable<SitePage> Pages { get; set; }
+		public IEnumerable<ISitePage> Pages { get; set; }
 
 		[IgnoreDataMember]
-		public SitePage Parent { get; set; }
-		
+		public ISitePage Parent { get; set; }
+
 		[IgnoreDataMember]
 		public string BaseUrl
 		{
@@ -36,9 +39,9 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public SitePage()
+		public XmlSitePage()
 		{
-			Pages = new List<SitePage>();
+			Pages = new List<ISitePage>();
 			LastModified = DateTime.MinValue;
 		}
 
@@ -55,16 +58,16 @@ namespace MiniWeb.Core
 		}
 	}
 
-	public class PageSection
+	public class PageSection : IPageSection
 	{
 		public string Key { get; set; }
-		public List<ContentItem> Items { get; set; }
+		public List<IContentItem> Items { get; set; }
 	}
 
-	public class ContentItem
+	public class ContentItem : IContentItem
 	{
 		[IgnoreDataMember]
-		public SitePage Page { get; set; }
+		public ISitePage Page { get; set; }
 		public string Template { get; set; }
 		public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
@@ -88,13 +91,6 @@ namespace MiniWeb.Core
 				return default(T);
 			}
 		}
-
-		public static ContentItem DefaultItem(string template)
-		{
-			return new ContentItem
-			{
-				Template = template
-			};
-		}
+		
 	}
 }

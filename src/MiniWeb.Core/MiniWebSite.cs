@@ -13,14 +13,16 @@ namespace MiniWeb.Core
 {
 	public class MiniWebSite : IMiniWebSite
 	{
+		public const string EmbeddedBase64FileInHtmlRegex = "(data-filename=\"([^\"]+)\"\\s+)(src|href)=\"(data:([^\"]+))\"?";
 		public MiniWebConfiguration Configuration { get; }
 		public IHostingEnvironment HostingEnvironment { get; }
 
 		public ILogger Logger { get; }
 		public IMiniWebContentStorage ContentStorage { get; }
+		public IMiniWebAssetStorage AssetStorage { get; }
 
-		public IEnumerable<SitePage> PageHierarchy { get; set; }
-		public IEnumerable<SitePage> Pages { get; set; }
+		public IEnumerable<ISitePage> PageHierarchy { get; set; }
+		public IEnumerable<ISitePage> Pages { get; set; }
 		public IEnumerable<string> PageTemplates
 		{
 			get
@@ -39,69 +41,22 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public SitePage Page404
-		{
-			get
-			{
-				return Pages.FirstOrDefault(p => p.Url == "404") ?? new SitePage()
-				{
-					Title = "Page Not Found : 404",
-					MetaTitle = "Page Not Found : 404",
-					Layout = Configuration.Layout,
-					Template = $"~{Configuration.PageTemplatePath}/OneColumn.cshtml",
-					Visible = true,
-					Sections = new List<PageSection>()
-					{
-						new PageSection()
-						{
-							Key = "content",
-							Items = new List<ContentItem>()
-							{
-								new ContentItem {
-									Template = $"~{Configuration.ItemTemplatePath}/item.cshtml",
-									Values =
-									{
-										["title"] = "404",
-										["content"] = "Page not found"
-									}
-								}
-							}
-						}
-						},
-					Url = "404"
-				};
-			}
-		}
 
-		public SitePage PageLogin
+		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
+						   IOptions<MiniWebConfiguration> config)
 		{
-			get
-			{
-				return new SitePage()
-				{
-					Title = "Login",
-					MetaTitle = "Login",
-					Layout = Configuration.Layout,
-					Template = $"~{Configuration.PageTemplatePath}/OneColumn.cshtml",
-					Sections = new List<PageSection>(),
-					Url = "miniweb/login",
-					Visible = true
-				};
-			}
-		}
-
-		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IOptions<MiniWebConfiguration> config)
-		{
-			Pages = Enumerable.Empty<SitePage>();
+			Pages = Enumerable.Empty<ISitePage>();
 
 			HostingEnvironment = env;
 			Configuration = config.Value;
 			ContentStorage = storage;
+			AssetStorage = assetStorage;
 			Logger = SetupLogging(loggerfactory);
 
 			//pass on self to storage module
 			//cannot inject because of circular reference.
 			ContentStorage.MiniWebSite = this;
+			AssetStorage.MiniWebSite = this;
 		}
 
 		private ILogger SetupLogging(ILoggerFactory loggerfactory)
@@ -113,7 +68,7 @@ namespace MiniWeb.Core
 			return null;
 		}
 
-		public SitePage GetPageByUrl(string url, bool editing = false)
+		public ISitePage GetPageByUrl(string url, bool editing = false)
 		{
 			Logger?.LogDebug($"Finding page {url}");
 			var suffix = string.Empty;
@@ -132,9 +87,9 @@ namespace MiniWeb.Core
 				}
 			}
 
-			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? ContentStorage.GetSitePageByUrl(url) ?? Page404;
-			var foundPage = pageByUrl.Visible || editing ? pageByUrl : Page404;
-			if (foundPage == Page404)
+			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? ContentStorage.GetSitePageByUrl(url) ?? ContentStorage.MiniWeb404Page;
+			var foundPage = pageByUrl.Visible || editing ? pageByUrl : ContentStorage.MiniWeb404Page;
+			if (foundPage == ContentStorage.MiniWeb404Page)
 			{
 				Logger?.LogWarning($"Could not find page [{url}] found page: [{foundPage.Url}]");
 			}
@@ -145,7 +100,7 @@ namespace MiniWeb.Core
 			return foundPage;
 		}
 
-		public string GetPageUrl(SitePage page)
+		public string GetPageUrl(ISitePage page)
 		{
 			if (page == null)
 			{
@@ -187,13 +142,13 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public void SaveSitePage(SitePage page, bool storeImages = false)
+		public void SaveSitePage(ISitePage page, bool storeImages = false)
 		{
 			Logger?.LogInformation($"Saving page {page.Url}");
 			page.LastModified = DateTime.Now;
 			if (page.Sections == null)
 			{
-				page.Sections = new List<PageSection>();
+				page.Sections = new List<IPageSection>();
 			}
 			if (storeImages)
 			{
@@ -213,34 +168,26 @@ namespace MiniWeb.Core
 			ReloadPages();
 		}
 
-		public void DeleteSitePage(SitePage page)
+		public void DeleteSitePage(ISitePage page)
 		{
 			Logger?.LogInformation($"Deleting page {page.Url}");
 			ContentStorage.DeleteSitePage(page);
 			ReloadPages();
 		}
 
-		public List<PageSection> GetDefaultContentForTemplate(string template)
+		public List<IPageSection> GetDefaultContentForTemplate(string template)
 		{
 			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template, template) == 0);
-			return defaultContent?.Content?.Select(c => new PageSection()
-			{
-				Key = c.Section,
-				Items = c.Items?.Select(i => new ContentItem()
-				{
-					Template = i,
-					Values = new Dictionary<string, string>()
-				}).ToList()
-			}).ToList();
+			return ContentStorage.GetDefaultSectionContent(defaultContent);
 		}
 
-		
-		public IEnumerable<Asset> Assets { get; set; }
-		public void DeleteAsset(Asset asset)
+
+		public IEnumerable<IAsset> Assets { get; set; }
+		public void DeleteAsset(IAsset asset)
 		{
 
 		}
-		public void SaveAsset(Asset asset)
+		public void SaveAsset(IAsset asset)
 		{
 
 		}
@@ -249,17 +196,29 @@ namespace MiniWeb.Core
 
 		}
 
+		public IContentItem DummyContent(string template)
+		{
+			return new DummyContentItem
+			{
+				Template = template
+			};
+		}
+
+
 		private string SaveEmbeddedImages(string html)
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
-			Match match = Regex.Match(html, "(data-filename=\"([^\"]+)\"\\s+)(src|href)=\"(data:([^\"]+))\"?");
+			Match match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
 			while (!string.IsNullOrEmpty(match?.Value))
 			{
-				string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
 				string filename = match.Groups[2].Value;
-				byte[] bytes = ConvertToBytes(match.Groups[5].Value);
-				string path = SaveFileToDisk(bytes, extension, filename);
+				string base64String = match.Groups[5].Value;
+				//byte[] bytes = ConvertToBytes(base64String);
+				var newAsset = AssetStorage.CreateAsset(filename, base64String);
+				//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
+				string path = newAsset.VirtualPath;// SaveFileToDisk(bytes, extension, filename);
 
+				//replace URL in content
 				string value = string.Format("src=\"{0}\" alt=\"\" ", path);
 
 				if (match.Groups[1].Value == "href")
@@ -267,7 +226,7 @@ namespace MiniWeb.Core
 
 				html = html.Replace(match.Value, value);
 				//next match.
-				match = Regex.Match(html, "(data-filename=\"([^\"]+)\"\\s+)(src|href)=\"(data:([^\"]+))\"?");
+				match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
 			}
 			return html;
 		}

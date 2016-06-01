@@ -9,15 +9,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
+using MiniWeb.AssetStorage.FileSystem;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
+using MiniWeb.Storage.XmlStorage;
 using Newtonsoft.Json.Linq;
 
 namespace SampleWeb
 {
 
-    public class Startup
+	public class Startup
 	{
 		public IConfigurationRoot Configuration { get; set; }
 
@@ -40,8 +41,10 @@ namespace SampleWeb
 			services.AddAntiforgery();
 			services.AddMvc();
 
-			//services.AddMiniWebEFSqlServerStorage(Configuration);
-			services.AddMiniWebJsonStorage(Configuration);
+			//services.AddMiniWeb(Configuration).AddMiniWebEFSqlServerStorage(Configuration);
+			services.AddMiniWeb(Configuration)
+					.AddMiniWebJsonStorage(Configuration)
+					.AddMiniWebAssetFileSystemStorage(Configuration);
 		}
 
 		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory)

@@ -90,20 +90,15 @@ namespace MiniWeb.Core
 		}
 
 
-		public static IServiceCollection AddMiniWeb<T1, T2>(this IServiceCollection services, IConfigurationRoot configuration)
-			where T1 : class, IMiniWebContentStorage
-			where T2 : class, IMiniWebStorageConfiguration
+		public static IServiceCollection AddMiniWeb(this IServiceCollection services, IConfigurationRoot configuration)
 		{
-			return services.AddMiniWeb<MiniWebSite, T1, T2>(configuration);
+			return services.AddMiniWeb<MiniWebSite>(configuration);
 		}
 
-		public static IServiceCollection AddMiniWeb<T1, T2, T3>(this IServiceCollection services, IConfigurationRoot configuration)
+		public static IServiceCollection AddMiniWeb<T1>(this IServiceCollection services, IConfigurationRoot configuration)
 			where T1 : class, IMiniWebSite
-			where T2 : class, IMiniWebContentStorage
-			where T3 : class, IMiniWebStorageConfiguration
 		{
 			//Setup miniweb configuration
-			services.Configure<T3>(configuration.GetSection("MiniWebStorage"));
 			services.Configure<MiniWebConfiguration>(configuration.GetSection("MiniWeb"));
 			
 			//get the config locally
@@ -128,7 +123,6 @@ namespace MiniWeb.Core
 			});
 
 			//Setup miniweb injection
-			services.AddSingleton<IMiniWebContentStorage, T2>();
 			services.AddSingleton<IMiniWebSite, T1>();
 			return services;
 		}
