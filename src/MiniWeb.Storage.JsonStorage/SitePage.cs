@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace MiniWeb.Storage.JsonStorage
 {
-	public class JsonSitePage : ISitePage
+	public class SitePage : ISitePage
 	{
 		public string Url { get; set; }
 		public string Title { get; set; }
@@ -38,7 +38,7 @@ namespace MiniWeb.Storage.JsonStorage
 			}
 		}
 
-		public JsonSitePage()
+		public SitePage()
 		{
 			Pages = new List<ISitePage>();
 			LastModified = DateTime.MinValue;
@@ -56,27 +56,7 @@ namespace MiniWeb.Storage.JsonStorage
 			return Visible && ShowInMenu;
 		}
 	}
-	public class InterfaceConverter : JsonConverter
-	{
-		public override bool CanConvert(Type objectType)
-		{
-			return (objectType == typeof(IPageSection)) || (objectType == typeof(IContentItem));
-		}
-
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-		{
-			if (objectType == typeof(IPageSection))
-				return serializer.Deserialize<PageSection>(reader);
-			if (objectType == typeof(IContentItem))
-				return serializer.Deserialize<ContentItem>(reader);
-			return null;
-		}
-
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-		{
-			serializer.Serialize(writer, value);
-		}
-	}
+	
 
 	public class PageSection : IPageSection
 	{

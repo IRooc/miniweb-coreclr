@@ -43,7 +43,7 @@ namespace SampleWeb
 
 			//services.AddMiniWeb(Configuration).AddMiniWebEFSqlServerStorage(Configuration);
 			services.AddMiniWeb(Configuration)
-					.AddMiniWebJsonStorage(Configuration)
+					.AddMiniWebXmlStorage(Configuration)
 					.AddMiniWebAssetFileSystemStorage(Configuration);
 		}
 

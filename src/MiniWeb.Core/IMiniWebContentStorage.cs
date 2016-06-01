@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MiniWeb.Core
 {
@@ -16,5 +17,8 @@ namespace MiniWeb.Core
 		ISitePage MiniWeb404Page { get; }
 
 		List<IPageSection> GetDefaultSectionContent(DefaultContent defaultContent);
+
+		//Used to deserialize the Posted JSON to concrete classes.
+		JsonConverter JsonInterfaceConverter { get; }
 	}
 }

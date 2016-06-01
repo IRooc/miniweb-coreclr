@@ -196,5 +196,13 @@ namespace MiniWeb.Storage.EFStorage
 				};
 			}
 		}
+
+		public JsonConverter JsonInterfaceConverter
+		{
+			get
+			{
+				return new JsonInterfaceConverter();
+			}
+		}
 	}
 }

@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MiniWeb.Core;
+using Newtonsoft.Json;
 
 namespace MiniWeb.Storage.XmlStorage
 {
@@ -133,9 +134,19 @@ namespace MiniWeb.Storage.XmlStorage
 			}
 		}
 
+		public JsonConverter JsonInterfaceConverter
+		{
+			get
+			{
+				return new JsonInterfaceConverter();
+			}
+		}
+
+
 		private void SerializeObject(string filename, object obj)
 		{
-			var serializer = new DataContractSerializer(obj.GetType());
+			var serializer = GetSerializer<XmlSitePage>();
+			//var serializer = new DataContractSerializer(obj.GetType(), new[] { typeof(XmlSitePage), typeof(PageSection), typeof(ContentItem) });
 			using (MemoryStream ms = new MemoryStream())
 			{
 				serializer.WriteObject(ms, obj);
@@ -151,7 +162,7 @@ namespace MiniWeb.Storage.XmlStorage
 		{
 			try
 			{
-				var serializer = new DataContractSerializer(typeof(T), new[] { typeof(PageSection), typeof(ContentItem) });
+				DataContractSerializer serializer = GetSerializer<T>();
 				using (var stream = new FileStream(filename, FileMode.Open))
 				{
 					stream.Position = 0;
@@ -168,6 +179,12 @@ namespace MiniWeb.Storage.XmlStorage
 			}
 
 		}
+
+		private static DataContractSerializer GetSerializer<T>()
+		{
+			return new DataContractSerializer(typeof(T), new[] { typeof(XmlSitePage), typeof(PageSection), typeof(ContentItem) });
+		}
+
 		/// <summary>
 		/// Gets the name of the site page file.
 		/// </summary>

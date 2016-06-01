@@ -31,7 +31,7 @@ namespace MiniWeb.Core
 			if (page != null)
 			{
 				_webSite.Logger?.LogInformation($"save PAGE found {page.Url}");
-				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items);
+				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items, _webSite.ContentStorage.JsonInterfaceConverter);
 				page.Sections.Clear();
 				page.Sections.AddRange(newSections);
 

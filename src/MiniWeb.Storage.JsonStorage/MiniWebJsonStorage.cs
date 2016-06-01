@@ -29,7 +29,7 @@ namespace MiniWeb.Storage.JsonStorage
 			string name = GetSitePageFileName(url.ToLowerInvariant());
 			if (File.Exists(name))
 			{
-				return DeSerializeFile<JsonSitePage>(name);
+				return DeSerializeFile<SitePage>(name);
 			}
 			return null;
 		}
@@ -56,14 +56,14 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public IEnumerable<ISitePage> AllPages()
 		{
-			List<JsonSitePage> pages = new List<JsonSitePage>();
+			List<SitePage> pages = new List<SitePage>();
 			if (Directory.Exists(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder))
 			{
 				string[] pageFiles = Directory.GetFiles(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder, "*.json");
 				foreach (string page in pageFiles)
 				{
 					MiniWebSite.Logger?.LogDebug($"Loading page from disc {page}");
-					pages.Add(DeSerializeFile<JsonSitePage>(page));
+					pages.Add(DeSerializeFile<SitePage>(page));
 				}
 			}
 			return pages;
@@ -86,7 +86,7 @@ namespace MiniWeb.Storage.JsonStorage
 		{
 			get
 			{
-				return AllPages().FirstOrDefault(p => p.Url == "404") ?? new JsonSitePage()
+				return AllPages().FirstOrDefault(p => p.Url == "404") ?? new SitePage()
 				{
 					Title = "Page Not Found : 404",
 					MetaTitle = "Page Not Found : 404",
@@ -120,7 +120,7 @@ namespace MiniWeb.Storage.JsonStorage
 		{
 			get
 			{
-				return new JsonSitePage()
+				return new SitePage()
 				{
 					Title = "Login",
 					MetaTitle = "Login",
@@ -130,6 +130,14 @@ namespace MiniWeb.Storage.JsonStorage
 					Url = "miniweb/login",
 					Visible = true
 				};
+			}
+		}
+
+		public JsonConverter JsonInterfaceConverter
+		{
+			get
+			{
+				return new JsonInterfaceConverter();
 			}
 		}
 
@@ -149,7 +157,7 @@ namespace MiniWeb.Storage.JsonStorage
 			try
 			{
 				string jsonString = File.ReadAllText(filename);
-				return JsonConvert.DeserializeObject<T>(jsonString, new InterfaceConverter());
+				return JsonConvert.DeserializeObject<T>(jsonString, JsonInterfaceConverter);
 
 			}
 			catch (Exception ex)
