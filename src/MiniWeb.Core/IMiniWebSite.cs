@@ -30,7 +30,6 @@ namespace MiniWeb.Core
 		List<IPageSection> GetDefaultContentForTemplate(string template);
 		IEnumerable<IAsset> Assets { get; set; }
 		void DeleteAsset(IAsset asset);
-		void SaveAsset(IAsset asset);
 		void ReloadAssets();
 
 		bool Authenticate(string user, string password);

@@ -13,8 +13,7 @@ namespace MiniWeb.Core
 
 		IEnumerable<IAsset> GetAllAssets();
 		
-		void StoreAsset(IAsset asset);
-		void DeleteAsset(IAsset asset);
+		void RemoveAsset(IAsset asset);
 		
 		IAsset CreateAsset(string fileName, byte[] bytes, string virtualFolder = null);
 		IAsset CreateAsset(string fileName, string base64String, string virtualFolder = null);
@@ -30,6 +29,6 @@ namespace MiniWeb.Core
 	{
 		FileInfo Info { get; }
 		string VirtualPath { get; set; }
-		AssetType Type{ get; set; }
+		AssetType Type{ get; }
 	}
 }

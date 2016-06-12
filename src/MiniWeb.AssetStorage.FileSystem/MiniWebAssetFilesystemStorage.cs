@@ -30,13 +30,18 @@ namespace MiniWeb.AssetStorage.FileSystem
 
 		public IEnumerable<IAsset> GetAllAssets()
 		{
-			throw new NotImplementedException();
+			string folder = Path.Combine(HostingEnvironment.WebRootPath, Configuration.AssetRootPath);
+			var allFiles = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+			return allFiles.Select(f => new FileSystemAsset(HostingEnvironment)
+			{
+				VirtualPath = GetVirtualPath(f)
+			});
 		}
 
 		public IAsset CreateAsset(string fileName, byte[] bytes, string virtualFolder = null)
 		{
 			var virtualPath = Path.Combine(Configuration.AssetRootPath, virtualFolder ?? string.Empty, fileName);
-			string file = Path.Combine(HostingEnvironment.WebRootPath,virtualPath);
+			string file = Path.Combine(HostingEnvironment.WebRootPath, virtualPath);
 			File.WriteAllBytes(file, bytes);
 			IAsset a = new FileSystemAsset(HostingEnvironment)
 			{
@@ -56,16 +61,17 @@ namespace MiniWeb.AssetStorage.FileSystem
 			return CreateAsset(fileName, bytes, virtualFolder);
 		}
 
-		public void DeleteAsset(IAsset asset)
+		public void RemoveAsset(IAsset asset)
 		{
-			throw new NotImplementedException();
+			string file = Path.Combine(HostingEnvironment.WebRootPath, asset.VirtualPath);
+			File.Delete(file);
 		}
-
-		public void StoreAsset(IAsset asset)
+		
+		private string GetVirtualPath(string path)
 		{
-			throw new NotImplementedException();
+			var virtualPath = path.Substring(HostingEnvironment.WebRootPath.Length);
+			return virtualPath.Replace("\\", "/");
 		}
-
 
 		private byte[] ConvertToBytes(string base64)
 		{
@@ -85,6 +91,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 
 	public class FileSystemAsset : IAsset
 	{
+		private string[] ImageExtensions = new[] { "png", "jpg", "jpeg", "gif", "bmp" };
 		public IHostingEnvironment HostingEnvironment { get; }
 		public FileSystemAsset(IHostingEnvironment env)
 		{
@@ -98,8 +105,19 @@ namespace MiniWeb.AssetStorage.FileSystem
 				return new FileInfo(path);
 			}
 		}
-		
+
 		public string VirtualPath { get; set; }
-		public AssetType Type{ get; set; }
+		public AssetType Type
+		{
+			get
+			{
+				var extension = Path.GetExtension(VirtualPath);
+				if (ImageExtensions.Contains(extension))
+				{
+					return AssetType.Image;
+				}
+				return AssetType.File;
+			}
+		}
 	}
 }

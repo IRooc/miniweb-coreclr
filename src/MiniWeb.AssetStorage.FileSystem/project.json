@@ -3,7 +3,7 @@
 
 	"dependencies": {
 		"Microsoft.NETCore.App": {
-			"version": "1.0.0-rc2-3002659",
+			"version": "1.0.0-rc2-*",
 			"type": "platform"
 		},
 		"MiniWeb.Core": "1.0.0"

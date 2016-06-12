@@ -22,6 +22,7 @@ namespace MiniWeb.Core
 			if (!_webSite.Pages.Any())
 			{
 				_webSite.ReloadPages();
+				_webSite.ReloadAssets();
 			}
 		}
 
@@ -32,6 +33,7 @@ namespace MiniWeb.Core
 			if (Request.Query["reloadpages"] == "true")
 			{
 				_webSite.ReloadPages();
+				_webSite.ReloadAssets();
 			}
 			if (string.IsNullOrWhiteSpace(url) || url == "/")
 			{

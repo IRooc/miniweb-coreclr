@@ -7,7 +7,7 @@
 	},
 	"dependencies": {
 		"Microsoft.NETCore.App": {
-			"version": "1.0.0-rc2-3002659",
+			"version": "1.0.0-rc2-*",
 			"type": "platform"
 		},
 		"System.Xml.XmlSerializer": "4.0.11-*",
