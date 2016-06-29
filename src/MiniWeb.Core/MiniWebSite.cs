@@ -13,7 +13,7 @@ namespace MiniWeb.Core
 {
 	public class MiniWebSite : IMiniWebSite
 	{
-		public const string EmbeddedBase64FileInHtmlRegex = "(data-filename=\"([^\"]+)\"\\s+)(src|href)=\"(data:([^\"]+))\"?";
+		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
 		public MiniWebConfiguration Configuration { get; }
 		public IHostingEnvironment HostingEnvironment { get; }
 

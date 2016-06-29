@@ -116,6 +116,10 @@ RC
 							var node = document.createElement("a");
 							node.innerText = fileInfo.name;
 							node.href = dataUrl;
+							var attrib = document.createAttribute("data-filename");
+							attrib.value = fileInfo.name;
+							node.setAttributeNode(attrib);
+
 							frag.appendChild(node);
 							window.getSelection().getRangeAt(0).insertNode(node);
 						}).fail(function (e) {

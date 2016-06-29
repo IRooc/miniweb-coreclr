@@ -9,24 +9,24 @@
 	},
 	"dependencies": {
 		"Microsoft.NETCore.App": {
-			"version": "1.0.0-rc2-*",
+			"version": "1.0.0",
 			"type": "platform"
 		},
-		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0-*",
-		"Microsoft.AspNetCore.DataProtection": "1.0.0-*",
-		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
-		"Microsoft.AspNetCore.Html.Abstractions": "1.0.0-*",
-		"Microsoft.AspNetCore.Routing": "1.0.0-*",
-		"Microsoft.AspNetCore.Mvc.Core": "1.0.0-*",
-		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
-		"Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-*",
-		"Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
-		"Microsoft.Extensions.Configuration": "1.0.0-*",
-		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
-		"Microsoft.Extensions.FileProviders.Embedded": "1.0.0-*",
-		"Microsoft.Extensions.Logging": "1.0.0-*",
-		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
-		"System.Runtime.Serialization.Primitives": "4.1.1-*"
+		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
+		"Microsoft.AspNetCore.DataProtection": "1.0.0",
+		"Microsoft.AspNetCore.Hosting": "1.0.0",
+		"Microsoft.AspNetCore.Html.Abstractions": "1.0.0",
+		"Microsoft.AspNetCore.Routing": "1.0.0",
+		"Microsoft.AspNetCore.Mvc.Core": "1.0.0",
+		"Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0",
+		"Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0",
+		"Microsoft.AspNetCore.Razor.Runtime": "1.0.0",
+		"Microsoft.Extensions.Configuration": "1.0.0",
+		"Microsoft.Extensions.Configuration.Json": "1.0.0",
+		"Microsoft.Extensions.FileProviders.Embedded": "1.0.0",
+		"Microsoft.Extensions.Logging": "1.0.0",
+		"Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+		"System.Runtime.Serialization.Primitives": "4.1.1"
 	},
 	"frameworks": {
 		"netcoreapp1.0": {

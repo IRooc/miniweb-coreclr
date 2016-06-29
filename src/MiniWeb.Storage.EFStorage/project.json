@@ -6,19 +6,19 @@
 	},
 	"dependencies": {
 		"Microsoft.NETCore.App": {
-			"version": "1.0.0-rc2-*",
+			"version": "1.0.0",
 			"type": "platform"
 		},
-		"Microsoft.AspNetCore.Cryptography.KeyDerivation": "1.0.0-*",
-		"Microsoft.AspNetCore.Hosting": "1.0.0-*",
-		"Microsoft.AspNetCore.Identity": "1.0.0-*",
-		"Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-*",
-		"Microsoft.Extensions.Configuration": "1.0.0-*",
-		"Microsoft.Extensions.Configuration.Json": "1.0.0-*",
-		"Microsoft.Extensions.DependencyInjection": "1.0.0-*",
-		"Microsoft.Extensions.Logging": "1.0.0-*",
+		"Microsoft.AspNetCore.Cryptography.KeyDerivation": "1.0.0",
+		"Microsoft.AspNetCore.Hosting": "1.0.0",
+		"Microsoft.AspNetCore.Identity": "1.0.0",
+		"Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
+		"Microsoft.Extensions.Configuration": "1.0.0",
+		"Microsoft.Extensions.Configuration.Json": "1.0.0",
+		"Microsoft.Extensions.DependencyInjection": "1.0.0",
+		"Microsoft.Extensions.Logging": "1.0.0",
 		"MiniWeb.Core": "1.0.0",
-		"System.Security.Cryptography.Algorithms": "4.1.0-*"
+		"System.Security.Cryptography.Algorithms": "4.2.0"
 	},
 	"frameworks": {
 		"netcoreapp1.0": {

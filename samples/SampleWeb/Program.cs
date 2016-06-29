@@ -20,6 +20,7 @@ namespace SampleWeb
                         .UseKestrel()
                         .UseContentRoot(PlatformServices.Default.Application.ApplicationBasePath)
                         .UseUrls("http://localhost:5001")
+						.UseIISIntegration()
                         .UseStartup<Startup>()
                         .Build();
 

@@ -31,17 +31,25 @@ namespace MiniWeb.AssetStorage.FileSystem
 		public IEnumerable<IAsset> GetAllAssets()
 		{
 			string folder = Path.Combine(HostingEnvironment.WebRootPath, Configuration.AssetRootPath);
-			var allFiles = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
-			return allFiles.Select(f => new FileSystemAsset(HostingEnvironment)
+			if (Directory.Exists(folder))
 			{
-				VirtualPath = GetVirtualPath(f)
-			});
+				var allFiles = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+				return allFiles.Select(f => new FileSystemAsset(HostingEnvironment)
+				{
+					VirtualPath = GetVirtualPath(f)
+				});
+			}
+			Logger?.LogWarning($"Folder not present {folder} no assets loaded");
+			return Enumerable.Empty<IAsset>();
 		}
 
 		public IAsset CreateAsset(string fileName, byte[] bytes, string virtualFolder = null)
 		{
-			var virtualPath = Path.Combine(Configuration.AssetRootPath, virtualFolder ?? string.Empty, fileName);
-			string file = Path.Combine(HostingEnvironment.WebRootPath, virtualPath);
+			Logger?.LogInformation($"Create asset {fileName} in {Configuration.AssetRootPath}");
+			var virtualPath = Path.Combine(Configuration.AssetRootPath, virtualFolder ?? string.Empty);
+			string path = Path.Combine(HostingEnvironment.WebRootPath, virtualPath);
+			Directory.CreateDirectory(path);
+			string file = Path.Combine(path, fileName);
 			File.WriteAllBytes(file, bytes);
 			IAsset a = new FileSystemAsset(HostingEnvironment)
 			{
