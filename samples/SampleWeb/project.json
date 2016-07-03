@@ -51,6 +51,7 @@
 		"MiniWeb.Core": "*",
 		"MiniWeb.Storage.JsonStorage": "*",
 		"MiniWeb.Storage.XmlStorage": "*",
+		"MiniWeb.Storage.EFStorage": "*",
 		"MiniWeb.AssetStorage.FileSystem": "*"
 	},
 	"frameworks": {

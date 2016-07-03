@@ -31,6 +31,10 @@ namespace MiniWeb.Storage.EFStorage
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			builder.Entity<DbSitePage>().HasKey(s => s.Url);
+			builder.Entity<DbSitePage>().Ignore(s => s.BaseUrl);
+			builder.Entity<DbSitePage>().Ignore(s => s.Pages);
+			builder.Entity<DbSitePage>().Ignore(s => s.Parent);
+			builder.Entity<DbSitePage>().Ignore(s => s.Sections);
 			builder.Entity<DbContentItem>().HasKey(c => new { c.PageUrl, c.Sortorder, c.SectionKey });
 			builder.Entity<DbUser>().HasKey(u => u.UserName);
 			base.OnModelCreating(builder);
@@ -74,12 +78,14 @@ namespace MiniWeb.Storage.EFStorage
 
 		public string GetBodyCss()
 		{
-			throw new NotImplementedException();
+			var bodyCss = Url.Replace("/", "-");
+
+			return bodyCss;
 		}
 
 		public bool VisibleInMenu()
 		{
-			throw new NotImplementedException();
+			return Visible && ShowInMenu;
 		}
 	}
 

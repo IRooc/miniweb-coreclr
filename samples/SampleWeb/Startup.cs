@@ -13,6 +13,7 @@ using MiniWeb.AssetStorage.FileSystem;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
 using MiniWeb.Storage.XmlStorage;
+using MiniWeb.Storage.EFStorage;
 using Newtonsoft.Json.Linq;
 
 namespace SampleWeb
@@ -43,7 +44,7 @@ namespace SampleWeb
 
 			//services.AddMiniWeb(Configuration).AddMiniWebEFSqlServerStorage(Configuration);
 			services.AddMiniWeb(Configuration)
-					.AddMiniWebJsonStorage(Configuration)
+					.AddMiniWebEFSqlServerStorage(Configuration)
 					.AddMiniWebAssetFileSystemStorage(Configuration);
 		}
 
@@ -108,8 +109,8 @@ namespace SampleWeb
 			});
 
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
-			//app.UseEFMiniWebSite(false);
-			app.UseMiniWebSite(false);
+			app.UseEFMiniWebSite(false);
+			//app.UseMiniWebSite(false);
 		}
 
 	}
