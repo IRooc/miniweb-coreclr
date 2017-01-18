@@ -44,7 +44,7 @@ namespace SampleWeb
 
 			//services.AddMiniWeb(Configuration).AddMiniWebEFSqlServerStorage(Configuration);
 			services.AddMiniWeb(Configuration)
-					.AddMiniWebEFSqlServerStorage(Configuration)
+					.AddMiniWebJsonStorage(Configuration)
 					.AddMiniWebAssetFileSystemStorage(Configuration);
 		}
 
@@ -109,8 +109,8 @@ namespace SampleWeb
 			});
 
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
-			app.UseEFMiniWebSite(false);
-			//app.UseMiniWebSite(false);
+			//app.UseEFMiniWebSite(false);
+			app.UseMiniWebSite(false);
 		}
 
 	}

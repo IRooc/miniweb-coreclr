@@ -183,7 +183,7 @@
 									<option value="">Choose url or enter custom</option>
 									@foreach (var page in MiniWebSite.Pages)
 									{
-										<option value="@(MiniWebSite.GetPageUrl(page))">@page.Title (/@page.Url)</option>
+										<option value="@(MiniWebSite.GetPageUrl(page))">/@page.Url (@page.Title)</option>
 									}
 								</select>
 							</div>

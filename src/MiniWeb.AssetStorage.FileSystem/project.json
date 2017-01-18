@@ -2,20 +2,12 @@
 	"version": "1.0.0",
 
 	"dependencies": {
-		"Microsoft.NETCore.App": {
-			"version": "1.0.0",
-			"type": "platform"
-		},
 		"MiniWeb.Core": "1.0.0"
 	},
 
 	"frameworks": {
-		"netcoreapp1.0": {
-			"imports": [
-				"portable-dnxcore50+net45+win8+wp8+wpa81",
-				"portable-net45+win8+wpa81",
-				"dotnet5.6"
-			]
+		"netstandard1.6": {
+			"imports": "dnxcore50"
 		}
 	}
 }

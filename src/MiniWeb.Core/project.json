@@ -8,10 +8,7 @@
 		}
 	},
 	"dependencies": {
-		"Microsoft.NETCore.App": {
-			"version": "1.0.0",
-			"type": "platform"
-		},
+		
 		"Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
 		"Microsoft.AspNetCore.DataProtection": "1.0.0",
 		"Microsoft.AspNetCore.Hosting": "1.0.0",
@@ -29,12 +26,8 @@
 		"System.Runtime.Serialization.Primitives": "4.1.1"
 	},
 	"frameworks": {
-		"netcoreapp1.0": {
-			"imports": [
-				"portable-dnxcore50+net45+win8+wp8+wpa81",
-				"portable-net45+win8+wpa81",
-				"dotnet5.6"
-			]
+		"netstandard1.6": {
+			"imports": "dnxcore50"
 		}
 	}
 }

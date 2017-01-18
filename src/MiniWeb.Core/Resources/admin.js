@@ -3,7 +3,7 @@
     $.fn.miniwebAdmin = function (userOptions) {
         var adminTag = $(this);
         var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
-        var contentEditables, contentHtmlEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, editContent = function () {
+        var contentEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, editContent = function () {
             $('body').addClass('miniweb-editing');
             //reassign arrays so al new items are parsed
             contentEditables = $('[data-miniwebprop]');

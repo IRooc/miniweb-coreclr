@@ -3,7 +3,7 @@
 	$.fn.miniwebAdmin = function (userOptions) {
 		var adminTag = $(this);
 		var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
-		var contentEditables, contentHtmlEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel,
+		var contentEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel,
 
 			editContent = function () {
 				$('body').addClass('miniweb-editing');
@@ -208,7 +208,7 @@
 			addNewContent = function () {
 				var htmlid = $(this).data('contentid');
 				var target = $(this).closest('#newContentAdd').attr('data-targetsection');
-				$('[data-miniwebsection=' + target + ']').append($('#' + htmlid).html());
+				$('[data-miniwebsection=' + target + ']').append($('#' + htmlid).html()); 
 				cancelEdit();
 				editContent();
 				$('#newContentAdd').modal('hide');

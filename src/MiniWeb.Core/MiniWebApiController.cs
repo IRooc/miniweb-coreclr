@@ -23,6 +23,12 @@ namespace MiniWeb.Core
 			return Content(_webSite.HostingEnvironment.EnvironmentName + " " + _webSite.HostingEnvironment.ContentRootPath);
 		}
 
+		public IActionResult LoadAssets()
+		{
+			_webSite.ReloadAssets();
+			return new JsonResult(_webSite.Assets.Select(a => a.VirtualPath));
+		}
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)

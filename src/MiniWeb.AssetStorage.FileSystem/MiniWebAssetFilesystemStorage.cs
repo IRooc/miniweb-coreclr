@@ -51,9 +51,10 @@ namespace MiniWeb.AssetStorage.FileSystem
 			Directory.CreateDirectory(path);
 			string file = Path.Combine(path, fileName);
 			File.WriteAllBytes(file, bytes);
+			virtualPath = Path.Combine(virtualPath, fileName);
 			IAsset a = new FileSystemAsset(HostingEnvironment)
 			{
-				VirtualPath = virtualPath
+				VirtualPath = "/" + virtualPath
 			};
 			return a;
 		}

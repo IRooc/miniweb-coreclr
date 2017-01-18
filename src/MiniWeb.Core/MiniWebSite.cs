@@ -45,7 +45,7 @@ namespace MiniWeb.Core
 		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
 						   IOptions<MiniWebConfiguration> config)
 		{
-			Pages = Enumerable.Empty<ISitePage>();
+			Pages = Enumerable.Empty<ISitePage>(); 
 
 			HostingEnvironment = env;
 			Configuration = config.Value;
@@ -209,22 +209,24 @@ namespace MiniWeb.Core
 			Match match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
 			while (!string.IsNullOrEmpty(match?.Value))
 			{
-				string filename = match.Groups[2].Value;
-				string base64String = match.Groups[5].Value;
-				//byte[] bytes = ConvertToBytes(base64String);
-				var newAsset = AssetStorage.CreateAsset(filename, base64String);
-				//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
-				string path = newAsset.VirtualPath;// SaveFileToDisk(bytes, extension, filename);
+				string filename = match.Groups[5].Value;
+				string base64String = match.Groups[2].Value;
+				if (!string.IsNullOrWhiteSpace(base64String)) {
+					//byte[] bytes = ConvertToBytes(base64String);
+					var newAsset = AssetStorage.CreateAsset(filename, base64String);
+					//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
+					string path = newAsset.VirtualPath;// SaveFileToDisk(bytes, extension, filename);
 
-				//replace URL in content
-				string value = string.Format("src=\"{0}\" alt=\"\" ", path);
+					//replace URL in content
+					string value = string.Format("src=\"{0}\" alt=\"\" ", path);
 
-				if (match.Groups[1].Value == "href")
-					value = string.Format("href=\"{0}\"", path);
+					if (match.Groups[1].Value == "href")
+						value = string.Format("href=\"{0}\"", path);
 
-				html = html.Replace(match.Value, value);
-				//next match.
-				match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
+					html = html.Replace(match.Value, value);
+					//next match.
+					match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
+				}
 			}
 			return html;
 		}
