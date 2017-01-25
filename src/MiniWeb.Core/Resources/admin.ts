@@ -1,9 +1,11 @@
 ﻿/// <reference path="jquery.d.ts" />
+/// <reference path="bootstrap.d.ts" />
+/// <reference path="bootstrap-wysiwyg.ts" />
 (function ($) {
 	$.fn.miniwebAdmin = function (userOptions) {
 		var adminTag = $(this);
 		var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
-		var contentEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel,
+		var contentEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, qqq,
 
 			editContent = function () {
 				$('body').addClass('miniweb-editing');
@@ -335,7 +337,7 @@
 	};
 
 	$('#showHiddenPages input').click(function () {
-		sessionStorage.setItem('showhiddenpages', $(this).is(':checked'));
+		sessionStorage.setItem('showhiddenpages', String($(this).is(':checked')));
 		$('.miniweb-hidden-menu').toggle($(this).is(':checked'));
 	});
 	if (sessionStorage.getItem('showhiddenpages') === "true") {
