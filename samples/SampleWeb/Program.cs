@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
 
 namespace SampleWeb
 {
@@ -18,7 +18,7 @@ namespace SampleWeb
             var host = new WebHostBuilder()
                 .UseConfiguration(config)
                         .UseKestrel()
-                        .UseContentRoot(PlatformServices.Default.Application.ApplicationBasePath)
+                        .UseContentRoot(Directory.GetCurrentDirectory())
                         .UseUrls("http://localhost:5001")
 						.UseIISIntegration()
                         .UseStartup<Startup>()

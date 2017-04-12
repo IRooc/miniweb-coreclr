@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebSite : IMiniWebSite
+    public class MiniWebSite : IMiniWebSite
 	{
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
 		public MiniWebConfiguration Configuration { get; }

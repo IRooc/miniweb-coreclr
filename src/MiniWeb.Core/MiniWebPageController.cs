@@ -1,18 +1,13 @@
-using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebPageController : Controller
+    public class MiniWebPageController : Controller
 	{
 		private readonly IMiniWebSite _webSite;
 

@@ -12,8 +12,8 @@ using Microsoft.Extensions.Logging;
 using MiniWeb.AssetStorage.FileSystem;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
-using MiniWeb.Storage.XmlStorage;
-using MiniWeb.Storage.EFStorage;
+//using MiniWeb.Storage.XmlStorage;
+//using MiniWeb.Storage.EFStorage;
 using Newtonsoft.Json.Linq;
 
 namespace SampleWeb

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,9 +10,9 @@ using MiniWeb.Core;
 
 namespace MiniWeb.AssetStorage.FileSystem
 {
-	// This project can output the Class library as a NuGet Package.
-	// To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
-	public class MiniWebAssetFileSystemStorage : IMiniWebAssetStorage
+    // This project can output the Class library as a NuGet Package.
+    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
+    public class MiniWebAssetFileSystemStorage : IMiniWebAssetStorage
 	{
 		public IMiniWebSite MiniWebSite { get; set; }
 		public ILogger Logger { get; }

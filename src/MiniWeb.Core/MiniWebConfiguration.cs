@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebConfiguration
+    public class MiniWebConfiguration
 	{
 		public string Title { get; set; } = "MiniWeb by Rooc";
 		public string DefaultPage { get; set; } = "/home.html";

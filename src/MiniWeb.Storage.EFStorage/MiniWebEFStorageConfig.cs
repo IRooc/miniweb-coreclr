@@ -1,8 +1,6 @@
-﻿using MiniWeb.Core;
-
-namespace MiniWeb.Storage.EFStorage
+﻿namespace MiniWeb.Storage.EFStorage
 {
-	public class MiniWebEFStorageConfig 
+    public class MiniWebEFStorageConfig 
 	{
 		public string Connectionstring { get; set; } = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MiniWebDemo;Integrated Security=True";
 		public string Layout { get; set; } = "~/Views/_layout.cshtml";

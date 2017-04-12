@@ -17,7 +17,7 @@ RC
 		var loader = $.Deferred(),
 		 fReader = new FileReader();
 		fReader.onload = function (e) {
-			loader.resolve(e.target.result);
+			loader.resolve((<any>e.target).result);
 		};
 		fReader.onerror = loader.reject;
 		fReader.onprogress = loader.notify;
@@ -33,13 +33,13 @@ RC
 		var editorWysiwyg = {
 			me: editor,
 			selectedRange: null,
-			options: {},
+			options: <any>{},
 			toolbarBtnSelector: '',
 			updateToolbar: function () {
 				if (this.options.activeToolbarClass) {
 					var opts = this.options;
 					$(opts.toolbarSelector).find(this.toolbarBtnSelector).each(function () {
-						var command = $(this).data(opts.commandRole);
+						var command = <any>$(this).data(opts.commandRole);
 						try {
 							if (document.queryCommandState(command)) {
 								$(this).addClass(opts.activeToolbarClass);
@@ -58,7 +58,7 @@ RC
 				if (commandWithArgs === "createLink") {
 					this.options.createLink(this);
 				} else {
-					document.execCommand(command, 0, args);
+					document.execCommand(command, false, args);
 					this.updateToolbar();
 				}
 			},
@@ -94,8 +94,8 @@ RC
 					try {
 						selection.removeAllRanges();
 					} catch (ex) {
-						document.body.createTextRange().select();
-						document.selection.empty();
+						(<any>document.body).createTextRange().select();
+						(<any>document).selection.empty();
 					}
 
 					selection.addRange(this.selectedRange);
@@ -156,7 +156,7 @@ RC
 					meEdit.restoreSelection();
 					if (newValue) {
 						this.me.focus();
-						execCommand($(this).data(options.commandRole), newValue);
+						meEdit.execCommand($(this).data(options.commandRole), newValue);
 					}
 					meEdit.saveSelection();
 				}).on('focus', function () {
@@ -241,9 +241,9 @@ RC
 		readFileIntoUrl: readFileIntoDataUrl,
 		createLink: function (wysiwygObj) {
 			var args = prompt("Enter the URL for this link:", "http://");
-			document.execCommand("createLink", 0, args);
+			document.execCommand("createLink", false, args);
 			wysiwygObj.updateToolbar();
 		}
 	};
-}(window.jQuery));
+}(jQuery));
 

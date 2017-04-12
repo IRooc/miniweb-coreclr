@@ -1,11 +1,24 @@
 ﻿/// <reference path="jquery.d.ts" />
 /// <reference path="bootstrap.d.ts" />
 /// <reference path="bootstrap-wysiwyg.ts" />
+if (typeof jQuery == 'undefined') {
+    // jQuery is not loaded
+    var script = document.createElement('script');
+    script.type = "text/javascript";
+    script.src = "https://code.jquery.com/jquery-2.2.4.min.js";
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
+if (typeof $().modal != 'function') {
+    var script = document.createElement('script');
+    script.type = "text/javascript";
+    script.src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js";
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
 (function ($) {
 	$.fn.miniwebAdmin = function (userOptions) {
 		var adminTag = $(this);
 		var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
-		var contentEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, qqq,
+		var contentEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel,
 
 			editContent = function () {
 				$('body').addClass('miniweb-editing');
@@ -337,7 +350,7 @@
 	};
 
 	$('#showHiddenPages input').click(function () {
-		sessionStorage.setItem('showhiddenpages', String($(this).is(':checked')));
+		sessionStorage.setItem('showhiddenpages', <string><any>$(this).is(':checked'));
 		$('.miniweb-hidden-menu').toggle($(this).is(':checked'));
 	});
 	if (sessionStorage.getItem('showhiddenpages') === "true") {

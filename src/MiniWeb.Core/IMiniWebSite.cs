@@ -2,11 +2,10 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
 {
-	public interface IMiniWebSite
+    public interface IMiniWebSite
 	{
 		IHostingEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }

@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace MiniWeb.Core.TagHelpers
 {
-	[HtmlTargetElement(MiniWebAdminTag)]
+    [HtmlTargetElement(MiniWebAdminTag)]
 	public class MiniWebAdminTagHelper : TagHelper
 	{
 		private const string MiniWebAdminTag = "miniwebadmin";
@@ -31,6 +30,10 @@ namespace MiniWeb.Core.TagHelpers
 			if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
 			{
 				output.TagMode = TagMode.StartTagAndEndTag;
+				output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//code.jquery.com/jquery-2.2.4.min.js\"></script>");
+				output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//code.jquery.com/jquery-2.2.4.min.js\"></script>");
+				output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>");
+
 				//add the own contents.
 				output.Content.AppendHtml(output.GetChildContentAsync().Result);
 

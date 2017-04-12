@@ -57,7 +57,7 @@ RC
                     this.options.createLink(this);
                 }
                 else {
-                    document.execCommand(command, 0, args);
+                    document.execCommand(command, false, args);
                     this.updateToolbar();
                 }
             },
@@ -127,6 +127,7 @@ RC
                         }).fail(function (e) {
                             meObj.options.fileUploadError("file-reader", e);
                         });
+                        //this.options.fileUploadError("unsupported-file-type", fileInfo.type);
                     }
                 });
             },
@@ -153,7 +154,7 @@ RC
                     meEdit.restoreSelection();
                     if (newValue) {
                         this.me.focus();
-                        execCommand($(this).data(options.commandRole), newValue);
+                        meEdit.execCommand($(this).data(options.commandRole), newValue);
                     }
                     meEdit.saveSelection();
                 }).on('focus', function () {
@@ -235,8 +236,8 @@ RC
         readFileIntoUrl: readFileIntoDataUrl,
         createLink: function (wysiwygObj) {
             var args = prompt("Enter the URL for this link:", "http://");
-            document.execCommand("createLink", 0, args);
+            document.execCommand("createLink", false, args);
             wysiwygObj.updateToolbar();
         }
     };
-}(window.jQuery));
+}(jQuery));

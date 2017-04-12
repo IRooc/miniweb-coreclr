@@ -5,12 +5,11 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace MiniWeb.Core.TagHelpers
 {
-	[HtmlTargetElement(Attributes = MiniWebSectionTagname)]
+    [HtmlTargetElement(Attributes = MiniWebSectionTagname)]
 	public class MiniWebSectionTagHelper : TagHelper
 	{
 		private const string MiniWebSectionTagname = "miniweb-section";
