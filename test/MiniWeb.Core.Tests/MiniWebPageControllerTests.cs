@@ -8,28 +8,38 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MiniWeb.Core.Tests
 {
-    public class MiniWebPageControllerTests : IClassFixture<MiniWebSiteFixture>
-    {
-        MiniWebSiteFixture _fixture;
-        MiniWebPageController _pageController;
-        public MiniWebPageControllerTests(MiniWebSiteFixture fixture){
-            _fixture = fixture;
-            _pageController = new MiniWebPageController(fixture.MiniWeb);
+	public class MiniWebPageControllerTests : IClassFixture<MiniWebSiteFixture>
+	{
+		MiniWebSiteFixture _fixture;
+		MiniWebPageController _pageController;
+		public MiniWebPageControllerTests(MiniWebSiteFixture fixture)
+		{
+			_fixture = fixture;
+			_pageController = new MiniWebPageController(fixture.MiniWeb);
 
-            var request = new Mock<HttpRequest>();
-            var context = new Mock<HttpContext>();
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            request.SetupGet(f => f.Query).Returns(Mock.Of<IQueryCollection>());
-            _pageController.ControllerContext.HttpContext = context.Object;
-        }
+			var request = new Mock<HttpRequest>();
+			var context = new Mock<HttpContext>();
+			context.SetupGet(x => x.Request).Returns(request.Object);
+			request.SetupGet(f => f.Query).Returns(Mock.Of<IQueryCollection>());
+			_pageController.ControllerContext.HttpContext = context.Object;
+		}
 
-        [Fact]
-        public void RootPage()
-        {
-            var result = _pageController.Index("/");
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<ISitePage>(viewResult.ViewData.Model);
-            Assert.Equal("/home", model.Url);
-        }
-    }
+		[Fact]
+		public void Show404Page()
+		{
+			var result = _pageController.Index("/");
+			var viewResult = Assert.IsType<ViewResult>(result);
+			var model = Assert.IsAssignableFrom<ISitePage>(viewResult.ViewData.Model);
+			Assert.Equal("/404", model.Url);
+		}
+
+		[Fact]
+		public void ShowLoginPage()
+		{
+			var result = _pageController.Login();
+			var viewResult = Assert.IsType<ViewResult>(result);
+			var model = Assert.IsAssignableFrom<ISitePage>(viewResult.ViewData.Model);
+			Assert.Equal("Login", model.Title);
+		}
+	}
 }
