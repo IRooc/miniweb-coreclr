@@ -9,6 +9,7 @@ namespace MiniWeb.Core
 		public string PageExtension { get; set; } = "html";
 
 		public string LoginView { get; set; } = "~/Views/login.cshtml";
+		public string ApiEndpoint {get;set;} = "/miniweb-api/";
 
 		public string PageTemplatePath { get; set; } = "/Views/Pages";
 		public string ItemTemplatePath { get; set; } = "/Views/Items";

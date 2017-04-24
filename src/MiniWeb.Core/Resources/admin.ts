@@ -170,7 +170,7 @@ if (typeof $().modal != 'function') {
 
 				//console.log(JSON.stringify(items));
 
-				$.post('/miniweb-api/savecontent', {
+				$.post(options.apiEndpoint + 'savecontent', {
 					url: $('#admin').attr('data-miniweb-path'),
 					items: JSON.stringify(items),
 					'__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val()
@@ -191,7 +191,7 @@ if (typeof $().modal != 'function') {
 			savePage = function () {
 				var formArr = $(this).closest('form').serializeArray();
 				formArr.push({ name: '__RequestVerificationToken', value: $('#miniweb-templates input[name=__RequestVerificationToken]').val() });
-				$.post("/miniweb-api/savepage",
+				$.post(options.apiEndpoint + "savepage",
 					formArr
 					).done(function (data) {
 					if (data && data.result) {
@@ -206,7 +206,7 @@ if (typeof $().modal != 'function') {
 			},
 			removePage = function () {
 				if (confirm('are you sure?')) {
-					$.post("/miniweb-api/removepage", {
+					$.post(options.apiEndpoint + "removepage", {
 						'__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val(),
 						url: $('#admin').attr('data-miniweb-path')
 					}).done(function (data) {
@@ -298,6 +298,7 @@ if (typeof $().modal != 'function') {
 		$('#addHyperLink').modal();
 	};
 	$.fn.miniwebAdmin.defaults = {
+		apiEndpoint: '/miniweb-api/',
 		editTypes: [
 			{
 				key: 'html',

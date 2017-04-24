@@ -2,6 +2,7 @@
 	"MiniWeb": {
 		"Title": "New Title from Config",
 		"DefaultPage": "/home.html",
+		"ApiEndpoint": "/miniweb-api-endpoint/",
 		"DefaultContent": [
 			{
 				"Template": "~/Views/Pages/OneColumn.cshtml",

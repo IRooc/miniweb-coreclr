@@ -20,7 +20,7 @@ namespace MiniWeb.Core
 		[AllowAnonymous]
 		public IActionResult DebugInfo()
 		{
-			return Content(_webSite.HostingEnvironment.EnvironmentName + " " + _webSite.HostingEnvironment.ContentRootPath);
+			return Content($"{Environment.MachineName} {_webSite.HostingEnvironment.EnvironmentName} {_webSite.HostingEnvironment.ContentRootPath}");
 		}
 
 		public IActionResult LoadAssets()
