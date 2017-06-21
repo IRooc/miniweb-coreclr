@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -29,7 +30,7 @@ namespace MiniWeb.Core.TagHelpers
 			_htmlHelper = helper;
 		}
 
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			//load the content items in the specified section
 			if (!string.IsNullOrWhiteSpace(Section))
@@ -49,28 +50,29 @@ namespace MiniWeb.Core.TagHelpers
 
 				if (viewPage != null)
 				{
-					var sectionContent = SectionContent(_htmlHelper, viewPage.Model, Section);
+					var sectionContent = await SectionContent(viewPage.Model, Section);
 					output.Content.AppendHtml(sectionContent);
 				}
 			}
 		}
-		private string SectionContent(IHtmlHelper html, ISitePage sitepage, string section)
+		private async Task<string> SectionContent(ISitePage sitepage, string section)
 		{
 			if (sitepage?.Sections?.Any(s => s?.Key == section) == true)
 			{
-				return SectionContent(html, sitepage, sitepage.Sections.First(s => s.Key == section));
+				return await SectionContent(sitepage, sitepage.Sections.First(s => s.Key == section));
 			}
 			return String.Empty;
 		}
 
-		private static string SectionContent(IHtmlHelper html, ISitePage sitepage, IPageSection model)
+		private async Task<string> SectionContent(ISitePage sitepage, IPageSection model)
 		{
 			using (StringWriter result = new StringWriter())
 			{
 				foreach (var item in model.Items)
 				{
 					item.Page = sitepage;
-					html.Partial(item.Template, item).WriteTo(result, HtmlEncoder.Default);
+					var partial = await _htmlHelper.PartialAsync(item.Template, item);
+					partial.WriteTo(result, HtmlEncoder.Default);
 				}
 				return result.ToString();
 			}

@@ -100,11 +100,9 @@ public static void Main(string[] args)
     
 	var host = new WebHostBuilder()
 				.UseKestrel()
-				//if Directory.GetCurrentDirectory() is used the application should be run from the base path 
-				// and cannot be started from a different folder, ie dotnet run -p samples/SampleWeb 
-				.UseContentRoot(PlatformServices.Default.Application.ApplicationBasePath)
-				.UseDefaultHostingConfiguration(args)
+				.UseContentRoot(Directory.GetCurrentDirectory())
 				.UseUrls("http://localhost:5001")
+				.UseIISIntegration()
 				.UseStartup<Startup>()
 				.Build();
 
@@ -127,6 +125,5 @@ The first two are filesystem stores and store their files in the /App_Data/Sitep
 * Better image handling (enable picking existing images as well)
 * Upgrade to new bootstrap
 * Setup integration with clientside packages (bower grunt and so on)
-* Wait for .net core release :D
 
 

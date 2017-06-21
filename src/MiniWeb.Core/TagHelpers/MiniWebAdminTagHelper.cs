@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -25,21 +26,21 @@ namespace MiniWeb.Core.TagHelpers
 			_htmlHelper = helper;
 		}
 
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
 			{
 				output.TagMode = TagMode.StartTagAndEndTag;
 				output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//code.jquery.com/jquery-2.2.4.min.js\"></script>");
-				output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//code.jquery.com/jquery-2.2.4.min.js\"></script>");
 				output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>");
 
 				//add the own contents.
-				output.Content.AppendHtml(output.GetChildContentAsync().Result);
+				var ownContent = await output.GetChildContentAsync();
+				output.Content.AppendHtml(ownContent);
 
 				(_htmlHelper as IViewContextAware )?.Contextualize(ViewContext);
 				//admin content
-				var content = _htmlHelper.Partial(_webSite.Configuration.EmbeddedResourcePath + MiniWebFileProvider.ADMIN_FILENAME);
+				var content = await _htmlHelper.PartialAsync(_webSite.Configuration.EmbeddedResourcePath + MiniWebFileProvider.ADMIN_FILENAME);
 
 				output.PreContent.AppendHtml(content);
 
