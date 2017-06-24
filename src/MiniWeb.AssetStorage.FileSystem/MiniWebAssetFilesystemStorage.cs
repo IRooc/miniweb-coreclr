@@ -99,7 +99,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 
 	public class FileSystemAsset : IAsset
 	{
-		private string[] ImageExtensions = new[] { "png", "jpg", "jpeg", "gif", "bmp" };
+		private string[] ImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
 		public IHostingEnvironment HostingEnvironment { get; }
 		public FileSystemAsset(IHostingEnvironment env)
 		{

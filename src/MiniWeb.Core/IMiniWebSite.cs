@@ -12,6 +12,7 @@ namespace MiniWeb.Core
 		MiniWebConfiguration Configuration { get; }
 
 		IMiniWebContentStorage ContentStorage { get; }
+		IMiniWebAssetStorage AssetStorage { get; }
 
 		IEnumerable<ISitePage> Pages { get; set; }
 		IEnumerable<ISitePage> PageHierarchy { get; set; }

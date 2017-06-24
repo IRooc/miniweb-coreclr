@@ -147,6 +147,19 @@ body.miniweb-editing .miniweb-url-edit[contenteditable]::after {
   left: 95%;
   position: absolute;
 }
+
+/*http://jsfiddle.net/wC2p7/1/ */
+body.miniweb-editing .miniweb-asset-edit[contenteditable] {
+    width: 95%;
+}
+body.miniweb-editing .miniweb-asset-edit[contenteditable]::after {
+  content: "\e060";
+  font-family: "Glyphicons Halflings";
+  cursor:pointer;
+  float: right;
+  left: 95%;
+  position: absolute;
+}
 body.miniweb-editing .editor-toolbar .btn {
 	padding: 4px 8px;
 }
@@ -233,6 +246,23 @@ body.miniweb-editing .miniweb-editonly {
 	display:block;
 }
 
+body.miniweb-editing #miniweb-assetlist {
+	list-style: none;
+	display: block;
+	min-height: 80px;
+	overflow: hidden;
+	width: 100%;
+}
+body.miniweb-editing #miniweb-assetlist li {
+	width: 100px;
+	height: 100px;
+	display: inline-block;
+	overflow: hidden;
+}
+body.miniweb-editing #miniweb-assetlist li .miniweb-asset-pick {
+	max-width: 100%;
+	max-height: 100%;
+}
 
 
 @media (max-width: 1024px) {

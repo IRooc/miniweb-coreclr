@@ -17,9 +17,11 @@ namespace MiniWeb.Core.Tests
 			var loggerFactory = new Mock<ILoggerFactory>();
 			var contentStorage = new Mock<IMiniWebContentStorage>();
 			var assetStorage = new Mock<IMiniWebAssetStorage>();
-			Mock<ISitePage> homeSitePage = GetHomeSitePage();
-			contentStorage.SetupGet(x => x.MiniWeb404Page).Returns(homeSitePage.Object);
-			Mock<ISitePage> loginPage = GetLoginPage();
+			var missingSitePage = Get404SitePage();
+			var loginPage = GetLoginPage();
+
+			hostingEnv.SetupGet(h => h.ContentRootPath).Returns("./");
+			contentStorage.SetupGet(x => x.MiniWeb404Page).Returns(missingSitePage.Object);
 			contentStorage.SetupGet(x => x.MiniWebLoginPage).Returns(loginPage.Object);
 
 			var configOptions = Options.Create(new MiniWebConfiguration());
@@ -30,16 +32,16 @@ namespace MiniWeb.Core.Tests
 		private Mock<ISitePage> GetLoginPage()
 		{
 			var sitePage = new Mock<ISitePage>();
-			sitePage.SetupGet(x => x.Url).Returns("/login");
+			sitePage.SetupGet(x => x.Url).Returns("login");
 			sitePage.SetupGet(x => x.Title).Returns("Login");
 			sitePage.SetupGet(x => x.Visible).Returns(true);
 			return sitePage;
 		}
 
-		public Mock<ISitePage> GetHomeSitePage()
+		public Mock<ISitePage> Get404SitePage()
 		{
 			var sitePage = new Mock<ISitePage>();
-			sitePage.SetupGet(x => x.Url).Returns("/404");
+			sitePage.SetupGet(x => x.Url).Returns("404");
 			sitePage.SetupGet(x => x.Visible).Returns(true);
 			return sitePage;
 		}

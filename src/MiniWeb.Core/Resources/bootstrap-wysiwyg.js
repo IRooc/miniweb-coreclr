@@ -32,6 +32,7 @@ RC
             me: editor,
             selectedRange: null,
             options: {},
+            toolbar: null,
             toolbarBtnSelector: '',
             updateToolbar: function () {
                 if (this.options.activeToolbarClass) {
@@ -55,6 +56,9 @@ RC
                 var commandArr = commandWithArgs.split(' '), command = commandArr.shift(), args = commandArr.join(' ') + (valueArg || '');
                 if (commandWithArgs === "createLink") {
                     this.options.createLink(this);
+                }
+                else if (commandWithArgs === "insertAsset") {
+                    this.options.insertAsset(this);
                 }
                 else {
                     document.execCommand(command, false, args);
@@ -141,6 +145,7 @@ RC
             },
             bindToolbar: function (toolbar, options) {
                 var meEdit = this;
+                meEdit.toolbar = toolbar;
                 toolbar.find(meEdit.toolbarBtnSelector).click(function () {
                     meEdit.restoreSelection();
                     meEdit.me.focus();
@@ -238,6 +243,11 @@ RC
             var args = prompt("Enter the URL for this link:", "http://");
             document.execCommand("createLink", false, args);
             wysiwygObj.updateToolbar();
+        },
+        insertAsset: function (wysiwygObj) {
+            wysiwygObj.toolbar.find('input[type=file][data-' + wysiwygObj.options.commandRole + ']').click();
+            wysiwygObj.updateToolbar();
+            return false;
         }
     };
 }(jQuery));

@@ -1,3 +1,4 @@
+pushd %~dp0
 
 dotnet restore
 pushd src\MiniWeb.Core\Resources
@@ -10,12 +11,14 @@ pushd src\MiniWeb.Storage.JsonStorage
 dotnet build
 popd
 pushd src\MiniWeb.Storage.XmlStorage
-dotnet build
+rem dotnet build
 popd
-pushd src\MiniWeb.Storage.EFStorage
+rem pushd src\MiniWeb.Storage.EFStorage
 dotnet build
 popd
 pushd samples\SampleWeb
 dotnet build
+popd
+
 popd
 exit

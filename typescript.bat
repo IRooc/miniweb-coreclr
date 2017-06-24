@@ -1,5 +1,5 @@
+pushd %~dp0
 
 pushd src\MiniWeb.Core\Resources
-call tsc -p .
+call tsc admin.ts
 popd
-exit

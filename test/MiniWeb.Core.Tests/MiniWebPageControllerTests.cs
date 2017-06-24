@@ -18,8 +18,10 @@ namespace MiniWeb.Core.Tests
 			_pageController = new MiniWebPageController(fixture.MiniWeb);
 
 			var request = new Mock<HttpRequest>();
+			var response = new Mock<HttpResponse>();
 			var context = new Mock<HttpContext>();
 			context.SetupGet(x => x.Request).Returns(request.Object);
+			context.SetupGet(x => x.Response).Returns(response.Object);
 			request.SetupGet(f => f.Query).Returns(Mock.Of<IQueryCollection>());
 			_pageController.ControllerContext.HttpContext = context.Object;
 		}
@@ -30,7 +32,7 @@ namespace MiniWeb.Core.Tests
 			var result = _pageController.Index("/");
 			var viewResult = Assert.IsType<ViewResult>(result);
 			var model = Assert.IsAssignableFrom<ISitePage>(viewResult.ViewData.Model);
-			Assert.Equal("/404", model.Url);
+			Assert.Equal("404", model.Url);
 		}
 
 		[Fact]

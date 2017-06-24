@@ -15,6 +15,18 @@ if (typeof $().modal != 'function') {
     document.getElementsByTagName('head')[0].appendChild(script);
 }
 (function ($) {
+	var readFileIntoDataUrl = function (fileInfo) {
+		var loader = $.Deferred(),
+		 fReader = new FileReader();
+		fReader.onload = function (e) {
+			loader.resolve((<any>e.target).result);
+		};
+		fReader.onerror = loader.reject;
+		fReader.onprogress = loader.notify;
+		fReader.readAsDataURL(fileInfo);
+		return loader.promise();
+	};
+
 	$.fn.miniwebAdmin = function (userOptions) {
 		var adminTag = $(this);
 		var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
@@ -297,6 +309,38 @@ if (typeof $().modal != 'function') {
 		wysiwygObj.saveSelection();
 		$('#addHyperLink').modal();
 	};
+	$.fn.miniwebAdmin.insertAsset = function(wysiwygObj: any) {
+		$('#imageAdd button.add-asset').unbind('click').bind('click', function(){
+			$('input[type=file].add-asset').click().change(function () {
+				if (this.type === 'file' && this.files && this.files.length > 0) {
+					//only first for now
+					var fileInfo = this.files[0];
+					$.when(readFileIntoDataUrl(fileInfo)).done(function (dataUrl) {
+						dataUrl = dataUrl.replace(';base64', ';filename=' + fileInfo.name + ';base64')
+						var imageHtml = '<img src="' + dataUrl + '" data-filename="' + fileInfo.name + '"/>';
+						var el = $('<li></li>');
+						el.append(imageHtml);
+						$('#miniweb-assetlist').append(el);
+					}).fail(function (e) {
+						alert("file-reader" + e);
+					});
+				}
+				this.value = '';
+			});
+		});
+		$('#miniweb-assetlist').unbind("click").on('click', 'li', function (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			var dataUrl = $('img', this).attr('src');
+//todo get file from dataUrl;
+			var filename= 'newfile.png';
+
+			var imageHtml = '<img src="' + dataUrl + '" data-filename="' + filename + '"/>';
+			wysiwygObj.execCommand('inserthtml', imageHtml);
+			$('#imageAdd').modal('hide');
+		});
+		$('#imageAdd').modal();
+	}
 	$.fn.miniwebAdmin.defaults = {
 		apiEndpoint: '/miniweb-api/',
 		editTypes: [
@@ -310,7 +354,8 @@ if (typeof $().modal != 'function') {
 						hotKeys: {},
 						activeToolbarClass: "active", 
 						toolbarSelector: '[data-role=editor-toolbar' + index + ']',
-						createLink: $.fn.miniwebAdmin.createHyperlink 
+						createLink: $.fn.miniwebAdmin.createHyperlink,
+						insertAsset: $.fn.miniwebAdmin.insertAsset 
 					});
 				},
 				editEnd: function (index) {
@@ -318,9 +363,49 @@ if (typeof $().modal != 'function') {
 				}
 			},
 			{
+				key: 'asset',
+				editStart: function(index){
+					$(this).addClass('miniweb-asset-edit').unbind('click').click(function (e) {
+						var $el = $(this);
+						//only trigger on :after click...
+						if (e.offsetX > this.offsetWidth) {
+							$('#imageAdd button.add-asset').unbind('click').bind('click', function(){
+
+								$('input[type=file].add-asset').click().change(function () {
+									if (this.type === 'file' && this.files && this.files.length > 0) {
+										//only first for now
+										var fileInfo = this.files[0];
+										$.when(readFileIntoDataUrl(fileInfo)).done(function (dataUrl) {
+											dataUrl = dataUrl.replace(';base64', ';filename=' + fileInfo.name + ';base64')
+											var imageHtml = '<img src="' + dataUrl + '" data-filename="' + fileInfo.name + '"/>';
+											var el = $('<li></li>');
+											el.append(imageHtml);
+											$('#miniweb-assetlist').append(el);
+										}).fail(function (e) {
+											alert("file-reader" + e);
+										});
+									}
+									this.value = '';
+								});
+							});
+							$('#miniweb-assetlist').unbind("click").on('click', 'li', function (e) {
+								e.stopPropagation();
+								e.preventDefault();
+								$el.text($('img', this).attr('src'));
+								$('#imageAdd').modal('hide');
+							});
+							$('#imageAdd').modal();
+						}
+					});
+				},
+				editEnd: function(index){
+					$(this).removeClass('miniweb-asset-edit');
+				}
+			},
+			{
 				key: 'url',
 				editStart: function (index) {
-					$(this).addClass('miniweb-url-edit').click(function (e) {
+					$(this).addClass('miniweb-url-edit').unbind('click').click(function (e) {
 						var $el = $(this);
 						//only trigger on :after click...
 						if (e.offsetX > this.offsetWidth) {
@@ -330,8 +415,7 @@ if (typeof $().modal != 'function') {
 							} else {
 								$('#addHyperLink #createInternalUrl').val(curHref);
 							}
-							$('#addHyperLink .btn-primary').unbind('click');
-							$('#addHyperLink .btn-primary').bind('click', function () {
+							$('#addHyperLink .btn-primary').unbind('click').bind('click', function () {
 								var newHref = $('#addHyperLink #createInternalUrl').val();
 								if (newHref == '') {
 									newHref = $('#addHyperLink #createLinkUrl').val();

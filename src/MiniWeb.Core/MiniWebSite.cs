@@ -12,6 +12,7 @@ namespace MiniWeb.Core
     public class MiniWebSite : IMiniWebSite
 	{
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
+		public const string EmbeddedBase64FileInValueRegex = "(data:([^\"]+))";
 		public MiniWebConfiguration Configuration { get; }
 		public IHostingEnvironment HostingEnvironment { get; }
 
@@ -205,7 +206,7 @@ namespace MiniWeb.Core
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
 			Match match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
-			while (!string.IsNullOrEmpty(match?.Value))
+			while (match.Success && !string.IsNullOrEmpty(match?.Value))
 			{
 				string filename = match.Groups[5].Value;
 				string base64String = match.Groups[2].Value;
@@ -225,6 +226,16 @@ namespace MiniWeb.Core
 					//next match.
 					match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
 				}
+			}
+			match = Regex.Match(html, EmbeddedBase64FileInValueRegex);
+			if (match.Success && !string.IsNullOrEmpty(match?.Value))
+			{
+				string base64String = match.Groups[2].Value;
+				var fileNameMatch = Regex.Match(base64String, "(;filename=(.*?));base64");
+				var fileName = fileNameMatch.Groups[2].Value;
+				base64String = base64String.Replace(fileNameMatch.Groups[1].Value, "");
+				var newAsset = AssetStorage.CreateAsset(fileName, base64String);
+				html = newAsset.VirtualPath;
 			}
 			return html;
 		}
