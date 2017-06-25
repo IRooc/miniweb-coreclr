@@ -119,7 +119,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 		{
 			get
 			{
-				var extension = Path.GetExtension(VirtualPath);
+				var extension = Path.GetExtension(VirtualPath)?.ToLowerInvariant();
 				if (ImageExtensions.Contains(extension))
 				{
 					return AssetType.Image;
