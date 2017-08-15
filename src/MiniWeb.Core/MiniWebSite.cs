@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Core
 {
@@ -141,7 +142,7 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public void SaveSitePage(ISitePage page, bool storeImages = false)
+		public void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false)
 		{
 			Logger?.LogInformation($"Saving page {page.Url}");
 			page.LastModified = DateTime.Now;
@@ -152,7 +153,7 @@ namespace MiniWeb.Core
 			if (storeImages)
 			{
 				//NOTE(RC): save current with base 64 so at least it's saved.
-				ContentStorage.StoreSitePage(page);
+				ContentStorage.StoreSitePage(page, currentRequest);
 				//NOTE(RC): can this be done saner?
 				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
 				{
@@ -163,7 +164,7 @@ namespace MiniWeb.Core
 					}
 				}
 			}
-			ContentStorage.StoreSitePage(page);
+			ContentStorage.StoreSitePage(page, currentRequest);
 			ReloadPages();
 		}
 

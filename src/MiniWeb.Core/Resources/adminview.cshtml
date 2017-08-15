@@ -181,9 +181,9 @@
 								<span class="input-group-addon">/</span>
 								<select id="createInternalUrl" class="form-control">
 									<option value="">Choose url or enter custom</option>
-									@foreach (var page in MiniWebSite.Pages)
+									@foreach (var p in MiniWebSite.Pages)
 									{
-										<option value="@(MiniWebSite.GetPageUrl(page))">/@page.Url (@page.Title)</option>
+										<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
 									}
 								</select>
 							</div>

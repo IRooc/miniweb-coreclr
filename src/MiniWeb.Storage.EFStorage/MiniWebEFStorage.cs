@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MiniWeb.Core;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Storage.EFStorage
 {
@@ -64,7 +65,7 @@ namespace MiniWeb.Storage.EFStorage
 			return Context.Pages.Where(p => p.Url == url).Select(p => GetSitePage(p)).SingleOrDefault();
 		}
 
-		public void StoreSitePage(ISitePage sitePage)
+		public void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
 		{
 			var oldPage = Context.Pages.FirstOrDefault(p => p.Url == sitePage.Url);
 			if (oldPage != null)
@@ -203,6 +204,10 @@ namespace MiniWeb.Storage.EFStorage
 			{
 				return new JsonInterfaceConverter();
 			}
+		}
+		public ISitePage NewPage()
+		{
+			return new DbSitePage();
 		}
 	}
 }
