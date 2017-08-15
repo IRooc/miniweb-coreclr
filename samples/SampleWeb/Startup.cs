@@ -52,7 +52,9 @@ namespace SampleWeb
 					.AddMiniWebAssetFileSystemStorage(Configuration);
 
 			MiniWebAuthentication authConfig = Configuration.Get<MiniWebConfiguration>().Authentication;
-			
+			var githubConfig = new GithubAuthConfig();
+			Configuration.GetSection("GithubAuth").Bind(githubConfig);
+
 			services.AddAuthentication(c =>
 			{
 				c.DefaultScheme = authConfig.AuthenticationScheme;
@@ -61,6 +63,43 @@ namespace SampleWeb
 			{
 				o.LoginPath = new PathString(authConfig.LoginPath);
 				o.LogoutPath = new PathString(authConfig.LogoutPath);
+			})
+			.AddOAuth("Github-Auth", "Login with GitHub account", o =>
+			{
+				//o.DisplayName = "Login with GitHub account",
+				o.ClientId = githubConfig.ClientId;
+				o.ClientSecret = githubConfig.ClientSecret;
+				o.CallbackPath = new PathString(githubConfig.CallbackPath);
+				o.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+				o.TokenEndpoint = "https://github.com/login/oauth/access_token";
+				o.UserInformationEndpoint = "https://api.github.com/user";
+				o.SignInScheme = authConfig.AuthenticationScheme;
+				o.Events = new OAuthEvents()
+				{
+					OnCreatingTicket = async notification =>
+					{
+						var request = new HttpRequestMessage(HttpMethod.Get, notification.Options.UserInformationEndpoint);
+						request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", notification.AccessToken);
+						request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+						var response = await notification.Backchannel.SendAsync(request, notification.HttpContext.RequestAborted);
+						response.EnsureSuccessStatusCode();
+						var user = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+						var loginName = user.Value<string>("login");
+
+						//Check allowed users here
+						var adminList = (githubConfig.AllowedAdmins ?? string.Empty).Split(',');
+						if (adminList?.Any(item => item == loginName) == true)
+						{
+							var claims = new[] {
+								new Claim(ClaimTypes.Name, loginName),
+								new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
+							};
+							notification.Identity.AddClaims(claims);
+						}
+					}
+				};
 			});
 		}
 
