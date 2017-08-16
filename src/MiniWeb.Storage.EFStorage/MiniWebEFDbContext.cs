@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MiniWeb.Core;
-using Newtonsoft.Json;
 
 namespace MiniWeb.Storage.EFStorage
 {
-	public class MiniWebEFDbContext : DbContext
+    public class MiniWebEFDbContext : DbContext
 	{
 		public DbSet<DbSitePage> Pages { get; set; }
 		public DbSet<DbContentItem> ContentItems { get; set; }

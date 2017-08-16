@@ -1,16 +1,24 @@
-pushd src\MiniWeb.Core
+pushd %~dp0
+
 dotnet restore
-dotnet  compile
+pushd src\MiniWeb.Core\Resources
+call tsc admin.ts
 popd
-REM pushd src\MiniWeb.Storage.JsonStorage
-REM dotnet compile
-REM popd
-REM pushd src\MiniWeb.Storage.XmlStorage
-REM dotnet compile
-REM popd
-REM pushd src\MiniWeb.Storage.EFStorage
-REM dotnet compile
-REM popd
-REM pushd samples\SampleWeb
-REM dotnet compile
-REM popd
+pushd src\MiniWeb.Core
+dotnet  build
+popd
+pushd src\MiniWeb.Storage.JsonStorage
+dotnet build
+popd
+pushd src\MiniWeb.Storage.XmlStorage
+rem dotnet build
+popd
+rem pushd src\MiniWeb.Storage.EFStorage
+dotnet build
+popd
+pushd samples\SampleWeb
+dotnet build
+popd
+
+popd
+exit

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -16,7 +17,7 @@ namespace MiniWeb.Core.TagHelpers
 	[HtmlTargetElement("miniweb-menuitem")]
 	public class MiniWebMenuItemTagHelper : TagHelper
 	{
-		public override async void Process(TagHelperContext context, TagHelperOutput output)
+		public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			if (!context.Items.ContainsKey(typeof(MiniWebMenuContext)))
 			{
@@ -55,7 +56,7 @@ namespace MiniWeb.Core.TagHelpers
 			_webSite = webSite;
 		}
 
-		public override async void Process(TagHelperContext context, TagHelperOutput output)
+		public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			//setup context
 			MiniWebMenuContext menuContext = new MiniWebMenuContext();

@@ -1,18 +1,13 @@
-using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebPageController : Controller
+    public class MiniWebPageController : Controller
 	{
 		private readonly IMiniWebSite _webSite;
 
@@ -76,9 +71,9 @@ namespace MiniWeb.Core
 
 				_webSite.Logger?.LogInformation($"signing in as :{username}");
 				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
-				var identity = new ClaimsIdentity(claims, _webSite.Configuration.Authentication.AuthenticationType);
+				var identity = new ClaimsIdentity(claims);
 				var principal = new ClaimsPrincipal(identity);
-				await HttpContext.Authentication.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
+				await HttpContext.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
 
 				return Redirect(_webSite.Configuration.DefaultPage);
 			}
@@ -113,7 +108,7 @@ namespace MiniWeb.Core
 			if (_webSite.IsAuthenticated(User))
 			{
 				_webSite.Logger?.LogInformation($"Logout {User.Identity.Name} and goto {returnUrl}");
-				await HttpContext.Authentication.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
+				await HttpContext.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
 				return Redirect(returnUrl);
 			}
 			return Index(_webSite.Configuration.DefaultPage);

@@ -7,13 +7,20 @@
       "sslPort": 0
     }
   },
-  "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    }
-  }
+	"profiles": {
+		"IIS Express": {
+			"commandName": "IISExpress",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
+		"SampleWeb": {
+			"commandName": "Project",
+			"launchBrowser": true,
+			"launchUrl": "http://localhost:5001",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		}
+	}
 }

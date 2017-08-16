@@ -1,15 +1,15 @@
-using System;
 using System.Collections.Generic;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebConfiguration
+    public class MiniWebConfiguration
 	{
 		public string Title { get; set; } = "MiniWeb by Rooc";
 		public string DefaultPage { get; set; } = "/home.html";
 		public string PageExtension { get; set; } = "html";
 
 		public string LoginView { get; set; } = "~/Views/login.cshtml";
+		public string ApiEndpoint {get;set;} = "/miniweb-api/";
 
 		public string PageTemplatePath { get; set; } = "/Views/Pages";
 		public string ItemTemplatePath { get; set; } = "/Views/Items";

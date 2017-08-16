@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Reflection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebFileProvider : IFileProvider
+    public class MiniWebFileProvider : IFileProvider
 	{
 		readonly IFileProvider _embeddedFileProvider;
 		readonly ILogger _logger;

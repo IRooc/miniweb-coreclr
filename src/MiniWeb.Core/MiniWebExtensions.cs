@@ -1,7 +1,5 @@
-using System;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
@@ -9,11 +7,10 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebRouteConstraint : IRouteConstraint
+    public class MiniWebRouteConstraint : IRouteConstraint
 	{
 
 		private RegexRouteConstraint _regexConstaint;
@@ -46,20 +43,7 @@ namespace MiniWeb.Core
 		{
 			return app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
 		}
-
-		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app)
-		{
-			MiniWebAuthentication authConfig = app.GetMiniWebConfig().Authentication;
-			app.UseCookieAuthentication(new CookieAuthenticationOptions()
-			{
-				LoginPath = new PathString(authConfig.LoginPath),
-				LogoutPath = new PathString(authConfig.LogoutPath),
-				AuthenticationScheme = authConfig.AuthenticationScheme,
-				AutomaticAuthenticate = true
-
-			});
-			return app;
-		}
+		
 
 		/// <summary>
 		/// Registers the miniweb Mvc Routes and Custom Middleware
@@ -67,19 +51,17 @@ namespace MiniWeb.Core
 		/// <param name="app"></param>
 		/// <param name="registerCookieAuth"></param>
 		/// <returns></returns>
-		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, bool registerCookieAuth = true)
+		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app)
 		{
 			MiniWebConfiguration config = app.GetMiniWebConfig();
-			if (registerCookieAuth)
-			{
-				app.UseMiniWebSiteCookieAuth();
-			}
+
+			app.UseAuthentication();
 
 			app.UseMiddleware<MiniWebAdminMiddleware>();
 
 			app.UseMvc(routes =>
 			{
-				routes.MapRoute("miniwebapi", "miniweb-api/{action}", new { controller = "MiniWebApi" });
+				routes.MapRoute("miniwebapi", $"{config.ApiEndpoint.Substring(1)}{{action}}", new { controller = "MiniWebApi" });
 				routes.MapRoute("miniwebsociallogin", config.Authentication.SocialLoginPath.Substring(1), new { controller = "MiniWebPage", action = "SocialLogin" });
 				routes.MapRoute("miniweblogin", config.Authentication.LoginPath.Substring(1), new { controller = "MiniWebPage", action = "Login" });
 				routes.MapRoute("miniweblogout", config.Authentication.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });

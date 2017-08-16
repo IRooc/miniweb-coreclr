@@ -1,7 +1,8 @@
 ﻿@model MiniWeb.Core.IContentItem
 <article miniweb-template="@Model.Template">
 	<a href="#" title="link title" miniweb-prop="link" miniweb-attributes="href|url,title">link demo</a>
-	<img src="" alt="image" miniweb-prop="image" miniweb-attributes="src,alt" />
+	<img src="" alt="image" miniweb-prop="image"  miniweb-attributes="src|asset,alt" />
 
 	 <span miniweb-prop="URL" miniweb-edittype="url"></span>
+	 <span miniweb-prop="ASSET" miniweb-edittype="asset"></span>
 </article>

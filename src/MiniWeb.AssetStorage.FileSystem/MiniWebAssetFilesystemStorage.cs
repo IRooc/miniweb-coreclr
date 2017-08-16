@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,9 +10,9 @@ using MiniWeb.Core;
 
 namespace MiniWeb.AssetStorage.FileSystem
 {
-	// This project can output the Class library as a NuGet Package.
-	// To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
-	public class MiniWebAssetFileSystemStorage : IMiniWebAssetStorage
+    // This project can output the Class library as a NuGet Package.
+    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
+    public class MiniWebAssetFileSystemStorage : IMiniWebAssetStorage
 	{
 		public IMiniWebSite MiniWebSite { get; set; }
 		public ILogger Logger { get; }
@@ -51,9 +50,10 @@ namespace MiniWeb.AssetStorage.FileSystem
 			Directory.CreateDirectory(path);
 			string file = Path.Combine(path, fileName);
 			File.WriteAllBytes(file, bytes);
+			virtualPath = Path.Combine(virtualPath, fileName);
 			IAsset a = new FileSystemAsset(HostingEnvironment)
 			{
-				VirtualPath = virtualPath
+				VirtualPath = "/" + virtualPath
 			};
 			return a;
 		}
@@ -99,7 +99,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 
 	public class FileSystemAsset : IAsset
 	{
-		private string[] ImageExtensions = new[] { "png", "jpg", "jpeg", "gif", "bmp" };
+		private string[] ImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
 		public IHostingEnvironment HostingEnvironment { get; }
 		public FileSystemAsset(IHostingEnvironment env)
 		{
@@ -119,7 +119,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 		{
 			get
 			{
-				var extension = Path.GetExtension(VirtualPath);
+				var extension = Path.GetExtension(VirtualPath)?.ToLowerInvariant();
 				if (ImageExtensions.Contains(extension))
 				{
 					return AssetType.Image;

@@ -2,17 +2,18 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Core
 {
-	public interface IMiniWebSite
+    public interface IMiniWebSite
 	{
 		IHostingEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }
 		MiniWebConfiguration Configuration { get; }
 
 		IMiniWebContentStorage ContentStorage { get; }
+		IMiniWebAssetStorage AssetStorage { get; }
 
 		IEnumerable<ISitePage> Pages { get; set; }
 		IEnumerable<ISitePage> PageHierarchy { get; set; }
@@ -22,7 +23,7 @@ namespace MiniWeb.Core
 		void DeleteSitePage(ISitePage page);
 		ISitePage GetPageByUrl(string url, bool editing = false);
 		string GetPageUrl(ISitePage page);
-		void SaveSitePage(ISitePage page, bool storeImages = false);
+		void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
 		void ReloadPages();
 
 		IContentItem DummyContent(string template);

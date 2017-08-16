@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Core
 {
-	public class MiniWebSite : IMiniWebSite
+    public class MiniWebSite : IMiniWebSite
 	{
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
+		public const string EmbeddedBase64FileInValueRegex = "(data:([^\"]+))";
 		public MiniWebConfiguration Configuration { get; }
 		public IHostingEnvironment HostingEnvironment { get; }
 
@@ -45,7 +45,7 @@ namespace MiniWeb.Core
 		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
 						   IOptions<MiniWebConfiguration> config)
 		{
-			Pages = Enumerable.Empty<ISitePage>();
+			Pages = Enumerable.Empty<ISitePage>(); 
 
 			HostingEnvironment = env;
 			Configuration = config.Value;
@@ -142,7 +142,7 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public void SaveSitePage(ISitePage page, bool storeImages = false)
+		public void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false)
 		{
 			Logger?.LogInformation($"Saving page {page.Url}");
 			page.LastModified = DateTime.Now;
@@ -153,7 +153,7 @@ namespace MiniWeb.Core
 			if (storeImages)
 			{
 				//NOTE(RC): save current with base 64 so at least it's saved.
-				ContentStorage.StoreSitePage(page);
+				ContentStorage.StoreSitePage(page, currentRequest);
 				//NOTE(RC): can this be done saner?
 				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
 				{
@@ -164,7 +164,7 @@ namespace MiniWeb.Core
 					}
 				}
 			}
-			ContentStorage.StoreSitePage(page);
+			ContentStorage.StoreSitePage(page, currentRequest);
 			ReloadPages();
 		}
 
@@ -207,24 +207,36 @@ namespace MiniWeb.Core
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
 			Match match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
-			while (!string.IsNullOrEmpty(match?.Value))
+			while (match.Success && !string.IsNullOrEmpty(match?.Value))
 			{
-				string filename = match.Groups[2].Value;
-				string base64String = match.Groups[5].Value;
-				//byte[] bytes = ConvertToBytes(base64String);
-				var newAsset = AssetStorage.CreateAsset(filename, base64String);
-				//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
-				string path = newAsset.VirtualPath;// SaveFileToDisk(bytes, extension, filename);
+				string filename = match.Groups[5].Value;
+				string base64String = match.Groups[2].Value;
+				if (!string.IsNullOrWhiteSpace(base64String)) {
+					//byte[] bytes = ConvertToBytes(base64String);
+					var newAsset = AssetStorage.CreateAsset(filename, base64String);
+					//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
+					string path = newAsset.VirtualPath;// SaveFileToDisk(bytes, extension, filename);
 
-				//replace URL in content
-				string value = string.Format("src=\"{0}\" alt=\"\" ", path);
+					//replace URL in content
+					string value = string.Format("src=\"{0}\" alt=\"\" ", path);
 
-				if (match.Groups[1].Value == "href")
-					value = string.Format("href=\"{0}\"", path);
+					if (match.Groups[1].Value == "href")
+						value = string.Format("href=\"{0}\"", path);
 
-				html = html.Replace(match.Value, value);
-				//next match.
-				match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
+					html = html.Replace(match.Value, value);
+					//next match.
+					match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
+				}
+			}
+			match = Regex.Match(html, EmbeddedBase64FileInValueRegex);
+			if (match.Success && !string.IsNullOrEmpty(match?.Value))
+			{
+				string base64String = match.Groups[2].Value;
+				var fileNameMatch = Regex.Match(base64String, "(;filename=(.*?));base64");
+				var fileName = fileNameMatch.Groups[2].Value;
+				base64String = base64String.Replace(fileNameMatch.Groups[1].Value, "");
+				var newAsset = AssetStorage.CreateAsset(fileName, base64String);
+				html = newAsset.VirtualPath;
 			}
 			return html;
 		}

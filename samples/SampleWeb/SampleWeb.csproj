@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <AssemblyName>SampleWeb</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>SampleWeb</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\**\*;Views\**\*;App_Data\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MiniWeb.Core\MiniWeb.Core.csproj" />
+    <ProjectReference Include="..\..\src\MiniWeb.Storage.JsonStorage\MiniWeb.Storage.JsonStorage.csproj" />
+    <!--<ProjectReference Include="..\..\src\MiniWeb.Storage.XmlStorage\MiniWeb.Storage.XmlStorage.csproj" />
+    <ProjectReference Include="..\..\src\MiniWeb.Storage.EFStorage\MiniWeb.Storage.EFStorage.csproj" />-->
+    <ProjectReference Include="..\..\src\MiniWeb.AssetStorage.FileSystem\MiniWeb.AssetStorage.FileSystem.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+  
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
+  </ItemGroup> 
+</Project>

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>MiniWeb.AssetStorage.FileSystem</AssemblyName>
+    <PackageId>MiniWeb.AssetStorage.FileSystem</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiniWeb.Core\MiniWeb.Core.csproj" />
+  </ItemGroup>
+
+</Project>

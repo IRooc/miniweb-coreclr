@@ -2,7 +2,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +14,8 @@ using Microsoft.Extensions.Logging;
 using MiniWeb.AssetStorage.FileSystem;
 using MiniWeb.Core;
 using MiniWeb.Storage.JsonStorage;
-using MiniWeb.Storage.XmlStorage;
-using MiniWeb.Storage.EFStorage;
+//using MiniWeb.Storage.XmlStorage;
+//using MiniWeb.Storage.EFStorage;
 using Newtonsoft.Json.Linq;
 
 namespace SampleWeb
@@ -42,45 +44,37 @@ namespace SampleWeb
 			services.AddAntiforgery();
 			services.AddMvc();
 
+
+
 			//services.AddMiniWeb(Configuration).AddMiniWebEFSqlServerStorage(Configuration);
 			services.AddMiniWeb(Configuration)
-					.AddMiniWebEFSqlServerStorage(Configuration)
+					.AddMiniWebJsonStorage(Configuration)
 					.AddMiniWebAssetFileSystemStorage(Configuration);
-		}
 
-		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory)
-		{
-			// Add the loggers.
-			if (Configuration.Value<bool>("Logging:EnableConsole"))
-			{
-				loggerfactory.AddConsole(LogLevel.Information);
-			}
-
-			app.UseDeveloperExceptionPage();
-			app.UseStaticFiles();
-
-
-			var miniwebConfig = app.GetMiniWebConfig();
-
-			//Registers base cookie authentication method. Do this when you need to register "other" authentications
-			app.UseMiniWebSiteCookieAuth();
-
-			//setup other authentications
+			MiniWebAuthentication authConfig = Configuration.Get<MiniWebConfiguration>().Authentication;
 			var githubConfig = new GithubAuthConfig();
 			Configuration.GetSection("GithubAuth").Bind(githubConfig);
-			app.UseOAuthAuthentication(new OAuthOptions
+
+			services.AddAuthentication(c =>
 			{
-				AuthenticationScheme = "Github-Auth",
-				DisplayName = "Login with GitHub account",
-				ClientId = githubConfig.ClientId,
-				ClientSecret = githubConfig.ClientSecret,
-				CallbackPath = new PathString(githubConfig.CallbackPath),
-				AuthorizationEndpoint = "https://github.com/login/oauth/authorize",
-				TokenEndpoint = "https://github.com/login/oauth/access_token",
-				UserInformationEndpoint = "https://api.github.com/user",
-				ClaimsIssuer = miniwebConfig.Authentication.AuthenticationType,
-				SignInScheme = miniwebConfig.Authentication.AuthenticationScheme,
-				Events = new OAuthEvents()
+				c.DefaultScheme = authConfig.AuthenticationScheme;
+			})
+			.AddCookie(authConfig.AuthenticationScheme, o =>
+			{
+				o.LoginPath = new PathString(authConfig.LoginPath);
+				o.LogoutPath = new PathString(authConfig.LogoutPath);
+			})
+			.AddOAuth("Github-Auth", "Login with GitHub account", o =>
+			{
+				//o.DisplayName = "Login with GitHub account",
+				o.ClientId = githubConfig.ClientId;
+				o.ClientSecret = githubConfig.ClientSecret;
+				o.CallbackPath = new PathString(githubConfig.CallbackPath);
+				o.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+				o.TokenEndpoint = "https://github.com/login/oauth/access_token";
+				o.UserInformationEndpoint = "https://api.github.com/user";
+				o.SignInScheme = authConfig.AuthenticationScheme;
+				o.Events = new OAuthEvents()
 				{
 					OnCreatingTicket = async notification =>
 					{
@@ -105,12 +99,27 @@ namespace SampleWeb
 							notification.Identity.AddClaims(claims);
 						}
 					}
-				}
+				};
 			});
+		}
 
+		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory)
+		{
+			// Add the loggers.
+			if (Configuration.Value<bool>("Logging:EnableConsole"))
+			{
+				loggerfactory.AddConsole(LogLevel.Information);
+			}
+
+			app.UseDeveloperExceptionPage();
+			app.UseStaticFiles();
+
+
+			var miniwebConfig = app.GetMiniWebConfig();
+			
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
-			app.UseEFMiniWebSite(false);
-			//app.UseMiniWebSite(false);
+			//app.UseEFMiniWebSite(false);
+			app.UseMiniWebSite();
 		}
 
 	}

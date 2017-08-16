@@ -14,12 +14,12 @@ namespace MiniWeb.Storage.EFStorage
 			return services.AddSingleton<IMiniWebContentStorage, MiniWebEFStorage>();
 		}
 
-		public static IApplicationBuilder UseEFMiniWebSite(this IApplicationBuilder app, bool registerCookie = true)
+		public static IApplicationBuilder UseEFMiniWebSite(this IApplicationBuilder app)
 		{
 			//validate db is created
 			app.ApplicationServices.GetRequiredService<MiniWebEFDbContext>().Database.EnsureCreated();
 
-			return app.UseMiniWebSite(registerCookie);
+			return app.UseMiniWebSite();
 		}
 	}
 }

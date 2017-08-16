@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Core
 {
@@ -9,7 +10,7 @@ namespace MiniWeb.Core
 		IMiniWebSite MiniWebSite { get; set; }
 		bool Authenticate(string username, string password);
 		ISitePage GetSitePageByUrl(string url);
-		void StoreSitePage(ISitePage sitePage);
+		void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest);
 		void DeleteSitePage(ISitePage sitePage);
 		IEnumerable<ISitePage> AllPages();
 		
@@ -20,5 +21,7 @@ namespace MiniWeb.Core
 
 		//Used to deserialize the Posted JSON to concrete classes.
 		JsonConverter JsonInterfaceConverter { get; }
+
+		ISitePage NewPage();
 	}
 }

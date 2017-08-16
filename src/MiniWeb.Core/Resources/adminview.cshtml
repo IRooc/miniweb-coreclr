@@ -70,7 +70,7 @@
 		<div class="btn-group">
 			<a class="btn btn-mini" data-edit="createLink" title="Hyperlink"><i class="glyphicon glyphicon-globe"></i></a>
 			<a class="btn btn-mini" data-edit="unlink" title="Remove hyperlink"><i class="glyphicon glyphicon-remove"></i></a>
-			<a class="btn btn-mini uploadimage"><i class="glyphicon glyphicon-picture"></i></a>
+			<a class="btn btn-mini" data-edit="insertAsset"><i class="glyphicon glyphicon-picture"></i></a>
 		</div>
 
 		<input type="file" class="txtImage" data-edit="insertImage" style="width:0; height: 0;position:absolute" />
@@ -181,9 +181,9 @@
 								<span class="input-group-addon">/</span>
 								<select id="createInternalUrl" class="form-control">
 									<option value="">Choose url or enter custom</option>
-									@foreach (var page in MiniWebSite.Pages)
+									@foreach (var p in MiniWebSite.Pages)
 									{
-										<option value="@(MiniWebSite.GetPageUrl(page))">@page.Title (/@page.Url)</option>
+										<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
 									}
 								</select>
 							</div>
@@ -223,6 +223,42 @@
 							<button type="button" class="btn btn-primary" data-contentid="content-@System.IO.Path.GetFileNameWithoutExtension(s)">Add content item</button>
 						</div>
 					}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="imageAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog miniweb">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add image</h4>
+			</div>
+			<form class="form-horizontal">
+				<div class="modal-body">
+					<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-page-move="-1" style="display:none;"><span class="glyphicon glyphicon-chevron-left"></span></a>
+					<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-page-move="1" style="display:none;"><span class="glyphicon glyphicon-chevron-right"></span></a>
+					<ul id="miniweb-assetlist" data-page="0">
+					@foreach(var a in MiniWebSite.AssetStorage.GetAllAssets()){
+						<li>
+						@if (a.Type == MiniWeb.Core.AssetType.Image) {
+							<img src="@a.VirtualPath" class="miniweb-asset-pick"/>
+						} 
+						else 
+						{
+							<a href="@a.VirtualPath" class="miniweb-asset-pick">@a.VirtualPath</a>
+						}
+						</li>
+					}
+					</ul>
+					<button type="button" class="btn btn-primary add-asset">Add Asset</button>
+					<input type="file" class="add-asset" style="position:absolute;width:0;height:0"/>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

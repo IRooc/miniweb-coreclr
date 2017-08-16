@@ -20,7 +20,13 @@ namespace MiniWeb.Core
 		[AllowAnonymous]
 		public IActionResult DebugInfo()
 		{
-			return Content(_webSite.HostingEnvironment.EnvironmentName + " " + _webSite.HostingEnvironment.ContentRootPath);
+			return Content($"{Environment.MachineName} {_webSite.HostingEnvironment.EnvironmentName} {_webSite.HostingEnvironment.ContentRootPath}");
+		}
+
+		public IActionResult LoadAssets()
+		{
+			_webSite.ReloadAssets();
+			return new JsonResult(_webSite.Assets.Select(a => a.VirtualPath));
 		}
 
 		[HttpPost]
@@ -35,7 +41,7 @@ namespace MiniWeb.Core
 				page.Sections.Clear();
 				page.Sections.AddRange(newSections);
 
-				_webSite.SaveSitePage(page, true);
+				_webSite.SaveSitePage(page, Request, true);
 				return new JsonResult(new { result = true });
 			}
 			return new JsonResult(new { result = false });
@@ -43,29 +49,36 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SavePage(ISitePage page)
+		public IActionResult SavePage([FromForm]SitePageBasicPostModel posted)
 		{
 			//ignore move for now...
-			if (Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != page.Url)
+			if (Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != posted.Url)
 			{
-				string message = $"Moving pages not allowed yet, tried to move {Request.Form["OldUrl"]} to new location: {page.Url}";
+				string message = $"Moving pages not allowed yet, tried to move {Request.Form["OldUrl"]} to new location: {posted.Url}";
 				_webSite.Logger?.LogError(message);
 				return new JsonResult(new { result = false, message = message });
 			}
 
-			//keep sections only change page properties
-			ISitePage oldPage = _webSite.Pages.FirstOrDefault(p => p.Url == page.Url);
-			if (oldPage != null)
-			{
-				page.Sections = oldPage.Sections;
-			}
-			else
+			//find current page
+			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == posted.Url);
+			if (page == null)
 			{
 				//new page
+				page = _webSite.ContentStorage.NewPage();
 				page.Created = DateTime.Now;
 				page.Sections = _webSite.GetDefaultContentForTemplate(page.Template);
 			}
-			_webSite.SaveSitePage(page);
+			//only reset properties of posted model on page
+			page.Layout = posted.Layout;
+			page.MetaDescription = posted.MetaDescription;
+			page.MetaTitle = posted.MetaTitle;
+			page.ShowInMenu = posted.ShowInMenu;
+			page.SortOrder = posted.SortOrder;
+			page.Template = posted.Template;
+			page.Title = posted.Title;
+			page.Visible = posted.Visible;
+
+			_webSite.SaveSitePage(page, Request, false);
 			return new JsonResult(new { result = true, url = _webSite.GetPageUrl(page) });
 		}
 

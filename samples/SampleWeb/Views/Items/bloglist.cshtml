@@ -17,12 +17,12 @@
 	 var shownPages = pages.OrderByDescending(p => p.Created).Skip(pageIndex * pageSize).Take(pageSize);
 	
 	 
-	 foreach (var page in shownPages)
+	 foreach (var p in shownPages)
 	 {
-		var firstContentItem = page.Sections.FirstOrDefault(s => s.Key == "content")?.Items.FirstOrDefault(s => s .Template == "~/Views/Items/blogitem.cshtml");
+		var firstContentItem = p.Sections.FirstOrDefault(s => s.Key == "content")?.Items.FirstOrDefault(s => s .Template == "~/Views/Items/blogitem.cshtml");
         <article>
-            <h2><a href="@(MiniWebSite.GetPageUrl(page))">@(firstContentItem?.GetValue("title"))</a></h2>
-				<p>@@ @page.Created</p>
+            <h2><a href="@(MiniWebSite.GetPageUrl(p))">@(firstContentItem?.GetValue("title"))</a></h2>
+				<p>@@ @p.Created</p>
             <div>
 				 @Html.Raw(firstContentItem?.GetValue("content"))
 			</div>

@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using MiniWeb.Core;
-using Newtonsoft.Json;
 
 namespace MiniWeb.Storage.JsonStorage
 {
-	public class SitePage : ISitePage
+    public class SitePage : ISitePage
 	{
 		public string Url { get; set; }
 		public string Title { get; set; }
