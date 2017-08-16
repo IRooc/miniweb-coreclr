@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MiniWeb.Core;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Storage.XmlStorage
 {
@@ -36,7 +37,7 @@ namespace MiniWeb.Storage.XmlStorage
 		}
 
 
-		public void StoreSitePage(ISitePage sitePage)
+		public void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
 		{
 			string name = GetSitePageFileName(sitePage.Url.ToLowerInvariant());
 			if (MiniWebSite.Configuration.StoreVersions && File.Exists(name))
@@ -140,6 +141,10 @@ namespace MiniWeb.Storage.XmlStorage
 			{
 				return new JsonInterfaceConverter();
 			}
+		}
+		public ISitePage NewPage()
+		{
+			return new XmlSitePage();
 		}
 
 

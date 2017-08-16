@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Core
 {
@@ -22,7 +23,7 @@ namespace MiniWeb.Core
 		void DeleteSitePage(ISitePage page);
 		ISitePage GetPageByUrl(string url, bool editing = false);
 		string GetPageUrl(ISitePage page);
-		void SaveSitePage(ISitePage page, bool storeImages = false);
+		void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
 		void ReloadPages();
 
 		IContentItem DummyContent(string template);

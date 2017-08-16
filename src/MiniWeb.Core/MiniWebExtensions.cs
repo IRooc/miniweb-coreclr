@@ -43,20 +43,7 @@ namespace MiniWeb.Core
 		{
 			return app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
 		}
-
-		public static IApplicationBuilder UseMiniWebSiteCookieAuth(this IApplicationBuilder app)
-		{
-			MiniWebAuthentication authConfig = app.GetMiniWebConfig().Authentication;
-			app.UseCookieAuthentication(new CookieAuthenticationOptions()
-			{
-				LoginPath = new PathString(authConfig.LoginPath),
-				LogoutPath = new PathString(authConfig.LogoutPath),
-				AuthenticationScheme = authConfig.AuthenticationScheme,
-				AutomaticAuthenticate = true
-
-			});
-			return app;
-		}
+		
 
 		/// <summary>
 		/// Registers the miniweb Mvc Routes and Custom Middleware
@@ -64,13 +51,11 @@ namespace MiniWeb.Core
 		/// <param name="app"></param>
 		/// <param name="registerCookieAuth"></param>
 		/// <returns></returns>
-		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app, bool registerCookieAuth = true)
+		public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app)
 		{
 			MiniWebConfiguration config = app.GetMiniWebConfig();
-			if (registerCookieAuth)
-			{
-				app.UseMiniWebSiteCookieAuth();
-			}
+
+			app.UseAuthentication();
 
 			app.UseMiddleware<MiniWebAdminMiddleware>();
 
