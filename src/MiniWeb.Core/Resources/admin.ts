@@ -124,36 +124,36 @@ if (typeof $().modal != 'function') {
 					}
 				});
 			},
-checkAssetPagerVisibility = function (){
-	if ($('#miniweb-assetlist li').length > 15 && 
-			$('body.miniweb-editing #miniweb-assetlist li:visible:last').get(0) != $('body.miniweb-editing #miniweb-assetlist li:last').get(0)) {
-		$('#miniweb-asset-page-right').show();
-			
-	} else {
-		$('#miniweb-asset-page-right').hide();
-	}
-	if ($('#miniweb-assetlist').data('page') == 0) {
+			checkAssetPagerVisibility = function (){
+				if ($('#miniweb-assetlist li').length > 15 && 
+						$('body.miniweb-editing #miniweb-assetlist li:visible:last').get(0) != $('body.miniweb-editing #miniweb-assetlist li:last').get(0)) {
+					$('#miniweb-asset-page-right').show();
+						
+				} else {
+					$('#miniweb-asset-page-right').hide();
+				}
+				if ($('#miniweb-assetlist').data('page') == 0) {
 
-		$('#miniweb-asset-page-left').hide();
-	} else {
-		$('#miniweb-asset-page-left').show();
-	}
-},
-setupAssetPager = function() {
-	checkAssetPagerVisibility();
-$(".miniweb-asset-pager").unbind('click').click(function(){
-	var page = $('#miniweb-assetlist').data('page');
-	var move = $(this).data('page-move');
-	var newPage = page + move;
-	$('#miniweb-assetlist').data('page', newPage);
-	newPage = (newPage * 15) + 1;
-					
-	$('body.miniweb-editing #miniweb-assetlist li').css({'display':'none'})
-	$('body.miniweb-editing #miniweb-assetlist li:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 14) +')').css({'display':'inline-block'})
-	checkAssetPagerVisibility();
-});
+					$('#miniweb-asset-page-left').hide();
+				} else {
+					$('#miniweb-asset-page-left').show();
+				}
+			},
+			setupAssetPager = function() {
+				checkAssetPagerVisibility();
+				$(".miniweb-asset-pager").unbind('click').click(function(){
+					var page = $('#miniweb-assetlist').data('page');
+					var move = $(this).data('page-move');
+					var newPage = page + move;
+					$('#miniweb-assetlist').data('page', newPage);
+					newPage = (newPage * 15) + 1;
+									
+					$('body.miniweb-editing #miniweb-assetlist li').css({'display':'none'})
+					$('body.miniweb-editing #miniweb-assetlist li:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 14) +')').css({'display':'inline-block'})
+					checkAssetPagerVisibility();
+				});
 
-},
+			},
 			showMessage = function (success: boolean, message: string, isHtml: boolean = false) {
 				var className = success ? "alert-success" : "alert-danger";
 				var timeout = success ? 4000 : 8000;
@@ -364,8 +364,11 @@ $(".miniweb-asset-pager").unbind('click').click(function(){
 			e.stopPropagation();
 			e.preventDefault();
 			var dataUrl = $('img', this).attr('src');
-//todo get file from dataUrl;
-			var filename= 'newfile.png';
+
+			var filename= $('img', this).data('filename');
+			if (filename == null) {
+				filename = 'newfile.png';
+			}
 
 			var imageHtml = '<img src="' + dataUrl + '" data-filename="' + filename + '"/>';
 			wysiwygObj.execCommand('inserthtml', imageHtml);
