@@ -151,7 +151,7 @@ namespace MiniWeb.Storage.JsonStorage
 		{
 			using (MemoryStream ms = new MemoryStream())
 			{
-				string fileContent = JsonConvert.SerializeObject(obj);
+				string fileContent = JsonConvert.SerializeObject(obj, new JsonSerializerSettings{Formatting = Formatting.Indented});
 				if (File.Exists(filename))
 					File.Delete(filename);
 				File.WriteAllText(filename, fileContent);
