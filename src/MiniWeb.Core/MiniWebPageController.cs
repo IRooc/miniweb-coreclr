@@ -38,6 +38,10 @@ namespace MiniWeb.Core
 			ISitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
 			if (page.Url != url && $"{page.Url}.{_webSite.Configuration.PageExtension}" != url)
 			{
+				if (!string.IsNullOrWhiteSpace(_webSite.Configuration.PageExtension))
+				{
+					return Redirect($"{page.Url}.{_webSite.Configuration.PageExtension}");
+				}
 				return Redirect(page.Url);
 			}
 			ViewBag.CurrentUrl = page.Url;
