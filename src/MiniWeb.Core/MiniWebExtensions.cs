@@ -12,13 +12,15 @@ namespace MiniWeb.Core
 {
     public class MiniWebRouteConstraint : IRouteConstraint
 	{
-
+		private readonly bool _force;
 		private RegexRouteConstraint _regexConstaint;
-		public MiniWebRouteConstraint(string extension)
+		public MiniWebRouteConstraint(string extension, bool force)
 		{
 			if (!string.IsNullOrEmpty(extension)){
 				_regexConstaint = new RegexRouteConstraint($".*?\\.{extension}(\\?.*)?");
 			}
+
+			this._force = force;
 		}
 
         public bool Match(HttpContext httpContext, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
@@ -28,7 +30,7 @@ namespace MiniWeb.Core
 
 				if (values.TryGetValue(routeKey, out routeValue))
 				{
-					return routeValue == null || _regexConstaint.Match(httpContext, route, routeKey, values, routeDirection);
+					return routeValue == null || _regexConstaint.Match(httpContext, route, routeKey, values, routeDirection) || !this._force;
 				}
 				return false;
 			}
@@ -65,7 +67,7 @@ namespace MiniWeb.Core
 				routes.MapRoute("miniwebsociallogin", config.Authentication.SocialLoginPath.Substring(1), new { controller = "MiniWebPage", action = "SocialLogin" });
 				routes.MapRoute("miniweblogin", config.Authentication.LoginPath.Substring(1), new { controller = "MiniWebPage", action = "Login" });
 				routes.MapRoute("miniweblogout", config.Authentication.LogoutPath.Substring(1), new { controller = "MiniWebPage", action = "Logout" });
-				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" }, constraints: new { url = new MiniWebRouteConstraint(config.PageExtension) });
+				routes.MapRoute("miniweb", "{*url}", new { controller = "MiniWebPage", action = "Index" }, constraints: new { url = new MiniWebRouteConstraint(config.PageExtension, config.PageExtensionForce) });
 			});
 
 			return app;

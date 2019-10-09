@@ -8,6 +8,7 @@ namespace MiniWeb.Storage.JsonStorage
     public class SitePage : ISitePage
 	{
 		public string Url { get; set; }
+		public string RedirectUrl { get; set; }
 		public string Title { get; set; }
 		public string Template { get; set; }
 		public string Layout { get; set; }

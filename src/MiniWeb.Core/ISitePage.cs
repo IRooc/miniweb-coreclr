@@ -14,6 +14,7 @@ namespace MiniWeb.Core
 		string Template { get; set; }
 		string Title { get; set; }
 		string Url { get; set; }
+		string RedirectUrl { get; set; }
 		bool Visible { get; set; }
 
 		DateTime Created { get; set; }

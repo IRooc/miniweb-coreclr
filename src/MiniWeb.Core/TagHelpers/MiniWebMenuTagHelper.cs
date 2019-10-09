@@ -81,9 +81,11 @@ namespace MiniWeb.Core.TagHelpers
 			{
 				//remember the current model
 				object currentModel = ViewContext.ViewData.Model;
-				foreach (var page in items)
+				for(var i =0; i < items.Count(); i++)				
 				{
+					var page = items.ElementAt(i);
 					//override the model to the current child page
+					ViewContext.ViewBag.MenuIteratorIndex = i;
 					ViewContext.ViewData.Model = page;
 
 					//render child without cached results.

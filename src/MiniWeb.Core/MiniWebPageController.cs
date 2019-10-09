@@ -36,6 +36,10 @@ namespace MiniWeb.Core
 				url = _webSite.Configuration.DefaultPage;
 			}
 			ISitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
+			if (page.Url != url && $"{page.Url}.{_webSite.Configuration.PageExtension}" != url)
+			{
+				return Redirect(page.Url);
+			}
 			ViewBag.CurrentUrl = page.Url;
 			if (_webSite.Configuration.RedirectToFirstSub && page.Pages.Any())
 			{

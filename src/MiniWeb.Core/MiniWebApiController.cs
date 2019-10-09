@@ -65,10 +65,12 @@ namespace MiniWeb.Core
 			{
 				//new page
 				page = _webSite.ContentStorage.NewPage();
+				page.Url = posted.Url;
 				page.Created = DateTime.Now;
 				page.Sections = _webSite.GetDefaultContentForTemplate(page.Template);
 			}
 			//only reset properties of posted model on page
+			page.RedirectUrl = posted.RedirectUrl;
 			page.Layout = posted.Layout;
 			page.MetaDescription = posted.MetaDescription;
 			page.MetaTitle = posted.MetaTitle;

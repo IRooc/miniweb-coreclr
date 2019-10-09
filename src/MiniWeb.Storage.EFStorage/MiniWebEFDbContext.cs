@@ -42,6 +42,7 @@ namespace MiniWeb.Storage.EFStorage
 	public class DbSitePage : ISitePage
 	{
 		public string Url { get; set; }
+		public string RedirectUrl { get; set; }
 		public string Title { get; set; }
 		public string Template { get; set; }
 		public string Layout { get; set; }

@@ -95,6 +95,14 @@ namespace MiniWeb.Core
 			}
 			else
 			{
+				if (!string.IsNullOrWhiteSpace(foundPage.RedirectUrl))
+				{
+					var redirectPage = Pages.FirstOrDefault(p => p.Url == foundPage.RedirectUrl) ?? ContentStorage.GetSitePageByUrl(foundPage.RedirectUrl);
+					if (!editing && redirectPage != null)
+					{
+						foundPage = redirectPage;
+					}
+				}
 				Logger?.LogInformation($"Found page [{foundPage.Url}] from url: [{url}]");
 			}
 			return foundPage;
