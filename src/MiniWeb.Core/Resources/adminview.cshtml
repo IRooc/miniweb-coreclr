@@ -11,6 +11,7 @@
 	</div>
 	<div class="navbar-inner pull-right">
 		<ul class="nav navbar-nav">
+			<li><button class="btn btn-link" onclick="document.querySelector('body').classList.add('preview')"><span>Preview</span></button></li>
 			<li id="showHiddenPages"><label class="btn btn-link"><input type="checkbox" /> <span>Show hidden pages</span></label></li>
 			<li><button class="btn btn-link" id="newPage"><i class="glyphicon glyphicon-asterisk"></i> <span>New page</span></button></li>
 			<li class="divider"></li>
@@ -257,7 +258,7 @@
 					@foreach(var a in MiniWebSite.AssetStorage.GetAllAssets()){
 						<li>
 						@if (a.Type == MiniWeb.Core.AssetType.Image) {
-							<img src="@a.VirtualPath" class="miniweb-asset-pick"/>
+							<img data-src="@a.VirtualPath" class="miniweb-asset-pick"/>
 						} 
 						else 
 						{

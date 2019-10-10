@@ -1,10 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{09F9F350-B9A5-44CE-A752-3ACAFAEE5F72}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		NuGet.Config = NuGet.Config
 		README.md = README.md
 	EndProjectSection

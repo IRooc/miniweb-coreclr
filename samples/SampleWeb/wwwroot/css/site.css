@@ -109,6 +109,23 @@ aside > article.aside > div a {
 	color: black;
 }
 
+
+.galleryimage {
+	width: 250px;
+	height: 200px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	overflow: hidden;
+	float: left;
+	text-align: center;
+}
+
+	.galleryimage img {
+		max-width: 100%;
+		max-height: 90%;
+		margin: auto;
+	}
+
 .miniweb-editonly {display:none;}
 
 

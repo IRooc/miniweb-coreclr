@@ -1,23 +1,24 @@
 ﻿/// <reference path="jquery.d.ts" />
 /// <reference path="bootstrap.d.ts" />
 /// <reference path="bootstrap-wysiwyg.ts" />
-if (typeof jQuery == 'undefined') {
-    // jQuery is not loaded
-    var script = document.createElement('script');
-    script.type = "text/javascript";
-    script.src = "https://code.jquery.com/jquery-2.2.4.min.js";
-    document.getElementsByTagName('head')[0].appendChild(script);
+if (typeof jQuery === 'undefined') {
+	// jQuery is not loaded
+	var script = document.createElement('script');
+	script.type = "text/javascript";
+	script.src = "https://code.jquery.com/jquery-2.2.4.min.js";
+	document.getElementsByTagName('head')[0].appendChild(script);
 }
-if (typeof $().modal != 'function') {
-    var script = document.createElement('script');
-    script.type = "text/javascript";
-    script.src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js";
-    document.getElementsByTagName('head')[0].appendChild(script);
+if (typeof $().modal !== 'function') {
+	var script = document.createElement('script');
+	script.type = "text/javascript";
+	script.src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js";
+	document.getElementsByTagName('head')[0].appendChild(script);
 }
+
 (function ($) {
 	var readFileIntoDataUrl = function (fileInfo) {
 		var loader = $.Deferred(),
-		 fReader = new FileReader();
+			fReader = new FileReader();
 		fReader.onload = function (e) {
 			loader.resolve((<any>e.target).result);
 		};
@@ -52,7 +53,7 @@ if (typeof $().modal != 'function') {
 
 				toggleSourceView();
 				$(".editor-toolbar").fadeIn().css("display", "block");
-				
+
 				setupAssetPager();
 			},
 			cancelEdit = function () {
@@ -124,11 +125,11 @@ if (typeof $().modal != 'function') {
 					}
 				});
 			},
-			checkAssetPagerVisibility = function (){
-				if ($('#miniweb-assetlist li').length > 15 && 
-						$('body.miniweb-editing #miniweb-assetlist li:visible:last').get(0) != $('body.miniweb-editing #miniweb-assetlist li:last').get(0)) {
+			checkAssetPagerVisibility = function () {
+				if ($('#miniweb-assetlist li').length > 15 &&
+					$('body.miniweb-editing #miniweb-assetlist li:visible:last').get(0) != $('body.miniweb-editing #miniweb-assetlist li:last').get(0)) {
 					$('#miniweb-asset-page-right').show();
-						
+
 				} else {
 					$('#miniweb-asset-page-right').hide();
 				}
@@ -139,17 +140,17 @@ if (typeof $().modal != 'function') {
 					$('#miniweb-asset-page-left').show();
 				}
 			},
-			setupAssetPager = function() {
+			setupAssetPager = function () {
 				checkAssetPagerVisibility();
-				$(".miniweb-asset-pager").unbind('click').click(function(){
+				$(".miniweb-asset-pager").unbind('click').click(function () {
 					var page = $('#miniweb-assetlist').data('page');
 					var move = $(this).data('page-move');
 					var newPage = page + move;
 					$('#miniweb-assetlist').data('page', newPage);
 					newPage = (newPage * 15) + 1;
-									
-					$('body.miniweb-editing #miniweb-assetlist li').css({'display':'none'})
-					$('body.miniweb-editing #miniweb-assetlist li:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 14) +')').css({'display':'inline-block'})
+
+					$('body.miniweb-editing #miniweb-assetlist li').css({ 'display': 'none' })
+					$('body.miniweb-editing #miniweb-assetlist li:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 14) + ')').css({ 'display': 'inline-block' })
 					checkAssetPagerVisibility();
 				});
 
@@ -179,6 +180,8 @@ if (typeof $().modal != 'function') {
 				return $.trim(parsedDOM);
 			},
 			saveContent = function (e) {
+				if (!$('body').hasClass('miniweb-editing')) return;
+
 				if ($(".source").attr("data-cmd") === "design") {
 					$(".source").click();
 				}
@@ -237,7 +240,7 @@ if (typeof $().modal != 'function') {
 				formArr.push({ name: '__RequestVerificationToken', value: $('#miniweb-templates input[name=__RequestVerificationToken]').val() });
 				$.post(options.apiEndpoint + "savepage",
 					formArr
-					).done(function (data) {
+				).done(function (data) {
 					if (data && data.result) {
 						document.location.href = data.url;
 					} else {
@@ -267,7 +270,7 @@ if (typeof $().modal != 'function') {
 			addNewContent = function () {
 				var htmlid = $(this).data('contentid');
 				var target = $(this).closest('#newContentAdd').attr('data-targetsection');
-				$('[data-miniwebsection=' + target + ']').append($('#' + htmlid).html()); 
+				$('[data-miniwebsection=' + target + ']').append($('#' + htmlid).html());
 				cancelEdit();
 				editContent();
 				$('#newContentAdd').modal('hide');
@@ -285,6 +288,14 @@ if (typeof $().modal != 'function') {
 					$('#newPageProperties .btn-primary').bind('click', savePage);
 				}
 				$('#newPageProperties').modal();
+			},
+			ctrl_s_save = function (event) {
+				if ($('body').hasClass('miniweb-editing')) {
+					if (event.ctrlKey && event.keyCode == 83) {
+						event.preventDefault();
+						saveContent(event);
+					};
+				}
 			};
 
 		txtMessage = $("#admin .alert");
@@ -300,6 +311,7 @@ if (typeof $().modal != 'function') {
 		$('#newPage').bind('click', addNewPage);
 
 
+		window.addEventListener('keydown', ctrl_s_save, true);
 		$(document).keyup(function (e) {
 			if (!(<HTMLElement>document.activeElement).isContentEditable) {
 				if (e.keyCode === 27) { // ESC key
@@ -341,8 +353,8 @@ if (typeof $().modal != 'function') {
 		wysiwygObj.saveSelection();
 		$('#addHyperLink').modal();
 	};
-	$.fn.miniwebAdmin.insertAsset = function(wysiwygObj: any) {
-		$('#imageAdd button.add-asset').unbind('click').bind('click', function(){
+	$.fn.miniwebAdmin.insertAsset = function (wysiwygObj: any) {
+		$('#imageAdd button.add-asset').unbind('click').bind('click', function () {
 			$('input[type=file].add-asset').click().change(function () {
 				if (this.type === 'file' && this.files && this.files.length > 0) {
 					//only first for now
@@ -365,7 +377,7 @@ if (typeof $().modal != 'function') {
 			e.preventDefault();
 			var dataUrl = $('img', this).attr('src');
 
-			var filename= $('img', this).data('filename');
+			var filename = $('img', this).data('filename');
 			if (filename == null) {
 				filename = 'newfile.png';
 			}
@@ -387,10 +399,10 @@ if (typeof $().modal != 'function') {
 					$(this).before(thisTools);
 					$(this).wysiwyg({
 						hotKeys: {},
-						activeToolbarClass: "active", 
+						activeToolbarClass: "active",
 						toolbarSelector: '[data-role=editor-toolbar' + index + ']',
 						createLink: $.fn.miniwebAdmin.createHyperlink,
-						insertAsset: $.fn.miniwebAdmin.insertAsset 
+						insertAsset: $.fn.miniwebAdmin.insertAsset
 					});
 				},
 				editEnd: function (index) {
@@ -399,12 +411,12 @@ if (typeof $().modal != 'function') {
 			},
 			{
 				key: 'asset',
-				editStart: function(index){
+				editStart: function (index) {
 					$(this).addClass('miniweb-asset-edit').unbind('click').click(function (e) {
 						var $el = $(this);
 						//only trigger on :after click...
 						if (e.offsetX > this.offsetWidth) {
-							$('#imageAdd button.add-asset').unbind('click').bind('click', function(){
+							$('#imageAdd button.add-asset').unbind('click').bind('click', function () {
 
 								$('input[type=file].add-asset').click().change(function () {
 									if (this.type === 'file' && this.files && this.files.length > 0) {
@@ -429,11 +441,14 @@ if (typeof $().modal != 'function') {
 								$el.text($('img', this).attr('src'));
 								$('#imageAdd').modal('hide');
 							});
+							$('#miniweb-assetlist .miniweb-asset-pick').each(function () {
+								$(this).attr('src', $(this).attr('data-src'));
+							});
 							$('#imageAdd').modal();
 						}
 					});
 				},
-				editEnd: function(index){
+				editEnd: function (index) {
 					$(this).removeClass('miniweb-asset-edit');
 				}
 			},

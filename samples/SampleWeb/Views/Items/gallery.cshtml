@@ -1,0 +1,33 @@
+﻿@model MiniWeb.Core.IContentItem
+@inject MiniWeb.Core.IMiniWebSite MiniWebSite
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment env
+<article miniweb-template="@Model.Template">
+    <h1 miniweb-prop="blogTitle">Foto's</h1>
+    <p miniweb-prop="folder" class="miniweb-editonly">/images/gallery/</p>
+</article>
+
+@if (Model?.Page != null)
+{
+	//just a blog example 
+	//add pages under the sitepage where this content items is added to show all subs
+	//TODO: Loads of stuff like what to do about the content item page
+	//		show only exerpt etc
+	var folder = Model.Get<string>("folder");
+	while (folder.Length > 0 && folder.StartsWith("/"))
+	{
+		folder = folder.Substring(1);
+	}
+	if (folder.Length > 0)
+	{
+		var path = System.IO.Path.Combine(env.WebRootPath, folder);
+		var files = System.IO.Directory.EnumerateFiles(path);
+
+		foreach (var file in files)
+		{
+			<div class="galleryimage">
+				<img src="@file.Replace(env.WebRootPath, "").Replace("\\", "/")"/><br/>
+				@System.IO.Path.GetFileName(file)
+			</div>
+		}
+	}
+}

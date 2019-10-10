@@ -25,12 +25,12 @@ namespace MiniWeb.Core
 
         public bool Match(HttpContext httpContext, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
-			if (_regexConstaint != null) {
+			if (_force && _regexConstaint != null) {
 				object routeValue;
 
 				if (values.TryGetValue(routeKey, out routeValue))
 				{
-					return routeValue == null || _regexConstaint.Match(httpContext, route, routeKey, values, routeDirection) || !this._force;
+					return routeValue == null || _regexConstaint.Match(httpContext, route, routeKey, values, routeDirection);
 				}
 				return false;
 			}

@@ -1,6 +1,14 @@
 ﻿body {
-	margin-top: 50px !important;
+	margin-top: 50px;
 }
+
+	body.preview {
+		margin-top: inherit;
+	}
+
+		body.preview miniwebadmin {
+			display: none;
+		}
 
 .admin {
 	margin-top: 50px;
@@ -57,34 +65,34 @@
 			padding: 8px 1em;
 		}
 
-		#admin #showHiddenPages {
+	#admin #showHiddenPages {
+		position: relative;
+		top: 5px;
+		left: 10px;
+	}
+
+		#admin #showHiddenPages label {
+			display: inline;
 			position: relative;
-			top: 5px;
-			left: 10px;
+			left: 4px;
+			font-weight: normal;
 		}
 
-			#admin #showHiddenPages label {
-				display: inline;
-				position: relative;
-				left: 4px;
-				font-weight: normal;
-			}
+	#admin .navbar-header.offline {
+		background: red;
+	}
 
-		#admin .navbar-header.offline {
-			background: red;
+		#admin .navbar-header.offline a {
+			color: white;
 		}
 
-			#admin .navbar-header.offline a {
-				color: white;
-			}
-
-			#admin .navbar-header .navbar-brand {
-				float: left;
-				height: 50px;
-				padding: 15px 5px;
-				font-size: 12px;
-				line-height: 20px;
-			}
+	#admin .navbar-header .navbar-brand {
+		float: left;
+		height: 50px;
+		padding: 15px 5px;
+		font-size: 12px;
+		line-height: 20px;
+	}
 
 miniwebadmin .miniweb.modal-dialog {
 	margin-top: 60px;
@@ -110,11 +118,13 @@ body.miniweb-editing [contenteditable] {
 	width: 100%;
 	display: inline-block;
 }
+
 body.miniweb-editing img[contenteditable] {
 	width: auto;
-	overflow:hidden;
-	display:block;
+	overflow: hidden;
+	display: block;
 }
+
 body.miniweb-editing div[contenteditable] {
 	margin-bottom: 10px;
 }
@@ -137,29 +147,32 @@ body.miniweb-editing div[contenteditable]:before {
 }
 /*http://jsfiddle.net/wC2p7/1/ */
 body.miniweb-editing .miniweb-url-edit[contenteditable] {
-    width: 95%;
+	width: 95%;
 }
-body.miniweb-editing .miniweb-url-edit[contenteditable]::after {
-  content: "\e135";
-  font-family: "Glyphicons Halflings";
-  cursor:pointer;
-  float: right;
-  left: 95%;
-  position: absolute;
-}
+
+	body.miniweb-editing .miniweb-url-edit[contenteditable]::after {
+		content: "\e135";
+		font-family: "Glyphicons Halflings";
+		cursor: pointer;
+		float: right;
+		left: 95%;
+		position: absolute;
+	}
 
 /*http://jsfiddle.net/wC2p7/1/ */
 body.miniweb-editing .miniweb-asset-edit[contenteditable] {
-    width: 95%;
+	width: 95%;
 }
-body.miniweb-editing .miniweb-asset-edit[contenteditable]::after {
-  content: "\e060";
-  font-family: "Glyphicons Halflings";
-  cursor:pointer;
-  float: right;
-  left: 95%;
-  position: absolute;
-}
+
+	body.miniweb-editing .miniweb-asset-edit[contenteditable]::after {
+		content: "\e060";
+		font-family: "Glyphicons Halflings";
+		cursor: pointer;
+		float: right;
+		left: 95%;
+		position: absolute;
+	}
+
 body.miniweb-editing .editor-toolbar .btn {
 	padding: 4px 8px;
 }
@@ -190,20 +203,21 @@ body.miniweb-editing [data-miniwebtemplate]:nth-last-child(2) .miniweb-template-
 }
 
 .miniweb-attributes {
-	display:none;
+	display: none;
 	padding: 5px 0 5px 24px;
 	margin: 5px 0;
 	background: #f9f9f9;
 }
-.miniweb-attributes:before {
-	content: "\e144";
-	font-family: 'Glyphicons Halflings';
-	position: absolute;
-	left: 20px
-}
+
+	.miniweb-attributes:before {
+		content: "\e144";
+		font-family: 'Glyphicons Halflings';
+		position: absolute;
+		left: 20px
+	}
 
 body.miniweb-editing .miniweb-attributes {
-	display:block;
+	display: block;
 }
 
 body.miniweb-editing aside > [data-miniwebtemplate].aside .editor-toolbar a {
@@ -240,10 +254,11 @@ body.miniweb-editing .miniweb-insertcontent {
 }
 
 #miniweb-templates {
-	display:none;
+	display: none;
 }
+
 body.miniweb-editing .miniweb-editonly {
-	display:block;
+	display: block;
 }
 
 body.miniweb-editing #miniweb-assetlist {
@@ -252,26 +267,30 @@ body.miniweb-editing #miniweb-assetlist {
 	min-height: 80px;
 	overflow: hidden;
 	width: 100%;
-	padding-left:20px;
+	padding-left: 20px;
 }
-body.miniweb-editing #miniweb-assetlist li {
-	width: 100px;
-	height: 100px;
-	display: none;
-	overflow: hidden;
-	border: 1px solid #ddd;
-	border-radius: 10px;
-	line-height: 94px;
-	background: #fafafa;
-	transition:all .2s ease-in-out;
-}
-body.miniweb-editing #miniweb-assetlist li .miniweb-asset-pick {
-	max-width: 100%;
-	max-height: 100%;
-}
-body.miniweb-editing #miniweb-assetlist li:nth-child(n+1):nth-child(-n+15) {
-	display:inline-block;
-}
+
+	body.miniweb-editing #miniweb-assetlist li {
+		width: 100px;
+		height: 100px;
+		display: none;
+		overflow: hidden;
+		border: 1px solid #ddd;
+		border-radius: 10px;
+		line-height: 94px;
+		background: #fafafa;
+		transition: all .2s ease-in-out;
+	}
+
+		body.miniweb-editing #miniweb-assetlist li .miniweb-asset-pick {
+			max-width: 100%;
+			max-height: 100%;
+		}
+
+		body.miniweb-editing #miniweb-assetlist li:nth-child(n+1):nth-child(-n+15) {
+			display: inline-block;
+		}
+
 body.miniweb-editing .miniweb-asset-pager {
 	position: absolute;
 	color: #2e6da4;
@@ -279,12 +298,14 @@ body.miniweb-editing .miniweb-asset-pager {
 	font-size: 17px;
 	left: 10px
 }
+
 body.miniweb-editing #miniweb-asset-page-right.miniweb-asset-pager {
 	right: 12px;
-	left:auto;
+	left: auto;
 }
+
 body.miniweb-editing .miniweb-asset-pager:hover {
-	color:#337ab7;
+	color: #337ab7;
 }
 
 
@@ -293,19 +314,18 @@ body.miniweb-editing .miniweb-asset-pager:hover {
 		display: inline-block;
 	}
 
-	#admin .nav > li button, #ispublished {
-		padding-left: 8px;
-		padding-right: 8px;
-	}
+		#admin .nav > li button, #ispublished {
+			padding-left: 8px;
+			padding-right: 8px;
+		}
 
 	#admin .navbar-inner .btn i {
 		padding: 0 5px;
 	}
 
-	#admin #showHiddenPages label span{
-		display:none;
+	#admin #showHiddenPages label span {
+		display: none;
 	}
-
 }
 
 @media screen and (max-width: 767px) {

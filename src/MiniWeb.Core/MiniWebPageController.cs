@@ -40,9 +40,9 @@ namespace MiniWeb.Core
 			{
 				if (!string.IsNullOrWhiteSpace(_webSite.Configuration.PageExtension))
 				{
-					return Redirect($"{page.Url}.{_webSite.Configuration.PageExtension}");
+					return Redirect($"/{page.Url}.{_webSite.Configuration.PageExtension}");
 				}
-				return Redirect(page.Url);
+				return Redirect($"/{page.Url}");
 			}
 			ViewBag.CurrentUrl = page.Url;
 			if (_webSite.Configuration.RedirectToFirstSub && page.Pages.Any())

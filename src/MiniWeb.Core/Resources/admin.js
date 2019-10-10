@@ -1,14 +1,10 @@
-/// <reference path="jquery.d.ts" />
-/// <reference path="bootstrap.d.ts" />
-/// <reference path="bootstrap-wysiwyg.ts" />
-if (typeof jQuery == 'undefined') {
-    // jQuery is not loaded
+if (typeof jQuery === 'undefined') {
     var script = document.createElement('script');
     script.type = "text/javascript";
     script.src = "https://code.jquery.com/jquery-2.2.4.min.js";
     document.getElementsByTagName('head')[0].appendChild(script);
 }
-if (typeof $().modal != 'function') {
+if (typeof $().modal !== 'function') {
     var script = document.createElement('script');
     script.type = "text/javascript";
     script.src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js";
@@ -30,7 +26,6 @@ if (typeof $().modal != 'function') {
         var options = $.extend({}, $.fn.miniwebAdmin.defaults, userOptions);
         var contentEditables, txtMessage, btnNew, btnEdit, btnSave, btnCancel, editContent = function () {
             $('body').addClass('miniweb-editing');
-            //reassign arrays so al new items are parsed
             contentEditables = $('[data-miniwebprop]');
             contentEditables.attr('contentEditable', true);
             for (var i = 0; i < options.editTypes.length; i++) {
@@ -156,6 +151,8 @@ if (typeof $().modal != 'function') {
             parsedDOM = RegExp.$1;
             return $.trim(parsedDOM);
         }, saveContent = function (e) {
+            if (!$('body').hasClass('miniweb-editing'))
+                return;
             if ($(".source").attr("data-cmd") === "design") {
                 $(".source").click();
             }
@@ -173,12 +170,10 @@ if (typeof $().modal != 'function') {
                         Template: $(this).attr('data-miniwebtemplate'),
                         Values: {}
                     };
-                    //find all dynamic properties
                     $tmpl.find('[data-miniwebprop]').each(function () {
                         var key = $(this).attr('data-miniwebprop');
                         var value = getParsedHtml($(this));
                         item.Values[key] = value;
-                        //update attributes if any
                         if (key.indexOf(':') > 0) {
                             var orig = key.split(':')[0];
                             var attrib = key.split(':')[1];
@@ -188,7 +183,6 @@ if (typeof $().modal != 'function') {
                     items[index].Items.push(item);
                 });
             });
-            //console.log(JSON.stringify(items));
             $.post(options.apiEndpoint + 'savecontent', {
                 url: $('#admin').attr('data-miniweb-path'),
                 items: JSON.stringify(items),
@@ -242,7 +236,6 @@ if (typeof $().modal != 'function') {
             editContent();
             $('#newContentAdd').modal('hide');
         }, addNewPage = function () {
-            //copy and empty current page property modal
             if ($('#newPageProperties').length == 0) {
                 var newP = $('#pageProperties').clone();
                 newP.attr('id', 'newPageProperties');
@@ -254,6 +247,14 @@ if (typeof $().modal != 'function') {
                 $('#newPageProperties .btn-primary').bind('click', savePage);
             }
             $('#newPageProperties').modal();
+        }, ctrl_s_save = function (event) {
+            if ($('body').hasClass('miniweb-editing')) {
+                if (event.ctrlKey && event.keyCode == 83) {
+                    event.preventDefault();
+                    saveContent(event);
+                }
+                ;
+            }
         };
         txtMessage = $("#admin .alert");
         btnNew = $("#btnNew");
@@ -265,6 +266,7 @@ if (typeof $().modal != 'function') {
         $('#pageProperties .btn-danger').bind("click", removePage);
         $('#newContentAdd .btn-primary').bind("click", addNewContent);
         $('#newPage').bind('click', addNewPage);
+        window.addEventListener('keydown', ctrl_s_save, true);
         $(document).keyup(function (e) {
             if (!document.activeElement.isContentEditable) {
                 if (e.keyCode === 27) {
@@ -272,7 +274,6 @@ if (typeof $().modal != 'function') {
                 }
             }
         });
-        //always cancel edit on refresh, stops remembering of firefox for inputs and stuff
         cancelEdit();
         return this;
     };
@@ -310,7 +311,6 @@ if (typeof $().modal != 'function') {
         $('#imageAdd button.add-asset').unbind('click').bind('click', function () {
             $('input[type=file].add-asset').click().change(function () {
                 if (this.type === 'file' && this.files && this.files.length > 0) {
-                    //only first for now
                     var fileInfo = this.files[0];
                     $.when(readFileIntoDataUrl(fileInfo)).done(function (dataUrl) {
                         dataUrl = dataUrl.replace(';base64', ';filename=' + fileInfo.name + ';base64');
@@ -329,8 +329,10 @@ if (typeof $().modal != 'function') {
             e.stopPropagation();
             e.preventDefault();
             var dataUrl = $('img', this).attr('src');
-            //todo get file from dataUrl;
-            var filename = 'newfile.png';
+            var filename = $('img', this).data('filename');
+            if (filename == null) {
+                filename = 'newfile.png';
+            }
             var imageHtml = '<img src="' + dataUrl + '" data-filename="' + filename + '"/>';
             wysiwygObj.execCommand('inserthtml', imageHtml);
             $('#imageAdd').modal('hide');
@@ -363,12 +365,10 @@ if (typeof $().modal != 'function') {
                 editStart: function (index) {
                     $(this).addClass('miniweb-asset-edit').unbind('click').click(function (e) {
                         var $el = $(this);
-                        //only trigger on :after click...
                         if (e.offsetX > this.offsetWidth) {
                             $('#imageAdd button.add-asset').unbind('click').bind('click', function () {
                                 $('input[type=file].add-asset').click().change(function () {
                                     if (this.type === 'file' && this.files && this.files.length > 0) {
-                                        //only first for now
                                         var fileInfo = this.files[0];
                                         $.when(readFileIntoDataUrl(fileInfo)).done(function (dataUrl) {
                                             dataUrl = dataUrl.replace(';base64', ';filename=' + fileInfo.name + ';base64');
@@ -389,6 +389,9 @@ if (typeof $().modal != 'function') {
                                 $el.text($('img', this).attr('src'));
                                 $('#imageAdd').modal('hide');
                             });
+                            $('#miniweb-assetlist .miniweb-asset-pick').each(function () {
+                                $(this).attr('src', $(this).attr('data-src'));
+                            });
                             $('#imageAdd').modal();
                         }
                     });
@@ -402,7 +405,6 @@ if (typeof $().modal != 'function') {
                 editStart: function (index) {
                     $(this).addClass('miniweb-url-edit').unbind('click').click(function (e) {
                         var $el = $(this);
-                        //only trigger on :after click...
                         if (e.offsetX > this.offsetWidth) {
                             var curHref = $el.text();
                             if (curHref.indexOf('http') == 0) {

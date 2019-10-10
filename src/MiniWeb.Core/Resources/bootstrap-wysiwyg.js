@@ -1,15 +1,3 @@
-/* http://github.com/mindmup/bootstrap-wysiwyg */
-/*global jQuery, $, FileReader*/
-/*jslint browser:true*/
-/*
-
-RC
-- Extended userOptions to enable createLink override
-- Changed the insertimage to inserthtml so you can set the imagename as attribute
-- updated with closures so can be used in extended function
-*/
-/// <reference path="jquery.d.ts" />
-/// <reference path="bootstrap.d.ts" />
 (function ($) {
     'use strict';
     var readFileIntoDataUrl = function (fileInfo) {
@@ -118,7 +106,6 @@ RC
                     }
                     else {
                         $.when(meObj.options.readFileIntoUrl(fileInfo)).done(function (dataUrl) {
-                            //execCommand('inserthtml', '<a href="' + dataUrl + '">Download</a>');
                             var frag = document.createDocumentFragment();
                             var node = document.createElement("a");
                             node.innerText = fileInfo.name;
@@ -131,7 +118,6 @@ RC
                         }).fail(function (e) {
                             meObj.options.fileUploadError("file-reader", e);
                         });
-                        //this.options.fileUploadError("unsupported-file-type", fileInfo.type);
                     }
                 });
             },
@@ -154,7 +140,7 @@ RC
                 });
                 toolbar.find('[data-toggle=dropdown]').click(this.restoreSelection);
                 toolbar.find('input[type=text][data-' + options.commandRole + ']').on('webkitspeechchange change', function () {
-                    var newValue = this.value; /* ugly but prevents fake double-calls due to selection restoration */
+                    var newValue = this.value;
                     this.value = '';
                     meEdit.restoreSelection();
                     if (newValue) {

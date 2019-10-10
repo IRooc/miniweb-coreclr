@@ -1,0 +1,28 @@
+﻿@model MiniWeb.Core.ISitePage
+@using MiniWeb.Core
+@inject IMiniWebSite MiniWebSite
+<!DOCTYPE html>
+
+<html>
+<head prefix="og: http://ogp.me/ns#">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.MetaTitle</title>
+    <meta name="description" content="@Model.MetaDescription" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/site.css" />
+
+    <meta name="application-name" content="@MiniWebSite.Configuration.Title" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+
+    <meta property="og:title" content="@Model.MetaTitle" />
+    <meta property="og:type" content="website" />
+
+</head>
+<body class="@Model.GetBodyCss()">
+
+	<img src="~/images/icon.png" style="margin:auto;display:block"/>
+	@RenderBody()
+    <miniwebadmin />
+</body>
+</html>
