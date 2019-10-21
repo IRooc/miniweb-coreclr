@@ -13,7 +13,9 @@ namespace MiniWeb.Core
 		void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest);
 		void DeleteSitePage(ISitePage sitePage);
 		IEnumerable<ISitePage> AllPages();
-		
+
+		ISitePage Deserialize(string filecontent);
+
 		ISitePage MiniWebLoginPage { get; }
 		ISitePage MiniWeb404Page { get; }
 

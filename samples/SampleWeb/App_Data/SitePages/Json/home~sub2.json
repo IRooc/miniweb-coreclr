@@ -1,1 +1,33 @@
-{"Url":"home/sub2","Title":"Sub 2","Template":"~/Views/Pages/OneColumn.cshtml","Layout":"~/Views/_layout.cshtml","MetaTitle":"Subpage 2","MetaDescription":"Sub page of home 2","Visible":true,"ShowInMenu":true,"SortOrder":2,"Created":"0001-01-01T00:00:00","LastModified":"2016-04-03T12:20:48.4673824+02:00","Sections":[{"Key":"content","Items":[{"Template":"~/Views/Items/href.cshtml","Values":{"link":"Link text","link:href":"/home.html","link:title":"Title of the a href","image":"","image:src":"http://lorempixel.com/200/100","image:alt":"nice image from lorempixel","URL":""}}]}]}
+{
+  "Url": "home/sub2",
+  "RedirectUrl": null,
+  "Title": "Sub 2",
+  "Template": "~/Views/Pages/OneColumn.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
+  "MetaTitle": "Subpage 2",
+  "MetaDescription": "Sub page of home 2",
+  "Visible": true,
+  "ShowInMenu": true,
+  "SortOrder": 2,
+  "Created": "0001-01-01T00:00:00",
+  "LastModified": "2019-10-21T13:51:22.3800998+02:00",
+  "Sections": [
+    {
+      "Key": "content",
+      "Items": [
+        {
+          "Template": "~/Views/Items/href.cshtml",
+          "Values": {
+            "link": "Link text",
+            "link:href": "/home.html",
+            "link:title": "Title of the a href",
+            "image": "",
+            "image:src": "http://lorempixel.com/200/100",
+            "image:alt": "nice image from lorempixel",
+            "URL": ""
+          }
+        }
+      ]
+    }
+  ]
+}

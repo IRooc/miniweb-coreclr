@@ -359,3 +359,7 @@ body.miniweb-editing .miniweb-asset-pager:hover {
 		padding: 0 10px;
 	}
 }
+
+miniwebadmin .is-hidden {
+	display: none !important;
+}

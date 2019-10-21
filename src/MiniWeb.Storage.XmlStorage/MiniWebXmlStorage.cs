@@ -36,6 +36,10 @@ namespace MiniWeb.Storage.XmlStorage
 			return null;
 		}
 
+		public ISitePage Deserialize(string filecontent)
+		{
+			throw new NotImplementedException();
+		}
 
 		public void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
 		{

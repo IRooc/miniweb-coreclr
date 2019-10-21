@@ -46,7 +46,7 @@ namespace MiniWeb.Core.TagHelpers
 
 				if (!IgnoreAdminStart)
 				{
-					output.Content.AppendHtml($"<script>$(function(){{$('{MiniWebAdminTag}').miniwebAdmin({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\"}});}});</script>");
+					output.Content.AppendHtml($"<script>$(function(){{ window.currentMiniweb = $('{MiniWebAdminTag}').miniwebAdmin({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\"}});}});</script>");
 				}
 			}
 			else

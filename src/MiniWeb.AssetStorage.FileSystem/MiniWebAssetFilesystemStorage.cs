@@ -30,13 +30,10 @@ namespace MiniWeb.AssetStorage.FileSystem
 		public IEnumerable<IAsset> GetAllAssets()
 		{
 			string folder = Path.Combine(HostingEnvironment.WebRootPath, Configuration.AssetRootPath);
-			if (Directory.Exists(folder))
+			if (!string.IsNullOrWhiteSpace(Configuration.AssetRootPath) && !Configuration.AssetRootPath.Contains("..") && Directory.Exists(folder))
 			{
 				var allFiles = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
-				return allFiles.Select(f => new FileSystemAsset(HostingEnvironment)
-				{
-					VirtualPath = GetVirtualPath(f)
-				});
+				return allFiles.Select(f => new FileSystemAsset(HostingEnvironment, Configuration, f));
 			}
 			Logger?.LogWarning($"Folder not present {folder} no assets loaded");
 			return Enumerable.Empty<IAsset>();
@@ -45,16 +42,13 @@ namespace MiniWeb.AssetStorage.FileSystem
 		public IAsset CreateAsset(string fileName, byte[] bytes, string virtualFolder = null)
 		{
 			Logger?.LogInformation($"Create asset {fileName} in {Configuration.AssetRootPath}");
+			if (virtualFolder.StartsWith("/")) virtualFolder = virtualFolder.Substring(1);
 			var virtualPath = Path.Combine(Configuration.AssetRootPath, virtualFolder ?? string.Empty);
 			string path = Path.Combine(HostingEnvironment.WebRootPath, virtualPath);
 			Directory.CreateDirectory(path);
 			string file = Path.Combine(path, fileName);
 			File.WriteAllBytes(file, bytes);
-			virtualPath = Path.Combine(virtualPath, fileName);
-			IAsset a = new FileSystemAsset(HostingEnvironment)
-			{
-				VirtualPath = "/" + virtualPath
-			};
+			IAsset a = new FileSystemAsset(HostingEnvironment, Configuration, file);
 			return a;
 		}
 
@@ -75,11 +69,6 @@ namespace MiniWeb.AssetStorage.FileSystem
 			File.Delete(file);
 		}
 		
-		private string GetVirtualPath(string path)
-		{
-			var virtualPath = path.Substring(HostingEnvironment.WebRootPath.Length);
-			return virtualPath.Replace("\\", "/");
-		}
 
 		private byte[] ConvertToBytes(string base64)
 		{
@@ -101,9 +90,14 @@ namespace MiniWeb.AssetStorage.FileSystem
 	{
 		private string[] ImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
 		public IHostingEnvironment HostingEnvironment { get; }
-		public FileSystemAsset(IHostingEnvironment env)
+		public MiniWebAssetFileSystemConfig Configuration { get; }
+		public FileSystemAsset(IHostingEnvironment env, MiniWebAssetFileSystemConfig config, string fullPath)
 		{
 			HostingEnvironment = env;
+			Configuration = config;
+			VirtualPath = GetVirtualPath(fullPath);
+			FileName = Path.GetFileName(VirtualPath);
+			Folder = Path.GetDirectoryName(VirtualPath.Substring(Configuration.AssetRootPath.Length)).Replace("\\", "/");
 		}
 		public FileInfo Info
 		{
@@ -126,6 +120,15 @@ namespace MiniWeb.AssetStorage.FileSystem
 				}
 				return AssetType.File;
 			}
+		}
+
+		public string FileName { get; set; }
+		public string Folder { get; set; }
+
+		private string GetVirtualPath(string path)
+		{
+			var virtualPath = path.Substring(HostingEnvironment.WebRootPath.Length);
+			return virtualPath.Replace("\\", "/");
 		}
 	}
 }

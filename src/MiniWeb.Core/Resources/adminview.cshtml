@@ -5,7 +5,7 @@
 	var path = Model.Url;
 }
 
-<nav id="admin" class="navbar navbar-default navbar-fixed-top" data-ispublished="@isPublished" data-miniweb-path="@path">
+<nav id="admin" class="navbar navbar-default navbar-fixed-top" data-ispublished="@isPublished" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
 	<div class="navbar-header @(isPublished ? "published" : "offline")">
 		<a href="#" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
 	</div>
@@ -165,12 +165,19 @@
 						</div>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-danger">Delete Page</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
-				</div>
 			</form>
+			<div class="modal-footer">
+				<div class="is-hidden">
+					<form>
+						<input type="file" multiple name="files" class="add-multiplepages" style="position:absolute;width:0;height:0"/>
+						<label>force<input type="checkbox" name="force" value="true"/></label>
+						<button type="button" class="btn btn-default add-multiplepages">Upload Pages</button>
+					</form>
+				</div>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-danger">Delete Page</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -252,23 +259,36 @@
 			</div>
 			<form class="form-horizontal">
 				<div class="modal-body">
+					<a href="#" id="miniweb-asset-page-reset" class="miniweb-asset-pager is-hidden" data-page-move="-10000" style="display:none;position:absolute;width:0;height:0"><span class="glyphicon glyphicon-chevron-left"></span></a>
 					<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-page-move="-1" style="display:none;"><span class="glyphicon glyphicon-chevron-left"></span></a>
 					<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-page-move="1" style="display:none;"><span class="glyphicon glyphicon-chevron-right"></span></a>
+					@{ 
+						var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
+						var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
+					}
+					Folder: <input class="select-asset-folder" name="virtualFolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
+					<datalist id="miniweb-folder-list">
+					@foreach(var f in allFolders)
+					{
+						<option value="@f">@f</option>
+					}
+					</datalist>
+
 					<ul id="miniweb-assetlist" data-page="0">
-					@foreach(var a in MiniWebSite.AssetStorage.GetAllAssets()){
-						<li>
+					@foreach(var a in allAssets){
+						<li data-path="@a.Folder" class="is-hidden">
 						@if (a.Type == MiniWeb.Core.AssetType.Image) {
-							<img data-src="@a.VirtualPath" class="miniweb-asset-pick"/>
+							<img data-src="@a.VirtualPath" data-filename="@a.FileName" class="miniweb-asset-pick"/>
 						} 
 						else 
 						{
-							<a href="@a.VirtualPath" class="miniweb-asset-pick">@a.VirtualPath</a>
+							<a href="@a.VirtualPath" class="miniweb-asset-pick">@a.FileName</a>
 						}
 						</li>
 					}
 					</ul>
 					<button type="button" class="btn btn-primary add-asset">Add Asset</button>
-					<input type="file" class="add-asset" style="position:absolute;width:0;height:0"/>
+					<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0"/>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

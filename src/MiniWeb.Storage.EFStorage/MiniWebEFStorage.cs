@@ -46,6 +46,7 @@ namespace MiniWeb.Storage.EFStorage
 			return p;
 		}
 
+
 		public bool Authenticate(string username, string password)
 		{
 			//TODO(RC):Fix hashing and stuff...
@@ -146,7 +147,12 @@ namespace MiniWeb.Storage.EFStorage
 				}).ToList<IContentItem>()
 			}).ToList<IPageSection>();
 		}
-		
+
+		public ISitePage Deserialize(string filecontent)
+		{
+			throw new NotImplementedException();
+		}
+
 		public ISitePage MiniWeb404Page
 		{
 			get

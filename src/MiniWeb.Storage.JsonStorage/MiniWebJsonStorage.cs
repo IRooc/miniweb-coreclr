@@ -35,6 +35,10 @@ namespace MiniWeb.Storage.JsonStorage
 			return null;
 		}
 
+		public ISitePage Deserialize(string filecontent)
+		{
+			return JsonConvert.DeserializeObject<SitePage>(filecontent, JsonInterfaceConverter);
+		}
 
 		public void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
 		{

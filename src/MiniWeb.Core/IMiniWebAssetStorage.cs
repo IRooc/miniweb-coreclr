@@ -26,6 +26,9 @@ namespace MiniWeb.Core
 	{
 		FileInfo Info { get; }
 		string VirtualPath { get; set; }
+		string FileName { get; set; }
+		string Folder { get; set; }
 		AssetType Type{ get; }
+
 	}
 }

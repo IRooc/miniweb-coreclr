@@ -9,13 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\images\NewFolder\**" />
-    <Content Remove="wwwroot\images\NewFolder\**" />
-    <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
-    <None Remove="wwwroot\images\NewFolder\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="wwwroot\**\*;Views\**\*;App_Data\**\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -30,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Microsoft.AspNetCore.All" />  
+	  <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />  
   </ItemGroup>
 
   <ItemGroup>

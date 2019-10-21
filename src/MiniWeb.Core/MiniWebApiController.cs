@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace MiniWeb.Core
 {
@@ -47,6 +51,54 @@ namespace MiniWeb.Core
 			return new JsonResult(new { result = false });
 		}
 
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult SaveAssets(string virtualFolder, List<IFormFile> files)
+		{
+			if (files.Count > 0)
+			{
+				List<IAsset> assets = new List<IAsset>();
+				foreach (var file in files)
+				{
+					using (var ms = new MemoryStream())
+					{
+						file.CopyTo(ms);
+						var fileBytes = ms.ToArray();
+						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, virtualFolder);
+						assets.Add(newAsset);
+					}
+				}
+				return new JsonResult(new { result = true, assets = assets.Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
+			}
+			return new JsonResult(new { result = false });
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> MultiplePages(List<IFormFile> files, bool force)
+		{
+			if (files.Count > 0)
+			{
+				foreach (var file in files)
+				{
+					using (var reader = new StreamReader(file.OpenReadStream()))
+					{
+						var content = await reader.ReadToEndAsync();
+						var sitePage = _webSite.ContentStorage.Deserialize(content);
+						if (_webSite.Pages.FirstOrDefault(p => p.Url == sitePage.Url) == null || force)
+						{
+							_webSite.SaveSitePage(sitePage, Request);
+						} 
+						else if (!force)
+						{
+							return new JsonResult(new { result = false, message = $"Page with url {sitePage.Url} already exists" });
+						}
+					}
+				}
+				return new JsonResult(new { result = true });
+			}
+			return new JsonResult(new { result = false });
+		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult SavePage([FromForm]SitePageBasicPostModel posted)
