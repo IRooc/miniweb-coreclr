@@ -17,7 +17,7 @@ Tested on windows, mac osx, linux (ubuntu)
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
-It needs bootstrap v3.2 for now for the admin menu to work and contains a modified version of [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
+It contains bootstrap v3.2 for now for the admin menu to work and contains a modified version of [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
 
 ## Example
 Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the samples/SampleWeb project for an example implementation. Make sure the basic bootstrap files are in the wwwroot folder.
@@ -119,11 +119,21 @@ Currently there are three storage packages
 
 The first two are filesystem stores and store their files in the /App_Data/Sitepages folder
 
+## Login
+If you use the JsonStorage example make sure your username password is added to the miniweb.json
+```JSON
+	"MiniWebStorage": {
+		"Users": {
+			"username":"password"
+		}
+	}
+```
+
 ## TODO
-* Multiple edittypes
-* Extra Storage Provider examples (documentdb)
+* Move JQuery dependency to ES6 scripts
+* Remove Bootstrap if easily possible
+* Update to .netcore 3.0 and revisit current solution.
+* Add clientview to a Razor Pages package
 * Better image handling (enable picking existing images as well)
-* Upgrade to new bootstrap
-* Setup integration with clientside packages (bower grunt and so on)
 
 
