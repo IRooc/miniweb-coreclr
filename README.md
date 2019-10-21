@@ -122,11 +122,11 @@ The first two are filesystem stores and store their files in the /App_Data/Sitep
 ## Login
 If you use the JsonStorage example make sure your username password is added to the miniweb.json
 ```JSON
-	"MiniWebStorage": {
-		"Users": {
-			"username":"password"
-		}
+"MiniWebStorage": {
+	"Users": {
+		"username":"password"
 	}
+}
 ```
 
 ## TODO
