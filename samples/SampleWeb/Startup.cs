@@ -113,10 +113,17 @@ namespace SampleWeb
 
 			app.UseDeveloperExceptionPage();
 			app.UseStaticFiles();
-
-
-			var miniwebConfig = app.GetMiniWebConfig();
 			
+			//hosting needs this
+			app.Map("/emonitor.aspx", context =>
+			{
+				context.Run(async ctx =>
+				{
+					ctx.Response.ContentType = "text/plain";
+					await ctx.Response.WriteAsync("Enterprise Monitor test ASP");
+				});
+			});
+
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
 			//app.UseEFMiniWebSite(false);
 			app.UseMiniWebSite();
