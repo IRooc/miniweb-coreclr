@@ -114,8 +114,8 @@ namespace SampleWeb
 			}
 			else
 			{
-				app.UseHsts();
-				app.UseHttpsRedirection();
+				//app.UseHsts();
+				//app.UseHttpsRedirection();
 			}
 			app.UseStaticFiles();
 			
