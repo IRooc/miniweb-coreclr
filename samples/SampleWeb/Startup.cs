@@ -2,6 +2,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -117,8 +118,9 @@ namespace SampleWeb
 				//app.UseHsts();
 				//app.UseHttpsRedirection();
 			}
+			app.UseMiddleware<CustomHttpsRedirect>();
 			app.UseStaticFiles();
-			
+
 			//hosting needs this
 			app.Map("/emonitor.aspx", context =>
 			{
@@ -134,6 +136,25 @@ namespace SampleWeb
 			app.UseMiniWebSite();
 		}
 
+		private class CustomHttpsRedirect
+		{
+			private readonly RequestDelegate _next;
+			public CustomHttpsRedirect(RequestDelegate next, ILoggerFactory loggerFactory)
+			{
+				_next = next;
+			}
+			public async Task Invoke(HttpContext httpContext)
+			{
+				if (!httpContext.Request.IsHttps)
+				{
+					httpContext.Response.Redirect($"https://{httpContext.Request.Host}{httpContext.Request.Path}{httpContext.Request.QueryString}");
+				}
+				else
+				{
+					await _next.Invoke(httpContext);
+				}
+			}
+		}
 	}
 
 	public static class ConfigExtensions
