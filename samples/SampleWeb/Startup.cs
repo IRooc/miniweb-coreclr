@@ -115,10 +115,10 @@ namespace SampleWeb
 			}
 			else
 			{
+				app.UseMiddleware<CustomHttpsRedirect>();
 				//app.UseHsts();
 				//app.UseHttpsRedirection();
 			}
-			app.UseMiddleware<CustomHttpsRedirect>();
 			app.UseStaticFiles();
 
 			//hosting needs this
