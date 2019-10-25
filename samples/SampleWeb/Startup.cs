@@ -2,9 +2,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -103,15 +101,22 @@ namespace SampleWeb
 			});
 		}
 
-		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
 		{
 			// Add the loggers.
 			if (Configuration.Value<bool>("Logging:EnableConsole"))
 			{
 				loggerfactory.AddConsole(LogLevel.Information);
 			}
-
-			app.UseDeveloperExceptionPage();
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseHsts();
+				app.UseHttpsRedirection();
+			}
 			app.UseStaticFiles();
 			
 			//hosting needs this
