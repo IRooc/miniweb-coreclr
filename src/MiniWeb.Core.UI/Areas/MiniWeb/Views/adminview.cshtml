@@ -11,6 +11,12 @@
 	</div>
 	<div class="navbar-inner pull-right">
 		<ul class="nav navbar-nav">
+			<li><input type="text" list="pages" class="form-control" id="navigateOnEnter"/><datalist id="pages">
+				@foreach (var p in MiniWebSite.Pages)
+				{
+					<option value="@(MiniWebSite.GetPageUrl(p))"/>
+				}				
+			</datalist></li>
 			<li><button class="btn btn-link" onclick="document.querySelector('body').classList.add('preview')"><span>Preview</span></button></li>
 			<li id="showHiddenPages"><label class="btn btn-link"><input type="checkbox" /> <span>Show hidden pages</span></label></li>
 			<li><button class="btn btn-link" id="newPage"><i class="glyphicon glyphicon-asterisk"></i> <span>New page</span></button></li>
@@ -308,6 +314,6 @@
 	@Html.AntiForgeryToken()
 </div>
 
-<link rel="stylesheet" href="@(MiniWebSite.Configuration.EmbeddedResourcePath)admin.css" />
-<script src="@(MiniWebSite.Configuration.EmbeddedResourcePath)bootstrap-wysiwyg.js" defer></script>
-<script src="@(MiniWebSite.Configuration.EmbeddedResourcePath)admin.js" defer></script>
+<link rel="stylesheet" href="/miniweb-resources/admin.css" />
+<script src="/miniweb-resources/bootstrap-wysiwyg.js" defer></script>
+<script src="/miniweb-resources/admin.js" defer></script>

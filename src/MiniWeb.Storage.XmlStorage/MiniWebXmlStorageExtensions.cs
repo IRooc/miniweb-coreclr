@@ -6,7 +6,7 @@ namespace MiniWeb.Storage.XmlStorage
 {
 	public static class MiniWebXmlStorageExtensions
 	{
-		public static IServiceCollection AddMiniWebXmlStorage(this IServiceCollection services, IConfigurationRoot configuration)
+		public static IServiceCollection AddMiniWebXmlStorage(this IServiceCollection services, IConfiguration configuration)
 		{		
 			services.Configure<MiniWebXmlStorageConfig>(configuration.GetSection("MiniWebStorage"));
 			return services.AddSingleton<IMiniWebContentStorage, MiniWebXmlStorage>();

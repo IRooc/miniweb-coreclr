@@ -224,6 +224,11 @@ if (typeof $().modal !== 'function') {
         $('#pageProperties .btn-danger').bind("click", removePage);
         $('#newContentAdd .btn-primary').bind("click", addNewContent);
         $('#newPage').bind('click', addNewPage);
+        $('#navigateOnEnter').bind('keypress', function (e) {
+            if (e.which == 13) {
+                document.location.href = $(this).val();
+            }
+        });
         window.addEventListener('keydown', ctrl_s_save, true);
         $(document).keyup(function (e) {
             if (!document.activeElement.isContentEditable) {

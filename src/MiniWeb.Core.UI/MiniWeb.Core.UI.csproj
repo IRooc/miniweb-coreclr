@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <StaticWebAssetBasePath>/miniweb-resources</StaticWebAssetBasePath>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiniWeb.Core\MiniWeb.Core.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+
+</Project>
