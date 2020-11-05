@@ -110,6 +110,8 @@ namespace SampleWeb
             // Add the loggers.
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
+            
+            app.UseHttpsRedirection();
 
             //current hosting needs this
             app.Map("/emonitor.aspx", context =>

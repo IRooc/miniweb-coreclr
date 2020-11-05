@@ -7,41 +7,44 @@ using System.IO;
 
 namespace SampleWeb
 {
-	public class Program
-	{
-
-	
-    public static void Main(string[] args)
+    public class Program
     {
-        CreateHostBuilder(args).Build().Run();
+
+
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseIISIntegration();
+                    webBuilder.UseConfiguration(new ConfigurationBuilder()
+							.SetBasePath(Directory.GetCurrentDirectory())
+							.AddJsonFile("miniweb.json", optional: true)
+							.AddCommandLine(args)
+							.Build());
+                    webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        var env = hostingContext.HostingEnvironment;
+                        config.AddJsonFile("miniweb.json", optional: true, reloadOnChange: true)
+                              .AddJsonFile($"githubauth.json", optional: true, reloadOnChange: true)
+                              .AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                        config.AddEnvironmentVariables();
+                    });
+                    webBuilder.ConfigureLogging((hostingContext, logging) =>
+                    {
+                        logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                        logging.AddConsole();
+                        if (hostingContext.HostingEnvironment.IsDevelopment())
+                        {
+                            logging.AddDebug();
+                        }
+                    });
+                    webBuilder.UseStartup<Startup>();
+                });
+
     }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-				webBuilder.UseIISIntegration();
-				webBuilder.UseUrls("http://+:5001");
-				webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
-				{
-					var env = hostingContext.HostingEnvironment;
-					config.AddJsonFile("miniweb.json", optional: true, reloadOnChange: true)
-						  .AddJsonFile($"githubauth.json", optional: true, reloadOnChange: true)
-						  .AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-					config.AddEnvironmentVariables();
-				});
-				webBuilder.ConfigureLogging((hostingContext, logging) =>
-				{
-					logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-					logging.AddConsole();
-					if (hostingContext.HostingEnvironment.IsDevelopment())
-					{
-						logging.AddDebug();
-					}
-				});
-                webBuilder.UseStaticWebAssets();
-                webBuilder.UseStartup<Startup>();
-            });
-
-	}
 }
