@@ -36,7 +36,7 @@ namespace MiniWeb.Core
 				url = _webSite.Configuration.DefaultPage;
 			}
 			ISitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
-			if (page.Url != url && $"{page.Url}.{_webSite.Configuration.PageExtension}" != url)
+			if (page.Url != url && $"{page.Url}.{_webSite.Configuration.PageExtension}" != url && (page.Url != "404"))
 			{
 				if (!string.IsNullOrWhiteSpace(_webSite.Configuration.PageExtension))
 				{

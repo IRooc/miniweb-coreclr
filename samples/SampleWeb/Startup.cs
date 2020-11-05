@@ -49,12 +49,10 @@ namespace SampleWeb
                 options.EnableEndpointRouting = false;  //for now...
             });
 
-            //services.AddMiniWeb(Configuration).AddMiniWebEFSqlServerStorage(Configuration);
             services.AddMiniWeb(Configuration, Environment)
                     .AddMiniWebJsonStorage(Configuration)
                     .AddMiniWebAssetFileSystemStorage(Configuration);
 
-            ConfigureMvcParts(services);
             MiniWebAuthentication authConfig = Configuration.Get<MiniWebConfiguration>().Authentication;
             var githubConfig = new GithubAuthConfig();
             Configuration.GetSection("GithubAuth").Bind(githubConfig);
@@ -71,7 +69,6 @@ namespace SampleWeb
             })
             .AddOAuth("Github-Auth", "Login with GitHub account", o =>
             {
-                //o.DisplayName = "Login with GitHub account",
                 o.ClientId = githubConfig.ClientId;
                 o.ClientSecret = githubConfig.ClientSecret;
                 o.CallbackPath = new PathString(githubConfig.CallbackPath);
@@ -114,7 +111,7 @@ namespace SampleWeb
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
 
-            //hosting needs this
+            //current hosting needs this
             app.Map("/emonitor.aspx", context =>
             {
                 context.Run(async ctx =>
@@ -127,21 +124,6 @@ namespace SampleWeb
             //Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
             //app.UseEFMiniWebSite(false);
             app.UseMiniWebSite();
-        }
-
-
-        /// <summary>
-        /// Register AssemblyPart
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="containingClassType"></param>
-        public static void ConfigureMvcParts(IServiceCollection services)
-        {
-            Assembly assembly = typeof(MiniWeb.Core.UI.TagHelpers.MiniWebAdminTagHelper).Assembly;
-            AssemblyPart assemblyPart = new AssemblyPart(assembly);
-            EmbeddedFileProvider fileProvider = new EmbeddedFileProvider(assembly);
-            services.AddControllersWithViews().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));
-            services.Configure<MvcRazorRuntimeCompilationOptions>(options => options.FileProviders.Add(fileProvider));
         }
 
     }
