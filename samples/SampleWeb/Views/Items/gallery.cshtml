@@ -1,6 +1,6 @@
 ﻿@model MiniWeb.Core.IContentItem
 @inject MiniWeb.Core.IMiniWebSite MiniWebSite
-@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment env
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 <article miniweb-template="@Model.Template">
     <h1 miniweb-prop="blogTitle">Foto's</h1>
     <p miniweb-prop="folder" class="miniweb-editonly">/images/gallery/</p>

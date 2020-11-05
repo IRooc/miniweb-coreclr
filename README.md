@@ -59,19 +59,12 @@ For this to work the miniweb taghelpers need to be registered for instance in th
 
 the minimal startup will be something like this:
 ```c#
-public IConfigurationRoot Configuration { get; set; }
+public IConfiguration Configuration { get; set; }
 
-public Startup(IHostingEnvironment env)
-{
-	// Setup configuration sources, not needed if defaults are used
-	var configuration = new ConfigurationBuilder()
-					.SetBasePath(env.ContentRootPath)
-					.AddJsonFile("miniweb.json", optional: true)
-					.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
-					.AddEnvironmentVariables();
-					
+public Startup(IConfiguration configuration)
+{				
 	//Remember Configuration for use in ConfigureServices
-	Configuration = configuration.Build();
+	Configuration = configuration;
 }
 
 public void ConfigureServices(IServiceCollection services)

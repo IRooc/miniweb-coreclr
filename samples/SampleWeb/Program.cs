@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 using System.IO;
 
 namespace SampleWeb
@@ -8,17 +10,38 @@ namespace SampleWeb
 	public class Program
 	{
 
-		public static void Main(string[] args)
-		{
+	
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
 
-			var host = new WebHostBuilder()
-				.UseKestrel()
-				.UseContentRoot(Directory.GetCurrentDirectory())
-				.UseUrls("http://127.0.0.1:5001")
-				.UseIISIntegration()
-				.UseStartup<Startup>()
-				.Build();
-			host.Run();
-		}
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+				webBuilder.UseIISIntegration();
+				webBuilder.UseUrls("http://+:5001");
+				webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+				{
+					var env = hostingContext.HostingEnvironment;
+					config.AddJsonFile("miniweb.json", optional: true, reloadOnChange: true)
+						  .AddJsonFile($"githubauth.json", optional: true, reloadOnChange: true)
+						  .AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+					config.AddEnvironmentVariables();
+				});
+				webBuilder.ConfigureLogging((hostingContext, logging) =>
+				{
+					logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+					logging.AddConsole();
+					if (hostingContext.HostingEnvironment.IsDevelopment())
+					{
+						logging.AddDebug();
+					}
+				});
+                webBuilder.UseStaticWebAssets();
+                webBuilder.UseStartup<Startup>();
+            });
+
 	}
 }
