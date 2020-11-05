@@ -1,8 +1,0 @@
-{
-    "compilerOptions": {
-        "compileOnSave": true,
-        "target": "es5",
-        "module": "commonjs",
-        "sourceMap": false
-    }
-}

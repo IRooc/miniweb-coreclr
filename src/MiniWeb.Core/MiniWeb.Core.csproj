@@ -6,12 +6,7 @@
 		<AssemblyName>MiniWeb.Core</AssemblyName>
 		<OutputType>Library</OutputType>
 		<PackageId>MiniWeb.Core</PackageId>
-        <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Include="Resources\admin.js;Resources\admin.css;Resources\bootstrap-wysiwyg.js;Resources\adminview.cshtml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
