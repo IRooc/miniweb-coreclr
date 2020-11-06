@@ -61,54 +61,43 @@ MiniWeb.Core.UI contains the `<miniwebadmin>` taghelper so the edit UI can be sh
 
 the minimal startup will be something like this:
 ```c#
-public IConfiguration Configuration { get; set; }
-public IWebHostEnvironment Environment { get; set; }
-
-public Startup(IConfiguration configuration, IWebHostEnvironment env)
-{				
-	//Remember Configuration for use in ConfigureServices
-	Configuration = configuration;
-    Environment = env;
-}
-
-public void ConfigureServices(IServiceCollection services)
+public class Startup
 {
-	// Default services used by MiniWeb
- 	services.AddAntiforgery();
-	var builder = services.AddMvc(options =>
+	public IConfiguration Configuration { get; set; }
+	public IWebHostEnvironment Environment { get; set; }
+
+	public Startup(IConfiguration configuration, IWebHostEnvironment env)
+	{				
+		//Remember Configuration for use in ConfigureServices
+		Configuration = configuration;
+		Environment = env;
+	}
+
+	public void ConfigureServices(IServiceCollection services)
 	{
-		options.EnableEndpointRouting = false;  //for now...
-	});
-
-	//register core, storage and filestorage
-	services.AddMiniWeb(Configuration, Environment)
-			.AddMiniWebJsonStorage(Configuration)
-			.AddMiniWebAssetFileSystemStorage(Configuration);
-}
-
-public void Configure(IApplicationBuilder app)
-{
-	// Default middleware used by MiniWeb
-	app.UseDeveloperExceptionPage();
-	app.UseStaticFiles();
-
-	//Registers the miniweb middleware and MVC Routes
-	app.UseMiniWebSite();
-}
-
-//Main entrypoint
-public static void Main(string[] args)
-{
-	CreateHostBuilder(args).Build().Run();
-}
-
-public static IHostBuilder CreateHostBuilder(string[] args) =>
-	Host.CreateDefaultBuilder(args)
-		.ConfigureWebHostDefaults(webBuilder =>
+		// Default services used by MiniWeb
+		services.AddAntiforgery();
+		var builder = services.AddMvc(options =>
 		{
-			webBuilder.UseStartup<Startup>();
+			options.EnableEndpointRouting = false;  //for now...
 		});
 
+		//register core, storage and filestorage
+		services.AddMiniWeb(Configuration, Environment)
+				.AddMiniWebJsonStorage(Configuration)
+				.AddMiniWebAssetFileSystemStorage(Configuration);
+	}
+
+	public void Configure(IApplicationBuilder app)
+	{
+		// Default middleware used by MiniWeb
+		app.UseDeveloperExceptionPage();
+		app.UseStaticFiles();
+
+		//Registers the miniweb middleware and MVC Routes
+		app.UseMiniWebSite();
+	}
+}
 ```
 
 ## Storage
@@ -137,6 +126,7 @@ If you use the JsonStorage example make sure your username password is added to 
 Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.
 
 ## TODO
+* Remove need for `EnableEndpointRouting=false`
 * Remove external UI dependencies
   * Remove Bootstrap if easily possible
   * Remove JQuery dependency to ES6 scripts
