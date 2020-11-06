@@ -60,7 +60,6 @@ namespace SampleWeb
             services.AddAuthentication(c =>
             {
                 c.DefaultScheme = authConfig.AuthenticationScheme;
-                c.RequireAuthenticatedSignIn = false;  //for now
             })
             .AddCookie(authConfig.AuthenticationScheme, o =>
             {
