@@ -125,6 +125,10 @@ body.miniweb-editing img[contenteditable] {
 	display: block;
 }
 
+
+body.miniweb-editing [contenteditable][data-miniwebedittype="html"] {
+	min-height: 180px;
+}
 body.miniweb-editing div[contenteditable] {
 	margin-bottom: 10px;
 }
@@ -134,7 +138,7 @@ body.miniweb-editing [contenteditable] img {
 }
 
 body.miniweb-editing [contenteditable]:before {
-	background: #f4f2dxf;
+	background: #f4f2df;
 	color: #777;
 	content: attr(data-miniwebprop) ": ";
 	white-space: nowrap;
@@ -193,12 +197,11 @@ body.miniweb-editing .miniweb-editing [data-miniwebtemplate] {
 	border: 1px dotted green;
 	overflow: hidden;
 }
-
-body.miniweb-editing [data-miniwebtemplate]:first-child .miniweb-template-actions .btn.articleUp {
+body.miniweb-editing [data-miniwebtemplate]:first-of-type .miniweb-template-actions .btn.articleUp {
 	visibility: hidden;
 }
 /*last child is add content button*/
-body.miniweb-editing [data-miniwebtemplate]:nth-last-child(2) .miniweb-template-actions .btn.articleDown {
+body.miniweb-editing [data-miniwebtemplate]:last-of-type .miniweb-template-actions .btn.articleDown {
 	visibility: hidden;
 }
 
