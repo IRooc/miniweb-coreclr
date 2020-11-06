@@ -126,7 +126,7 @@ If you use the JsonStorage example make sure your username password is added to 
 Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.
 
 ## TODO
-* Remove need for `EnableEndpointRouting=false` (issue #12)
+* Remove need for `RequireAuthenticatedSignIn=false` (issue #12)
 * Remove external UI dependencies
   * Remove Bootstrap if easily possible
   * Remove JQuery dependency to ES6 scripts
