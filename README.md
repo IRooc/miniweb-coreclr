@@ -104,7 +104,7 @@ public class Startup
 Currently there are three storage packages
 * MiniWeb.Storage.JsonStorage
 * MiniWeb.Storage.XmlStorage
-* MiniWeb.Storage.EFStorage (SqlServer)
+* MiniWeb.Storage.EFStorage (SqlServer) not tested on core3 yet
 
 The first two are filesystem stores and store their files in the /App_Data/Sitepages folder
 
