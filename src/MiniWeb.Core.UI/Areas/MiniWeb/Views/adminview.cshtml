@@ -11,7 +11,7 @@
 	</div>
 	<div class="navbar-inner pull-right">
 		<ul class="nav navbar-nav">
-			<li><input type="text" list="pages" class="form-control" id="navigateOnEnter"/><datalist id="pages">
+			<li class="hidden-xs"><input type="text" list="pages" class="form-control" id="navigateOnEnter"/><datalist id="pages">
 				@foreach (var p in MiniWebSite.Pages)
 				{
 					<option value="@(MiniWebSite.GetPageUrl(p))"/>
