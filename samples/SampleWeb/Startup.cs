@@ -2,9 +2,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +26,6 @@ using System.IO;
 
 namespace SampleWeb
 {
-
     public class Startup
     {
         public IConfiguration Configuration { get; set; }
