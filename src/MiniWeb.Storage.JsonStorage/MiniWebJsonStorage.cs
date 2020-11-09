@@ -22,7 +22,7 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public bool Authenticate(string username, string password)
 		{
-			return StorageConfig.Users?.Any(u => string.Compare(u.Key, username, true) == 0 && string.Compare(u.Value, password) == 0) == true;
+			return StorageConfig.Users?.Any(u => string.Compare(u.Key, username, true) == 0 && !string.IsNullOrEmpty(u.Value)  && string.Compare(u.Value, password) == 0) == true;
 		}
 
 		public ISitePage GetSitePageByUrl(string url)
