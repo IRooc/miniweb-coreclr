@@ -51,7 +51,6 @@ namespace MiniWeb.Core
 			return new JsonResult(new { result = false });
 		}
 
-
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveAssets(string virtualFolder, List<IFormFile> files)
@@ -73,6 +72,7 @@ namespace MiniWeb.Core
 			}
 			return new JsonResult(new { result = false });
 		}
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> MultiplePages(List<IFormFile> files, bool force)
@@ -99,6 +99,7 @@ namespace MiniWeb.Core
 			}
 			return new JsonResult(new { result = false });
 		}
+		
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult SavePage([FromForm]SitePageBasicPostModel posted)
