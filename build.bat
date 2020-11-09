@@ -1,10 +1,11 @@
 pushd %~dp0
 
 dotnet restore
-pushd src\MiniWeb.Core\Resources
-call tsc admin.ts
-popd
+
 pushd src\MiniWeb.Core
+dotnet  build
+popd
+pushd src\MiniWeb.Core.UI
 dotnet  build
 popd
 pushd src\MiniWeb.Storage.JsonStorage

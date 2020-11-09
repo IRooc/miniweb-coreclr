@@ -29,7 +29,7 @@ namespace MiniWeb.Core.Tests
 		[Fact]
 		public void Show404Page()
 		{
-			var result = _pageController.Index("/");
+			var result = _pageController.Index("/nonexistent");
 			var viewResult = Assert.IsType<ViewResult>(result);
 			var model = Assert.IsAssignableFrom<ISitePage>(viewResult.ViewData.Model);
 			Assert.Equal("404", model.Url);

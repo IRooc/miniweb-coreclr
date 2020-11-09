@@ -12,7 +12,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * [embedded Razor View](http://irooc.github.io/miniweb-coreclr/embedded-razorviews.html)
 * [embedded assets](http://irooc.github.io/miniweb-coreclr/embedded-assets.html) (css/js)
 
-it currently runs on  1.0.0-rc2-24008 coreclr x64.
+it currently runs on  .net core 3.1.
 Tested on windows, mac osx, linux (ubuntu)
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
@@ -53,71 +53,66 @@ A content item example
 every tag can have a miniweb-prop attribute that will be stored in the content item, edittype is eiter single line or specified as html. 
 For this to work the miniweb taghelpers need to be registered for instance in the /Views/_ViewImports.cshtml
 ```HTML
-@addTagHelper "MiniWeb.Core.*, MiniWeb.Core"
+@addTagHelper MiniWeb.Core.*, MiniWeb.Core
+@addTagHelper MiniWeb.Core.UI.*, MiniWeb.Core.UI
 ```
+MiniWeb.Core.UI contains the `<miniwebadmin>` taghelper so the edit UI can be shown when a user is logged in with the `MiniWeb-CmsRole` role claim
 
 
 the minimal startup will be something like this:
 ```c#
-public IConfigurationRoot Configuration { get; set; }
-
-public Startup(IHostingEnvironment env)
+public class Startup
 {
-	// Setup configuration sources, not needed if defaults are used
-	var configuration = new ConfigurationBuilder()
-					.SetBasePath(env.ContentRootPath)
-					.AddJsonFile("miniweb.json", optional: true)
-					.AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true)
-					.AddEnvironmentVariables();
-					
-	//Remember Configuration for use in ConfigureServices
-	Configuration = configuration.Build();
+	public IConfiguration Configuration { get; set; }
+	public IWebHostEnvironment Environment { get; set; }
+
+	public Startup(IConfiguration configuration, IWebHostEnvironment env)
+	{				
+		//Remember Configuration for use in ConfigureServices
+		Configuration = configuration;
+		Environment = env;
+	}
+
+	public void ConfigureServices(IServiceCollection services)
+	{
+		// Default services used by MiniWeb
+		services.AddAntiforgery();
+		var builder = services.AddMvc(options =>
+		{
+			options.EnableEndpointRouting = false;  //for now...
+		});
+
+		//register core, storage and filestorage
+		services.AddMiniWeb(Configuration, Environment)
+				.AddMiniWebJsonStorage(Configuration)
+				.AddMiniWebAssetFileSystemStorage(Configuration);
+	}
+
+	public void Configure(IApplicationBuilder app)
+	{
+		// Default middleware used by MiniWeb
+		app.UseDeveloperExceptionPage();
+		app.UseStaticFiles();
+
+		//Registers the miniweb middleware and MVC Routes
+		app.UseMiniWebSite();
+	}
 }
-
-public void ConfigureServices(IServiceCollection services)
-{
-	// Default services used by MiniWeb
-	services.AddAntiforgery();
-	services.AddMvc();
-
-    //registers miniweb and json storage provider
-	services.AddMiniWebJsonStorage(Configuration);
-}
-
-public void Configure(IApplicationBuilder app)
-{
-	// Default middleware used by MiniWeb
-	app.UseDeveloperExceptionPage();
-	app.UseStaticFiles();
-
-	//Registers the miniweb middleware and MVC Routes
-	app.UseMiniWebSite();
-}
-
-//Main entrypoint
-public static void Main(string[] args)
-{
-    
-	var host = new WebHostBuilder()
-				.UseKestrel()
-				.UseContentRoot(Directory.GetCurrentDirectory())
-				.UseUrls("http://localhost:5001")
-				.UseIISIntegration()
-				.UseStartup<Startup>()
-				.Build();
-
-	host.Run();
-}
-
 ```
 
 ## Storage
 Currently there are three storage packages
 * MiniWeb.Storage.JsonStorage
 * MiniWeb.Storage.XmlStorage
-* MiniWeb.Storage.EFStorage (SqlServer)
+* MiniWeb.Storage.EFStorage (SqlServer) not tested on core3 yet
 
 The first two are filesystem stores and store their files in the /App_Data/Sitepages folder
+
+## Asset Storage
+File uploads are handled with this package:
+* MiniWeb.AssetStorage.FileSystem
+
+Default stores the files in wwwroot/images so that they are served as well, needs Write rights to do this 
 
 ## Login
 If you use the JsonStorage example make sure your username password is added to the miniweb.json
@@ -128,12 +123,13 @@ If you use the JsonStorage example make sure your username password is added to 
 	}
 }
 ```
+Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.
 
 ## TODO
-* Move JQuery dependency to ES6 scripts
-* Remove Bootstrap if easily possible
-* Update to .netcore 3.0 and revisit current solution.
-* Add clientview to a Razor Pages package
-* Better image handling (enable picking existing images as well)
+* Remove external UI dependencies
+  * Remove Bootstrap if easily possible
+  * Remove JQuery dependency to ES6 scripts
+* Maybe change usage files to a Razor Pages
+
 
 

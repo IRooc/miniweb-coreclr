@@ -7,7 +7,7 @@ namespace MiniWeb.Storage.EFStorage
 {
 	public static class MiniWebEFStorageExtensions
 	{
-		public static IServiceCollection AddMiniWebEFSqlServerStorage(this IServiceCollection services, IConfigurationRoot configuration)
+		public static IServiceCollection AddMiniWebEFSqlServerStorage(this IServiceCollection services, IConfiguration configuration)
 		{		
 			services.AddDbContext<MiniWebEFDbContext>();
 			services.Configure<MiniWebEFStorageConfig>(configuration.GetSection("MiniWebStorage"));

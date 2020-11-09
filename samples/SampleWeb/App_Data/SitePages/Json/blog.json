@@ -1,1 +1,28 @@
-{"Url":"blog","Title":"Blog","Template":"~/Views/Pages/OneColumn.cshtml","Layout":"~/Views/_layout.cshtml","MetaTitle":"Blog test","MetaDescription":"This is a test for a blog, it may take to many steps every time...","Visible":false,"ShowInMenu":false,"SortOrder":2,"Created":"2015-09-17T00:00:00","LastModified":"2017-08-15T13:10:53.3768278+02:00","Sections":[{"Key":"content","Items":[{"Template":"~/Views/Items/bloglist.cshtml","Values":{"blogTitle":"Blog","pageSize":"3"}}]}]}
+{
+  "Url": "blog",
+  "RedirectUrl": null,
+  "Title": "Blog",
+  "Template": "~/Views/Pages/OneColumn.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
+  "MetaTitle": "Blog test",
+  "MetaDescription": "This is a test for a blog, it may take to many steps every time...",
+  "Visible": true,
+  "ShowInMenu": true,
+  "SortOrder": 20,
+  "Created": "2015-09-17T00:00:00",
+  "LastModified": "2020-02-28T10:38:49.6801806+01:00",
+  "Sections": [
+    {
+      "Key": "content",
+      "Items": [
+        {
+          "Template": "~/Views/Items/bloglist.cshtml",
+          "Values": {
+            "blogTitle": "Blog",
+            "pageSize": "3"
+          }
+        }
+      ]
+    }
+  ]
+}

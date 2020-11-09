@@ -48,33 +48,19 @@ namespace MiniWeb.Core.TagHelpers
 				var viewPage = view?.RazorPage as RazorPage<ISitePage>;
 				output.Content.Clear();
 
-				if (viewPage != null)
-				{
-					var sectionContent = await SectionContent(viewPage.Model, Section);
-					output.Content.AppendHtml(sectionContent);
-				}
+				await SectionContent(viewPage.Model, viewPage.Model?.Sections?.FirstOrDefault(s => s?.Key == Section), output);
 			}
-		}
-		private async Task<string> SectionContent(ISitePage sitepage, string section)
-		{
-			if (sitepage?.Sections?.Any(s => s?.Key == section) == true)
-			{
-				return await SectionContent(sitepage, sitepage.Sections.First(s => s.Key == section));
-			}
-			return String.Empty;
 		}
 
-		private async Task<string> SectionContent(ISitePage sitepage, IPageSection model)
+		private async Task SectionContent(ISitePage sitepage, IPageSection model, TagHelperOutput output)
 		{
-			using (StringWriter result = new StringWriter())
+			if (sitepage == null || model == null) return;
+
+			foreach (var item in model.Items)
 			{
-				foreach (var item in model.Items)
-				{
-					item.Page = sitepage;
-					var partial = await _htmlHelper.PartialAsync(item.Template, item);
-					partial.WriteTo(result, HtmlEncoder.Default);
-				}
-				return result.ToString();
+				item.Page = sitepage;
+				var partial = await _htmlHelper.PartialAsync(item.Template, item);
+				output.Content.AppendHtml(partial);
 			}
 		}
 	}
