@@ -45,7 +45,8 @@ namespace SampleWeb
             var builder = services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;  //for now...
-            });
+            })
+            .AddRazorRuntimeCompilation(); //needed for miniweb for now.
 
             services.AddMiniWeb(Configuration, Environment)
                     .AddMiniWebJsonStorage(Configuration)
@@ -122,7 +123,7 @@ namespace SampleWeb
 
             //Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
             //app.UseEFMiniWebSite(false);
-            app.UseMiniWebSite();
+            app.UseMiniWebSite(); 
         }
 
     }

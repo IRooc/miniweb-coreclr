@@ -6,6 +6,8 @@
     <AssemblyName>SampleWeb</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>SampleWeb</PackageId>
+    <!-- do not compile on publish, miniweb expects files to be there physically currently-->
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
   </PropertyGroup>
 
 
