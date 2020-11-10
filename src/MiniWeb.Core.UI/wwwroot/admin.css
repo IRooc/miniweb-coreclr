@@ -357,12 +357,83 @@ body.miniweb-editing .miniweb-asset-pager:hover {
 		padding-right: 15px;
 	}
 
+	miniwebadmin .miniweb-tools  button.icon span,
 	#admin .navbar-inner .btn span {
 		display: none;
 		padding: 0 10px;
 	}
 }
 
+miniwebadmin .modal,
 miniwebadmin .is-hidden {
 	display: none !important;
+}
+
+miniwebadmin .miniweb-tools {
+	position: fixed;
+	display: block;
+	top:0;
+	width: 100%;
+	height: 3.5em;
+	background-color: #f4f2df;
+	font-size: 10pt;
+}
+miniwebadmin .miniweb-tools .miniweb-tool {
+	float: left;
+}
+miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
+	width: 3em;
+	height: 100%;
+	background-color: red;
+}
+miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status.published {
+	background-color: green;
+}
+miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list {
+	list-style: none;
+	padding-left:0;
+}
+miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list li {
+	display: inline-block;
+}
+miniwebadmin .pull-right {
+	float:right!important;
+}
+miniwebadmin .miniweb-tools  button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding-left:15px;
+	position: relative;
+}
+miniwebadmin .miniweb-tools  button:disabled {
+	cursor: default;
+	color: lightgrey;
+}
+miniwebadmin .miniweb-tools  button.icon span{
+	padding-left:20px;
+}
+
+miniwebadmin .icon:before {
+	position: absolute;
+	font-size: 15px;
+	padding-right: 5px;
+	top:-2px;
+}
+
+miniwebadmin .icon.icon-props:before {
+	content: "\2634";
+}
+miniwebadmin .icon.icon-edit:before {
+	content: "\2710";
+}
+miniwebadmin .icon.icon-save:before {
+	content: "\1F5AB";
+	font-weight: 700;
+}
+miniwebadmin .icon.icon-cancel:before {
+	content: "\21ba";
+	font-size: 18px;
+	font-weight: 700;
+	top: -5px;
 }
