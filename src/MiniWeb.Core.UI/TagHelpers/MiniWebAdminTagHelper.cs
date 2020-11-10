@@ -32,8 +32,6 @@ namespace MiniWeb.Core.UI.TagHelpers
             if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
             {
                 output.TagMode = TagMode.StartTagAndEndTag;
-                output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//code.jquery.com/jquery-2.2.4.min.js\"></script>");
-                output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>");
 
                 //add the own contents.
                 var ownContent = await output.GetChildContentAsync();
@@ -47,7 +45,7 @@ namespace MiniWeb.Core.UI.TagHelpers
 
                 if (!IgnoreAdminStart) 
                 {
-                    output.Content.AppendHtml($"<script>$(function(){{ window.currentMiniweb = $('{MiniWebAdminTag}').miniwebAdmin({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\"}});}});</script>");
+                    output.Content.AppendHtml($"<script>window.onload = function(event) {{ window.currentMiniweb = window.miniwebAdmin({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\"}});}};</script>");
                 }
             }
             else

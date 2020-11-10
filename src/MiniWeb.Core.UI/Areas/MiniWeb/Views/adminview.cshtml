@@ -17,14 +17,14 @@
 					<option value="@(MiniWebSite.GetPageUrl(p))"/>
 				}				
 			</datalist></li>
-			<li><button class="btn btn-link" onclick="document.querySelector('body').classList.add('preview')"><span>Preview</span></button></li>
+			<li><button onclick="document.querySelector('body').classList.add('preview')"><span>Preview</span></button></li>
 			<li id="showHiddenPages"><label class="btn btn-link"><input type="checkbox" /> <span>Show hidden pages</span></label></li>
-			<li><button class="btn btn-link" id="newPage"><i class="glyphicon glyphicon-asterisk"></i> <span>New page</span></button></li>
+			<li><button class="icon icon-new" id="btnNew"><span>New page</span></button></li>
 			<li class="divider"></li>
 			<li>
 				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
 					<input type="hidden" name="returnUrl" value="@MiniWebSite.GetPageUrl(Model)" />
-					<button type="submit" title="Signed in as @User.Identity.Name" class="btn btn-link">
+					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout">
 						<span>Sign out&nbsp;</span><i class="glyphicon glyphicon-log-out"></i>
 					</button>
 				</form>
@@ -40,7 +40,7 @@
 			<li><button class="icon icon-cancel"  id="btnCancel" disabled><span>Cancel</span></button></li>
 		</ul>
 	</div>
-	<aside>
+	<aside class="is-hidden">
 		<p class="alert"></p>
 	</aside>
 
@@ -315,5 +315,5 @@
 </div>
 
 <link rel="stylesheet" href="/miniweb-resources/admin.css" />
-<script src="/miniweb-resources/bootstrap-wysiwyg.js" defer></script>
+<!-- <script src="/miniweb-resources/bootstrap-wysiwyg.js" defer></script> -->
 <script src="/miniweb-resources/admin.js" defer></script>
