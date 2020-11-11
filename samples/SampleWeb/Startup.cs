@@ -50,6 +50,7 @@ namespace SampleWeb
 
             services.AddMiniWeb(Configuration, Environment)
                     .AddMiniWebJsonStorage(Configuration)
+            //        .AddMiniWebXmlStorage(Configuration)
                     .AddMiniWebAssetFileSystemStorage(Configuration);
 
             MiniWebAuthentication authConfig = Configuration.Get<MiniWebConfiguration>().Authentication;
