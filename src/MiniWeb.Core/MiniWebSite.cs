@@ -57,6 +57,10 @@ namespace MiniWeb.Core
 			//cannot inject because of circular reference.
 			ContentStorage.MiniWebSite = this;
 			AssetStorage.MiniWebSite = this;
+
+			this.ReloadPages();
+			this.ReloadAssets();
+
 		}
 
 		private ILogger SetupLogging(ILoggerFactory loggerfactory)

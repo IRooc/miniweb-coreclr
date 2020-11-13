@@ -14,14 +14,8 @@ namespace MiniWeb.Core
 		public MiniWebPageController(IMiniWebSite website)
 		{
 			_webSite = website;
-			if (!_webSite.Pages.Any())
-			{
-				_webSite.ReloadPages();
-				_webSite.ReloadAssets();
-			}
 		}
 
-		//[MiniWebUrlConstraint()]
 		public IActionResult Index(string url)
 		{
 			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");

@@ -11,13 +11,11 @@ namespace MiniWeb.Storage.EFStorage
 		{		
 			services.AddDbContext<MiniWebEFDbContext>();
 			services.Configure<MiniWebEFStorageConfig>(configuration.GetSection("MiniWebStorage"));
-			return services.AddSingleton<IMiniWebContentStorage, MiniWebEFStorage>();
+			return services.AddScoped<IMiniWebContentStorage, MiniWebEFStorage>();
 		}
 
 		public static IApplicationBuilder UseEFMiniWebSite(this IApplicationBuilder app)
 		{
-			//validate db is created
-			app.ApplicationServices.GetRequiredService<MiniWebEFDbContext>().Database.EnsureCreated();
 
 			return app.UseMiniWebSite();
 		}

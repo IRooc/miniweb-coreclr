@@ -159,7 +159,7 @@ if (typeof $().modal !== 'function') {
                 showMessage(false, "Something bad happened. Server reported<br/>" + message[1], true);
             });
         }, savePage = function () {
-            var formArr = $(this).closest('#pageProperties').find('form').serializeArray();
+            var formArr = $(this).closest('.modal-content').find('form').serializeArray();
             formArr.push({ name: '__RequestVerificationToken', value: $('#miniweb-templates input[name=__RequestVerificationToken]').val() });
             $.post(options.apiEndpoint + "savepage", formArr).done(function (data) {
                 if (data && data.result) {
@@ -203,7 +203,7 @@ if (typeof $().modal !== 'function') {
                 var parentUrl = $('#pageProperties input[name=Url]').val();
                 $('input[name=Url]', newP).val(parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1));
                 adminTag.append(newP);
-                $('#newPageProperties .btn-primary').bind('click', savePage);
+                $('#newPageProperties .btn-primary').data('newpage', true).bind('click', savePage);
             }
             $('#newPageProperties').modal();
         }, ctrl_s_save = function (event) {
