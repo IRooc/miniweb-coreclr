@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MiniWeb.Core
 {
-    public class MiniWebSite : IMiniWebSite
+	public class MiniWebSite : IMiniWebSite
 	{
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
 		public const string EmbeddedBase64FileInValueRegex = "(data:([^\"]+))";
@@ -20,6 +21,7 @@ namespace MiniWeb.Core
 		public ILogger Logger { get; }
 		public IMiniWebContentStorage ContentStorage { get; }
 		public IMiniWebAssetStorage AssetStorage { get; }
+		public IMemoryCache Cache { get; }
 
 		public IEnumerable<ISitePage> PageHierarchy { get; set; }
 		public IEnumerable<ISitePage> Pages { get; set; }
@@ -43,14 +45,15 @@ namespace MiniWeb.Core
 
 
 		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
-						   IOptions<MiniWebConfiguration> config)
+						   IMemoryCache cache, IOptions<MiniWebConfiguration> config)
 		{
-			Pages = Enumerable.Empty<ISitePage>(); 
+			Pages = Enumerable.Empty<ISitePage>();
 
 			HostingEnvironment = env;
 			Configuration = config.Value;
 			ContentStorage = storage;
 			AssetStorage = assetStorage;
+			Cache = cache;
 			Logger = SetupLogging(loggerfactory);
 
 			//pass on self to storage module
@@ -135,11 +138,21 @@ namespace MiniWeb.Core
 			return ContentStorage.Authenticate(user, password);
 		}
 
-		public void ReloadPages()
+		public void ReloadPages(bool forceReload = false)
 		{
-			Logger?.LogInformation("Reload pages");
-			Pages = ContentStorage.AllPages().ToList();
+			// Look for cache key.
+			if (!forceReload && Cache.TryGetValue("MWPAGES", out IEnumerable<ISitePage> pages))
+			{
+				Logger?.LogInformation("Cached pages");
+				Pages = pages;
+			}
+			else
+			{
+				Logger?.LogInformation("Reload pages");
+				Pages = ContentStorage.AllPages().ToList();
 
+				Cache.Set("MWPAGES", Pages);
+			}
 			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 			foreach (var page in Pages)
 			{
@@ -177,14 +190,14 @@ namespace MiniWeb.Core
 				}
 			}
 			ContentStorage.StoreSitePage(page, currentRequest);
-			ReloadPages();
+			ReloadPages(true);
 		}
 
 		public void DeleteSitePage(ISitePage page)
 		{
 			Logger?.LogInformation($"Deleting page {page.Url}");
 			ContentStorage.DeleteSitePage(page);
-			ReloadPages();
+			ReloadPages(true);
 		}
 
 		public List<IPageSection> GetDefaultContentForTemplate(string template)
@@ -198,12 +211,23 @@ namespace MiniWeb.Core
 		public void DeleteAsset(IAsset asset)
 		{
 			AssetStorage.RemoveAsset(asset);
-			ReloadAssets();
+			ReloadAssets(true);
 		}
-		
-		public void ReloadAssets()
+
+		public void ReloadAssets(bool forceReload = false)
 		{
-			Assets = AssetStorage.GetAllAssets();
+			if (!forceReload && Cache.TryGetValue("MWASSETS", out IEnumerable<IAsset> assets))
+			{
+				Logger?.LogInformation("Cached assets");
+				Assets = assets;
+			}
+			else
+			{
+				Logger?.LogInformation("Reload assets");
+				Assets = AssetStorage.GetAllAssets();
+
+				Cache.Set("MWASSETS", Assets);
+			}
 		}
 
 		public IContentItem DummyContent(string template)
@@ -223,7 +247,8 @@ namespace MiniWeb.Core
 			{
 				string filename = match.Groups[5].Value;
 				string base64String = match.Groups[2].Value;
-				if (!string.IsNullOrWhiteSpace(base64String)) {
+				if (!string.IsNullOrWhiteSpace(base64String))
+				{
 					//byte[] bytes = ConvertToBytes(base64String);
 					var newAsset = AssetStorage.CreateAsset(filename, base64String);
 					//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;

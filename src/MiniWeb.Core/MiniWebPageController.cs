@@ -19,11 +19,6 @@ namespace MiniWeb.Core
 		public IActionResult Index(string url)
 		{
 			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");
-			if (Request.Query["reloadpages"] == "true")
-			{
-				_webSite.ReloadPages();
-				_webSite.ReloadAssets();
-			}
 			if (string.IsNullOrWhiteSpace(url) || url == "/")
 			{
 				_webSite.Logger?.LogDebug("Homepage");
