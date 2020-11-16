@@ -29,7 +29,6 @@ namespace MiniWeb.Core
 
 		public IActionResult LoadAssets()
 		{
-			_webSite.ReloadAssets();
 			return new JsonResult(_webSite.Assets.Select(a => a.VirtualPath));
 		}
 
@@ -37,8 +36,8 @@ namespace MiniWeb.Core
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)
 		{
-			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
-			if (page != null)
+			ISitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
+			if (page != null && page.Url != "404")
 			{
 				_webSite.Logger?.LogInformation($"save PAGE found {page.Url}");
 				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items, _webSite.ContentStorage.JsonInterfaceConverter);
@@ -66,6 +65,7 @@ namespace MiniWeb.Core
 						var fileBytes = ms.ToArray();
 						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, virtualFolder);
 						assets.Add(newAsset);
+						_webSite.ReloadAssets(true);
 					}
 				}
 				return new JsonResult(new { result = true, assets = assets.Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
@@ -146,6 +146,15 @@ namespace MiniWeb.Core
 			_webSite.DeleteSitePage(page);
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
 			return new JsonResult(new { result = true, url = redirectUrl });
+		}
+		
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult ReloadPages()
+		{
+			_webSite.ReloadAssets(true);
+			_webSite.ReloadPages(true);
+			return new JsonResult(new {result=true});
 		}
 	}
 }

@@ -45,12 +45,10 @@ namespace MiniWeb.Core
 
     public static class MiniWebExtensions
     {
-
         public static MiniWebConfiguration GetMiniWebConfig(this IApplicationBuilder app)
         {
             return app.ApplicationServices.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
         }
-
 
         /// <summary>
         /// Registers the miniweb Mvc Routes and Custom Middleware
@@ -101,7 +99,7 @@ namespace MiniWeb.Core
             });
 
             //Setup miniweb injection
-            services.AddSingleton<IMiniWebSite, T1>();
+            services.AddScoped<IMiniWebSite, T1>();
             return services;
         }
     }

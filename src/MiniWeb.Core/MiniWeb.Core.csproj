@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFramework>net5.0</TargetFramework>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 		<AssemblyName>MiniWeb.Core</AssemblyName>
 		<OutputType>Library</OutputType>
@@ -10,9 +10,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="3.1.9" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
 		<PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0" />
@@ -21,11 +21,12 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.9" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.9" />
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.9" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.9" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.9" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
 		<PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
 	</ItemGroup>
 </Project>

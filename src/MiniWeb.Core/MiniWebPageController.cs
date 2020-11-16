@@ -14,22 +14,11 @@ namespace MiniWeb.Core
 		public MiniWebPageController(IMiniWebSite website)
 		{
 			_webSite = website;
-			if (!_webSite.Pages.Any())
-			{
-				_webSite.ReloadPages();
-				_webSite.ReloadAssets();
-			}
 		}
 
-		//[MiniWebUrlConstraint()]
 		public IActionResult Index(string url)
 		{
 			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");
-			if (Request.Query["reloadpages"] == "true")
-			{
-				_webSite.ReloadPages();
-				_webSite.ReloadAssets();
-			}
 			if (string.IsNullOrWhiteSpace(url) || url == "/")
 			{
 				_webSite.Logger?.LogDebug("Homepage");

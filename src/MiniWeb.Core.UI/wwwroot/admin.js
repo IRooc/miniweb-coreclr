@@ -104,15 +104,68 @@
                     items[index].Items.push(item);
                 });
             });
-            showMessage(true, "TEST SUCCESS");
-        };
-        const savePage = function () {
-            var formArr = document.querySelector('#pageProperties form').serializeArray();
-            formArr.push({ name: '__RequestVerificationToken', value: document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]').value });
-            console.log('savePage', formArr);
-        };
-        const removePage = function () {
+            $.post(options.apiEndpoint + 'savecontent', {
+                url: $('#admin').attr('data-miniweb-path'),
+                items: JSON.stringify(items),
+                '__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val()
+            }).done(function (data) {
+                if (data.result) {
+                    showMessage(true, "The page was saved successfully");
+                }
+                else {
+                    showMessage(false, "Save page failed");
+                }
+                cancelEdit();
+            }).fail(function (data) {
+                var message = data.responseText.match('\<div class=\"titleerror\"\>([^\<]+)\</div\>');
+                showMessage(false, "Something bad happened. Server reported<br/>" + message[1], true);
+            });
+        }, savePage = function () {
+            var formArr = $(this).closest('.modal-content').find('form').serializeArray();
+            formArr.push({ name: '__RequestVerificationToken', value: $('#miniweb-templates input[name=__RequestVerificationToken]').val() });
+            $.post(options.apiEndpoint + "savepage", formArr).done(function (data) {
+                if (data && data.result) {
+                    document.location.href = data.url;
+                }
+                else {
+                    showMessage(false, data.message);
+                }
+            }).fail(function (data) {
+                var message = data.responseText.match('\<div class=\"titleerror\"\>([^\<]+)\</div\>');
+                showMessage(false, "Something bad happened. Server reported<br/>" + message[1], true);
+            });
+        }, removePage = function () {
             if (confirm('are you sure?')) {
+                $.post(options.apiEndpoint + "removepage", {
+                    '__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val(),
+                    url: $('#admin').attr('data-miniweb-path')
+                }).done(function (data) {
+                    showMessage(true, "The page was saved successfully");
+                    setTimeout(function () {
+                        document.location.href = data.url;
+                    }, 1500);
+                }).fail(function (data) {
+                    var message = data.responseText.match('\<div class=\"titleerror\"\>([^\<]+)\</div\>');
+                    showMessage(false, "Something bad happened. Server reported<br/>" + message[1], true);
+                });
+            }
+        }, addNewContent = function () {
+            var htmlid = $(this).data('contentid');
+            var target = $(this).closest('#newContentAdd').attr('data-targetsection');
+            $('[data-miniwebsection=' + target + ']').append($('#' + htmlid).html());
+            cancelEdit();
+            editContent();
+            $('#newContentAdd').modal('hide');
+        }, addNewPage = function () {
+            if ($('#newPageProperties').length == 0) {
+                var newP = $('#pageProperties').clone();
+                newP.attr('id', 'newPageProperties');
+                $('input[name=OldUrl]', newP).remove();
+                $('input,textarea', newP).not('[type=hidden],[type=checkbox]').val('');
+                var parentUrl = $('#pageProperties input[name=Url]').val();
+                $('input[name=Url]', newP).val(parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1));
+                adminTag.append(newP);
+                $('#newPageProperties .btn-primary').data('newpage', true).bind('click', savePage);
             }
         };
         const addNewContent = function () {
