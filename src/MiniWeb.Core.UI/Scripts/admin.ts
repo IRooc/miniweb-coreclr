@@ -39,6 +39,7 @@ interface Window { miniwebAdmin: any; }
 
 		let contentEditables: NodeListOf<Element>;
 		let btnNew: Element;
+		let btnSavePage: Element;
 		let btnEdit: Element;
 		let btnSave: Element;
 		let btnCancel: Element;
@@ -186,7 +187,7 @@ interface Window { miniwebAdmin: any; }
 				});
 			});
 
-			//console.log(JSON.stringify(items));
+			console.log(JSON.stringify(items));
 			showMessage(true, "TEST SUCCESS");
 			// $.post(options.apiEndpoint + 'savecontent', {
 			// 	url: $('#admin').attr('data-miniweb-path'),
@@ -207,9 +208,29 @@ interface Window { miniwebAdmin: any; }
 
 		};
 		const savePage = function () {
-			var formArr = (<HTMLFormElement>document.querySelector('#pageProperties form')).serializeArray();
-			formArr.push({ name: '__RequestVerificationToken', value: (<HTMLInputElement>document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]')).value });
-			console.log('savePage', formArr);
+			const form = (<HTMLFormElement>document.querySelector('#pageProperties form'));
+			const items = form.querySelectorAll('select,input,textarea');
+			let formArr = new FormData();
+			items.forEach((el: HTMLInputElement, ix) => {
+				console.log(el.getAttribute('name'), el.value);
+				formArr.append(el.getAttribute('name'), el.value);
+			});
+			formArr.append('__RequestVerificationToken', (<HTMLInputElement>document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]')).value);
+			console.log('savePage', options.apiEndpoint, formArr);
+			fetch(options.apiEndpoint + "savepage", {
+				method: "POST",				
+				body: formArr
+			}).then(res => res.json())
+			.then(data => {
+				if (data.result) {
+					showMessage(true, "saved page successfully");
+					document.querySelector('.modal.show').classList.remove('show');
+				} else { 
+					showMessage(false, data.message);
+				}
+			}).catch(res => {
+				showMessage(false, 'failed to post');
+			});
 			// $.post(options.apiEndpoint + "savepage",
 			// 	formArr
 			// ).done(function (data) {
@@ -270,13 +291,40 @@ interface Window { miniwebAdmin: any; }
 			}
 		};
 
+		const modalTriggers = document.querySelectorAll('[data-show-modal]');
+		modalTriggers.forEach((t, i) => {
+			t.addEventListener('click', (e) => {
+				if (e.target instanceof Element) {
+					const modalTargetSelector = (e.target as HTMLElement).dataset.showModal;
+					const modalTarget = document.querySelector(modalTargetSelector) as HTMLElement;
+					if (modalTarget) {
+						modalTarget.classList.contains('show') ? modalTarget.classList.remove('show') : modalTarget.classList.add('show');
+					}
+				}
+			});
+		});
+
+		const modalDismiss = document.querySelectorAll('[data-dismiss]');
+		modalDismiss.forEach((t, i) => {
+			t.addEventListener('click', (e) => {
+				if (e.target instanceof Element) {
+					const modalTargetSelector = (e.target as HTMLElement).dataset.dismiss;
+					const modalTarget = document.querySelector(modalTargetSelector) as HTMLElement;
+					if (modalTarget) {
+						modalTarget.classList.remove('show');
+					}
+				}
+			});
+		});
 
 		btnNew = document.getElementById("btnNew");
+		btnSavePage = document.getElementById("miniwebSavePage");
 		btnEdit = document.getElementById("btnEdit");//.bind("click", editContent);
 		btnSave = document.getElementById("btnSave");//.bind("click", saveContent);
 		btnCancel = document.getElementById("btnCancel");//.bind("click", cancelEdit);
 		contentEditables = document.querySelectorAll('[data-miniwebprop]');
 
+		btnSavePage.addEventListener('click', savePage);
 		btnEdit.addEventListener('click', editContent);
 		btnSave.addEventListener('click', saveContent);
 		btnCancel.addEventListener('click', cancelEdit);
@@ -348,7 +396,7 @@ interface Window { miniwebAdmin: any; }
 			.replace(/</g, '<');
 	}
 
-	var txtMessage = document.querySelector("#admin .alert");
+	var txtMessage = document.querySelector("miniwebadmin .alert");
 	var showMessage = function (success: boolean, message: string, isHtml: boolean = false) {
 		var className = success ? "alert-success" : "alert-danger";
 		var timeout = success ? 4000 : 8000;
@@ -591,7 +639,7 @@ interface Window { miniwebAdmin: any; }
 	};
 
 	document.querySelector('#showHiddenPages input').addEventListener('click', (e) => {
-		sessionStorage.setItem('showhiddenpages', (<HTMLInputElement>(e.target)).checked ? "true" : "false" );
+		sessionStorage.setItem('showhiddenpages', (<HTMLInputElement>(e.target)).checked ? "true" : "false");
 		//$('.miniweb-hidden-menu').toggle($(this).is(':checked'));
 	});
 	// if (sessionStorage.getItem('showhiddenpages') === "true") {

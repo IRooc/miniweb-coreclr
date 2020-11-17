@@ -17,32 +17,27 @@
 					<option value="@(MiniWebSite.GetPageUrl(p))"/>
 				}				
 			</datalist></li>
-			<li><button onclick="document.querySelector('body').classList.add('preview')"><span>Preview</span></button></li>
-			<li id="showHiddenPages"><label class="btn btn-link"><input type="checkbox" /> <span>Show hidden pages</span></label></li>
-			<li><button class="icon icon-new" id="btnNew"><span>New page</span></button></li>
+			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
+			<li id="showHiddenPages"><label class="btn btn-link"><input type="checkbox" /><span class="hidden-xs">Show hidden pages</span></label></li>
+			<li><button class="icon icon-new" id="btnNew">New page</button></li>
 			<li class="divider"></li>
 			<li>
 				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
 					<input type="hidden" name="returnUrl" value="@MiniWebSite.GetPageUrl(Model)" />
-					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout">
-						<span>Sign out&nbsp;</span><i class="glyphicon glyphicon-log-out"></i>
-					</button>
+					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout">Sign out</button>
 				</form>
 			</li>
 		</ul>
 	</div>
 	<div class="miniweb-tool">
 		<ul class="miniweb-horizontal-list">
-			<li><button class="icon icon-props" data-toggle="modal" data-target="#pageProperties"><span>Page properties</span></button></li>
+			<li><button class="icon icon-props" data-show-modal="#pageProperties">Page properties</button></li>
 			<li class="divider"></li>
-			<li><button class="icon icon-edit" id="btnEdit"><span>Edit Content</span></button></li>
-			<li><button class="icon icon-save" id="btnSave" disabled><span>Save Content</span></button></li>
-			<li><button class="icon icon-cancel"  id="btnCancel" disabled><span>Cancel</span></button></li>
+			<li><button class="icon icon-edit" id="btnEdit">Edit Content</button></li>
+			<li><button class="icon icon-save" id="btnSave" disabled>Save Content</button></li>
+			<li><button class="icon icon-cancel"  id="btnCancel" disabled>Cancel</button></li>
 		</ul>
 	</div>
-	<aside class="is-hidden">
-		<p class="alert"></p>
-	</aside>
 
 	<!--Html Tools-->
 	<div id="tools" data-role="editor-toolbar">
@@ -87,105 +82,80 @@
 		</div>
 	</div>
 </nav>
+<aside class="is-hidden">
+	<p class="alert"></p>
+</aside>
 
 <!-- Modal -->
-<div class="modal fade" id="pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
-	<div class="modal-dialog miniweb">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalPageLabel">Page properties</h4>
+<div class="modal" id="pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h4 class="modal-title" id="myModalPageLabel">Page properties</h4>
+			<button type="button" class="icon right" data-dismiss=".modal">&times;</button>
+		</div>
+		<form>
+			<input type="hidden" name="OldUrl" value="@Model.Url" />
+			<input type="hidden" name="Layout" value="@Model.Layout" />
+			<div class="form-group">
+				<label for="name">Page name</label>
+				<input type="text" id="name" name="Title" placeholder="Page name" value="@Model.Title">
 			</div>
-			<form class="form-horizontal">
-				<div class="modal-body">
-					<input type="hidden" name="OldUrl" value="@Model.Url" />
-					<input type="hidden" name="Layout" value="@Model.Layout" />
-					<div class="form-group">
-						<label for="name" class="col-sm-4 control-label">Page name</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="name" name="Title" placeholder="Page name" value="@Model.Title">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="metatitle" class="col-sm-4 control-label">Browser title</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="metatitle" name="MetaTitle" placeholder="Browser title" value="@Model.MetaTitle">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="metadescription" class="col-sm-4 control-label">Meta description</label>
-						<div class="col-sm-8">
-							<textarea type="text" class="form-control" id="metadescription" name="MetaDescription" placeholder="Meta description" value="">@Model.MetaDescription</textarea>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="template" class="col-sm-4 control-label">Template</label>
-						<div class="col-sm-8">
-							<select name="Template" id="template" data-curval="@Model.Template">
-								@foreach (var s in MiniWebSite.PageTemplates)
-								{
-									<option value="@s" @(s.ToLowerInvariant() == Model.Template.ToLowerInvariant() ? "selected=\"selected\"" : "")>@s.Substring(s.LastIndexOf("/") + 1)</option>
-								}
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-8 col-sm-offset-4">
-							<label class="control-label">
-								<input type="checkbox" id="visible" name="Visible" @(Model.Visible ? "checked=\"checked\"" : "") value="true">
-								Visible
-							</label>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-8 col-sm-offset-4">
-							<label class="control-label">
-								<input type="checkbox" id="ShowInMenu" name="ShowInMenu" @(Model.ShowInMenu ? "checked=\"checked\"" : "") value="true">
-								Show in menu
-							</label>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="Sortorder" class="col-sm-4 control-label">Sortorder</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="Sortorder" name="Sortorder" placeholder="Sortorder" value="@Model.SortOrder">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">Url</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<span class="input-group-addon">/</span>
-								<input type="text" class="form-control" id="url" name="Url" placeholder="url" value="@Model.Url">
-								<span class="input-group-addon">.@MiniWebSite.Configuration.PageExtension</span>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">RedirectUrl</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<span class="input-group-addon">/</span>
-								<input type="text" class="form-control" id="url" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl">
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-			<div class="modal-footer">
-				<div class="is-hidden">
-					<form>
-						<input type="file" multiple name="files" class="add-multiplepages" style="position:absolute;width:0;height:0"/>
-						<label>force<input type="checkbox" name="force" value="true"/></label>
-						<button type="button" class="btn btn-default add-multiplepages">Upload Pages</button>
-					</form>
-				</div>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-danger">Delete Page</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
+			<div class="form-group">
+				<label for="metatitle">Browser title</label>
+				<input type="text" id="metatitle" name="MetaTitle" placeholder="Browser title" value="@Model.MetaTitle">
 			</div>
+			<div class="form-group">
+				<label for="metadescription">Meta description</label>
+				<textarea type="text" id="metadescription" name="MetaDescription" placeholder="Meta description" value="">@Model.MetaDescription</textarea>
+			</div>
+			<div class="form-group">
+				<label for="template">Template</label>
+				<select name="Template" id="template" data-curval="@Model.Template">
+					@foreach (var s in MiniWebSite.PageTemplates)
+					{
+						<option value="@s" @(s.ToLowerInvariant() == Model.Template.ToLowerInvariant() ? "selected=\"selected\"" : "")>@s.Substring(s.LastIndexOf("/") + 1)</option>
+					}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="visible">Visible</label>
+				<input type="checkbox" id="visible" name="Visible" @(Model.Visible ? "checked=\"checked\"" : "") value="true">
+			</div>
+			<div class="form-group">
+				<label for="ShowInMenu">Show in menu</label>
+				<input type="checkbox" id="ShowInMenu" name="ShowInMenu" @(Model.ShowInMenu ? "checked=\"checked\"" : "") value="true">						
+			</div>
+			<div class="form-group">
+				<label for="Sortorder"">Sortorder</label>
+				<input type="text" id="Sortorder" name="Sortorder" placeholder="Sortorder" value="@Model.SortOrder">
+			</div>
+			<div class="form-group">
+				<label for="url">Url</label>
+				<div class="input-group">
+					<span class="input-group-addon">/</span>
+					<input type="text" id="url" name="Url" placeholder="url" value="@Model.Url">
+					<span class="input-group-addon">.@MiniWebSite.Configuration.PageExtension</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="url">RedirectUrl</label>
+				<input type="text" id="url" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl">
+			</div>
+		</form>
+		<div class="modal-footer">
+			<div class="is-hidden">
+				<form>
+					<input type="file" multiple name="files" class="add-multiplepages" style="position:absolute;width:0;height:0"/>
+					<label>force<input type="checkbox" name="force" value="true"/></label>
+					<button type="button" class="btn btn-default add-multiplepages">Upload Pages</button>
+				</form>
+			</div>
+			<button type="button" class="btn btn-default" data-dismiss=".modal">Close</button>
+			<button type="button" class="btn btn-danger">Delete Page</button>
+			<button type="button" id="miniwebSavePage">Save properties</button>
 		</div>
 	</div>
+
 </div>
 
 <div class="modal fade" id="addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">

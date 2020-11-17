@@ -1,15 +1,15 @@
 {
-	"Url": "home",
-	"Title": "Home",
-	"Template": "~/Views/Pages/OneColumn.cshtml",
-	"Layout": "~/Views/_home.cshtml",
-	"MetaTitle": "Home title!",
-	"MetaDescription": "Home is where the json is",
-	"Visible": true,
-	"ShowInMenu": true,
-	"SortOrder": 1,
-	"Created": "0001-01-01T00:00:00",
-	"LastModified": "2017-08-15T13:29:18.4171284+02:00",
-	"Sections": [
-	]
+  "Url": "home",
+  "RedirectUrl": null,
+  "Title": "Home",
+  "Template": "~/Views/Pages/OneColumn.cshtml",
+  "Layout": "~/Views/_home.cshtml",
+  "MetaTitle": "Home title!",
+  "MetaDescription": "Hello homepage",
+  "Visible": true,
+  "ShowInMenu": true,
+  "SortOrder": 0,
+  "Created": "0001-01-01T00:00:00",
+  "LastModified": "2020-11-17T10:05:44.3071121+01:00",
+  "Sections": []
 }

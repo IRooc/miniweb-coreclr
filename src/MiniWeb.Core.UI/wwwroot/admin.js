@@ -32,6 +32,7 @@
         var options = extend(miniwebAdminDefaults, userOptions);
         let contentEditables;
         let btnNew;
+        let btnSavePage;
         let btnEdit;
         let btnSave;
         let btnCancel;
@@ -104,68 +105,37 @@
                     items[index].Items.push(item);
                 });
             });
-            $.post(options.apiEndpoint + 'savecontent', {
-                url: $('#admin').attr('data-miniweb-path'),
-                items: JSON.stringify(items),
-                '__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val()
-            }).done(function (data) {
-                if (data.result) {
-                    showMessage(true, "The page was saved successfully");
-                }
-                else {
-                    showMessage(false, "Save page failed");
-                }
-                cancelEdit();
-            }).fail(function (data) {
-                var message = data.responseText.match('\<div class=\"titleerror\"\>([^\<]+)\</div\>');
-                showMessage(false, "Something bad happened. Server reported<br/>" + message[1], true);
+            console.log(JSON.stringify(items));
+            showMessage(true, "TEST SUCCESS");
+        };
+        const savePage = function () {
+            const form = document.querySelector('#pageProperties form');
+            const items = form.querySelectorAll('select,input,textarea');
+            let formArr = new FormData();
+            items.forEach((el, ix) => {
+                console.log(el.getAttribute('name'), el.value);
+                formArr.append(el.getAttribute('name'), el.value);
             });
-        }, savePage = function () {
-            var formArr = $(this).closest('.modal-content').find('form').serializeArray();
-            formArr.push({ name: '__RequestVerificationToken', value: $('#miniweb-templates input[name=__RequestVerificationToken]').val() });
-            $.post(options.apiEndpoint + "savepage", formArr).done(function (data) {
-                if (data && data.result) {
-                    document.location.href = data.url;
+            formArr.append('__RequestVerificationToken', document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]').value);
+            console.log('savePage', options.apiEndpoint, formArr);
+            fetch(options.apiEndpoint + "savepage", {
+                method: "POST",
+                body: formArr
+            }).then(res => res.json())
+                .then(data => {
+                if (data.result) {
+                    showMessage(true, "saved page successfully");
+                    document.querySelector('.modal.show').classList.remove('show');
                 }
                 else {
                     showMessage(false, data.message);
                 }
-            }).fail(function (data) {
-                var message = data.responseText.match('\<div class=\"titleerror\"\>([^\<]+)\</div\>');
-                showMessage(false, "Something bad happened. Server reported<br/>" + message[1], true);
+            }).catch(res => {
+                showMessage(false, 'failed to post');
             });
-        }, removePage = function () {
+        };
+        const removePage = function () {
             if (confirm('are you sure?')) {
-                $.post(options.apiEndpoint + "removepage", {
-                    '__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val(),
-                    url: $('#admin').attr('data-miniweb-path')
-                }).done(function (data) {
-                    showMessage(true, "The page was saved successfully");
-                    setTimeout(function () {
-                        document.location.href = data.url;
-                    }, 1500);
-                }).fail(function (data) {
-                    var message = data.responseText.match('\<div class=\"titleerror\"\>([^\<]+)\</div\>');
-                    showMessage(false, "Something bad happened. Server reported<br/>" + message[1], true);
-                });
-            }
-        }, addNewContent = function () {
-            var htmlid = $(this).data('contentid');
-            var target = $(this).closest('#newContentAdd').attr('data-targetsection');
-            $('[data-miniwebsection=' + target + ']').append($('#' + htmlid).html());
-            cancelEdit();
-            editContent();
-            $('#newContentAdd').modal('hide');
-        }, addNewPage = function () {
-            if ($('#newPageProperties').length == 0) {
-                var newP = $('#pageProperties').clone();
-                newP.attr('id', 'newPageProperties');
-                $('input[name=OldUrl]', newP).remove();
-                $('input,textarea', newP).not('[type=hidden],[type=checkbox]').val('');
-                var parentUrl = $('#pageProperties input[name=Url]').val();
-                $('input[name=Url]', newP).val(parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1));
-                adminTag.append(newP);
-                $('#newPageProperties .btn-primary').data('newpage', true).bind('click', savePage);
             }
         };
         const addNewContent = function () {
@@ -181,11 +151,37 @@
                 ;
             }
         };
+        const modalTriggers = document.querySelectorAll('[data-show-modal]');
+        modalTriggers.forEach((t, i) => {
+            t.addEventListener('click', (e) => {
+                if (e.target instanceof Element) {
+                    const modalTargetSelector = e.target.dataset.showModal;
+                    const modalTarget = document.querySelector(modalTargetSelector);
+                    if (modalTarget) {
+                        modalTarget.classList.contains('show') ? modalTarget.classList.remove('show') : modalTarget.classList.add('show');
+                    }
+                }
+            });
+        });
+        const modalDismiss = document.querySelectorAll('[data-dismiss]');
+        modalDismiss.forEach((t, i) => {
+            t.addEventListener('click', (e) => {
+                if (e.target instanceof Element) {
+                    const modalTargetSelector = e.target.dataset.dismiss;
+                    const modalTarget = document.querySelector(modalTargetSelector);
+                    if (modalTarget) {
+                        modalTarget.classList.remove('show');
+                    }
+                }
+            });
+        });
         btnNew = document.getElementById("btnNew");
+        btnSavePage = document.getElementById("miniwebSavePage");
         btnEdit = document.getElementById("btnEdit");
         btnSave = document.getElementById("btnSave");
         btnCancel = document.getElementById("btnCancel");
         contentEditables = document.querySelectorAll('[data-miniwebprop]');
+        btnSavePage.addEventListener('click', savePage);
         btnEdit.addEventListener('click', editContent);
         btnSave.addEventListener('click', saveContent);
         btnCancel.addEventListener('click', cancelEdit);
@@ -201,7 +197,7 @@
             .replace(/>/g, '>')
             .replace(/</g, '<');
     };
-    var txtMessage = document.querySelector("#admin .alert");
+    var txtMessage = document.querySelector("miniwebadmin .alert");
     var showMessage = function (success, message, isHtml = false) {
         var className = success ? "alert-success" : "alert-danger";
         var timeout = success ? 4000 : 8000;

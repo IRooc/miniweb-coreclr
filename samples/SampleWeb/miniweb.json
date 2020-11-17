@@ -21,6 +21,7 @@
 		"EnableFile": false,
 		"LogLevel": {
 			"Default": "Warning",
+			"Microsoft.Hosting.Lifetime": "Information",
 			"MiniWeb": "Information"
 		}
 	}
