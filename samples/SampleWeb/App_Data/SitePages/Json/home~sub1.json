@@ -5,12 +5,12 @@
   "Template": "~/Views/Pages/TwoColumn.cshtml",
   "Layout": "~/Views/_layout.cshtml",
   "MetaTitle": "Subpage 1",
-  "MetaDescription": "Sub page of home",
+  "MetaDescription": "Sub page of homepage",
   "Visible": true,
   "ShowInMenu": true,
   "SortOrder": 1,
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2019-10-21T13:51:22.3127845+02:00",
+  "LastModified": "2020-11-17T17:05:30.5336335+01:00",
   "Sections": [
     {
       "Key": "content",
@@ -33,6 +33,14 @@
             "title": "Aside 1",
             "content": "Test content a<b>aa</b>  for aside",
             "other": "Abcdefg hijkl dsafdsa<br />fdas<br />fdsafdsafdsa<br />fsdafsadfdsaasdfsad<br /><br />fdsafsdafdsafdasfas"
+          }
+        },
+        {
+          "Template": "~/Views/Items/aside.cshtml",
+          "Values": {
+            "title": "Enter title",
+            "content": "Enter content",
+            "other": "Enter other"
           }
         }
       ]

@@ -9,9 +9,12 @@ body.preview {
 body.preview miniwebadmin {
 	display: none;
 }
+miniwebadmin * {
+	font-family: Arial, Helvetica, sans-serif
+}
 
 miniwebadmin #miniweb-templates,
-miniwebadmin .modal,
+miniwebadmin .mw-modal,
 miniwebadmin #tools {display: none;}
 miniwebadmin .is-hidden {
 	display: none !important;
@@ -35,25 +38,26 @@ miniwebadmin > aside .alert.alert-success {
 }
 
 
-miniwebadmin .modal.show {
+miniwebadmin .mw-modal.show {
 	display: block !important;
 	position: fixed;
-	top: 3em;
+	top: 3.3em;
 	left: 0;
 	width: 100%; 
 	height: 100%;
 	background-color: rgba(0,0,0,0.7);
 	z-index: 10;
 }
-miniwebadmin .modal .modal-content {
-	width: 30em;
+miniwebadmin .mw-modal .mw-modal-content {
+	width: 40em;
 	background-color: white;
 	height: 100%;
 	position: absolute;
 	top:0;
 	left:0;
+	padding-left: 40px;
 }
-miniwebadmin .modal .modal-content .right {
+miniwebadmin .mw-modal .mw-modal-content .right {
 	position: absolute;
 	right: 0;
 	top:0;
@@ -91,7 +95,9 @@ miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status.published {
 }
 miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list {
 	list-style: none;
+	margin: 0.5em 0;
 	padding-left:0;
+	display: inline-block;
 }
 miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list li {
 	display: inline-block;
@@ -166,6 +172,7 @@ miniwebadmin .form-group label {
 	display: inline-block;
 	width: 30%;
 	font-size: 12px;
+	font-weight: normal;
 }
 miniwebadmin .form-group label + input {
 	width:60%
@@ -174,8 +181,69 @@ miniwebadmin .form-group .input-group {
 	display: inline-block;	
 	width:60%
 }
+miniwebadmin .form-group .input-group .addon {
+	display: inline-block;
+}
+miniwebadmin .form-group .input-group .addon + input {
+	width: 80%
+}
+
+.miniweb-hidden-menu {
+	display: none!important;
+}
+.miniweb-hidden-menu.show {
+	display: unset!important;
+}
+
+.miniweb-editing [data-miniwebtemplate] {
+	overflow: hidden;
+	border-bottom: 1px dashed black;
+	margin-bottom: 5px;
+	padding:1px;
+}
+
+.miniweb-editing [contenteditable] {
+	outline: thin dashed #ccc;
+	width: 100%;
+	display: inline-block;
+}
+.miniweb-editing [contenteditable]:before {
+	background: #f4f2df;
+	color: #777;
+	content: attr(data-miniwebprop) ": ";
+	white-space: nowrap;
+	margin: 0 5px 0 0;
+}
+
+.miniweb-editing div[contenteditable]:before {
+	display: block;
+	margin: 0;
+}
+
+.miniweb-editing .miniweb-template-actions button {
+	background:none;
+	border:none;
+	color: darkblue;
+	font-size: 2rem;
+}
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup {
+	display: inline-block;
+}
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button {
+	margin: 0;
+	padding: 2px;
+	display: inline-block;
+	width: 25px;
+	border: 1px solid lightslategray;
+	background-color: white;
+	color: lightslategray;
+	border-radius: 12px;
+}
 
 
+.miniweb-editing button.danger {
+	color:red;
+}
 
 @media (max-width: 1024px) {
 	miniwebadmin .miniweb-tools  button.icon  {
@@ -202,4 +270,25 @@ miniwebadmin .form-group .input-group {
 		width: 90%;
 		left:5%;
 	}
+}
+
+
+
+/**/
+
+.miniweb-hidden-menu {
+	display: none;
+
+}
+
+.miniweb-hidden-menu a:before {
+content: '[';
+}
+
+.miniweb-hidden-menu a:after {
+content: ']';
+}
+
+.miniweb-hidden-menu > a {
+	color: grey!important;
 }
