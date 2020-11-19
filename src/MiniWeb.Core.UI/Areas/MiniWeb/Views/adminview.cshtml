@@ -160,16 +160,13 @@
 		<form >
 			<div class="form-group">
 				<label for="url" class="col-sm-4 control-label">Internal URL</label>
-				<div class="input-group">
-					<span class="addon">/</span>
-					<select name="InternalUrl">
-						<option value="">Choose url or enter custom</option>
-						@foreach (var p in MiniWebSite.Pages)
-						{
-							<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
-						}
-					</select>
-				</div>
+				<select name="InternalUrl">
+					<option value="">Choose url or enter custom</option>
+					@foreach (var p in MiniWebSite.Pages)
+					{
+						<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
+					}
+				</select>
 			</div>
 			<div class="form-group">
 				<label for="url" class="col-sm-4 control-label">Custom URL</label>

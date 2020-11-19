@@ -242,15 +242,25 @@
         });
         const addLink = function () {
             const modal = document.getElementById('miniweb-addHyperLink');
+            let href = modal.querySelector('[name="InternalUrl"]').value;
+            if (!href)
+                href = modal.querySelector('[name="Url"]').value;
             if (modal.dataset.linkType == 'HTML') {
-                let href = modal.querySelector('[name="InternalUrl"]').value;
-                if (!href)
-                    href = modal.querySelector('[name="Url"]').value;
                 restoreSelection();
                 document.execCommand("unlink", false, null);
                 document.execCommand("createLink", false, href);
-                modal.classList.remove('show');
             }
+            else if (modal.dataset.linkType == "URL") {
+                const index = modal.dataset.linkIndex;
+                console.log('add link to', index);
+                const el = contentEditables[index];
+                el.innerText = href;
+            }
+            modal.classList.remove('show');
+            delete modal.dataset.linkIndex;
+            delete modal.dataset.linkType;
+            modal.querySelector('[name="InternalUrl"]').value = null;
+            modal.querySelector('[name="Url"]').value = null;
         };
         btnNew = document.getElementById("miniwebButtonNew");
         btnSavePage = document.getElementById("miniwebSavePage");
@@ -358,7 +368,7 @@
                                     saveSelection();
                                     const modal = document.getElementById('miniweb-addHyperLink');
                                     if (selectedRange.commonAncestorContainer.parentNode.tagName == 'A') {
-                                        var curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
+                                        const curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
                                         if (curHref.indexOf('http') == 0) {
                                             modal.querySelector('[name="Url"]').value = curHref;
                                         }
@@ -379,14 +389,30 @@
             },
             {
                 key: 'asset',
-                editStart: function (index) {
+                editStart: function (element, index) {
                 },
                 editEnd: function (index) {
                 }
             },
             {
                 key: 'url',
-                editStart: function (index) {
+                editStart: function (element, index) {
+                    element.addEventListener('click', (e) => {
+                        console.log('urlclick', e, element, index);
+                        if (e.offsetX > element.offsetWidth) {
+                            const modal = document.getElementById('miniweb-addHyperLink');
+                            const curHref = element.innerText;
+                            if (curHref.indexOf('http') == 0) {
+                                modal.querySelector('[name="Url"]').value = curHref;
+                            }
+                            else {
+                                modal.querySelector('[name="InternalUrl"]').value = curHref;
+                            }
+                            modal.dataset.linkType = 'URL';
+                            modal.dataset.linkIndex = index;
+                            modal.classList.add("show");
+                        }
+                    });
                 },
                 editEnd: function (index) {
                 }

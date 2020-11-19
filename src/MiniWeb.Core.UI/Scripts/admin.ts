@@ -328,14 +328,23 @@ interface Window { miniwebAdmin: any; }
 		});
 		const addLink = function(){
 			const modal = document.getElementById('miniweb-addHyperLink');
+			let href = (<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value;
+			if(!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
 			if (modal.dataset.linkType == 'HTML') {
-				let href = (<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value;
-				if(!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
 				restoreSelection();
 				document.execCommand("unlink", false, null);
 				document.execCommand("createLink", false, href);
-				modal.classList.remove('show');
-			}
+			} else if (modal.dataset.linkType == "URL") {
+				const index = modal.dataset.linkIndex;
+				console.log('add link to', index)
+				const el = <HTMLElement> contentEditables[index];
+				el.innerText = href;
+			}	
+			modal.classList.remove('show');
+			delete modal.dataset.linkIndex;
+			delete modal.dataset.linkType;
+			(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = null;
+			(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = null;
 		}
 
 		btnNew = document.getElementById("miniwebButtonNew");
@@ -634,7 +643,7 @@ interface Window { miniwebAdmin: any; }
 									saveSelection();
 									const modal = document.getElementById('miniweb-addHyperLink');
 									if(selectedRange.commonAncestorContainer.parentNode.tagName == 'A'){
-										var curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
+										const curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
 										if (curHref.indexOf('http') == 0) {
 											(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
 										} else {
@@ -654,7 +663,7 @@ interface Window { miniwebAdmin: any; }
 			},
 			{
 				key: 'asset',
-				editStart: function (index) {
+				editStart: function (element: HTMLElement, index) {
 					// $(this).addClass('miniweb-asset-edit').unbind('click').click(function (e) {
 					// 	var $el = $(this);
 					// 	//only trigger on :after click...
@@ -696,28 +705,22 @@ interface Window { miniwebAdmin: any; }
 			},
 			{
 				key: 'url',
-				editStart: function (index) {
-					// $(this).addClass('miniweb-url-edit').unbind('click').click(function (e) {
-					// 	var $el = $(this);
-					// 	//only trigger on :after click...
-					// 	if (e.offsetX > this.offsetWidth) {
-					// 		var curHref = $el.text();
-					// 		if (curHref.indexOf('http') == 0) {
-					// 			$('#addHyperLink #createLinkUrl').val(curHref);
-					// 		} else {
-					// 			$('#addHyperLink #createInternalUrl').val(curHref);
-					// 		}
-					// 		$('#addHyperLink .btn-primary').unbind('click').bind('click', function () {
-					// 			var newHref = $('#addHyperLink #createInternalUrl').val();
-					// 			if (newHref == '') {
-					// 				newHref = $('#addHyperLink #createLinkUrl').val();
-					// 			}
-					// 			$el.text(newHref);
-					// 			$('#addHyperLink').mw-modal('hide');
-					// 		});
-					// 		$('#addHyperLink').mw-modal();
-					// 	}
-					// });
+				editStart: function (element: HTMLElement, index) {
+					element.addEventListener('click', (e) =>{
+						console.log('urlclick', e, element, index);
+						if (e.offsetX > element.offsetWidth) {
+							const modal = document.getElementById('miniweb-addHyperLink');
+							const curHref = element.innerText;
+							if (curHref.indexOf('http') == 0) {
+								(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
+							} else {
+								(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = curHref;
+							}
+							modal.dataset.linkType = 'URL';
+							modal.dataset.linkIndex = index;
+							modal.classList.add("show");
+						}
+					});
 				},
 				editEnd: function (index) {
 					//$(this).removeClass('miniweb-url-edit');

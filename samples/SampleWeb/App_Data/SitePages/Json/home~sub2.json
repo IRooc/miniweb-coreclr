@@ -10,7 +10,7 @@
   "ShowInMenu": true,
   "SortOrder": 2,
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2019-10-21T13:51:22.3800998+02:00",
+  "LastModified": "2020-11-19T11:06:06.0884402+01:00",
   "Sections": [
     {
       "Key": "content",
@@ -22,9 +22,10 @@
             "link:href": "/home.html",
             "link:title": "Title of the a href",
             "image": "",
-            "image:src": "http://lorempixel.com/200/100",
+            "image:src": "//via.placeholder.com/350x150",
             "image:alt": "nice image from lorempixel",
-            "URL": ""
+            "URL": "",
+            "ASSET": ""
           }
         }
       ]
