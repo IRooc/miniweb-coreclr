@@ -147,7 +147,7 @@
             return document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]').value;
         };
         const savePage = function () {
-            const form = document.querySelector('#pageProperties form');
+            const form = document.querySelector('#miniweb-pageProperties form');
             let formData = new FormData(form);
             formData.append('__RequestVerificationToken', getVerificationToken());
             fetch(options.apiEndpoint + "savepage", {
@@ -171,29 +171,6 @@
             }
         };
         const addNewPage = function () {
-        };
-        let selectedRange;
-        const getCurrentRange = function () {
-            var sel = window.getSelection();
-            if (sel.getRangeAt && sel.rangeCount) {
-                return sel.getRangeAt(0);
-            }
-        };
-        const saveSelection = function () {
-            selectedRange = getCurrentRange();
-        };
-        const restoreSelection = function () {
-            var selection = window.getSelection();
-            if (selectedRange) {
-                try {
-                    selection.removeAllRanges();
-                }
-                catch (ex) {
-                    document.body.createTextRange().select();
-                    document.selection.empty();
-                }
-                selection.addRange(selectedRange);
-            }
         };
         const ctrl_s_save = function (event) {
             if (document.querySelector('body').classList.contains('miniweb-editing')) {
@@ -263,6 +240,18 @@
                 }
             }
         });
+        const addLink = function () {
+            const modal = document.getElementById('miniweb-addHyperLink');
+            if (modal.dataset.linkType == 'HTML') {
+                let href = modal.querySelector('[name="InternalUrl"]').value;
+                if (!href)
+                    href = modal.querySelector('[name="Url"]').value;
+                restoreSelection();
+                document.execCommand("unlink", false, null);
+                document.execCommand("createLink", false, href);
+                modal.classList.remove('show');
+            }
+        };
         btnNew = document.getElementById("miniwebButtonNew");
         btnSavePage = document.getElementById("miniwebSavePage");
         btnEdit = document.getElementById("miniwebButtonEdit");
@@ -273,9 +262,51 @@
         btnEdit.addEventListener('click', editContent);
         btnSave.addEventListener('click', saveContent);
         btnCancel.addEventListener('click', cancelEdit);
+        const btnAddLink = document.getElementById("miniwebAddLink");
+        btnAddLink.addEventListener('click', addLink);
+        document.getElementById('miniwebNavigateOnEnter').addEventListener('keypress', (e) => {
+            if (e.code == "Enter") {
+                document.location.href = e.target.value;
+            }
+        });
+        document.getElementById('miniwebNavigateOnEnter').addEventListener('input', (e) => {
+            const input = e.target;
+            const listId = input.getAttribute('list');
+            const list = document.getElementById(listId);
+            for (let i = 0; i < list.options.length; i++) {
+                if (input.value == list.options[i].value) {
+                    document.location.href = input.value;
+                    return;
+                }
+            }
+        });
         window.addEventListener('keydown', ctrl_s_save, true);
         cancelEdit();
         return this;
+    };
+    let selectedRange;
+    const getCurrentRange = function () {
+        var sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            return sel.getRangeAt(0);
+        }
+    };
+    const saveSelection = function () {
+        selectedRange = getCurrentRange();
+    };
+    const restoreSelection = function () {
+        var selection = window.getSelection();
+        if (selectedRange) {
+            try {
+                selection.removeAllRanges();
+            }
+            catch (ex) {
+                document.body.createTextRange().select();
+                document.selection.empty();
+            }
+            selection.addRange(selectedRange);
+            selection.anchorNode.parentElement.focus();
+        }
     };
     const htmlEscape = function (str) {
         return str
@@ -312,7 +343,6 @@
                     element.parentNode.insertBefore(thisTools, element);
                     thisTools.querySelectorAll('button').forEach((b, i) => {
                         b.addEventListener('click', (e) => {
-                            console.log("clicked button", b, e);
                             const commandWithArgs = b.dataset.edit;
                             if (commandWithArgs) {
                                 e.preventDefault();
@@ -324,6 +354,21 @@
                                 e.preventDefault();
                                 e.stopPropagation();
                                 console.log('do custom task', b);
+                                if (b.dataset.custom == "createLink") {
+                                    saveSelection();
+                                    const modal = document.getElementById('miniweb-addHyperLink');
+                                    if (selectedRange.commonAncestorContainer.parentNode.tagName == 'A') {
+                                        var curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
+                                        if (curHref.indexOf('http') == 0) {
+                                            modal.querySelector('[name="Url"]').value = curHref;
+                                        }
+                                        else {
+                                            modal.querySelector('[name="InternalUrl"]').value = curHref;
+                                        }
+                                    }
+                                    modal.dataset.linkType = 'HTML';
+                                    modal.classList.add("show");
+                                }
                             }
                         });
                     });

@@ -11,7 +11,7 @@
 	</div>
 	<div class="miniweb-tool pull-right">
 		<ul class="miniweb-horizontal-list">
-			<li class="hidden-xs"><input type="text" list="pages" class="form-control" id="navigateOnEnter"/><datalist id="pages">
+			<li class="hidden-xs"><input type="text" list="pages"  id="miniwebNavigateOnEnter"/><datalist id="pages">
 				@foreach (var p in MiniWebSite.Pages)
 				{
 					<option value="@(MiniWebSite.GetPageUrl(p))"/>
@@ -31,7 +31,7 @@
 	</div>
 	<div class="miniweb-tool">
 		<ul class="miniweb-horizontal-list">
-			<li><button class="icon icon-props" data-show-modal="#pageProperties">Page properties</button></li>
+			<li><button class="icon icon-props" data-show-modal="#miniweb-pageProperties">Page properties</button></li>
 			<li class="divider"></li>
 			<li><button class="icon icon-edit" id="miniwebButtonEdit">Edit Content</button></li>
 			<li><button class="icon icon-save" id="miniwebButtonSave" disabled>Save Content</button></li>
@@ -80,7 +80,7 @@
 </aside>
 
 <!-- Modal -->
-<div class="mw-modal" id="pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
+<div class="mw-modal" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
 	<div class="mw-modal-content">
 		<div class="mw-modal-header">
 			<h4 id="myModalPageLabel">Page properties</h4>
@@ -91,11 +91,11 @@
 			<input type="hidden" name="Layout" value="@Model.Layout" />
 			<div class="form-group">
 				<label for="name">Page name</label>
-				<input type="text" id="name" name="Title" placeholder="Page name" value="@Model.Title">
+				<input type="text" id="name" name="Title" placeholder="Page name" value="@Model.Title"/>
 			</div>
 			<div class="form-group">
 				<label for="metatitle">Browser title</label>
-				<input type="text" id="metatitle" name="MetaTitle" placeholder="Browser title" value="@Model.MetaTitle">
+				<input type="text" id="metatitle" name="MetaTitle" placeholder="Browser title" value="@Model.MetaTitle"/>
 			</div>
 			<div class="form-group">
 				<label for="metadescription">Meta description</label>
@@ -112,27 +112,27 @@
 			</div>
 			<div class="form-group">
 				<label for="visible">Visible</label>
-				<input type="checkbox" id="visible" name="Visible" @(Model.Visible ? "checked=\"checked\"" : "") value="true">
+				<input type="checkbox" id="visible" name="Visible" @(Model.Visible ? "checked=\"checked\"" : "") value="true"/>
 			</div>
 			<div class="form-group">
 				<label for="ShowInMenu">Show in menu</label>
-				<input type="checkbox" id="ShowInMenu" name="ShowInMenu" @(Model.ShowInMenu ? "checked=\"checked\"" : "") value="true">						
+				<input type="checkbox" id="ShowInMenu" name="ShowInMenu" @(Model.ShowInMenu ? "checked=\"checked\"" : "") value="true"/>						
 			</div>
 			<div class="form-group">
 				<label for="Sortorder"">Sortorder</label>
-				<input type="text" id="Sortorder" name="Sortorder" placeholder="Sortorder" value="@Model.SortOrder">
+				<input type="text" id="Sortorder" name="Sortorder" placeholder="Sortorder" value="@Model.SortOrder"/>
 			</div>
 			<div class="form-group">
 				<label for="url">Url</label>
 				<div class="input-group">
 					<span class="addon">/</span>
-					<input type="text" id="url" name="Url" placeholder="url" value="@Model.Url">
+					<input type="text" id="url" name="Url" placeholder="url" value="@Model.Url"/>
 					<span class="addon">.@MiniWebSite.Configuration.PageExtension</span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="url">RedirectUrl</label>
-				<input type="text" id="url" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl">
+				<input type="text" id="url" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl"/>
 			</div>
 		</form>
 		<div class="mw-modal-footer">
@@ -151,44 +151,34 @@
 
 </div>
 
-<div class="mw-modal fade" id="addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
-	<div class="mw-modal-dialog miniweb">
-		<div class="mw-modal-content">
-			<div class="mw-modal-header">
-				<button class="close" data-dismiss=".mw-modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4  id="myModalHyperlinkLabel">Add hyperlink</h4>
+<div class="mw-modal" id="miniweb-addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
+	<div class="mw-modal-content">
+		<div class="mw-modal-header">
+			<h4  id="myModalHyperlinkLabel">Add hyperlink</h4>
+			<button class="icon right" data-dismiss=".mw-modal">&times;</button>
+		</div>
+		<form >
+			<div class="form-group">
+				<label for="url" class="col-sm-4 control-label">Internal URL</label>
+				<div class="input-group">
+					<span class="addon">/</span>
+					<select name="InternalUrl">
+						<option value="">Choose url or enter custom</option>
+						@foreach (var p in MiniWebSite.Pages)
+						{
+							<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
+						}
+					</select>
+				</div>
 			</div>
-			<form class="form-horizontal">
-				<div class="mw-modal-body">
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">Internal URL</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<span class="input-group-addon">/</span>
-								<select id="createInternalUrl" class="form-control">
-									<option value="">Choose url or enter custom</option>
-									@foreach (var p in MiniWebSite.Pages)
-									{
-										<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
-									}
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">Custom URL</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<input type="text" class="form-control" id="createLinkUrl" name="Url" placeholder="custom url" value="http://" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="mw-modal-footer">
-					<button class="btn btn-primary">Add link</button>
-					<button class="btn btn-default" data-dismiss="mw-modal">Cancel</button>
-				</div>
-			</form>
+			<div class="form-group">
+				<label for="url" class="col-sm-4 control-label">Custom URL</label>
+				<input type="text" name="Url" placeholder="custom url" value="https://" />
+			</div>
+		</form>
+		<div class="mw-modal-footer">
+			<button id="miniwebAddLink">Add link</button>
+			<button data-dismiss=".mw-modal">Cancel</button>
 		</div>
 	</div>
 </div>

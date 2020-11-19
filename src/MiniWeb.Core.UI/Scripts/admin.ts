@@ -204,7 +204,7 @@ interface Window { miniwebAdmin: any; }
 			return (<HTMLInputElement>document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]')).value;
 		};
 		const savePage = function () {
-			const form = (<HTMLFormElement>document.querySelector('#pageProperties form'));
+			const form = (<HTMLFormElement>document.querySelector('#miniweb-pageProperties form'));
 			let formData = new FormData(form);
 			formData.append('__RequestVerificationToken', getVerificationToken());
 			fetch(options.apiEndpoint + "savepage", {
@@ -251,29 +251,6 @@ interface Window { miniwebAdmin: any; }
 			// 	$('#newPageProperties .btn-primary').bind('click', savePage);
 			// }
 			// $('#newPageProperties').mw-modal();
-		};
-		let selectedRange;
-		const getCurrentRange = function () {
-			var sel = window.getSelection();
-			if (sel.getRangeAt && sel.rangeCount) {
-				return sel.getRangeAt(0);
-			}
-		};
-		const saveSelection = function () {
-			selectedRange = getCurrentRange();
-		};
-		const restoreSelection = function () {
-			var selection = window.getSelection();
-			if (selectedRange) {
-				try {
-					selection.removeAllRanges();
-				} catch (ex) {
-					(<any>document.body).createTextRange().select();
-					(<any>document).selection.empty();
-				}
-
-				selection.addRange(selectedRange);
-			}
 		};
 		const ctrl_s_save = function (event) {
 			if (document.querySelector('body').classList.contains('miniweb-editing')) {
@@ -349,20 +326,33 @@ interface Window { miniwebAdmin: any; }
 				}
 			}
 		});
+		const addLink = function(){
+			const modal = document.getElementById('miniweb-addHyperLink');
+			if (modal.dataset.linkType == 'HTML') {
+				let href = (<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value;
+				if(!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
+				restoreSelection();
+				document.execCommand("unlink", false, null);
+				document.execCommand("createLink", false, href);
+				modal.classList.remove('show');
+			}
+		}
 
 		btnNew = document.getElementById("miniwebButtonNew");
 		btnSavePage = document.getElementById("miniwebSavePage");
-		btnEdit = document.getElementById("miniwebButtonEdit");//.bind("click", editContent);
-		btnSave = document.getElementById("miniwebButtonSave");//.bind("click", saveContent);
-		btnCancel = document.getElementById("miniwebButtonCancel");//.bind("click", cancelEdit);
+		btnEdit = document.getElementById("miniwebButtonEdit");
+		btnSave = document.getElementById("miniwebButtonSave");
+		btnCancel = document.getElementById("miniwebButtonCancel");
 		contentEditables = document.querySelectorAll('[data-miniwebprop]');
 
 		btnSavePage.addEventListener('click', savePage);
 		btnEdit.addEventListener('click', editContent);
 		btnSave.addEventListener('click', saveContent);
 		btnCancel.addEventListener('click', cancelEdit);
+		
+		const btnAddLink = document.getElementById("miniwebAddLink");
+		btnAddLink.addEventListener('click', addLink);
 
-		// $('#pageProperties .btn-primary').bind('click', savePage);
 		// $('#pageProperties .btn-danger').bind("click", removePage);
 		// $('#newContentAdd .btn-primary').bind("click", addNewContent);
 		// $('#newPage').bind('click', addNewPage);
@@ -371,6 +361,23 @@ interface Window { miniwebAdmin: any; }
 		// 		document.location.href = $(this).val();
 		// 	}
 		// })
+		document.getElementById('miniwebNavigateOnEnter').addEventListener('keypress', (e) => {
+			if (e.code == "Enter") {
+				document.location.href = (<HTMLInputElement>e.target).value;
+			}
+		});
+		document.getElementById('miniwebNavigateOnEnter').addEventListener('input', (e) => {
+			const input = (<HTMLInputElement>e.target);
+			const listId = input.getAttribute('list');
+			const list = <HTMLDataListElement>document.getElementById(listId);
+			for(let i =0; i < list.options.length; i++) {
+				if (input.value == list.options[i].value) {
+					document.location.href = input.value;
+					return;
+				}
+			}
+
+		});
 
 
 		window.addEventListener('keydown', ctrl_s_save, true);
@@ -385,6 +392,31 @@ interface Window { miniwebAdmin: any; }
 		cancelEdit();
 
 		return this;
+	};
+	
+	let selectedRange;
+	const getCurrentRange = function () {
+		var sel = window.getSelection();
+		if (sel.getRangeAt && sel.rangeCount) {
+			return sel.getRangeAt(0);
+		}
+	};
+	const saveSelection = function () {
+		selectedRange = getCurrentRange();
+	};
+	const restoreSelection = function () {
+		var selection = window.getSelection();
+		if (selectedRange) {
+			try {
+				selection.removeAllRanges();
+			} catch (ex) {
+				(<any>document.body).createTextRange().select();
+				(<any>document).selection.empty();
+			}
+
+			selection.addRange(selectedRange);
+			selection.anchorNode.parentElement.focus();
+		}
 	};
 
 	//PAGER STUFF
@@ -598,6 +630,20 @@ interface Window { miniwebAdmin: any; }
 								e.preventDefault();
 								e.stopPropagation();
 								console.log('do custom task', b);
+								if (b.dataset.custom == "createLink") {
+									saveSelection();
+									const modal = document.getElementById('miniweb-addHyperLink');
+									if(selectedRange.commonAncestorContainer.parentNode.tagName == 'A'){
+										var curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
+										if (curHref.indexOf('http') == 0) {
+											(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
+										} else {
+											(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = curHref;
+										}
+									}
+									modal.dataset.linkType = 'HTML';
+									modal.classList.add("show");
+								}
 							}
 						});
 					});

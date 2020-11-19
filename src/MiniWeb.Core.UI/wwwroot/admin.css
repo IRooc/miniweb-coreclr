@@ -19,6 +19,25 @@ miniwebadmin * {
 	font: inherit;
 	vertical-align: baseline;
 }
+miniwebadmin input,
+miniwebadmin textarea,
+miniwebadmin select {
+	border: 1px solid black;
+	border-radius: 2px;
+	padding: 3px;
+}
+
+miniwebadmin button {
+	border: 1px solid darkgray;
+	background-color: lightgray;
+	border-radius: 2px;
+	padding: 3px 10px;
+	cursor: pointer;
+}
+miniwebadmin button:hover {
+	background-color: #444;
+	color:white;
+}
 
 miniwebadmin #miniweb-templates,
 miniwebadmin .mw-modal,
@@ -128,6 +147,7 @@ miniwebadmin .miniweb-tools  button {
 }
 miniwebadmin .miniweb-tools  button:hover {
 	background-color: #dbd8be;
+	color:black;
 }
 miniwebadmin .miniweb-tools  button:disabled {
 	cursor: default;
@@ -181,7 +201,8 @@ miniwebadmin .form-group label {
 	font-size: 12px;
 	font-weight: normal;
 }
-miniwebadmin .form-group label + input {
+miniwebadmin .form-group label + input,
+miniwebadmin .form-group label + select {
 	width:60%
 }
 miniwebadmin .form-group .input-group {
@@ -191,7 +212,8 @@ miniwebadmin .form-group .input-group {
 miniwebadmin .form-group .input-group .addon {
 	display: inline-block;
 }
-miniwebadmin .form-group .input-group .addon + input {
+miniwebadmin .form-group .input-group .addon + input ,
+miniwebadmin .form-group .input-group .addon + select {
 	width: 80%
 }
 
