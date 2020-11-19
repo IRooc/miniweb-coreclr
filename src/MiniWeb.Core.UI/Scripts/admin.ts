@@ -186,7 +186,7 @@ interface Window { miniwebAdmin: any; }
 			});
 
 			const data = new FormData();
-			data.append('url', document.getElementById('admin').dataset.miniwebPath);
+			data.append('url', document.getElementById("miniweb-admin-nav").dataset.miniwebPath);
 			data.append('items', JSON.stringify(items));
 			data.append('__RequestVerificationToken', getVerificationToken());
 			fetch(options.apiEndpoint + "savecontent", {
@@ -226,7 +226,7 @@ interface Window { miniwebAdmin: any; }
 			if (confirm('are you sure?')) {
 				// $.post(options.apiEndpoint + "removepage", {
 				// 	'__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val(),
-				// 	url: $('#admin').attr('data-miniweb-path')
+				// 	url: $('#miniweb-admin-nav').attr('data-miniweb-path')
 				// }).done(function (data) {
 				// 	showMessage(true, "The page was saved successfully");
 				// 	setTimeout(function () {
@@ -350,11 +350,11 @@ interface Window { miniwebAdmin: any; }
 			}
 		});
 
-		btnNew = document.getElementById("btnNew");
+		btnNew = document.getElementById("miniwebButtonNew");
 		btnSavePage = document.getElementById("miniwebSavePage");
-		btnEdit = document.getElementById("btnEdit");//.bind("click", editContent);
-		btnSave = document.getElementById("btnSave");//.bind("click", saveContent);
-		btnCancel = document.getElementById("btnCancel");//.bind("click", cancelEdit);
+		btnEdit = document.getElementById("miniwebButtonEdit");//.bind("click", editContent);
+		btnSave = document.getElementById("miniwebButtonSave");//.bind("click", saveContent);
+		btnCancel = document.getElementById("miniwebButtonCancel");//.bind("click", cancelEdit);
 		contentEditables = document.querySelectorAll('[data-miniwebprop]');
 
 		btnSavePage.addEventListener('click', savePage);
@@ -453,7 +453,7 @@ interface Window { miniwebAdmin: any; }
 	// 		if (this.type === 'file' && this.files && this.files.length > 0) {
 	// 			var formData = new FormData(<HTMLFormElement>$(this).closest('form')[0]);
 	// 			formData.append('__RequestVerificationToken', $('#miniweb-templates input[name=__RequestVerificationToken]').val());
-	// 			var apiEndpoint = $('#admin').data('miniweb-apiendpoint');
+	// 			var apiEndpoint = $('#miniweb-admin-nav').data('miniweb-apiendpoint');
 	// 			console.log('add file', this, apiEndpoint, formData);
 	// 			$.ajax({
 	// 				url: apiEndpoint + 'multiplepages',
@@ -527,7 +527,7 @@ interface Window { miniwebAdmin: any; }
 	// 			if (this.type === 'file' && this.files && this.files.length > 0) {
 	// 				var formData = new FormData(<HTMLFormElement>$(this).closest('form')[0]);
 	// 				formData.append('__RequestVerificationToken', $('#miniweb-templates input[name=__RequestVerificationToken]').val());
-	// 				var apiEndpoint = $('#admin').data('miniweb-apiendpoint');
+	// 				var apiEndpoint = $('#miniweb-admin-nav').data('miniweb-apiendpoint');
 	// 				console.log('add file', this, apiEndpoint, formData);
 	// 				$.ajax({
 	// 					url: apiEndpoint + 'saveassets',
@@ -586,13 +586,18 @@ interface Window { miniwebAdmin: any; }
 					element.parentNode.insertBefore(thisTools, element);
 					thisTools.querySelectorAll('button').forEach((b, i) => {
 						b.addEventListener('click', (e) => {
-							console.log("clicked button", b, e);
 							const commandWithArgs = b.dataset.edit;
 							if (commandWithArgs) {
+								e.preventDefault();
+								e.stopPropagation();
 								const commandArr = commandWithArgs.split(' '),
 									command = commandArr.shift(),
 									args = commandArr.join(' ');
 								document.execCommand(command, false, args);
+							} else if (b.dataset.custom) {
+								e.preventDefault();
+								e.stopPropagation();
+								console.log('do custom task', b);
 							}
 						});
 					});
@@ -688,8 +693,8 @@ interface Window { miniwebAdmin: any; }
 	document.querySelector('#miniwebShowHiddenPages input').addEventListener('click', (e) => {
 		sessionStorage.setItem('miniwebShowHiddenPages', (<HTMLInputElement>(e.target)).checked ? "true" : "false");
 		toggleHiddenMenuItems((<HTMLInputElement>(e.target)).checked);
-		//$('.miniweb-hidden-menu').toggle($(this).is(':checked'));
 	});
+
 	if (sessionStorage.getItem('miniwebShowHiddenPages') === "true") {
 		(<HTMLInputElement>document.querySelector('#miniwebShowHiddenPages input')).checked = true
 		toggleHiddenMenuItems(true);

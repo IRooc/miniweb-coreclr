@@ -5,7 +5,7 @@
 	var path = Model.Url;
 }
 
-<nav id="admin" class="miniweb-tools" data-ispublished="@isPublished" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
+<nav id="miniweb-admin-nav" class="miniweb-tools" data-ispublished="@isPublished" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
 	<div class="miniweb-tool miniweb-status @(isPublished ? "published" : "offline")">
 		<a href="#" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
 	</div>
@@ -19,7 +19,7 @@
 			</datalist></li>
 			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
 			<li id="miniwebShowHiddenPages"><label class="btn btn-link"><input type="checkbox" /><span class="hidden-xs">Show hidden pages</span></label></li>
-			<li><button class="icon icon-new" id="btnNew">New page</button></li>
+			<li><button class="icon icon-new" id="miniwebButtonNew">New page</button></li>
 			<li class="divider"></li>
 			<li>
 				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
@@ -33,9 +33,9 @@
 		<ul class="miniweb-horizontal-list">
 			<li><button class="icon icon-props" data-show-modal="#pageProperties">Page properties</button></li>
 			<li class="divider"></li>
-			<li><button class="icon icon-edit" id="btnEdit">Edit Content</button></li>
-			<li><button class="icon icon-save" id="btnSave" disabled>Save Content</button></li>
-			<li><button class="icon icon-cancel"  id="btnCancel" disabled>Cancel</button></li>
+			<li><button class="icon icon-edit" id="miniwebButtonEdit">Edit Content</button></li>
+			<li><button class="icon icon-save" id="miniwebButtonSave" disabled>Save Content</button></li>
+			<li><button class="icon icon-cancel"  id="miniwebButtonCancel" disabled>Cancel</button></li>
 		</ul>
 	</div>
 
@@ -52,26 +52,26 @@
 		</div>
 
 		<div class="miniweb-buttongroup">
-			<button data-edit="justifyleft" title="Justify left"><i class="glyphicon glyphicon-align-left"></i></button>
-			<button data-edit="justifycenter" title="Justify center"><i class="glyphicon glyphicon-align-center"></i></button>
-			<button data-edit="justifyright" title="Justify right"><i class="glyphicon glyphicon-align-right"></i></button>
-			<button data-edit="justifyfull" title="Justify full"><i class="glyphicon glyphicon-align-justify"></i></button>
-			<button data-edit="insertunorderedlist" title="Bullet points"><i class="glyphicon glyphicon-list"></i></button>
-			<button data-edit="insertorderedlist" title="Numbered bullet points"><i class="glyphicon glyphicon-th-list"></i></button>
-			<button data-edit="outdent" title="Indent left"><i class="glyphicon glyphicon-indent-left"></i></button>
-			<button data-edit="indent" title="Indent right"><i class="glyphicon glyphicon-indent-right"></i></button>
+			<button data-edit="justifyleft" title="Justify left" class="miniweb-leftalign">&#9778;</button>
+			<button data-edit="justifycenter" title="Justify center">&#9778;</button>
+			<button data-edit="justifyright" title="Justify right" class="miniweb-rightalign">&#9778;</button>
+			<button data-edit="justifyfull" title="Justify full">&#9783;</button>
+			<button data-edit="insertunorderedlist" title="Bullet points">&#9679;</button>
+			<button data-edit="insertorderedlist" title="Numbered bullet points">&#9352;</button>
+			<button data-edit="outdent" title="Indent left">&#11104;</button>
+			<button data-edit="indent" title="Indent right">&#11106;</button>
 		</div>
 
 		<div class="miniweb-buttongroup">
-			<button data-custom="createLink" title="Hyperlink"><i class="glyphicon glyphicon-globe"></i></button>
-			<button data-edit="unlink" title="Remove hyperlink"><i class="glyphicon glyphicon-remove"></i></button>
-			<button data-custom="insertAsset"><i class="glyphicon glyphicon-picture"></i></button>
+			<button data-custom="createLink" title="Hyperlink" class="icon icon-earth"></button>
+			<button data-edit="unlink" title="Remove hyperlink">&#11198;</button>
+			<button data-custom="insertAsset">&#127203;</button>
 		</div>
 
 		<input type="file" class="txtImage" data-edit="insertImage" style="width:0; height: 0;position:absolute" />
 
 		<div class="miniweb-buttongroup">
-			<button class="source" data-cmd="source" title="Toggle source/design view"><i class="glyphicon glyphicon-eye-open"></i></button>
+			<button class="source" data-custom="showSource" title="Toggle source/design view">&#128065;</button>
 		</div>
 	</div>
 </nav>

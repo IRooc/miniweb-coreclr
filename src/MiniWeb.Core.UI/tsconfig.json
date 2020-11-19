@@ -4,7 +4,7 @@
         "target": "es2015",
         "module": "commonjs",
         "sourceMap": false,
-        "outDir": "../wwwroot",
+        "outDir": "wwwroot",
         "removeComments": true
     }
 }

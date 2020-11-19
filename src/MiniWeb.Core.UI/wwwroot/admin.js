@@ -127,7 +127,7 @@
                 });
             });
             const data = new FormData();
-            data.append('url', document.getElementById('admin').dataset.miniwebPath);
+            data.append('url', document.getElementById("miniweb-admin-nav").dataset.miniwebPath);
             data.append('items', JSON.stringify(items));
             data.append('__RequestVerificationToken', getVerificationToken());
             fetch(options.apiEndpoint + "savecontent", {
@@ -263,11 +263,11 @@
                 }
             }
         });
-        btnNew = document.getElementById("btnNew");
+        btnNew = document.getElementById("miniwebButtonNew");
         btnSavePage = document.getElementById("miniwebSavePage");
-        btnEdit = document.getElementById("btnEdit");
-        btnSave = document.getElementById("btnSave");
-        btnCancel = document.getElementById("btnCancel");
+        btnEdit = document.getElementById("miniwebButtonEdit");
+        btnSave = document.getElementById("miniwebButtonSave");
+        btnCancel = document.getElementById("miniwebButtonCancel");
         contentEditables = document.querySelectorAll('[data-miniwebprop]');
         btnSavePage.addEventListener('click', savePage);
         btnEdit.addEventListener('click', editContent);
@@ -315,8 +315,15 @@
                             console.log("clicked button", b, e);
                             const commandWithArgs = b.dataset.edit;
                             if (commandWithArgs) {
+                                e.preventDefault();
+                                e.stopPropagation();
                                 const commandArr = commandWithArgs.split(' '), command = commandArr.shift(), args = commandArr.join(' ');
                                 document.execCommand(command, false, args);
+                            }
+                            else if (b.dataset.custom) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('do custom task', b);
                             }
                         });
                     });
