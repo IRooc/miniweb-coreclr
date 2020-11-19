@@ -36,7 +36,7 @@
         let btnEdit;
         let btnSave;
         let btnCancel;
-        this.editContent = function () {
+        const editContent = function () {
             document.querySelector('body').classList.add('miniweb-editing');
             contentEditables = document.querySelectorAll('[data-miniwebprop]');
             contentEditables.forEach(el => el.setAttribute('contentEditable', "true"));
@@ -52,9 +52,9 @@
             btnEdit.setAttribute("disabled", "true");
             btnSave.removeAttribute("disabled");
             btnCancel.removeAttribute("disabled");
-            this.toggleContentInserts(true);
+            toggleContentInserts(true);
         };
-        this.cancelEdit = function () {
+        const cancelEdit = function () {
             document.querySelector('body').classList.remove('miniweb-editing');
             contentEditables.forEach(el => el.removeAttribute('contentEditable'));
             for (var i = 0; i < options.editTypes.length; i++) {
@@ -70,9 +70,9 @@
             btnEdit.removeAttribute("disabled");
             btnSave.setAttribute("disabled", "true");
             btnCancel.setAttribute("disabled", "true");
-            this.toggleContentInserts(false);
+            toggleContentInserts(false);
         };
-        this.toggleContentInserts = function (on) {
+        const toggleContentInserts = function (on) {
             if (on) {
                 document.querySelectorAll('[data-miniwebsection]').forEach(el => {
                     const section = el.dataset.miniwebsection;
@@ -85,9 +85,9 @@
                 document.querySelectorAll('.miniweb-insertcontent, .miniweb-template-actions').forEach(el => el.remove());
             }
         };
-        this.toggleSourceView = function () {
+        const toggleSourceView = function () {
         };
-        this.getParsedHtml = function (source) {
+        const getParsedHtml = function (source) {
             var parsedDOM;
             parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
             parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
@@ -95,7 +95,7 @@
             parsedDOM = RegExp.$1;
             return parsedDOM;
         };
-        this.saveContent = function (e) {
+        const saveContent = function (e) {
             if (!document.querySelector('body').classList.contains('miniweb-editing'))
                 return;
             var items = [];
@@ -114,7 +114,7 @@
                     };
                     tmpl.querySelectorAll('[data-miniwebprop]').forEach((prop, pindex) => {
                         var key = prop.getAttribute('data-miniwebprop');
-                        var value = this.getParsedHtml(prop);
+                        var value = getParsedHtml(prop);
                         item.Values[key] = value;
                         if (key.indexOf(':') > 0) {
                             var orig = key.split(':')[0];
@@ -128,7 +128,7 @@
             const data = new FormData();
             data.append('url', document.getElementById("miniweb-admin-nav").dataset.miniwebPath);
             data.append('items', JSON.stringify(items));
-            data.append('__RequestVerificationToken', this.getVerificationToken());
+            data.append('__RequestVerificationToken', getVerificationToken());
             fetch(options.apiEndpoint + "savecontent", {
                 method: "POST",
                 body: data
@@ -139,16 +139,16 @@
                     showMessage(true, "The page was saved successfully");
                 else
                     showMessage(false, "Save page failed");
-                this.cancelEdit();
+                cancelEdit();
             });
         };
-        this.getVerificationToken = function () {
+        const getVerificationToken = function () {
             return document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]').value;
         };
-        this.savePage = function () {
+        const savePage = function () {
             const form = document.querySelector('#miniweb-pageProperties form');
             let formData = new FormData(form);
-            formData.append('__RequestVerificationToken', this.getVerificationToken());
+            formData.append('__RequestVerificationToken', getVerificationToken());
             fetch(options.apiEndpoint + "savepage", {
                 method: "POST",
                 body: formData
@@ -165,22 +165,22 @@
                 showMessage(false, 'failed to post');
             });
         };
-        this.removePage = function () {
+        const removePage = function () {
             if (confirm('are you sure?')) {
             }
         };
-        this.addNewPage = function () {
+        const addNewPage = function () {
         };
         const ctrl_s_save = function (event) {
             if (document.querySelector('body').classList.contains('miniweb-editing')) {
                 if (event.ctrlKey && event.keyCode == 83) {
                     event.preventDefault();
-                    this.saveContent(event);
+                    saveContent(event);
                 }
                 ;
             }
         };
-        this.addLink = function () {
+        const addLink = function () {
             const modal = document.getElementById('miniweb-addHyperLink');
             let href = modal.querySelector('[name="InternalUrl"]').value;
             if (!href)
@@ -208,12 +208,12 @@
         btnSave = document.getElementById("miniwebButtonSave");
         btnCancel = document.getElementById("miniwebButtonCancel");
         contentEditables = document.querySelectorAll('[data-miniwebprop]');
-        btnSavePage.addEventListener('click', this.savePage);
-        btnEdit.addEventListener('click', this.editContent);
-        btnSave.addEventListener('click', this.saveContent);
-        btnCancel.addEventListener('click', this.cancelEdit);
+        btnSavePage.addEventListener('click', savePage);
+        btnEdit.addEventListener('click', editContent);
+        btnSave.addEventListener('click', saveContent);
+        btnCancel.addEventListener('click', cancelEdit);
         const btnAddLink = document.getElementById("miniwebAddLink");
-        btnAddLink.addEventListener('click', this.addLink);
+        btnAddLink.addEventListener('click', addLink);
         document.getElementById('miniwebNavigateOnEnter').addEventListener('keypress', (e) => {
             if (e.code == "Enter") {
                 document.location.href = e.target.value;
@@ -230,69 +230,69 @@
                 }
             }
         });
-        window.addEventListener('keydown', ctrl_s_save, true);
-        this.cancelEdit();
-        return this;
-    };
-    document.addEventListener('click', (e) => {
-        const target = e.target;
-        console.log('documentclick', e, target);
-        if (!target)
-            return;
-        if (target.dataset.showModal) {
-            e.preventDefault();
-            const modal = document.querySelector(target.dataset.showModal);
-            if (modal) {
-                modal.classList.contains('show') ? modal.classList.remove('show') : modal.classList.add('show');
-            }
-        }
-        else if (target.dataset.dismiss) {
-            e.preventDefault();
-            document.querySelectorAll('.mw-modal.show').forEach(el => {
-                el.classList.remove('show');
-            });
-        }
-        else if (target.dataset.addContentTo) {
-            e.preventDefault();
-            const contentTarget = target.dataset.addContentTo;
-            const modal = document.querySelector('#newContentAdd');
-            modal.dataset.targetsection = contentTarget;
-            modal.classList.add('show');
-        }
-        else if (target.dataset.addContentId) {
-            e.preventDefault();
-            const contentId = target.dataset.addContentId;
-            const targetSection = target.closest('.mw-modal').dataset.targetsection;
-            const el = (document.getElementById(contentId).firstElementChild.cloneNode(true));
-            const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
-            console.log(target, contentId, targetSection, section, el);
-            section.append(el);
-            this.cancelEdit();
-            this.editContent();
-            document.querySelectorAll('.mw-modal.show').forEach(el => {
-                el.classList.remove('show');
-            });
-        }
-        else if (target.dataset.contentMove) {
-            const move = target.dataset.contentMove;
-            const item = target.closest('[data-miniwebtemplate]');
-            console.log('move', move, item, target);
-            if (move == "up") {
-                item.parentNode.insertBefore(item, item.previousElementSibling);
-            }
-            else if (move == "down") {
-                item.parentNode.insertBefore(item, item.nextElementSibling.nextElementSibling);
-            }
-            else if (move == "delete") {
-                if (confirm('are you sure?')) {
-                    item.remove();
+        document.addEventListener('click', (e) => {
+            const target = e.target;
+            console.log('documentclick', e, target);
+            if (!target)
+                return;
+            if (target.dataset.showModal) {
+                e.preventDefault();
+                const modal = document.querySelector(target.dataset.showModal);
+                if (modal) {
+                    modal.classList.contains('show') ? modal.classList.remove('show') : modal.classList.add('show');
                 }
             }
-            else {
-                console.error("unknown move", move, target);
+            else if (target.dataset.dismiss) {
+                e.preventDefault();
+                document.querySelectorAll('.mw-modal.show').forEach(el => {
+                    el.classList.remove('show');
+                });
             }
-        }
-    });
+            else if (target.dataset.addContentTo) {
+                e.preventDefault();
+                const contentTarget = target.dataset.addContentTo;
+                const modal = document.querySelector('#newContentAdd');
+                modal.dataset.targetsection = contentTarget;
+                modal.classList.add('show');
+            }
+            else if (target.dataset.addContentId) {
+                e.preventDefault();
+                const contentId = target.dataset.addContentId;
+                const targetSection = target.closest('.mw-modal').dataset.targetsection;
+                const el = (document.getElementById(contentId).firstElementChild.cloneNode(true));
+                const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
+                console.log(target, contentId, targetSection, section, el);
+                section.append(el);
+                cancelEdit();
+                editContent();
+                document.querySelectorAll('.mw-modal.show').forEach(el => {
+                    el.classList.remove('show');
+                });
+            }
+            else if (target.dataset.contentMove) {
+                const move = target.dataset.contentMove;
+                const item = target.closest('[data-miniwebtemplate]');
+                console.log('move', move, item, target);
+                if (move == "up") {
+                    item.parentNode.insertBefore(item, item.previousElementSibling);
+                }
+                else if (move == "down") {
+                    item.parentNode.insertBefore(item, item.nextElementSibling.nextElementSibling);
+                }
+                else if (move == "delete") {
+                    if (confirm('are you sure?')) {
+                        item.remove();
+                    }
+                }
+                else {
+                    console.error("unknown move", move, target);
+                }
+            }
+        });
+        window.addEventListener('keydown', ctrl_s_save, true);
+        cancelEdit();
+        return this;
+    };
     let selectedRange;
     const getCurrentRange = function () {
         var sel = window.getSelection();
@@ -340,10 +340,21 @@
             txtMessage.parentElement.classList.add("is-hidden");
         }, timeout);
     };
+    document.querySelector('[name="miniweb-asset-folder"]').addEventListener('input', (e) => {
+        const input = e.target;
+        const listId = input.getAttribute('list');
+        const list = document.getElementById(listId);
+        for (let i = 0; i < list.options.length; i++) {
+            if (input.value == list.options[i].value) {
+                showAssetPage(0);
+                return;
+            }
+        }
+    });
+    const assetPageList = document.querySelector('.miniweb-assetlist');
     const showAssetPage = function (page) {
-        const list = document.querySelector('.miniweb-assetlist');
-        list.dataset.page = page.toString();
-        const assets = list.querySelectorAll('li');
+        assetPageList.dataset.page = page.toString();
+        const assets = assetPageList.querySelectorAll('li');
         assets.forEach((li) => {
             li.classList.add('is-hidden');
             const img = li.querySelector('img');
@@ -351,11 +362,12 @@
                 delete img.src;
         });
         const folder = document.querySelector('[name="miniweb-asset-folder"]').value;
-        const curEls = list.querySelectorAll('li[data-path="' + folder + '"]');
+        const curEls = assetPageList.querySelectorAll('li[data-path="' + folder + '"]');
         for (let i = curEls.length; i > 0; i--) {
-            list.insertBefore(curEls[i - 1], list.childNodes[0]);
+            assetPageList.insertBefore(curEls[i - 1], assetPageList.childNodes[0]);
         }
-        const toShow = document.querySelectorAll('.miniweb-assetlist li[data-path="' + folder + '"]:nth-child(n+' + page + '):nth-child(-n+' + (page + 16) + ')');
+        const newPage = (page * 16) + 1;
+        const toShow = document.querySelectorAll('.miniweb-assetlist li[data-path="' + folder + '"]:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 15) + ')');
         toShow.forEach((li) => {
             const img = li.querySelector('img');
             if (img && img.dataset.src) {
@@ -363,10 +375,34 @@
             }
             li.classList.remove('is-hidden');
         });
-        checkAssetPagerVisibility();
+        checkAssetPagerVisibility(page, folder);
     };
-    const checkAssetPagerVisibility = function () {
+    const checkAssetPagerVisibility = function (page, folder) {
+        const all = assetPageList.querySelectorAll('li[data-path="' + folder + '"]');
+        const last = all[all.length - 1];
+        if (last.classList.contains('is-hidden')) {
+            document.getElementById('miniweb-asset-page-right').classList.remove('is-hidden');
+        }
+        else {
+            document.getElementById('miniweb-asset-page-right').classList.add('is-hidden');
+        }
+        if (page > 0) {
+            document.getElementById('miniweb-asset-page-left').classList.remove('is-hidden');
+        }
+        else {
+            document.getElementById('miniweb-asset-page-left').classList.add('is-hidden');
+        }
     };
+    document.querySelectorAll('.miniweb-asset-pager').forEach((elem, ix) => {
+        elem.addEventListener('click', (e) => {
+            const direction = Number(e.target.dataset.pageMove);
+            let curPage = Number(assetPageList.dataset.page);
+            curPage += direction;
+            if (curPage < 0)
+                curPage = 0;
+            showAssetPage(curPage);
+        });
+    });
     const miniwebAdminDefaults = {
         apiEndpoint: '/miniweb-api/',
         editTypes: [

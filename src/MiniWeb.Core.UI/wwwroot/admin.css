@@ -340,7 +340,7 @@ miniwebadmin .form-group .input-group .addon + select {
 .miniweb-editing .miniweb-assetlist li {
 	width: 100px;
 	height: 100px;
-	display: none;
+	display: inline-block;
 	overflow: hidden;
 	border: 1px solid #ddd;
 	border-radius: 10px;
@@ -354,15 +354,11 @@ miniwebadmin .form-group .input-group .addon + select {
 	max-height: 100%;
 }
 
-.miniweb-editing .miniweb-assetlist li:nth-child(n+0):nth-child(-n+15) {
-	display: inline-block;
-}
-
 .miniweb-editing .miniweb-asset-pager {
 	position: absolute;
 	color: #2e6da4;
 	top: 150px;
-	font-size: 17px;
+	font-size: 25px;
 	left: 10px
 }
 

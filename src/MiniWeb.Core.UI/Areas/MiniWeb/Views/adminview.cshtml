@@ -208,8 +208,8 @@
 		</div>
 		<form>
 			<div class="mw-modal-body">
-				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-page-move="-1" style="display:none;"><span class="glyphicon glyphicon-chevron-left"></span></a>
-				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-page-move="1" style="display:none;"><span class="glyphicon glyphicon-chevron-right"></span></a>
+				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-page-move="-1" >&#10218;</a>
+				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-page-move="1">&#10219;</a>
 				@{ 
 					var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
 					var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
