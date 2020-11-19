@@ -141,7 +141,8 @@ namespace MiniWeb.Core
 		public void ReloadPages(bool forceReload = false)
 		{
 			// Look for cache key.
-			if (!forceReload && Cache.TryGetValue("MWPAGES", out IEnumerable<ISitePage> pages))
+			IEnumerable<ISitePage> pages = null;
+			if (!forceReload && Cache?.TryGetValue("MWPAGES", out pages) == true)
 			{
 				Logger?.LogInformation("Cached pages");
 				Pages = pages;
@@ -151,7 +152,7 @@ namespace MiniWeb.Core
 				Logger?.LogInformation("Reload pages");
 				Pages = ContentStorage.AllPages().ToList();
 
-				Cache.Set("MWPAGES", Pages);
+				Cache?.Set("MWPAGES", Pages);
 			}
 			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 			foreach (var page in Pages)
@@ -216,7 +217,8 @@ namespace MiniWeb.Core
 
 		public void ReloadAssets(bool forceReload = false)
 		{
-			if (!forceReload && Cache.TryGetValue("MWASSETS", out IEnumerable<IAsset> assets))
+			IEnumerable<IAsset> assets = null;
+			if (!forceReload && Cache?.TryGetValue("MWASSETS", out assets) == true)
 			{
 				Logger?.LogInformation("Cached assets");
 				Assets = assets;
@@ -226,7 +228,7 @@ namespace MiniWeb.Core
 				Logger?.LogInformation("Reload assets");
 				Assets = AssetStorage.GetAllAssets();
 
-				Cache.Set("MWASSETS", Assets);
+				Cache?.Set("MWASSETS", Assets);
 			}
 		}
 

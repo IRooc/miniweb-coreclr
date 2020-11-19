@@ -44,7 +44,7 @@ interface Window { miniwebAdmin: any; }
 		let btnSave: Element;
 		let btnCancel: Element;
 
-		const editContent = function () {
+		this.editContent = function () {
 			document.querySelector('body').classList.add('miniweb-editing');
 			//reassign arrays so al new items are parsed
 			contentEditables = document.querySelectorAll('[data-miniwebprop]');
@@ -65,14 +65,9 @@ interface Window { miniwebAdmin: any; }
 			btnSave.removeAttribute("disabled");
 			btnCancel.removeAttribute("disabled");
 
-			toggleContentInserts(true);
-
-			toggleSourceView();
-			//$(".editor-toolbar").fadeIn().css("display", "block");
-
-			//setupAssetPager();
+			this.toggleContentInserts(true);
 		};
-		const cancelEdit = function () {
+		this.cancelEdit = function () {
 			document.querySelector('body').classList.remove('miniweb-editing');
 			contentEditables.forEach(el => el.removeAttribute('contentEditable'));
 
@@ -82,7 +77,7 @@ interface Window { miniwebAdmin: any; }
 
 				contentEditables.forEach((ce: HTMLElement, ix) => {
 					if (ce.dataset.miniwebedittype == editType.key) {
-						editType.editEnd();
+						editType.editEnd(ce, ix);
 						//break because one does all
 						return;
 					}
@@ -95,10 +90,10 @@ interface Window { miniwebAdmin: any; }
 			btnSave.setAttribute("disabled", "true");
 			btnCancel.setAttribute("disabled", "true");
 
-			toggleContentInserts(false);
+			this.toggleContentInserts(false);
 
 		};
-		const toggleContentInserts = function (on: boolean) {
+		this.toggleContentInserts = function (on: boolean) {
 			if (on) {
 				document.querySelectorAll('[data-miniwebsection]').forEach(el => {
 					const section = (el as HTMLElement).dataset.miniwebsection;
@@ -118,7 +113,7 @@ interface Window { miniwebAdmin: any; }
 				document.querySelectorAll('.miniweb-insertcontent, .miniweb-template-actions').forEach(el => el.remove());
 			}
 		};
-		const toggleSourceView = function () {
+		this.toggleSourceView = function () {
 			// $(".source").bind("click", function () {
 			// 	var self = $(this);
 			// 	if (self.attr("data-cmd") === "source") {
@@ -139,7 +134,7 @@ interface Window { miniwebAdmin: any; }
 			// 	}
 			// });
 		};
-		const getParsedHtml = function (source: HTMLElement) {
+		this.getParsedHtml = function (source: HTMLElement) {
 			var parsedDOM;
 			parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
 			parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
@@ -147,7 +142,7 @@ interface Window { miniwebAdmin: any; }
 			parsedDOM = RegExp.$1;
 			return parsedDOM;
 		};
-		const saveContent = function (e) {
+		this.saveContent = function (e) {
 			if (!document.querySelector('body').classList.contains('miniweb-editing')) return;
 
 			//TODO
@@ -172,7 +167,7 @@ interface Window { miniwebAdmin: any; }
 
 					tmpl.querySelectorAll('[data-miniwebprop]').forEach((prop: HTMLElement, pindex) => {
 						var key = prop.getAttribute('data-miniwebprop')
-						var value = getParsedHtml(prop);
+						var value = this.getParsedHtml(prop);
 						item.Values[key] = value;
 						//update attributes if any
 						if (key.indexOf(':') > 0) {
@@ -188,7 +183,7 @@ interface Window { miniwebAdmin: any; }
 			const data = new FormData();
 			data.append('url', document.getElementById("miniweb-admin-nav").dataset.miniwebPath);
 			data.append('items', JSON.stringify(items));
-			data.append('__RequestVerificationToken', getVerificationToken());
+			data.append('__RequestVerificationToken', this.getVerificationToken());
 			fetch(options.apiEndpoint + "savecontent", {
 				method: "POST",
 				body: data
@@ -197,16 +192,16 @@ interface Window { miniwebAdmin: any; }
 					console.log(data);
 					if (data.result) showMessage(true, "The page was saved successfully");
 					else showMessage(false, "Save page failed");
-					cancelEdit();
+					this.cancelEdit();
 				});
 		};
-		const getVerificationToken = function () {
+		this.getVerificationToken = function () {
 			return (<HTMLInputElement>document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]')).value;
 		};
-		const savePage = function () {
+		this.savePage = function () {
 			const form = (<HTMLFormElement>document.querySelector('#miniweb-pageProperties form'));
 			let formData = new FormData(form);
-			formData.append('__RequestVerificationToken', getVerificationToken());
+			formData.append('__RequestVerificationToken', this.getVerificationToken());
 			fetch(options.apiEndpoint + "savepage", {
 				method: "POST",
 				body: formData
@@ -222,7 +217,7 @@ interface Window { miniwebAdmin: any; }
 					showMessage(false, 'failed to post');
 				});
 		};
-		const removePage = function () {
+		this.removePage = function () {
 			if (confirm('are you sure?')) {
 				// $.post(options.apiEndpoint + "removepage", {
 				// 	'__RequestVerificationToken': $('#miniweb-templates input[name=__RequestVerificationToken]').val(),
@@ -238,7 +233,7 @@ interface Window { miniwebAdmin: any; }
 				// });
 			}
 		};
-		const addNewPage = function () {
+		this.addNewPage = function () {
 			//copy and empty current page property modal
 			// if ($('#newPageProperties').length == 0) {
 			// 	var newP = $('#pageProperties').clone();
@@ -256,7 +251,7 @@ interface Window { miniwebAdmin: any; }
 			if (document.querySelector('body').classList.contains('miniweb-editing')) {
 				if (event.ctrlKey && event.keyCode == 83) {
 					event.preventDefault();
-					saveContent(event);
+					this.saveContent(event);
 				};
 			}
 		};
@@ -274,62 +269,10 @@ interface Window { miniwebAdmin: any; }
 		// 	});
 		// });
 
-		//global events...
-		document.addEventListener('click', (e) => {
-			const target = e.target as HTMLElement;
-			console.log('documentclick', e, target);
-			if (!target) return;
-			if (target.dataset.showModal) {
-				e.preventDefault();
-				const modal = document.querySelector(target.dataset.showModal) as HTMLElement;
-				if (modal) {
-					modal.classList.contains('show') ? modal.classList.remove('show') : modal.classList.add('show');
-				}
-			} else if (target.dataset.dismiss) {
-				e.preventDefault();
-				document.querySelectorAll('.mw-modal.show').forEach(el => {
-					el.classList.remove('show');
-				});
-			} else if (target.dataset.addContentTo) {
-				e.preventDefault();
-				const contentTarget = target.dataset.addContentTo;
-				const modal = document.querySelector('#newContentAdd') as HTMLElement;
-				modal.dataset.targetsection = contentTarget;
-				modal.classList.add('show');
-			} else if (target.dataset.addContentId) {
-				e.preventDefault();
-				const contentId = target.dataset.addContentId;
-				const targetSection = (<HTMLElement>target.closest('.mw-modal')).dataset.targetsection;
-				const el = <HTMLElement>(document.getElementById(contentId).firstElementChild.cloneNode(true));
-				const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
-				console.log(target, contentId, targetSection, section, el);
-				section.append(el);
-				cancelEdit();
-				editContent();
-				document.querySelectorAll('.mw-modal.show').forEach(el => {
-					el.classList.remove('show');
-				});
-			} else if (target.dataset.contentMove) {
-				const move = target.dataset.contentMove;
-				const item = target.closest('[data-miniwebtemplate]');
-				console.log('move', move, item, target);
-				if (move == "up") {
-					item.parentNode.insertBefore(item, item.previousElementSibling);
-				} else if (move == "down") {
-					item.parentNode.insertBefore(item, item.nextElementSibling.nextElementSibling);
-				} else if (move == "delete") {
-					if (confirm('are you sure?')) {
-						item.remove();
-					}
-				} else {
-					console.error("unknown move", move, target);
-				}
-			}
-		});
-		const addLink = function(){
+		this.addLink = function () {
 			const modal = document.getElementById('miniweb-addHyperLink');
 			let href = (<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value;
-			if(!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
+			if (!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
 			if (modal.dataset.linkType == 'HTML') {
 				restoreSelection();
 				document.execCommand("unlink", false, null);
@@ -337,9 +280,9 @@ interface Window { miniwebAdmin: any; }
 			} else if (modal.dataset.linkType == "URL") {
 				const index = modal.dataset.linkIndex;
 				console.log('add link to', index)
-				const el = <HTMLElement> contentEditables[index];
+				const el = <HTMLElement>contentEditables[index];
 				el.innerText = href;
-			}	
+			}
 			modal.classList.remove('show');
 			delete modal.dataset.linkIndex;
 			delete modal.dataset.linkType;
@@ -354,13 +297,13 @@ interface Window { miniwebAdmin: any; }
 		btnCancel = document.getElementById("miniwebButtonCancel");
 		contentEditables = document.querySelectorAll('[data-miniwebprop]');
 
-		btnSavePage.addEventListener('click', savePage);
-		btnEdit.addEventListener('click', editContent);
-		btnSave.addEventListener('click', saveContent);
-		btnCancel.addEventListener('click', cancelEdit);
-		
+		btnSavePage.addEventListener('click', this.savePage);
+		btnEdit.addEventListener('click', this.editContent);
+		btnSave.addEventListener('click', this.saveContent);
+		btnCancel.addEventListener('click', this.cancelEdit);
+
 		const btnAddLink = document.getElementById("miniwebAddLink");
-		btnAddLink.addEventListener('click', addLink);
+		btnAddLink.addEventListener('click', this.addLink);
 
 		// $('#pageProperties .btn-danger').bind("click", removePage);
 		// $('#newContentAdd .btn-primary').bind("click", addNewContent);
@@ -379,7 +322,7 @@ interface Window { miniwebAdmin: any; }
 			const input = (<HTMLInputElement>e.target);
 			const listId = input.getAttribute('list');
 			const list = <HTMLDataListElement>document.getElementById(listId);
-			for(let i =0; i < list.options.length; i++) {
+			for (let i = 0; i < list.options.length; i++) {
 				if (input.value == list.options[i].value) {
 					document.location.href = input.value;
 					return;
@@ -398,11 +341,65 @@ interface Window { miniwebAdmin: any; }
 		// 	}
 		// });
 		//always cancel edit on refresh, stops remembering of firefox for inputs and stuff
-		cancelEdit();
+		this.cancelEdit();
 
 		return this;
 	};
-	
+
+
+	//global events...
+	document.addEventListener('click', (e) => {
+		const target = e.target as HTMLElement;
+		console.log('documentclick', e, target);
+		if (!target) return;
+		if (target.dataset.showModal) {
+			e.preventDefault();
+			const modal = document.querySelector(target.dataset.showModal) as HTMLElement;
+			if (modal) {
+				modal.classList.contains('show') ? modal.classList.remove('show') : modal.classList.add('show');
+			}
+		} else if (target.dataset.dismiss) {
+			e.preventDefault();
+			document.querySelectorAll('.mw-modal.show').forEach(el => {
+				el.classList.remove('show');
+			});
+		} else if (target.dataset.addContentTo) {
+			e.preventDefault();
+			const contentTarget = target.dataset.addContentTo;
+			const modal = document.querySelector('#newContentAdd') as HTMLElement;
+			modal.dataset.targetsection = contentTarget;
+			modal.classList.add('show');
+		} else if (target.dataset.addContentId) {
+			e.preventDefault();
+			const contentId = target.dataset.addContentId;
+			const targetSection = (<HTMLElement>target.closest('.mw-modal')).dataset.targetsection;
+			const el = <HTMLElement>(document.getElementById(contentId).firstElementChild.cloneNode(true));
+			const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
+			console.log(target, contentId, targetSection, section, el);
+			section.append(el);
+			this.cancelEdit();
+			this.editContent();
+			document.querySelectorAll('.mw-modal.show').forEach(el => {
+				el.classList.remove('show');
+			});
+		} else if (target.dataset.contentMove) {
+			const move = target.dataset.contentMove;
+			const item = target.closest('[data-miniwebtemplate]');
+			console.log('move', move, item, target);
+			if (move == "up") {
+				item.parentNode.insertBefore(item, item.previousElementSibling);
+			} else if (move == "down") {
+				item.parentNode.insertBefore(item, item.nextElementSibling.nextElementSibling);
+			} else if (move == "delete") {
+				if (confirm('are you sure?')) {
+					item.remove();
+				}
+			} else {
+				console.error("unknown move", move, target);
+			}
+		}
+	});
+
 	let selectedRange;
 	const getCurrentRange = function () {
 		var sel = window.getSelection();
@@ -427,40 +424,6 @@ interface Window { miniwebAdmin: any; }
 			selection.anchorNode.parentElement.focus();
 		}
 	};
-
-	//PAGER STUFF
-	// var checkAssetPagerVisibility = function () {
-	// 	if ($('#miniweb-assetlist li:not(".is-hidden")').length > 15 &&
-	// 		$('#miniweb-assetlist li:visible:last').get(0) != $('#miniweb-assetlist li:not(".is-hidden"):last').get(0)) {
-	// 		$('#miniweb-asset-page-right').show();
-
-	// 	} else {
-	// 		$('#miniweb-asset-page-right').hide();
-	// 	}
-	// 	if ($('#miniweb-assetlist').data('page') == 0) {
-
-	// 		$('#miniweb-asset-page-left').hide();
-	// 	} else {
-	// 		$('#miniweb-asset-page-left').show();
-	// 	}
-	// };
-	// var setupAssetPager = function () {
-	// 	checkAssetPagerVisibility();
-	// 	$(".miniweb-asset-pager").unbind('click').click(function () {
-	// 		var page = $('#miniweb-assetlist').data('page');
-	// 		var move = $(this).data('page-move');
-	// 		console.log('goto page', page, move);
-	// 		var newPage = page + move;
-	// 		if (newPage < 0) newPage = 0;
-	// 		$('#miniweb-assetlist').data('page', newPage);
-	// 		newPage = (newPage * 15) + 1;
-
-	// 		$('body.miniweb-editing #miniweb-assetlist li').hide();
-	// 		$('body.miniweb-editing #miniweb-assetlist li:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 14) + ')').css({ 'display': 'inline-block' })
-	// 		checkAssetPagerVisibility();
-	// 	});
-
-	// };
 	const htmlEscape = function (str) {
 		return str
 			.replace(/&/g, '&')
@@ -517,34 +480,71 @@ interface Window { miniwebAdmin: any; }
 	// 		}
 	// 	});
 	// });
-	// $.fn.miniwebAdmin.createHyperlink = function (wysiwygObj: any) {
-	// 	$('#addHyperLink .btn-primary').unbind('click.hyperlink.wysiwyg');
-	// 	$('#addHyperLink .btn-primary').bind('click.hyperlink.wysiwyg', function () {
-	// 		$('#addHyperLink').mw-modal('hide');
-	// 		var args = $('#addHyperLink #createInternalUrl').val();
-	// 		if (args == '') {
-	// 			args = $('#addHyperLink #createLinkUrl').val();
-	// 		}
-	// 		$('#addHyperLink #createInternalUrl').val('');
-	// 		$('#addHyperLink #createLinkUrl').val('http://');
-	// 		wysiwygObj.restoreSelection();
-	// 		wysiwygObj.me.focus();
-	// 		document.execCommand("createLink", false, args);
-	// 		wysiwygObj.updateToolbar();
-	// 		wysiwygObj.saveSelection();
-	// 	});
-	// 	$('#addHyperLink #createInternalUrl').val('');
-	// 	$('#addHyperLink #createLinkUrl').val('http://');
-	// 	if (wysiwygObj.selectedRange.commonAncestorContainer.parentNode.tagName == 'A') {
-	// 		var curHref = $(wysiwygObj.selectedRange.commonAncestorContainer.parentNode).attr('href');
-	// 		if (curHref.indexOf('http') == 0) {
-	// 			$('#addHyperLink #createLinkUrl').val(curHref);
-	// 		} else {
-	// 			$('#addHyperLink #createInternalUrl').val(curHref);
-	// 		}
+
+	const showAssetPage = function (page: number) {
+		const list = <HTMLElement>document.querySelector('.miniweb-assetlist');
+		list.dataset.page = page.toString();
+		const assets = list.querySelectorAll('li');
+		assets.forEach((li: HTMLElement) => {
+			li.classList.add('is-hidden');
+			const img = li.querySelector('img');
+			if (img) delete img.src;
+		});
+
+		//move current folder to top
+		const folder = (<HTMLInputElement>document.querySelector('[name="miniweb-asset-folder"]')).value;
+		const curEls = list.querySelectorAll('li[data-path="' + folder + '"]');
+
+		for (let i = curEls.length; i > 0; i--) {
+			list.insertBefore(curEls[i - 1], list.childNodes[0]);
+		}
+
+		const toShow = document.querySelectorAll('.miniweb-assetlist li[data-path="' + folder + '"]:nth-child(n+' + page + '):nth-child(-n+' + (page + 16) + ')');
+		toShow.forEach((li: HTMLElement) => {
+			const img = li.querySelector('img') as HTMLImageElement;
+			if (img && img.dataset.src) {
+				img.src = img.dataset.src;
+			}
+			li.classList.remove('is-hidden');
+		});
+		checkAssetPagerVisibility();
+	}
+	const checkAssetPagerVisibility = function () {
+
+	}
+
+	//PAGER STUFF
+	// var checkAssetPagerVisibility = function () {
+	// 	if ($('#miniweb-assetlist li:not(".is-hidden")').length > 15 &&
+	// 		$('#miniweb-assetlist li:visible:last').get(0) != $('#miniweb-assetlist li:not(".is-hidden"):last').get(0)) {
+	// 		$('#miniweb-asset-page-right').show();
+
+	// 	} else {
+	// 		$('#miniweb-asset-page-right').hide();
 	// 	}
-	// 	wysiwygObj.saveSelection();
-	// 	$('#addHyperLink').mw-modal();
+	// 	if ($('#miniweb-assetlist').data('page') == 0) {
+
+	// 		$('#miniweb-asset-page-left').hide();
+	// 	} else {
+	// 		$('#miniweb-asset-page-left').show();
+	// 	}
+	// };
+	// var setupAssetPager = function () {
+	// 	checkAssetPagerVisibility();
+	// 	$(".miniweb-asset-pager").unbind('click').click(function () {
+	// 		var page = $('#miniweb-assetlist').data('page');
+	// 		var move = $(this).data('page-move');
+	// 		console.log('goto page', page, move);
+	// 		var newPage = page + move;
+	// 		if (newPage < 0) newPage = 0;
+	// 		$('#miniweb-assetlist').data('page', newPage);
+	// 		newPage = (newPage * 15) + 1;
+
+	// 		$('body.miniweb-editing #miniweb-assetlist li').hide();
+	// 		$('body.miniweb-editing #miniweb-assetlist li:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 14) + ')').css({ 'display': 'inline-block' })
+	// 		checkAssetPagerVisibility();
+	// 	});
+
 	// };
 	// $.fn.miniwebAdmin.insertAsset = function (wysiwygObj: any) {
 	// 	$('#miniweb-assetlist li img').each(function () {
@@ -642,7 +642,7 @@ interface Window { miniwebAdmin: any; }
 								if (b.dataset.custom == "createLink") {
 									saveSelection();
 									const modal = document.getElementById('miniweb-addHyperLink');
-									if(selectedRange.commonAncestorContainer.parentNode.tagName == 'A'){
+									if (selectedRange.commonAncestorContainer.parentNode.tagName == 'A') {
 										const curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
 										if (curHref.indexOf('http') == 0) {
 											(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
@@ -652,6 +652,20 @@ interface Window { miniwebAdmin: any; }
 									}
 									modal.dataset.linkType = 'HTML';
 									modal.classList.add("show");
+								} else if (b.dataset.custom == "showSource") {
+									const content = b.closest('.miniweb-editor-toolbar').nextElementSibling;
+									if (b.dataset.showSource) {
+										delete b.dataset.showSource;
+										content.innerHTML = (<HTMLElement>content.firstElementChild).innerText;
+									} else {
+										b.dataset.showSource = "true";
+										let html = content.innerHTML;
+										html = html.replace(/\t/gi, '');
+										const pre = document.createElement('pre');
+										pre.innerText = html;
+										content.innerHTML = pre.outerHTML;
+									}
+
 								}
 							}
 						});
@@ -664,6 +678,20 @@ interface Window { miniwebAdmin: any; }
 			{
 				key: 'asset',
 				editStart: function (element: HTMLElement, index) {
+					element.addEventListener('click', (e) => {
+						console.log('assetclick', e, element, index);
+						if (e.offsetX > element.offsetWidth) {
+							const modal = document.getElementById('miniweb-addAsset');
+							const currentAsset = element.innerText;
+							modal.dataset.assetType = 'ASSET';
+							modal.dataset.assetIndex = index;
+							modal.dataset.currentAsset = currentAsset;
+							modal.classList.add("show");
+							e.stopPropagation();
+							e.preventDefault();
+							showAssetPage(0);
+						}
+					});
 					// $(this).addClass('miniweb-asset-edit').unbind('click').click(function (e) {
 					// 	var $el = $(this);
 					// 	//only trigger on :after click...
@@ -699,14 +727,15 @@ interface Window { miniwebAdmin: any; }
 					// 	}
 					// });
 				},
-				editEnd: function (index) {
-					//$(this).removeClass('miniweb-asset-edit');
+				editEnd: function (element: HTMLElement, index) {
+					//remove all click elements (recreate node)
+					element.parentNode.replaceChild(element.cloneNode(true), element);
 				}
 			},
 			{
 				key: 'url',
 				editStart: function (element: HTMLElement, index) {
-					element.addEventListener('click', (e) =>{
+					element.addEventListener('click', (e) => {
 						console.log('urlclick', e, element, index);
 						if (e.offsetX > element.offsetWidth) {
 							const modal = document.getElementById('miniweb-addHyperLink');
@@ -719,11 +748,14 @@ interface Window { miniwebAdmin: any; }
 							modal.dataset.linkType = 'URL';
 							modal.dataset.linkIndex = index;
 							modal.classList.add("show");
+							e.stopPropagation();
+							e.preventDefault();
 						}
 					});
 				},
-				editEnd: function (index) {
-					//$(this).removeClass('miniweb-url-edit');
+				editEnd: function (element: HTMLElement, index) {
+					//remove all click elements (recreate node)
+					element.parentNode.replaceChild(element.cloneNode(true), element);
 				}
 			}
 		]
