@@ -97,7 +97,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 			Configuration = config;
 			VirtualPath = GetVirtualPath(fullPath);
 			FileName = Path.GetFileName(VirtualPath);
-			Folder = Path.GetDirectoryName(VirtualPath.Substring(Configuration.AssetRootPath.Length)).Replace("\\", "/");
+			Folder = Path.GetDirectoryName(VirtualPath).Replace("\\", "/");
 		}
 		public FileInfo Info
 		{

@@ -288,6 +288,18 @@
                     console.error("unknown move", move, target);
                 }
             }
+            else if (target.classList.contains('miniweb-asset-pick')) {
+                const modal = document.getElementById('miniweb-addAsset');
+                const index = modal.dataset.assetIndex;
+                console.log('add link to', index);
+                const el = contentEditables[index];
+                if (modal.dataset.assetType == 'ASSET') {
+                    el.innerText = target.dataset.relpath;
+                }
+                modal.classList.remove('show');
+                delete modal.dataset.assetIndex;
+                delete modal.dataset.assetType;
+            }
         });
         window.addEventListener('keydown', ctrl_s_save, true);
         cancelEdit();
@@ -474,7 +486,10 @@
                             const currentAsset = element.innerText;
                             modal.dataset.assetType = 'ASSET';
                             modal.dataset.assetIndex = index;
-                            modal.dataset.currentAsset = currentAsset;
+                            if (currentAsset.lastIndexOf('/') > 0) {
+                                let folder = currentAsset.substr(0, currentAsset.lastIndexOf('/'));
+                                modal.querySelector('.select-asset-folder').value = folder;
+                            }
                             modal.classList.add("show");
                             e.stopPropagation();
                             e.preventDefault();

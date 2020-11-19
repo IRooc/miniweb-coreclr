@@ -327,7 +327,6 @@ interface Window { miniwebAdmin: any; }
 
 		});
 
-
 		//global events...
 		document.addEventListener('click', (e) => {
 			const target = e.target as HTMLElement;
@@ -378,6 +377,17 @@ interface Window { miniwebAdmin: any; }
 				} else {
 					console.error("unknown move", move, target);
 				}
+			} else if (target.classList.contains('miniweb-asset-pick')) {
+				const modal = document.getElementById('miniweb-addAsset');
+				const index = modal.dataset.assetIndex;
+				console.log('add link to', index)
+				const el = <HTMLElement>contentEditables[index];
+				if (modal.dataset.assetType == 'ASSET') {
+					el.innerText = target.dataset.relpath;
+				}
+				modal.classList.remove('show');
+				delete modal.dataset.assetIndex;
+				delete modal.dataset.assetType;
 			}
 		});
 
@@ -510,7 +520,7 @@ interface Window { miniwebAdmin: any; }
 		for (let i = curEls.length; i > 0; i--) {
 			assetPageList.insertBefore(curEls[i - 1], assetPageList.childNodes[0]);
 		}
-		
+
 		const newPage = (page*16)+1;
 		const toShow = document.querySelectorAll('.miniweb-assetlist li[data-path="' + folder + '"]:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 15) + ')');
 		toShow.forEach((li: HTMLElement) => {
@@ -718,7 +728,10 @@ interface Window { miniwebAdmin: any; }
 							const currentAsset = element.innerText;
 							modal.dataset.assetType = 'ASSET';
 							modal.dataset.assetIndex = index;
-							modal.dataset.currentAsset = currentAsset;
+							if (currentAsset.lastIndexOf('/') > 0) {
+								let folder = currentAsset.substr(0, currentAsset.lastIndexOf('/'));
+								(<HTMLInputElement>modal.querySelector('.select-asset-folder')).value = folder;
+							}
 							modal.classList.add("show");
 							e.stopPropagation();
 							e.preventDefault();
