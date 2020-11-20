@@ -79,7 +79,7 @@
 </aside>
 
 <!-- Modal -->
-<div class="mw-modal" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
+<div class="mw-modal miniweb-pageproperties" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
 	<div class="mw-modal-content">
 		<div class="mw-modal-header">
 			<h4 id="myModalPageLabel">Page properties</h4>
@@ -134,20 +134,19 @@
 				<input type="text" id="url" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl" />
 			</div>
 		</form>
-		<div class="mw-modal-footer">
-			<div class="is-hidden">
-				<form>
-					<input type="file" multiple name="files" class="add-multiplepages" style="position:absolute;width:0;height:0" />
-					<label>force<input type="checkbox" name="force" value="true" /></label>
-					<button class="btn btn-default add-multiplepages">Upload Pages</button>
-				</form>
-			</div>
+		<div class="mw-modal-footer">			
 			<button data-dismiss=".mw-modal">Close</button>
-			<button>Delete Page</button>
+			<button id="miniwebDeletePage">Delete Page</button>
 			<button id="miniwebSavePage">Save properties</button>
 		</div>
+		<div class="is-hidden">
+			<form>
+				<label>force<input type="checkbox" name="force" value="true" /></label>
+				<button type="button" id="add-multiplepages">Upload Pages</button>
+				<input type="file" multiple name="files" style="position:absolute;width:0;height:0" />
+			</form>
+		</div>
 	</div>
-
 </div>
 
 <div class="mw-modal" id="miniweb-addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
@@ -213,7 +212,7 @@
 					var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
 					var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
 				}
-				Folder: <input class="select-asset-folder" name="miniweb-asset-folder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
+				Folder: <input class="select-asset-folder" name="miniwebAssetFolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
 				<datalist id="miniweb-folder-list">
 					@foreach(var f in allFolders)
 					{
@@ -222,7 +221,8 @@
 				</datalist>
 
 				<ul class="miniweb-assetlist" data-page="0" data-asset-root-path="images/">
-					@foreach(var a in allAssets){
+					@foreach(var a in allAssets) 
+					{
 					<li data-path="@a.Folder" class="is-hidden">
 						@if (a.Type == MiniWeb.Core.AssetType.Image) {
 							<img data-src="@a.VirtualPath" data-filename="@a.FileName" data-relpath="@a.VirtualPath" class="miniweb-asset-pick" />
@@ -234,7 +234,7 @@
 					</li>
 					}
 				</ul>
-				<button>Add Asset</button>
+				<button id="miniweb-add-asset" type="button">Add Asset</button>
 				<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0" />
 			</div>
 			<div class="mw-modal-footer">

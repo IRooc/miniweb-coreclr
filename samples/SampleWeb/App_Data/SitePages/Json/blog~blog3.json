@@ -1,1 +1,28 @@
-{"Url":"blog/blog3","Title":"Blog 3","Template":"~/Views/Pages/OneColumn.cshtml","Layout":"~/Views/_layout.cshtml","MetaTitle":"blog 3 test","MetaDescription":"Blog 3 test item","Visible":true,"ShowInMenu":false,"SortOrder":3,"Created":"2015-09-17T08:08:54+02:00","LastModified":"2015-09-17T15:26:18.9087818+02:00","Sections":[{"Key":"content","Items":[{"Template":"~/Views/Items/blogitem.cshtml","Values":{"title":"Blog post number 3","content":"Blog 3 content item lorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porier"}}]}]}
+{
+  "Url": "blog/blog3",
+  "RedirectUrl": null,
+  "Title": "Blog 3",
+  "Template": "~/Views/Pages/OneColumn.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
+  "MetaTitle": "blog 3 test",
+  "MetaDescription": "Blog 3 test item",
+  "Visible": true,
+  "ShowInMenu": false,
+  "SortOrder": 3,
+  "Created": "2015-09-17T08:08:54+02:00",
+  "LastModified": "2020-11-20T11:43:16.8111583+01:00",
+  "Sections": [
+    {
+      "Key": "content",
+      "Items": [
+        {
+          "Template": "~/Views/Items/blogitem.cshtml",
+          "Values": {
+            "title": "Blog post number 3",
+            "content": "Blog 3 content item lorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porierlorem ipsum dolor sid amed etc func dolor mada porier"
+          }
+        }
+      ]
+    }
+  ]
+}

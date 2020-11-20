@@ -27,12 +27,11 @@
         }
         return extended;
     };
-    window.miniwebAdmin = function (userOptions) {
+    const miniwebAdmin = function (userOptions) {
         var adminTag = this;
         var options = extend(miniwebAdminDefaults, userOptions);
         let contentEditables;
         let btnNew;
-        let btnSavePage;
         let btnEdit;
         let btnSave;
         let btnCancel;
@@ -84,8 +83,6 @@
             else {
                 document.querySelectorAll('.miniweb-insertcontent, .miniweb-template-actions').forEach(el => el.remove());
             }
-        };
-        const toggleSourceView = function () {
         };
         const getParsedHtml = function (source) {
             var parsedDOM;
@@ -146,8 +143,8 @@
             return document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]').value;
         };
         const savePage = function () {
-            const form = document.querySelector('#miniweb-pageProperties form');
-            let formData = new FormData(form);
+            const form = document.querySelector('.show.miniweb-pageproperties form');
+            const formData = new FormData(form);
             formData.append('__RequestVerificationToken', getVerificationToken());
             fetch(options.apiEndpoint + "savepage", {
                 method: "POST",
@@ -167,6 +164,27 @@
         };
         const removePage = function () {
             if (confirm('are you sure?')) {
+                const adminNav = document.getElementById('miniweb-admin-nav');
+                const formData = new FormData();
+                formData.append('__RequestVerificationToken', getVerificationToken());
+                formData.append('url', adminNav.dataset.miniwebPath);
+                fetch(options.apiEndpoint + "removepage", {
+                    method: "POST",
+                    body: formData
+                }).then(res => res.json())
+                    .then(data => {
+                    if (data.result) {
+                        showMessage(true, "removed page successfully");
+                        setTimeout(function () {
+                            document.location.href = data.url;
+                        }, 1000);
+                    }
+                    else {
+                        showMessage(false, data.message);
+                    }
+                }).catch(res => {
+                    showMessage(false, 'failed to delete');
+                });
             }
         };
         const addNewPage = function () {
@@ -203,17 +221,21 @@
             modal.querySelector('[name="Url"]').value = null;
         };
         btnNew = document.getElementById("miniwebButtonNew");
-        btnSavePage = document.getElementById("miniwebSavePage");
         btnEdit = document.getElementById("miniwebButtonEdit");
         btnSave = document.getElementById("miniwebButtonSave");
         btnCancel = document.getElementById("miniwebButtonCancel");
         contentEditables = document.querySelectorAll('[data-miniwebprop]');
+        const btnSavePage = document.getElementById("miniwebSavePage");
+        const btnDeletePage = document.getElementById("miniwebDeletePage");
+        const btnAddLink = document.getElementById("miniwebAddLink");
+        const btnAddAsset = document.getElementById('miniweb-add-asset');
+        const btnAddMultiplePages = document.getElementById('add-multiplepages');
         btnSavePage.addEventListener('click', savePage);
+        btnDeletePage.addEventListener('click', removePage);
+        btnAddLink.addEventListener('click', addLink);
         btnEdit.addEventListener('click', editContent);
         btnSave.addEventListener('click', saveContent);
         btnCancel.addEventListener('click', cancelEdit);
-        const btnAddLink = document.getElementById("miniwebAddLink");
-        btnAddLink.addEventListener('click', addLink);
         document.getElementById('miniwebNavigateOnEnter').addEventListener('keypress', (e) => {
             if (e.code == "Enter") {
                 document.location.href = e.target.value;
@@ -230,6 +252,76 @@
                 }
             }
         });
+        btnAddAsset.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const button = e.target;
+            const form = button.closest('form');
+            const fileUpload = button.nextElementSibling;
+            fileUpload.onchange = (e) => {
+                console.log('selected asset', e);
+                const formData = new FormData(form);
+                formData.append('__RequestVerificationToken', getVerificationToken());
+                console.log('formdata', formData);
+                fetch(options.apiEndpoint + "saveassets", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                    if (data && data.result) {
+                        for (var i = 0; i < data.assets.length; i++) {
+                            var asset = data.assets[i];
+                            const assetList = document.querySelector('.miniweb-assetlist');
+                            if (assetList.querySelector('[data-relpath="' + asset.virtualPath + '"]'))
+                                continue;
+                            const li = document.createElement('li');
+                            li.dataset.path = asset.folder;
+                            if (asset.type == 0) {
+                                li.innerHTML = '<img data-src="' + asset.virtualPath + '" src="' + asset.virtualPath + '" data-filename=' + asset.fileName + '" data-relpath=' + asset.virtualPath + '" class="miniweb-asset-pick" >';
+                            }
+                            else {
+                                li.innerHTML = '<span data-filename="' + asset.virtualPath + '" data-relpath=' + asset.virtualPath + '" class="miniweb-asset-pick"  >' + asset.fileName + '</span>';
+                            }
+                            assetList.appendChild(li);
+                        }
+                        setTimeout(() => { showAssetPage(0); }, 500);
+                        showMessage(true, "The assets were saved successfully");
+                    }
+                    else {
+                        showMessage(false, "Save assets failed");
+                    }
+                });
+            };
+            fileUpload.click();
+        });
+        btnAddMultiplePages.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const button = e.target;
+            const form = button.closest('form');
+            const fileUpload = button.nextElementSibling;
+            fileUpload.onchange = (e) => {
+                console.log('selected asset', e);
+                const formData = new FormData(form);
+                formData.append('__RequestVerificationToken', getVerificationToken());
+                console.log('formdata', formData);
+                fetch(options.apiEndpoint + "multiplepages", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                    if (data && data.result) {
+                        showMessage(true, "Pages saved successfully");
+                    }
+                    else {
+                        showMessage(false, "Save pages failed");
+                    }
+                });
+            };
+            fileUpload.click();
+        });
         document.addEventListener('click', (e) => {
             const target = e.target;
             console.log('documentclick', e, target);
@@ -237,9 +329,12 @@
                 return;
             if (target.dataset.showModal) {
                 e.preventDefault();
+                document.querySelectorAll('.mw-modal.show').forEach(el => {
+                    el.classList.remove('show');
+                });
                 const modal = document.querySelector(target.dataset.showModal);
                 if (modal) {
-                    modal.classList.contains('show') ? modal.classList.remove('show') : modal.classList.add('show');
+                    modal.classList.add('show');
                 }
             }
             else if (target.dataset.dismiss) {
@@ -303,6 +398,9 @@
         });
         window.addEventListener('keydown', ctrl_s_save, true);
         cancelEdit();
+        this.options = options;
+        this.cancelEdit = cancelEdit;
+        this.getVerificationToken = getVerificationToken;
         return this;
     };
     let selectedRange;
@@ -352,7 +450,7 @@
             txtMessage.parentElement.classList.add("is-hidden");
         }, timeout);
     };
-    document.querySelector('[name="miniweb-asset-folder"]').addEventListener('input', (e) => {
+    document.querySelector('[name="miniwebAssetFolder"]').addEventListener('input', (e) => {
         const input = e.target;
         const listId = input.getAttribute('list');
         const list = document.getElementById(listId);
@@ -373,7 +471,7 @@
             if (img)
                 delete img.src;
         });
-        const folder = document.querySelector('[name="miniweb-asset-folder"]').value;
+        const folder = document.querySelector('[name="miniwebAssetFolder"]').value;
         const curEls = assetPageList.querySelectorAll('li[data-path="' + folder + '"]');
         for (let i = curEls.length; i > 0; i--) {
             assetPageList.insertBefore(curEls[i - 1], assetPageList.childNodes[0]);
@@ -551,4 +649,5 @@
     else {
         toggleHiddenMenuItems(false);
     }
+    window.miniwebAdmin = miniwebAdmin;
 })();

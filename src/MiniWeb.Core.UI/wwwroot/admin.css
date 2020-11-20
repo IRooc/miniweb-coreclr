@@ -74,6 +74,10 @@ miniwebadmin .mw-modal.show {
 	background-color: rgba(0,0,0,0.7);
 	z-index: 10;
 }
+miniwebadmin .mw-modal .mw-modal-header h4 {
+	margin: 1em 0;
+	font-size: 1.5em;
+}
 miniwebadmin .mw-modal .mw-modal-content {
 	width: 40em;
 	background-color: white;

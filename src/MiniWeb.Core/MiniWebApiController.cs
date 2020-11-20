@@ -52,7 +52,7 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SaveAssets(string virtualFolder, List<IFormFile> files)
+		public IActionResult SaveAssets(string miniwebAssetFolder, List<IFormFile> files)
 		{
 			if (files.Count > 0)
 			{
@@ -63,9 +63,14 @@ namespace MiniWeb.Core
 					{
 						file.CopyTo(ms);
 						var fileBytes = ms.ToArray();
-						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, virtualFolder);
-						assets.Add(newAsset);
-						_webSite.ReloadAssets(true);
+						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, miniwebAssetFolder);
+						if (newAsset != null)
+						{
+							assets.Add(newAsset);
+							_webSite.ReloadAssets(true);
+						} else {
+							return new JsonResult(new { result = false });
+						}
 					}
 				}
 				return new JsonResult(new { result = true, assets = assets.Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
@@ -88,7 +93,7 @@ namespace MiniWeb.Core
 						if (_webSite.Pages.FirstOrDefault(p => p.Url == sitePage.Url) == null || force)
 						{
 							_webSite.SaveSitePage(sitePage, Request);
-						} 
+						}
 						else if (!force)
 						{
 							return new JsonResult(new { result = false, message = $"Page with url {sitePage.Url} already exists" });
@@ -99,10 +104,10 @@ namespace MiniWeb.Core
 			}
 			return new JsonResult(new { result = false });
 		}
-		
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SavePage([FromForm]SitePageBasicPostModel posted)
+		public IActionResult SavePage([FromForm] SitePageBasicPostModel posted)
 		{
 			//ignore move for now...
 			if (Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != posted.Url)
@@ -147,14 +152,14 @@ namespace MiniWeb.Core
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
 			return new JsonResult(new { result = true, url = redirectUrl });
 		}
-		
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult ReloadPages()
 		{
 			_webSite.ReloadAssets(true);
 			_webSite.ReloadPages(true);
-			return new JsonResult(new {result=true});
+			return new JsonResult(new { result = true });
 		}
 	}
 }
