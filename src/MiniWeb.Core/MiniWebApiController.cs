@@ -68,7 +68,9 @@ namespace MiniWeb.Core
 						{
 							assets.Add(newAsset);
 							_webSite.ReloadAssets(true);
-						} else {
+						}
+						else
+						{
 							return new JsonResult(new { result = false });
 						}
 					}
@@ -110,7 +112,7 @@ namespace MiniWeb.Core
 		public IActionResult SavePage([FromForm] SitePageBasicPostModel posted)
 		{
 			//ignore move for now...
-			if (Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != posted.Url)
+			if (posted.NewPage != true && Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != posted.Url)
 			{
 				string message = $"Moving pages not allowed yet, tried to move {Request.Form["OldUrl"]} to new location: {posted.Url}";
 				_webSite.Logger?.LogError(message);
@@ -121,6 +123,10 @@ namespace MiniWeb.Core
 			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == posted.Url);
 			if (page == null)
 			{
+				if (posted.NewPage != true)
+				{
+					return new JsonResult(new { result = false, message = $"Page with url {posted.Url} already exists" });
+				}
 				//new page
 				page = _webSite.ContentStorage.NewPage();
 				page.Url = posted.Url;

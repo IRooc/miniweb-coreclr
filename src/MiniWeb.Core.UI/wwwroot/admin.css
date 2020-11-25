@@ -87,6 +87,12 @@ miniwebadmin .mw-modal .mw-modal-content {
 	left:0;
 	padding-left: 40px;
 }
+miniwebadmin .mw-modal.miniweb-modal-right .mw-modal-content {
+	position: absolute;
+	right: 0;
+	top:0;
+	left:auto;
+}
 miniwebadmin .mw-modal .mw-modal-content .right {
 	position: absolute;
 	right: 0;
@@ -209,6 +215,9 @@ miniwebadmin .form-group label + input,
 miniwebadmin .form-group label + select {
 	width:60%
 }
+miniwebadmin .form-group label + input[type="checkbox"] {
+	width: auto;
+}
 miniwebadmin .form-group .input-group {
 	display: inline-block;	
 	width:60%
@@ -231,6 +240,13 @@ miniwebadmin .form-group .input-group .addon + select {
 .miniweb-editing pre {
 	max-width: 100%;
 	white-space: pre-wrap;
+}
+.miniweb-editing [data-miniwebsection] {
+	padding: 5px;
+	border: 1px dotted transparent
+}
+.miniweb-editing [data-miniwebsection]:hover {
+	border-color: grey;
 }
 .miniweb-editing [data-miniwebtemplate] {
 	overflow: hidden;

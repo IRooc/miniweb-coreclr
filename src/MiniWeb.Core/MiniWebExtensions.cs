@@ -54,7 +54,6 @@ namespace MiniWeb.Core
         /// Registers the miniweb Mvc Routes and Custom Middleware
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="registerCookieAuth"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseMiniWebSite(this IApplicationBuilder app)
         {

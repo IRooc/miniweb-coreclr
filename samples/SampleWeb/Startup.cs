@@ -65,6 +65,7 @@ namespace SampleWeb
             {
                 o.LoginPath = new PathString(authConfig.LoginPath);
                 o.LogoutPath = new PathString(authConfig.LogoutPath);
+				o.ExpireTimeSpan = TimeSpan.FromHours(1);
             })
             .AddOAuth("Github-Auth", "Login with GitHub account", o =>
             {

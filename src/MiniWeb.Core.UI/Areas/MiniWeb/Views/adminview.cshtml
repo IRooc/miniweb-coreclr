@@ -31,7 +31,7 @@
 	</div>
 	<div class="miniweb-tool">
 		<ul class="miniweb-horizontal-list">
-			<li><button class="icon icon-props" data-show-modal="#miniweb-pageProperties">Page properties</button></li>
+			<li><button class="icon icon-props" id="miniwebPageProperties">Page properties</button></li>
 			<li class="divider"></li>
 			<li><button class="icon icon-edit" id="miniwebButtonEdit">Edit Content</button></li>
 			<li><button class="icon icon-save" id="miniwebButtonSave" disabled>Save Content</button></li>
@@ -86,6 +86,7 @@
 			<button class="icon right" data-dismiss=".mw-modal">&times;</button>
 		</div>
 		<form>
+			<input type="hidden" name="NewPage" value="false" />
 			<input type="hidden" name="OldUrl" value="@Model.Url" />
 			<input type="hidden" name="Layout" value="@Model.Layout" />
 			<div class="form-group">

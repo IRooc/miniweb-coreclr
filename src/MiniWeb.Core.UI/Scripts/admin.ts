@@ -186,6 +186,8 @@ interface Window { miniwebAdmin: any; }
 				}).catch(res => {
 					showMessage(false, 'failed to post');
 				});
+
+			(<HTMLInputElement>form.querySelector('[name="NewPage"]')).value = "false";
 		};
 		const removePage = function () {
 			if (confirm('are you sure?')) {
@@ -212,18 +214,26 @@ interface Window { miniwebAdmin: any; }
 			}
 		};
 		const addNewPage = function () {
-			//copy and empty current page property modal
-			// if ($('#newPageProperties').length == 0) {
-			// 	var newP = $('#pageProperties').clone();
-			// 	newP.attr('id', 'newPageProperties');
-			// 	$('input[name=OldUrl]', newP).remove();
-			// 	$('input,textarea', newP).not('[type=hidden],[type=checkbox]').val('');
-			// 	var parentUrl = $('#pageProperties input[name=Url]').val();
-			// 	$('input[name=Url]', newP).val(parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1));
-			// 	adminTag.append(newP);
-			// 	$('#newPageProperties .btn-primary').bind('click', savePage);
-			// }
-			// $('#newPageProperties').mw-modal();
+			const modal = document.querySelector('.miniweb-pageproperties') as HTMLElement;
+			modal.classList.add("miniweb-modal-right");
+			const form = modal.querySelector('form');
+
+			const elems = form.querySelectorAll('input,textarea');
+
+			for (let i = 0; i < elems.length; i++) {
+				const elem = elems[i] as HTMLInputElement;
+				switch (elem.name) {
+					case 'NewPage':
+						elem.value = "true";
+						break;
+					case 'Layout': break;
+					default:
+						elem.value = null;
+						break;
+				}
+			}
+
+			modal.classList.add('show');
 		};
 		const ctrl_s_save = function (event) {
 			if (document.querySelector('body').classList.contains('miniweb-editing')) {
@@ -262,6 +272,8 @@ interface Window { miniwebAdmin: any; }
 		contentEditables = document.querySelectorAll('[data-miniwebprop]');
 
 		const btnSavePage = document.getElementById("miniwebSavePage");
+		const btnNewPage = document.getElementById("miniwebButtonNew");
+		const btnPageProperties = document.getElementById("miniwebPageProperties");
 		const btnDeletePage = document.getElementById("miniwebDeletePage");
 		const btnAddLink = document.getElementById("miniwebAddLink");
 		const btnAddAsset = document.getElementById('miniweb-add-asset');
@@ -270,13 +282,19 @@ interface Window { miniwebAdmin: any; }
 		btnSavePage.addEventListener('click', savePage);
 		btnDeletePage.addEventListener('click', removePage);
 		btnAddLink.addEventListener('click', addLink);
+		btnNewPage.addEventListener('click', addNewPage);
+		btnPageProperties.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			const modal = document.querySelector('.miniweb-pageproperties') as HTMLElement;
+			(modal.querySelector('[name="NewPage"]') as HTMLInputElement).value = "false";
+			modal.classList.remove("miniweb-modal-right");
+			modal.classList.add("show");
+		});
 
 		btnEdit.addEventListener('click', editContent);
 		btnSave.addEventListener('click', saveContent);
 		btnCancel.addEventListener('click', cancelEdit);
-
-
-		// $('#newPage').bind('click', addNewPage);
 
 		document.getElementById('miniwebNavigateOnEnter').addEventListener('keypress', (e) => {
 			if (e.code == "Enter") {

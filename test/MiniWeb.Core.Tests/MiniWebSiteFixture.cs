@@ -14,7 +14,6 @@ namespace MiniWeb.Core.Tests
 		public IMiniWebSite MiniWeb { get; set; }
 		public MiniWebSiteFixture()
 		{
-			object expected;
 			var hostingEnv = new Mock<IHostingEnvironment>();
 			var loggerFactory = new Mock<ILoggerFactory>();
 			var contentStorage = new Mock<IMiniWebContentStorage>();

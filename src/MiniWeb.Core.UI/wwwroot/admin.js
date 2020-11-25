@@ -161,6 +161,7 @@
             }).catch(res => {
                 showMessage(false, 'failed to post');
             });
+            form.querySelector('[name="NewPage"]').value = "false";
         };
         const removePage = function () {
             if (confirm('are you sure?')) {
@@ -188,6 +189,23 @@
             }
         };
         const addNewPage = function () {
+            const modal = document.querySelector('.miniweb-pageproperties');
+            modal.classList.add("miniweb-modal-right");
+            const form = modal.querySelector('form');
+            const elems = form.querySelectorAll('input,textarea');
+            for (let i = 0; i < elems.length; i++) {
+                const elem = elems[i];
+                switch (elem.name) {
+                    case 'NewPage':
+                        elem.value = "true";
+                        break;
+                    case 'Layout': break;
+                    default:
+                        elem.value = null;
+                        break;
+                }
+            }
+            modal.classList.add('show');
         };
         const ctrl_s_save = function (event) {
             if (document.querySelector('body').classList.contains('miniweb-editing')) {
@@ -226,6 +244,8 @@
         btnCancel = document.getElementById("miniwebButtonCancel");
         contentEditables = document.querySelectorAll('[data-miniwebprop]');
         const btnSavePage = document.getElementById("miniwebSavePage");
+        const btnNewPage = document.getElementById("miniwebButtonNew");
+        const btnPageProperties = document.getElementById("miniwebPageProperties");
         const btnDeletePage = document.getElementById("miniwebDeletePage");
         const btnAddLink = document.getElementById("miniwebAddLink");
         const btnAddAsset = document.getElementById('miniweb-add-asset');
@@ -233,6 +253,15 @@
         btnSavePage.addEventListener('click', savePage);
         btnDeletePage.addEventListener('click', removePage);
         btnAddLink.addEventListener('click', addLink);
+        btnNewPage.addEventListener('click', addNewPage);
+        btnPageProperties.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const modal = document.querySelector('.miniweb-pageproperties');
+            modal.querySelector('[name="NewPage"]').value = "false";
+            modal.classList.remove("miniweb-modal-right");
+            modal.classList.add("show");
+        });
         btnEdit.addEventListener('click', editContent);
         btnSave.addEventListener('click', saveContent);
         btnCancel.addEventListener('click', cancelEdit);

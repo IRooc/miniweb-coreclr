@@ -12,5 +12,6 @@
 		public string Url { get; set; }
 		public string RedirectUrl { get; set; }
 		public bool Visible { get; set; }
+		public bool? NewPage { get; set; }
 	}
 }
