@@ -2,17 +2,6 @@
 interface Window { miniwebAdmin: any; }
 (function () {
 
-	var readFileIntoDataUrl = function (fileInfo) {
-		return new Promise((resolve, reject) => {
-			const fReader = new FileReader();
-			fReader.onload = function (e) {
-				resolve((<any>e.target).result);
-			};
-			fReader.onerror = reject;
-			fReader.readAsDataURL(fileInfo);
-		})
-	};
-
 	if (!document.querySelector("miniwebadmin")) {
 		return;
 	}

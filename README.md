@@ -12,7 +12,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * [embedded Razor View](http://irooc.github.io/miniweb-coreclr/embedded-razorviews.html)
 * [embedded assets](http://irooc.github.io/miniweb-coreclr/embedded-assets.html) (css/js)
 
-it currently runs on  .net core 3.1.
+it currently runs on  .net 5.0.
 Tested on windows, mac osx, linux (ubuntu)
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
@@ -104,7 +104,7 @@ public class Startup
 Currently there are three storage packages
 * MiniWeb.Storage.JsonStorage
 * MiniWeb.Storage.XmlStorage
-* MiniWeb.Storage.EFStorage (SqlServer) not tested on core3 yet
+* MiniWeb.Storage.EFStorage (SqlServer)
 
 The first two are filesystem stores and store their files in the /App_Data/Sitepages folder
 
@@ -126,9 +126,6 @@ If you use the JsonStorage example make sure your username password is added to 
 Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.
 
 ## TODO
-* Remove external UI dependencies
-  * Remove Bootstrap if easily possible
-  * Remove JQuery dependency to ES6 scripts
 * Maybe change usage files to a Razor Pages
 
 
