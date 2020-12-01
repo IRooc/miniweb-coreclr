@@ -45,7 +45,7 @@ namespace MiniWeb.Core.UI.TagHelpers
 
                 if (!IgnoreAdminStart) 
                 {
-                    output.Content.AppendHtml($"<script type=\"module\">import {{ miniwebAdmin }} from '/miniweb-resources/admin.js';miniwebAdmin({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\"}});</script>");
+                    output.Content.AppendHtml($"<script type=\"module\">import {{ miniwebAdminInit }} from '/miniweb-resources/admin.js';miniwebAdminInit({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\"}});</script>");
                 }
             }
             else

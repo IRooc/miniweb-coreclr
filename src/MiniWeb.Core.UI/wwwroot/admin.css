@@ -119,9 +119,10 @@ miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
 }
 miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status a {
 	color:white;
-	margin-top: 1.7em;
+	margin-top: 1em;
+	padding:0;
 	display: inline-block;
-	font-size: 12px;
+	font-size: 10px;
 	text-align: center;
 	width: 100%;
 	text-decoration: none;
