@@ -7,7 +7,7 @@
 
 <nav id="miniweb-admin-nav" class="miniweb-tools" data-ispublished="@isPublished" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
 	<div class="miniweb-tool miniweb-status @(isPublished ? " published" : "offline" )">
-		<a href="#" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
+		<a href="#" id="reload-cache" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
 	</div>
 	<div class="miniweb-tool pull-right">
 		<ul class="miniweb-horizontal-list">

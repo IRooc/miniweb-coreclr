@@ -161,7 +161,7 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult ReloadPages()
+		public IActionResult ReloadCaches()
 		{
 			_webSite.ReloadAssets(true);
 			_webSite.ReloadPages(true);

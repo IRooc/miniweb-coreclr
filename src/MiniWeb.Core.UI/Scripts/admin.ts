@@ -1,12 +1,4 @@
-﻿
-
-let contentEditables = <NodeListOf<Element>>document.querySelectorAll('[data-miniwebprop]');
-let options: any;
-
-const btnNew = <Element>document.getElementById("miniwebButtonNew");
-const btnEdit = <Element>document.getElementById("miniwebButtonEdit");
-const btnSave = <Element>document.getElementById("miniwebButtonSave");
-const btnCancel = <Element>document.getElementById("miniwebButtonCancel");
+﻿let options: any;
 
 const extend: any = function (defaults, options) {
 	var extended = {};
@@ -176,6 +168,7 @@ const htmlEscape = function (str) {
 
 const txtMessage = document.querySelector("miniwebadmin .alert");
 const showMessage = function (success: boolean, message: string, isHtml: boolean = false) {
+	console.log('showMessage', ...arguments);
 	var className = success ? "alert-success" : "alert-danger";
 	var timeout = success ? 4000 : 8000;
 	txtMessage.classList.add(className);
@@ -249,7 +242,7 @@ const toggleHiddenMenuItems = function (on: Boolean) {
 const editContent = function () {
 	document.querySelector('body').classList.add('miniweb-editing');
 	//reassign arrays so al new items are parsed
-	contentEditables = document.querySelectorAll('[data-miniwebprop]');
+	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
 	contentEditables.forEach(el => el.setAttribute('contentEditable', "true"));
 
 	for (var i = 0; i < options.editTypes.length; i++) {
@@ -261,7 +254,10 @@ const editContent = function () {
 			}
 		});
 	}
-
+	const btnNew = document.getElementById("miniwebButtonNew");
+	const btnEdit = document.getElementById("miniwebButtonEdit");
+	const btnSave = document.getElementById("miniwebButtonSave");
+	const btnCancel = document.getElementById("miniwebButtonCancel");
 	btnNew.setAttribute("disabled", "true");
 	btnEdit.setAttribute("disabled", "true");
 	btnSave.removeAttribute("disabled");
@@ -271,6 +267,7 @@ const editContent = function () {
 };
 const cancelEdit = function () {
 	document.querySelector('body').classList.remove('miniweb-editing');
+	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
 	contentEditables.forEach(el => el.removeAttribute('contentEditable'));
 
 
@@ -286,7 +283,10 @@ const cancelEdit = function () {
 		});
 	}
 
-
+	const btnNew = document.getElementById("miniwebButtonNew");
+	const btnEdit = document.getElementById("miniwebButtonEdit");
+	const btnSave = document.getElementById("miniwebButtonSave");
+	const btnCancel = document.getElementById("miniwebButtonCancel");
 	btnNew.removeAttribute("disabled");
 	btnEdit.removeAttribute("disabled");
 	btnSave.setAttribute("disabled", "true");
@@ -450,6 +450,7 @@ const ctrl_s_save = function (event) {
 
 const addLink = function () {
 	const modal = document.getElementById('miniweb-addHyperLink');
+	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
 	let href = (<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value;
 	if (!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
 	if (modal.dataset.linkType == 'HTML') {
@@ -526,6 +527,7 @@ document.addEventListener('click', (e) => {
 			console.error("unknown move", move, target);
 		}
 	} else if (target.classList.contains('miniweb-asset-pick')) {
+		const contentEditables = document.querySelectorAll('[data-miniwebprop]');
 		const modal = document.getElementById('miniweb-addAsset');
 		const index = modal.dataset.assetIndex;
 		console.log('add link to', index)
@@ -542,8 +544,9 @@ document.addEventListener('click', (e) => {
 const miniwebAdminInit = function (userOptions) {
 	options = extend(miniwebAdminDefaults, userOptions);
 
-
-
+	const btnEdit = document.getElementById("miniwebButtonEdit");
+	const btnSave = document.getElementById("miniwebButtonSave");
+	const btnCancel = document.getElementById("miniwebButtonCancel");
 	const btnSavePage = document.getElementById("miniwebSavePage");
 	const btnNewPage = document.getElementById("miniwebButtonNew");
 	const btnPageProperties = document.getElementById("miniwebPageProperties");
@@ -551,6 +554,7 @@ const miniwebAdminInit = function (userOptions) {
 	const btnAddLink = document.getElementById("miniwebAddLink");
 	const btnAddAsset = document.getElementById('miniweb-add-asset');
 	const btnAddMultiplePages = document.getElementById('add-multiplepages');
+	const btnReload = document.getElementById('reload-cache');
 
 	btnSavePage.addEventListener('click', savePage);
 	btnDeletePage.addEventListener('click', removePage);
@@ -657,6 +661,20 @@ const miniwebAdminInit = function (userOptions) {
 
 	});
 
+	btnReload.addEventListener('click', (e) => {
+		const data = new FormData();
+		data.append('__RequestVerificationToken', getVerificationToken());
+		fetch(options.apiEndpoint + "reloadcaches", {
+			method: "POST",
+			body: data
+		}).then(res => res.json())
+			.then(data => {
+				console.log(data);
+				if (data?.result) showMessage(true, "Caches were cleared");
+				else showMessage(false, "Failed to clear cache");
+				cancelEdit();
+			});
+	});
 
 
 	window.addEventListener('keydown', ctrl_s_save, true);
