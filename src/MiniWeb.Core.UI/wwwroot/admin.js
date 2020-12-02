@@ -67,6 +67,20 @@ const miniwebAdminDefaults = {
                                     content.innerHTML = pre.outerHTML;
                                 }
                             }
+                            else if (b.dataset.custom == "insertAsset") {
+                                const modal = document.getElementById('miniweb-addAsset');
+                                const currentAsset = element.innerText;
+                                modal.dataset.assetType = 'HTML';
+                                modal.dataset.assetIndex = index;
+                                if (currentAsset.lastIndexOf('/') > 0) {
+                                    let folder = currentAsset.substr(0, currentAsset.lastIndexOf('/'));
+                                    modal.querySelector('.select-asset-folder').value = folder;
+                                }
+                                modal.classList.add("show");
+                                e.stopPropagation();
+                                e.preventDefault();
+                                showAssetPage(0);
+                            }
                         }
                     });
                 });
@@ -404,6 +418,7 @@ const addNewPage = function () {
                 break;
             case 'Layout': break;
             default:
+                elem.dataset.oldvalue = elem.value;
                 elem.value = null;
                 break;
         }
@@ -512,6 +527,9 @@ document.addEventListener('click', (e) => {
         if (modal.dataset.assetType == 'ASSET') {
             el.innerText = target.dataset.relpath;
         }
+        else if (modal.dataset.assetType == 'HTML') {
+            document.execCommand('inserthtml', false, `<img src="${target.dataset.relpath}"/>`);
+        }
         modal.classList.remove('show');
         delete modal.dataset.assetIndex;
         delete modal.dataset.assetType;
@@ -539,6 +557,15 @@ const miniwebAdminInit = function (userOptions) {
         e.stopPropagation();
         const modal = document.querySelector('.miniweb-pageproperties');
         modal.querySelector('[name="NewPage"]').value = "false";
+        const form = modal.querySelector('form');
+        const elems = form.querySelectorAll('input,textarea');
+        for (let i = 0; i < elems.length; i++) {
+            const elem = elems[i];
+            if (!elem.value && elem.dataset.oldvalue) {
+                elem.value = elem.dataset.oldvalue;
+                delete elem.dataset.oldvalue;
+            }
+        }
         modal.classList.remove("miniweb-modal-right");
         modal.classList.add("show");
     });

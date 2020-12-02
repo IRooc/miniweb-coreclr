@@ -11,7 +11,7 @@
 	</div>
 	<div class="miniweb-tool pull-right">
 		<ul class="miniweb-horizontal-list">
-			<li class="hidden-xs"><input type="text" list="pages" id="miniwebNavigateOnEnter" /><datalist id="pages">
+			<li class="hidden-xs"><input type="text" list="pages" id="miniwebNavigateOnEnter" placeholder="Navigate to page"  /><datalist id="pages">
 					@foreach (var p in MiniWebSite.Pages)
 					{
 						<option value="@(MiniWebSite.GetPageUrl(p))" />
@@ -137,8 +137,8 @@
 		</form>
 		<div class="mw-modal-footer">			
 			<button data-dismiss=".mw-modal">Close</button>
-			<button id="miniwebDeletePage">Delete Page</button>
-			<button id="miniwebSavePage">Save properties</button>
+			<button id="miniwebDeletePage" class="danger">Delete Page</button>
+			<button id="miniwebSavePage" class="primary">Save properties</button>
 		</div>
 		<div class="is-hidden">
 			<form>
@@ -173,7 +173,7 @@
 			</div>
 		</form>
 		<div class="mw-modal-footer">
-			<button id="miniwebAddLink">Add link</button>
+			<button id="miniwebAddLink" class="primary">Add link</button>
 			<button data-dismiss=".mw-modal">Cancel</button>
 		</div>
 	</div>
@@ -235,7 +235,7 @@
 					</li>
 					}
 				</ul>
-				<button id="miniweb-add-asset" type="button">Add Asset</button>
+				<button class="primary" id="miniweb-add-asset" type="button">Add Asset</button>
 				<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0" />
 			</div>
 			<div class="mw-modal-footer">
