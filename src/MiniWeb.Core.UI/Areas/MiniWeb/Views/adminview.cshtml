@@ -79,29 +79,29 @@
 </aside>
 
 <!-- Modal -->
-<div class="mw-modal miniweb-pageproperties" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
-	<div class="mw-modal-content">
-		<div class="mw-modal-header">
+<div class="miniweb-modal miniweb-pageproperties" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
 			<h4 id="myModalPageLabel">Page properties</h4>
-			<button class="icon right" data-dismiss=".mw-modal">&times;</button>
+			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
 			<input type="hidden" name="NewPage" value="false" />
 			<input type="hidden" name="OldUrl" value="@Model.Url" />
 			<input type="hidden" name="Layout" value="@Model.Layout" />
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="name">Page name</label>
 				<input type="text" id="name" name="Title" placeholder="Page name" value="@Model.Title" />
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="metatitle">Browser title</label>
 				<input type="text" id="metatitle" name="MetaTitle" placeholder="Browser title" value="@Model.MetaTitle" />
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="metadescription">Meta description</label>
 				<textarea type="text" id="metadescription" name="MetaDescription" placeholder="Meta description" value="">@Model.MetaDescription</textarea>
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="template">Template</label>
 				<select name="Template" id="template" data-curval="@Model.Template">
 					@foreach (var s in MiniWebSite.PageTemplates)
@@ -110,19 +110,19 @@
 					}
 				</select>
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="visible">Visible</label>
 				<input type="checkbox" id="visible" name="Visible" @(Model.Visible ? "checked=\" checked\"" : "" ) value="true" />
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="ShowInMenu">Show in menu</label>
 				<input type="checkbox" id="ShowInMenu" name="ShowInMenu" @(Model.ShowInMenu ? "checked=\" checked\"" : "" ) value="true" />
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="Sortorder"">Sortorder</label>
 				<input type=" text" id="Sortorder" name="Sortorder" placeholder="Sortorder" value="@Model.SortOrder" />
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="url">Url</label>
 				<div class="input-group">
 					<span class="addon">/</span>
@@ -130,13 +130,13 @@
 					<span class="addon">.@MiniWebSite.Configuration.PageExtension</span>
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="url">RedirectUrl</label>
 				<input type="text" id="url" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl" />
 			</div>
 		</form>
-		<div class="mw-modal-footer">			
-			<button data-dismiss=".mw-modal">Close</button>
+		<div class="miniweb-modal-footer">			
+			<button data-dismiss=".miniweb-modal">Close</button>
 			<button id="miniwebDeletePage" class="danger">Delete Page</button>
 			<button id="miniwebSavePage" class="primary">Save properties</button>
 		</div>
@@ -150,14 +150,14 @@
 	</div>
 </div>
 
-<div class="mw-modal" id="miniweb-addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
-	<div class="mw-modal-content">
-		<div class="mw-modal-header">
+<div class="miniweb-modal" id="miniweb-addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
 			<h4 id="myModalHyperlinkLabel">Add hyperlink</h4>
-			<button class="icon right" data-dismiss=".mw-modal">&times;</button>
+			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="url" class="col-sm-4 control-label">Internal URL</label>
 				<select name="InternalUrl">
 					<option value="">Choose url or enter custom</option>
@@ -167,23 +167,23 @@
 					}
 				</select>
 			</div>
-			<div class="form-group">
+			<div class="miniweb-form-group">
 				<label for="url" class="col-sm-4 control-label">Custom URL</label>
 				<input type="text" name="Url" placeholder="custom url" value="https://" />
 			</div>
 		</form>
-		<div class="mw-modal-footer">
+		<div class="miniweb-modal-footer">
 			<button id="miniwebAddLink" class="primary">Add link</button>
-			<button data-dismiss=".mw-modal">Cancel</button>
+			<button data-dismiss=".miniweb-modal">Cancel</button>
 		</div>
 	</div>
 </div>
 
-<div class="mw-modal" id="newContentAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="mw-modal-content">
-		<div class="mw-modal-header">
-			<h4 class="mw-modal-title" id="myModalLabel">Add content</h4>
-			<button class="icon right" data-dismiss=".mw-modal">&times;</button>
+<div class="miniweb-modal miniweb-modal-center" id="newContentAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
+			<h4 class="miniweb-modal-title" id="myModalLabel">Add content</h4>
+			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
 			<p>Select an item to add</p>
@@ -192,21 +192,21 @@
 			<button data-add-content-id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
 			}
 		</form>
-		<div class="mw-modal-footer">
-			<button data-dismiss="mw-modal">Cancel</button>
+		<div class="miniweb-modal-footer">
+			<button data-dismiss="miniweb-modal">Cancel</button>
 		</div>
 	</div>
 </div>
 
 
-<div class="mw-modal" id="miniweb-addAsset" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="mw-modal-content">
-		<div class="mw-modal-header">
-			<h4 class="mw-modal-title" id="myModalLabel">Add image</h4>
-			<button class="icon right" data-dismiss=".mw-modal">&times;</button>
+<div class="miniweb-modal" id="miniweb-addAsset" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
+			<h4 class="miniweb-modal-title" id="myModalLabel">Add image</h4>
+			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
-			<div class="mw-modal-body">
+			<div class="miniweb-modal-body">
 				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-page-move="-1">&#10218;</a>
 				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-page-move="1">&#10219;</a>
 				@{
@@ -238,8 +238,8 @@
 				<button class="primary" id="miniweb-add-asset" type="button">Add Asset</button>
 				<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0" />
 			</div>
-			<div class="mw-modal-footer">
-				<button data-dismiss="mw-modal">Cancel</button>
+			<div class="miniweb-modal-footer">
+				<button data-dismiss="miniweb-modal">Cancel</button>
 			</div>
 		</form>
 	</div>

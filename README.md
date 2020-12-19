@@ -17,7 +17,7 @@ Tested on windows, mac osx, linux (ubuntu)
 
 Inspired by the [MiniBlog](https://github.com/madskristensen/miniblog) package by Mats Kristensen.
 
-It contains bootstrap v3.2 for now for the admin menu to work and contains a modified version of [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
+HTML editoris inspired by [bootstrap-wysiwyg](http://github.com/mindmup/bootstrap-wysiwyg)  
 
 ## Example
 Reference the MiniWeb.Core and one of the storage packages. Create an empty website. See the samples/SampleWeb project for an example implementation. Make sure the basic bootstrap files are in the wwwroot folder.
@@ -126,7 +126,7 @@ If you use the JsonStorage example make sure your username password is added to 
 Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.
 
 ## TODO
-* Maybe change usage files to a Razor Pages
+* Maybe change usage files to a Razor Pages?
 
 
 

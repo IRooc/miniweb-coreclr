@@ -395,7 +395,7 @@ const savePage = function () {
 		.then(data => {
 			if (data.result) {
 				showMessage(true, "saved page successfully");
-				document.querySelector('.mw-modal.show').classList.remove('show');
+				document.querySelector('.miniweb-modal.show').classList.remove('show');
 			} else {
 				showMessage(false, data.message);
 			}
@@ -493,7 +493,7 @@ document.addEventListener('click', (e) => {
 	if (!target) return;
 	if (target.dataset.showModal) {
 		e.preventDefault();
-		document.querySelectorAll('.mw-modal.show').forEach(el => {
+		document.querySelectorAll('.miniweb-modal.show').forEach(el => {
 			el.classList.remove('show');
 		});
 		const modal = document.querySelector(target.dataset.showModal) as HTMLElement;
@@ -502,7 +502,7 @@ document.addEventListener('click', (e) => {
 		}
 	} else if (target.dataset.dismiss) {
 		e.preventDefault();
-		document.querySelectorAll('.mw-modal.show').forEach(el => {
+		document.querySelectorAll('.miniweb-modal.show').forEach(el => {
 			el.classList.remove('show');
 		});
 	} else if (target.dataset.addContentTo) {
@@ -514,14 +514,14 @@ document.addEventListener('click', (e) => {
 	} else if (target.dataset.addContentId) {
 		e.preventDefault();
 		const contentId = target.dataset.addContentId;
-		const targetSection = (<HTMLElement>target.closest('.mw-modal')).dataset.targetsection;
+		const targetSection = (<HTMLElement>target.closest('.miniweb-modal')).dataset.targetsection;
 		const el = <HTMLElement>(document.getElementById(contentId).firstElementChild.cloneNode(true));
 		const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
 		console.log(target, contentId, targetSection, section, el);
 		section.append(el);
 		cancelEdit();
 		editContent();
-		document.querySelectorAll('.mw-modal.show').forEach(el => {
+		document.querySelectorAll('.miniweb-modal.show').forEach(el => {
 			el.classList.remove('show');
 		});
 	} else if (target.dataset.contentMove) {

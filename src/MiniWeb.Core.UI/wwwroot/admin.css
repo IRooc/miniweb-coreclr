@@ -39,22 +39,26 @@ miniwebadmin button:hover {
 	color:white;
 }
 miniwebadmin button.primary {
-	border: 1px solid darkcyan;
-	background-color: lightgreen;
+	border: 1px solid #254d25;
+	background-color: #73a882;
+	color: #254d25;
 }
 miniwebadmin button.primary:hover {
-	background-color: darkgreen;
+	background-color: rgb(41, 116, 41);
+	color:white;
 }
 miniwebadmin button.danger {
-	border: 1px solid darksalmon;
-	background-color: lightcoral;
+	border: 1px solid rgb(243, 78, 78);
+	background-color: rgb(230, 100, 100);
+	color:#4f0202;
 }
 miniwebadmin button.danger:hover {
-	background-color: darkred;
+	background-color: rgb(165, 14, 14);
+	color:white;
 }
 
 miniwebadmin #miniweb-templates,
-miniwebadmin .mw-modal,
+miniwebadmin .miniweb-modal,
 miniwebadmin #tools {display: none;}
 miniwebadmin .is-hidden {
 	display: none !important;
@@ -78,7 +82,7 @@ miniwebadmin > aside .alert.alert-success {
 }
 
 
-miniwebadmin .mw-modal.show {
+miniwebadmin .miniweb-modal.show {
 	display: block !important;
 	position: fixed;
 	top: 3em;
@@ -88,11 +92,11 @@ miniwebadmin .mw-modal.show {
 	background-color: rgba(0,0,0,0.7);
 	z-index: 10;
 }
-miniwebadmin .mw-modal .mw-modal-header h4 {
+miniwebadmin .miniweb-modal .miniweb-modal-header h4 {
 	margin: 1em 0;
 	font-size: 1.5em;
 }
-miniwebadmin .mw-modal .mw-modal-content {
+miniwebadmin .miniweb-modal .miniweb-modal-content {
 	width: 40em;
 	background-color: white;
 	height: 100%;
@@ -101,18 +105,21 @@ miniwebadmin .mw-modal .mw-modal-content {
 	left:0;
 	padding-left: 40px;
 }
-miniwebadmin .mw-modal.miniweb-modal-right .mw-modal-content {
+miniwebadmin .miniweb-modal.miniweb-modal-right .miniweb-modal-content {
 	position: absolute;
 	right: 0;
 	top:0;
 	left:auto;
 }
-miniwebadmin .mw-modal .mw-modal-content .right {
+miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
+	left: calc(50% - 20em - 20px);
+}
+miniwebadmin .miniweb-modal .miniweb-modal-content .right {
 	position: absolute;
 	right: 0;
 	top:0;
 }
-miniwebadmin .mw-modal .mw-modal-footer {
+miniwebadmin .miniweb-modal .miniweb-modal-footer {
 	text-align: right;
 	padding: 0 48px;
 }
@@ -221,31 +228,32 @@ miniwebadmin .icon.icon-new:before {
 	font-size: 23px;
 }
 
-miniwebadmin .form-group {
+miniwebadmin .miniweb-form-group {
 	width: 100%;
+	margin: 0 0 10px;
 }
-miniwebadmin .form-group label {
+miniwebadmin .miniweb-form-group label {
 	display: inline-block;
 	width: 30%;
 	font-size: 12px;
 	font-weight: normal;
 }
-miniwebadmin .form-group label + input,
-miniwebadmin .form-group label + select {
+miniwebadmin .miniweb-form-group label + input,
+miniwebadmin .miniweb-form-group label + select {
 	width:60%
 }
-miniwebadmin .form-group label + input[type="checkbox"] {
+miniwebadmin .miniweb-form-group label + input[type="checkbox"] {
 	width: auto;
 }
-miniwebadmin .form-group .input-group {
+miniwebadmin .miniweb-form-group .input-group {
 	display: inline-block;	
 	width:60%
 }
-miniwebadmin .form-group .input-group .addon {
+miniwebadmin .miniweb-form-group .input-group .addon {
 	display: inline-block;
 }
-miniwebadmin .form-group .input-group .addon + input ,
-miniwebadmin .form-group .input-group .addon + select {
+miniwebadmin .miniweb-form-group .input-group .addon + input ,
+miniwebadmin .miniweb-form-group .input-group .addon + select {
 	width: 80%
 }
 
