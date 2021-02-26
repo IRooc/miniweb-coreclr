@@ -1,4 +1,9 @@
 ﻿let options: any;
+const log = function (...args: any[]) {
+	if (localStorage.getItem("showLog") === "true") {
+		console.log(...args);
+	}
+}
 
 const extend: any = function (defaults, options) {
 	var extended = {};
@@ -40,7 +45,7 @@ const miniwebAdminDefaults = {
 						} else if (b.dataset.custom) {
 							e.preventDefault();
 							e.stopPropagation();
-							console.log('do custom task', b);
+							log('do custom task', b);
 							if (b.dataset.custom == "createLink") {
 								saveSelection();
 								const modal = document.getElementById('miniweb-addHyperLink');
@@ -93,7 +98,7 @@ const miniwebAdminDefaults = {
 			key: 'asset',
 			editStart: function (element: HTMLElement, index) {
 				element.addEventListener('click', (e) => {
-					console.log('assetclick', e, element, index);
+					log('assetclick', e, element, index);
 					if (e.offsetX > element.offsetWidth) {
 						const modal = document.getElementById('miniweb-addAsset');
 						const currentAsset = element.innerText;
@@ -119,7 +124,7 @@ const miniwebAdminDefaults = {
 			key: 'url',
 			editStart: function (element: HTMLElement, index) {
 				element.addEventListener('click', (e) => {
-					console.log('urlclick', e, element, index);
+					log('urlclick', e, element, index);
 					if (e.offsetX > element.offsetWidth) {
 						const modal = document.getElementById('miniweb-addHyperLink');
 						const curHref = element.innerText;
@@ -180,7 +185,7 @@ const htmlEscape = function (str) {
 
 const txtMessage = document.querySelector("miniwebadmin .alert");
 const showMessage = function (success: boolean, message: string, isHtml: boolean = false) {
-	console.log('showMessage', ...arguments);
+	log('showMessage', ...arguments);
 	var className = success ? "alert-success" : "alert-danger";
 	var timeout = success ? 4000 : 8000;
 	txtMessage.classList.add(className);
@@ -311,10 +316,10 @@ const toggleContentInserts = function (on: boolean) {
 	if (on) {
 		document.querySelectorAll('[data-miniwebsection]').forEach(el => {
 			const section = (el as HTMLElement).dataset.miniwebsection;
-			el.insertAdjacentHTML('beforeend', '<button class="miniweb-insertcontent" data-add-content-to="' + section + '">add content</button>');
+			el.insertAdjacentHTML('beforeend', '<button class="miniweb-button miniweb-insertcontent" data-add-content-to="' + section + '">add content</button>');
 		});
 		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate] .miniweb-template-actions').forEach(el => el.remove());
-		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate]').forEach(el => el.insertAdjacentHTML('beforeend', '<div class="pull-right miniweb-template-actions"><button data-content-move="up">&#11014;</button><button data-content-move="down" >&#11015;</button>	<button class="danger" data-content-move="delete">&#11199;</button></div>'));
+		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate]').forEach(el => el.insertAdjacentHTML('beforeend', '<div class="pull-right miniweb-template-actions"><button class="miniweb-button" data-content-move="up" title="Move up">&#11014;</button><button class="miniweb-button" data-content-move="down" title="Move down">&#11015;</button>	<button class="miniweb-button miniweb-danger" data-content-move="delete" title="Delete item">&#11199;</button></div>'));
 
 	} else {
 		document.querySelectorAll('.miniweb-insertcontent, .miniweb-template-actions').forEach(el => el.remove());
@@ -339,7 +344,7 @@ const saveContent = function (e) {
 	document.querySelectorAll('[data-miniwebsection]').forEach((section: HTMLElement, index) => {
 		var sectionid = section.dataset.miniwebsection;
 		section.querySelectorAll('[data-miniwebtemplate]').forEach((tmpl: HTMLElement, tindex) => {
-			console.log('item', tmpl);
+			log('item', tmpl);
 			if (items[index] == null) {
 				items[index] = {};
 				items[index].Key = sectionid;
@@ -375,7 +380,7 @@ const saveContent = function (e) {
 		body: data
 	}).then(res => res.json())
 		.then(data => {
-			console.log(data);
+			log(data);
 			if (data.result) showMessage(true, "The page was saved successfully");
 			else showMessage(false, "Save page failed");
 			cancelEdit();
@@ -472,7 +477,7 @@ const addLink = function () {
 		document.execCommand("createLink", false, href);
 	} else if (modal.dataset.linkType == "URL") {
 		const index = modal.dataset.linkIndex;
-		console.log('add link to', index)
+		log('add link to', index)
 		const el = <HTMLElement>contentEditables[index];
 		el.innerText = href;
 	}
@@ -489,7 +494,7 @@ const addLink = function () {
 //global events...
 document.addEventListener('click', (e) => {
 	const target = e.target as HTMLElement;
-	console.log('documentclick', e, target);
+	log('documentclick', e, target);
 	if (!target) return;
 	if (target.dataset.showModal) {
 		e.preventDefault();
@@ -517,7 +522,7 @@ document.addEventListener('click', (e) => {
 		const targetSection = (<HTMLElement>target.closest('.miniweb-modal')).dataset.targetsection;
 		const el = <HTMLElement>(document.getElementById(contentId).firstElementChild.cloneNode(true));
 		const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
-		console.log(target, contentId, targetSection, section, el);
+		log(target, contentId, targetSection, section, el);
 		section.append(el);
 		cancelEdit();
 		editContent();
@@ -527,7 +532,7 @@ document.addEventListener('click', (e) => {
 	} else if (target.dataset.contentMove) {
 		const move = target.dataset.contentMove;
 		const item = target.closest('[data-miniwebtemplate]');
-		console.log('move', move, item, target);
+		log('move', move, item, target);
 		if (move == "up") {
 			item.parentNode.insertBefore(item, item.previousElementSibling);
 		} else if (move == "down") {
@@ -543,7 +548,7 @@ document.addEventListener('click', (e) => {
 		const contentEditables = document.querySelectorAll('[data-miniwebprop]');
 		const modal = document.getElementById('miniweb-addAsset');
 		const index = modal.dataset.assetIndex;
-		console.log('add link to', index)
+		log('add link to', index)
 		const el = <HTMLElement>contentEditables[index];
 		if (modal.dataset.assetType == 'ASSET') {
 			el.innerText = target.dataset.relpath;
@@ -558,6 +563,8 @@ document.addEventListener('click', (e) => {
 
 const miniwebAdminInit = function (userOptions) {
 	options = extend(miniwebAdminDefaults, userOptions);
+	log('initiated miniweb with', userOptions, 'fulloptions', options);
+	document.querySelector('body').classList.add('miniweb');
 
 	const btnEdit = document.getElementById("miniwebButtonEdit");
 	const btnSave = document.getElementById("miniwebButtonSave");
@@ -623,10 +630,10 @@ const miniwebAdminInit = function (userOptions) {
 		const form = <HTMLFormElement>button.closest('form');
 		const fileUpload = <HTMLInputElement>button.nextElementSibling;
 		fileUpload.onchange = (e) => {
-			console.log('selected asset', e);
+			log('selected asset', e);
 			const formData = new FormData(form);
 			formData.append('__RequestVerificationToken', getVerificationToken());
-			console.log('formdata', formData);
+			log('formdata', formData);
 			fetch(options.apiEndpoint + "saveassets", {
 				method: "POST",
 				body: formData
@@ -666,10 +673,10 @@ const miniwebAdminInit = function (userOptions) {
 		const form = <HTMLFormElement>button.closest('form');
 		const fileUpload = <HTMLInputElement>button.nextElementSibling;
 		fileUpload.onchange = (e) => {
-			console.log('selected asset', e);
+			log('selected asset', e);
 			const formData = new FormData(form);
 			formData.append('__RequestVerificationToken', getVerificationToken());
-			console.log('formdata', formData);
+			log('formdata', formData);
 			fetch(options.apiEndpoint + "multiplepages", {
 				method: "POST",
 				body: formData
@@ -688,6 +695,13 @@ const miniwebAdminInit = function (userOptions) {
 	});
 
 	btnReload.addEventListener('click', (e) => {
+		if (localStorage.getItem('showLog') === 'true') {
+			console.log('turned logging off');
+			localStorage.removeItem('showLog');
+		} else {
+			console.log('turned logging on');
+			localStorage.setItem('showLog','true');
+		}
 		const data = new FormData();
 		data.append('__RequestVerificationToken', getVerificationToken());
 		fetch(options.apiEndpoint + "reloadcaches", {
@@ -695,7 +709,7 @@ const miniwebAdminInit = function (userOptions) {
 			body: data
 		}).then(res => res.json())
 			.then(data => {
-				console.log(data);
+				log(data);
 				if (data?.result) showMessage(true, "Caches were cleared");
 				else showMessage(false, "Failed to clear cache");
 				cancelEdit();

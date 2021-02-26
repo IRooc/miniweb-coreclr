@@ -1,17 +1,17 @@
-﻿body {
+﻿body.miniweb {
 	margin-top: 3.5em;
 }
 
-body.preview {
+body.miniweb.preview {
 	margin-top: inherit;
 }
 
-body.preview miniwebadmin {
+body.miniweb.preview miniwebadmin {
 	display: none;
 }
-.miniweb-editor-toolbar *,
-miniwebadmin * {
-	font-family: Arial, Helvetica, sans-serif;
+body .miniweb-editor-toolbar *,
+body miniwebadmin * {
+	font-family: Arial, Helvetica, sans-serif!important;
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -370,8 +370,11 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	display: inherit;
 }
 
+.miniweb-editing button.miniweb-button {
+	cursor: pointer;
+}
 
-.miniweb-editing button.danger {
+.miniweb-editing button.miniweb-danger {
 	color:red;
 }
 
