@@ -27,7 +27,7 @@ const miniwebAdminDefaults = {
 		{
 			key: 'html',
 			editStart: function (element: HTMLElement, index) {
-				var thisTools = <HTMLElement>(document.getElementById('tools').cloneNode(true));
+				var thisTools = <HTMLElement>(document.getElementById('miniweb-html-tools').cloneNode(true));
 				thisTools.removeAttribute("id");
 				thisTools.classList.add('miniweb-editor-toolbar');
 
@@ -213,7 +213,7 @@ const showAssetPage = function (page: number) {
 	});
 
 	//move current folder to top sa paging selector works
-	const folder = (<HTMLInputElement>document.querySelector('[name="miniwebAssetFolder"]')).value;
+	const folder = (<HTMLInputElement>document.querySelector('[name="miniweb-input-assetfolder"]')).value;
 	const curEls = assetPageList.querySelectorAll('li[data-path="' + folder + '"]');
 	for (let i = curEls.length; i > 0; i--) {
 		assetPageList.insertBefore(curEls[i - 1], assetPageList.childNodes[0]);
@@ -271,10 +271,10 @@ const editContent = function () {
 			}
 		});
 	}
-	const btnNew = document.getElementById("miniwebButtonNew");
-	const btnEdit = document.getElementById("miniwebButtonEdit");
-	const btnSave = document.getElementById("miniwebButtonSave");
-	const btnCancel = document.getElementById("miniwebButtonCancel");
+	const btnNew = document.getElementById("miniweb-button-newpage");
+	const btnEdit = document.getElementById("miniweb-button-edit");
+	const btnSave = document.getElementById("miniweb-button-save");
+	const btnCancel = document.getElementById("miniweb-button-cancel");
 	btnNew.setAttribute("disabled", "true");
 	btnEdit.setAttribute("disabled", "true");
 	btnSave.removeAttribute("disabled");
@@ -300,10 +300,10 @@ const cancelEdit = function () {
 		});
 	}
 
-	const btnNew = document.getElementById("miniwebButtonNew");
-	const btnEdit = document.getElementById("miniwebButtonEdit");
-	const btnSave = document.getElementById("miniwebButtonSave");
-	const btnCancel = document.getElementById("miniwebButtonCancel");
+	const btnNew = document.getElementById("miniweb-button-newpage");
+	const btnEdit = document.getElementById("miniweb-button-edit");
+	const btnSave = document.getElementById("miniweb-button-save");
+	const btnCancel = document.getElementById("miniweb-button-cancel");
 	btnNew.removeAttribute("disabled");
 	btnEdit.removeAttribute("disabled");
 	btnSave.setAttribute("disabled", "true");
@@ -513,7 +513,7 @@ document.addEventListener('click', (e) => {
 	} else if (target.dataset.addContentTo) {
 		e.preventDefault();
 		const contentTarget = target.dataset.addContentTo;
-		const modal = document.querySelector('#newContentAdd') as HTMLElement;
+		const modal = document.querySelector('#miniweb-content-add') as HTMLElement;
 		modal.dataset.targetsection = contentTarget;
 		modal.classList.add('show');
 	} else if (target.dataset.addContentId) {
@@ -566,17 +566,17 @@ const miniwebAdminInit = function (userOptions) {
 	log('initiated miniweb with', userOptions, 'fulloptions', options);
 	document.querySelector('body').classList.add('miniweb');
 
-	const btnEdit = document.getElementById("miniwebButtonEdit");
-	const btnSave = document.getElementById("miniwebButtonSave");
-	const btnCancel = document.getElementById("miniwebButtonCancel");
-	const btnSavePage = document.getElementById("miniwebSavePage");
-	const btnNewPage = document.getElementById("miniwebButtonNew");
-	const btnPageProperties = document.getElementById("miniwebPageProperties");
-	const btnDeletePage = document.getElementById("miniwebDeletePage");
-	const btnAddLink = document.getElementById("miniwebAddLink");
-	const btnAddAsset = document.getElementById('miniweb-add-asset');
-	const btnAddMultiplePages = document.getElementById('add-multiplepages');
-	const btnReload = document.getElementById('reload-cache');
+	const btnEdit = document.getElementById("miniweb-button-edit");
+	const btnSave = document.getElementById("miniweb-button-save");
+	const btnCancel = document.getElementById("miniweb-button-cancel");
+	const btnSavePage = document.getElementById("miniweb-button-savepage");
+	const btnNewPage = document.getElementById("miniweb-button-newpage");
+	const btnPageProperties = document.getElementById("miniweb-button-pageprops");
+	const btnDeletePage = document.getElementById("miniweb-button-deletepage");
+	const btnAddLink = document.getElementById("miniweb-button-addlink");
+	const btnAddAsset = document.getElementById('miniweb-button-addasset');
+	const btnAddMultiplePages = document.getElementById('miniweb-button-addmultiplepages');
+	const btnReload = document.getElementById('miniweb-button-reloadcache');
 
 	btnSavePage.addEventListener('click', savePage);
 	btnDeletePage.addEventListener('click', removePage);
@@ -606,12 +606,12 @@ const miniwebAdminInit = function (userOptions) {
 	btnSave.addEventListener('click', saveContent);
 	btnCancel.addEventListener('click', cancelEdit);
 
-	document.getElementById('miniwebNavigateOnEnter').addEventListener('keypress', (e) => {
+	document.getElementById('miniweb-datalist-navigateonenter').addEventListener('keypress', (e) => {
 		if (e.code == "Enter") {
 			document.location.href = (<HTMLInputElement>e.target).value;
 		}
 	});
-	document.getElementById('miniwebNavigateOnEnter').addEventListener('input', (e) => {
+	document.getElementById('miniweb-datalist-navigateonenter').addEventListener('input', (e) => {
 		const input = (<HTMLInputElement>e.target);
 		const listId = input.getAttribute('list');
 		const list = <HTMLDataListElement>document.getElementById(listId);
@@ -722,7 +722,7 @@ const miniwebAdminInit = function (userOptions) {
 	cancelEdit();
 
 	//assets
-	document.querySelector('[name="miniwebAssetFolder"]').addEventListener('input', (e) => {
+	document.querySelector('[name="miniweb-input-assetfolder"]').addEventListener('input', (e) => {
 		const input = (<HTMLInputElement>e.target);
 		const listId = input.getAttribute('list');
 		const list = <HTMLDataListElement>document.getElementById(listId);
@@ -745,13 +745,13 @@ const miniwebAdminInit = function (userOptions) {
 		});
 	});
 
-	document.querySelector('#miniwebShowHiddenPages input').addEventListener('click', (e) => {
-		sessionStorage.setItem('miniwebShowHiddenPages', (<HTMLInputElement>(e.target)).checked ? "true" : "false");
+	document.querySelector('#miniweb-li-showhiddenpages input').addEventListener('click', (e) => {
+		sessionStorage.setItem('miniweb-li-showhiddenpages', (<HTMLInputElement>(e.target)).checked ? "true" : "false");
 		toggleHiddenMenuItems((<HTMLInputElement>(e.target)).checked);
 	});
 
-	if (sessionStorage.getItem('miniwebShowHiddenPages') === "true") {
-		(<HTMLInputElement>document.querySelector('#miniwebShowHiddenPages input')).checked = true
+	if (sessionStorage.getItem('miniweb-li-showhiddenpages') === "true") {
+		(<HTMLInputElement>document.querySelector('#miniweb-li-showhiddenpages input')).checked = true
 		toggleHiddenMenuItems(true);
 	} else {
 		toggleHiddenMenuItems(false);

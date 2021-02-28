@@ -59,7 +59,7 @@ miniwebadmin button.danger:hover {
 
 miniwebadmin #miniweb-templates,
 miniwebadmin .miniweb-modal,
-miniwebadmin #tools {display: none;}
+miniwebadmin #miniweb-html-tools {display: none;}
 miniwebadmin .is-hidden {
 	display: none !important;
 }
@@ -233,24 +233,29 @@ miniwebadmin .miniweb-form-group {
 	margin: 0 0 10px;
 }
 miniwebadmin .miniweb-form-group label {
-	display: inline-block;
+	display: block;
+}
+miniwebadmin .miniweb-form-group label span {
+	display: inline-block;	
 	width: 30%;
 	font-size: 12px;
 	font-weight: normal;
+
 }
-miniwebadmin .miniweb-form-group label + input,
-miniwebadmin .miniweb-form-group label + select {
+miniwebadmin .miniweb-form-group label input,
+miniwebadmin .miniweb-form-group label select {
 	width:60%
 }
-miniwebadmin .miniweb-form-group label + input[type="checkbox"] {
+miniwebadmin .miniweb-form-group label input[type="checkbox"] {
 	width: auto;
 }
-miniwebadmin .miniweb-form-group .input-group {
+miniwebadmin .miniweb-form-group label .input-group {
 	display: inline-block;	
 	width:60%
 }
-miniwebadmin .miniweb-form-group .input-group .addon {
+miniwebadmin .miniweb-form-group label .input-group .addon {
 	display: inline-block;
+	width: auto;
 }
 miniwebadmin .miniweb-form-group .input-group .addon + input ,
 miniwebadmin .miniweb-form-group .input-group .addon + select {
