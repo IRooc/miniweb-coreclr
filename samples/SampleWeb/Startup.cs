@@ -82,10 +82,7 @@ namespace SampleWeb
 						var adminList = (githubConfig.AllowedAdmins ?? string.Empty).Split(',');
 						if (adminList?.Any(item => item == loginName) == true)
 						{
-							var claims = new[] {
-								new Claim(ClaimTypes.Name, loginName),
-								new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
-							};
+							var claims = MiniWebSite.GetClaimsFor(loginName);
 							notification.Identity.AddClaims(claims);
 						}
 					}

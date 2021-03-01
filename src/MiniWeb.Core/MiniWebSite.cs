@@ -163,15 +163,19 @@ namespace MiniWeb.Core
 
 		public ClaimsPrincipal GetClaimsPrincipal(string username)
 		{
-			var claims = new[] {
-					new Claim(ClaimTypes.Name, username),
-					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
-				};
-
+			Claim[] claims = GetClaimsFor(username);
 			Logger?.LogInformation($"signing in as :{username}");
 			var identity = new ClaimsIdentity(claims, Configuration.Authentication.AuthenticationScheme);
 			var principal = new ClaimsPrincipal(identity);
 			return principal;
+		}
+
+		public static Claim[] GetClaimsFor(string username)
+		{
+			return new[] {
+					new Claim(ClaimTypes.Name, username),
+					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
+				};
 		}
 
 		public void ReloadPages(bool forceReload = false)
