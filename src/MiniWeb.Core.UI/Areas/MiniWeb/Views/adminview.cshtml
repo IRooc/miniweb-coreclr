@@ -5,7 +5,7 @@ var isPublished = Model.Visible;
 var path = Model.Url;
 }
 
-<nav id="miniweb-admin-nav" class="miniweb-tools" data-ispublished="@isPublished" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
+<nav id="miniweb-admin-nav" class="miniweb-tools" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
 	<div class="miniweb-tool miniweb-status @(isPublished ? " published" : "offline" )">
 		<a href="#" id="miniweb-button-reloadcache" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
 	</div>
@@ -42,37 +42,37 @@ var path = Model.Url;
 	<!--Html Tools-->
 	<div id="miniweb-html-tools">
 		<div class="miniweb-buttongroup">
-			<button data-edit="formatBlock <h1>" title="Heading 1">H1</button>
-			<button data-edit="formatBlock <h2>" title="Heading 2">H2</button>
-			<button data-edit="formatBlock <h3>" title="Heading 3">H3</button>
-			<button data-edit="italic" title="Italic"><em>I</em></button>
-			<button data-edit="bold" title="Bold"><strong>B</strong></button>
-			<button data-edit="underline" title="Underline"><ins>U</ins></button>
-			<button data-edit="strikethrough" title="Strikethrough"><s>S</s></button>
+			<button data-miniweb-edit="formatBlock <h1>" title="Heading 1">H1</button>
+			<button data-miniweb-edit="formatBlock <h2>" title="Heading 2">H2</button>
+			<button data-miniweb-edit="formatBlock <h3>" title="Heading 3">H3</button>
+			<button data-miniweb-edit="italic" title="Italic"><em>I</em></button>
+			<button data-miniweb-edit="bold" title="Bold"><strong>B</strong></button>
+			<button data-miniweb-edit="underline" title="Underline"><ins>U</ins></button>
+			<button data-miniweb-edit="strikethrough" title="Strikethrough"><s>S</s></button>
 		</div>
 
 		<div class="miniweb-buttongroup">
-			<button data-edit="justifyleft" title="Justify left" class="miniweb-leftalign">&#9778;</button>
-			<button data-edit="justifycenter" title="Justify center">&#9778;</button>
-			<button data-edit="justifyright" title="Justify right" class="miniweb-rightalign">&#9778;</button>
-			<button data-edit="justifyfull" title="Justify full">&#9783;</button>
-			<button data-edit="insertunorderedlist" title="Bullet points">&#9679;</button>
-			<button data-edit="insertorderedlist" title="Numbered bullet points">&#9352;</button>
-			<button data-edit="outdent" title="Indent left">&#11104;</button>
-			<button data-edit="indent" title="Indent right">&#11106;</button>
+			<button data-miniweb-edit="justifyleft" title="Justify left" class="miniweb-leftalign">&#9778;</button>
+			<button data-miniweb-edit="justifycenter" title="Justify center">&#9778;</button>
+			<button data-miniweb-edit="justifyright" title="Justify right" class="miniweb-rightalign">&#9778;</button>
+			<button data-miniweb-edit="justifyfull" title="Justify full">&#9783;</button>
+			<button data-miniweb-edit="insertunorderedlist" title="Bullet points">&#9679;</button>
+			<button data-miniweb-edit="insertorderedlist" title="Numbered bullet points">&#9352;</button>
+			<button data-miniweb-edit="outdent" title="Indent left">&#11104;</button>
+			<button data-miniweb-edit="indent" title="Indent right">&#11106;</button>
 		</div>
 
 		<div class="miniweb-buttongroup">
-			<button data-custom="createLink" title="Hyperlink" class="icon icon-earth"></button>
-			<button data-edit="unlink" title="Remove hyperlink">&#11198;</button>
-			<button data-custom="insertAsset" title="Insert Asset">&#127203;</button>
+			<button data-miniweb-custom="createLink" title="Hyperlink" class="icon icon-earth"></button>
+			<button data-miniweb-edit="unlink" title="Remove hyperlink">&#11198;</button>
+			<button data-miniweb-custom="insertAsset" title="Insert Asset">&#127203;</button>
 		</div>
 
 		<div class="miniweb-buttongroup">
-			<button class="source" data-custom="showSource" title="Toggle source/design view">&#128065;</button>
+			<button class="source" data-miniweb-custom="showSource" title="Toggle source/design view">&#128065;</button>
 		</div>
 	</div>
-	<input type="file" class="txtImage is-hidden" data-edit="insertImage" />
+	<input type="file" class="txtImage is-hidden" data-miniweb-edit="insertImage" />
 </nav>
 <aside class="is-hidden">
 	<p class="alert"></p>
@@ -83,7 +83,7 @@ var path = Model.Url;
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
 			<h4 id="myModalPageLabel">Page properties</h4>
-			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
 			<input type="hidden" name="NewPage" value="false" />
@@ -110,10 +110,10 @@ var path = Model.Url;
 			<div class="miniweb-form-group">
 				<label>
 					<span>Template</span>
-					<select name="Template" data-curval="@Model.Template">
+					<select name="Template">
 						@foreach (var s in MiniWebSite.PageTemplates)
 						{
-						<option value="@s" @(s.ToLowerInvariant()==Model.Template.ToLowerInvariant() ? "selected=\" selected\"" : "" )>@s.Substring(s.LastIndexOf("/") + 1)</option>
+						<option value="@s" @(s.ToLowerInvariant() == Model.Template.ToLowerInvariant() ? "selected=\" selected\"" : "" )>@s.Substring(s.LastIndexOf("/") + 1)</option>
 						}
 					</select>
 				</label>	
@@ -154,7 +154,7 @@ var path = Model.Url;
 			</div>
 		</form>
 		<div class="miniweb-modal-footer">
-			<button data-dismiss=".miniweb-modal">Close</button>
+			<button data-miniweb-dismiss=".miniweb-modal">Close</button>
 			<button id="miniweb-button-deletepage" class="danger">Delete Page</button>
 			<button id="miniweb-button-savepage" class="primary">Save properties</button>
 		</div>
@@ -172,7 +172,7 @@ var path = Model.Url;
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
 			<h4 id="myModalHyperlinkLabel">Add hyperlink</h4>
-			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
 			<div class="miniweb-form-group">
@@ -196,7 +196,7 @@ var path = Model.Url;
 		</form>
 		<div class="miniweb-modal-footer">
 			<button id="miniweb-button-addlink" class="primary">Add link</button>
-			<button data-dismiss=".miniweb-modal">Cancel</button>
+			<button data-miniweb-dismiss=".miniweb-modal">Cancel</button>
 		</div>
 	</div>
 </div>
@@ -205,17 +205,17 @@ var path = Model.Url;
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
 			<h4 class="miniweb-modal-title" id="miniweb-addcontent-label">Add content</h4>
-			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
 			<p>Select an item to add</p>
 			@foreach (var s in MiniWebSite.ItemTemplates)
 			{
-			<button data-add-content-id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
+			<button data-miniweb-add-content-id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
 			}
 		</form>
 		<div class="miniweb-modal-footer">
-			<button data-dismiss="miniweb-modal">Cancel</button>
+			<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
 		</div>
 	</div>
 </div>
@@ -225,12 +225,12 @@ var path = Model.Url;
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
 			<h4 class="miniweb-modal-title" id="miniweb-addimage-label">Add image</h4>
-			<button class="icon right" data-dismiss=".miniweb-modal">&times;</button>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
 			<div class="miniweb-modal-body">
-				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-page-move="-1">&#10218;</a>
-				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-page-move="1">&#10219;</a>
+				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-miniweb-page-move="-1">&#10218;</a>
+				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-miniweb-page-move="1">&#10219;</a>
 				@{
 				var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
 				var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
@@ -243,16 +243,16 @@ var path = Model.Url;
 					}
 				</datalist>
 
-				<ul class="miniweb-assetlist" data-page="0" data-asset-root-path="images/">
+				<ul class="miniweb-assetlist" data-miniweb-page="0" data-asset-root-path="images/">
 					@foreach(var a in allAssets)
 					{
-					<li data-path="@a.Folder" class="is-hidden">
+					<li data-miniweb-path="@a.Folder" class="is-hidden">
 						@if (a.Type == MiniWeb.Core.AssetType.Image) {
-						<img data-src="@a.VirtualPath" data-filename="@a.FileName" data-relpath="@a.VirtualPath" class="miniweb-asset-pick" />
+						<img data-miniweb-src="@a.VirtualPath" data-miniweb-filename="@a.FileName" data-miniweb-relpath="@a.VirtualPath" class="miniweb-asset-pick" />
 						}
 						else
 						{
-						<span data-filename="@a.FileName" data-relpath="@a.VirtualPath" class="miniweb-asset-pick">@a.FileName</span>
+						<span data-miniweb-filename="@a.FileName" data-miniweb-relpath="@a.VirtualPath" class="miniweb-asset-pick">@a.FileName</span>
 						}
 					</li>
 					}
@@ -261,7 +261,7 @@ var path = Model.Url;
 				<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0" />
 			</div>
 			<div class="miniweb-modal-footer">
-				<button data-dismiss="miniweb-modal">Cancel</button>
+				<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
 			</div>
 		</form>
 	</div>
