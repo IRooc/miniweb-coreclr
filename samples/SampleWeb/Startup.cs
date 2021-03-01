@@ -29,13 +29,10 @@ namespace SampleWeb
 	public class Startup
 	{
 		public IConfiguration Configuration { get; set; }
-		public IWebHostEnvironment Environment { get; set; }
-
-		public Startup(IConfiguration configuration, IWebHostEnvironment env)
+		public Startup(IConfiguration configuration)
 		{
 			// Setup configuration sources.
 			Configuration = configuration;
-			Environment = env;
 		}
 
 		public void ConfigureServices(IServiceCollection services)
@@ -48,7 +45,7 @@ namespace SampleWeb
 			})
 			.AddRazorRuntimeCompilation(); //needed for miniweb for now.
 
-			services.AddMiniWeb(Configuration, Environment)
+			services.AddMiniWeb(Configuration)
 					.AddMiniWebJsonStorage(Configuration)
 					//        .AddMiniWebXmlStorage(Configuration)
 					.AddMiniWebAssetFileSystemStorage(Configuration);

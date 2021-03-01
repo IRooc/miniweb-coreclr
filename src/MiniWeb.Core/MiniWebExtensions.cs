@@ -76,12 +76,12 @@ namespace MiniWeb.Core
 		}
 
 
-		public static IServiceCollection AddMiniWeb(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+		public static IServiceCollection AddMiniWeb(this IServiceCollection services, IConfiguration configuration)
 		{
-			return services.AddMiniWeb<MiniWebSite>(configuration, env);
+			return services.AddMiniWeb<MiniWebSite>(configuration);
 		}
 
-		public static IServiceCollection AddMiniWeb<T1>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+		public static IServiceCollection AddMiniWeb<T1>(this IServiceCollection services, IConfiguration configuration)
 			where T1 : class, IMiniWebSite
 		{
 			//Setup miniweb configuration
