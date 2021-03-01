@@ -21,7 +21,7 @@ namespace MiniWeb.Core
 		IEnumerable<string> ItemTemplates { get; }
 
 		void DeleteSitePage(ISitePage page);
-		ISitePage GetPageByUrl(string url, bool editing = false);
+		FindResult GetPageByUrl(string url, bool editing = false);
 		string GetPageUrl(ISitePage page);
 		void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
 		void ReloadPages(bool forceReload = false);
@@ -33,8 +33,9 @@ namespace MiniWeb.Core
 		void DeleteAsset(IAsset asset);
 		void ReloadAssets(bool forceReload = false);
 
-		bool Authenticate(string user, string password);
+		bool Authenticate(string username, string password);
 		bool IsAuthenticated(ClaimsPrincipal user);
+		ClaimsPrincipal GetClaimsPrincipal(string username);
 
 	}
 }

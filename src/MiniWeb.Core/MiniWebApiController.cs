@@ -36,15 +36,15 @@ namespace MiniWeb.Core
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)
 		{
-			ISitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
-			if (page != null && page.Url != "404")
+			var result = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
+			if (result.Found)
 			{
-				_webSite.Logger?.LogInformation($"save PAGE found {page.Url}");
+				_webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");
 				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items, _webSite.ContentStorage.JsonInterfaceConverter);
-				page.Sections.Clear();
-				page.Sections.AddRange(newSections);
+				result.Page.Sections.Clear();
+				result.Page.Sections.AddRange(newSections);
 
-				_webSite.SaveSitePage(page, Request, true);
+				_webSite.SaveSitePage(result.Page, Request, true);
 				return new JsonResult(new { result = true });
 			}
 			return new JsonResult(new { result = false });

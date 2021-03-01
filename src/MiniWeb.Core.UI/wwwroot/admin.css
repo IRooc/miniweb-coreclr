@@ -274,7 +274,6 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	white-space: pre-wrap;
 }
 .miniweb-editing [data-miniwebsection] {
-	padding: 5px;
 	border: 1px dotted transparent
 }
 .miniweb-editing [data-miniwebsection]:hover {
@@ -291,19 +290,23 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	outline: thin dashed #ccc;
 	width: 100%;
 	display: inline-block;
+	margin-top: 25px;
+}
+.miniweb-editing [contenteditable]:focus,
+.miniweb-editing [contenteditable]:hover {
+	outline: thin solid #ccc;
 }
 .miniweb-editing [contenteditable]:before {
-	background: #f4f2df;
-	color: #777;
-	content: attr(data-miniwebprop) ": ";
+	position: absolute;
+	background: #128fb5;
+	color: #fff;
+	content: attr(data-miniwebprop);
 	white-space: nowrap;
-	margin: 0 5px 0 0;
+	margin-top: -23px;
+	padding: 0 5px;
+	border-radius: 5px 5px 0 0;
 }
 
-.miniweb-editing div[contenteditable]:before {
-	display: block;
-	margin: 0;
-}
 .miniweb-editing .miniweb-template-actions button {
 	background:none;
 	border:none;

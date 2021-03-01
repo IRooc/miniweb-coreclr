@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MiniWeb.Core
 {
-    public class MiniWebPageController : Controller
+	public class MiniWebPageController : Controller
 	{
 		private readonly IMiniWebSite _webSite;
 
@@ -19,59 +19,36 @@ namespace MiniWeb.Core
 		public IActionResult Index(string url)
 		{
 			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");
-			if (string.IsNullOrWhiteSpace(url) || url == "/")
+
+			bool editing = _webSite.IsAuthenticated(User);
+			var result = _webSite.GetPageByUrl(url, editing);
+
+			//redirect if not editing?
+			if (!string.IsNullOrWhiteSpace(result.RedirectUrl))
 			{
-				_webSite.Logger?.LogDebug("Homepage");
-				url = _webSite.Configuration.DefaultPage;
+				return Redirect(result.RedirectUrl);
 			}
-			ISitePage page = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
-			if (page.Url != url && $"{page.Url}.{_webSite.Configuration.PageExtension}" != url && (page.Url != "404"))
-			{
-				if (!string.IsNullOrWhiteSpace(_webSite.Configuration.PageExtension))
-				{
-					return Redirect($"/{page.Url}.{_webSite.Configuration.PageExtension}");
-				}
-				return Redirect($"/{page.Url}");
-			}
-			ViewBag.CurrentUrl = page.Url;
-			if (_webSite.Configuration.RedirectToFirstSub && page.Pages.Any())
-			{
-				return Redirect(page.Pages.First().Url);
-			}
-			if (page.Url == "404")
+			if (!result.Found)
 			{
 				Response.StatusCode = 404;
 			}
-
-			return View(page.Template, page);
+			return View(result.Page.Template, result.Page);
 		}
 
 		public IActionResult Login()
 		{
 			_webSite.Logger?.LogInformation("login action");
-			var page = _webSite.ContentStorage.MiniWebLoginPage;
-			ViewBag.CurrentUrl = page.Url;
-
-			return View(_webSite.Configuration.LoginView, page);
+			return base.View(_webSite.Configuration.LoginView, _webSite.ContentStorage.MiniWebLoginPage);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Login(string username, string password, bool remember = false)
+		public async Task<IActionResult> Login(string username, string password)
 		{
 			_webSite.Logger?.LogInformation("login post");
 			if (_webSite.Authenticate(username, password))
 			{
-				var claims = new[] {
-					new Claim(ClaimTypes.Name, username),
-					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
-				};
-
-				_webSite.Logger?.LogInformation($"signing in as :{username}");
-				// use ApplicationCookieAuthenticationType so user.IsSignedIn works...
-				var identity = new ClaimsIdentity(claims,_webSite.Configuration.Authentication.AuthenticationScheme);
-				var principal = new ClaimsPrincipal(identity);
+				var principal = _webSite.GetClaimsPrincipal(username);
 				await HttpContext.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
-
 				return Redirect(_webSite.Configuration.DefaultPage);
 			}
 			ViewBag.ErrorMessage = $"Failed to login as {username}";
@@ -88,12 +65,11 @@ namespace MiniWeb.Core
 			if (Request.HasFormContentType)
 			{
 				var provider = Request.Form["provider"].ToString();
-				_webSite.Logger?.LogInformation($"Social login {provider}");
 				AuthenticationProperties properties = new AuthenticationProperties()
 				{
 					RedirectUri = _webSite.Configuration.Authentication.SocialLoginPath
 				};
-				properties.Items.Add("LoginProvider", provider);
+				_webSite.Logger?.LogInformation($"Social login {provider}");
 				return new ChallengeResult(provider, properties);
 			}
 			return Login();
@@ -111,5 +87,5 @@ namespace MiniWeb.Core
 			return Index(_webSite.Configuration.DefaultPage);
 		}
 	}
-	
+
 }

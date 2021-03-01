@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace MiniWeb.Core
 {
+	public struct FindResult {
+		public ISitePage Page;
+		public bool Found;
+		public string RedirectUrl;
+	}
 	public interface ISitePage
 	{
 		string Layout { get; set; }

@@ -75,9 +75,15 @@ namespace MiniWeb.Core
 			return null;
 		}
 
-		public ISitePage GetPageByUrl(string url, bool editing = false)
+		public FindResult GetPageByUrl(string url, bool editing = false)
 		{
+			var result = new FindResult();
 			Logger?.LogDebug($"Finding page {url}");
+			if (string.IsNullOrWhiteSpace(url) || url == "/")
+			{
+				Logger?.LogDebug("Homepage");
+				url = Configuration.DefaultPage;
+			}
 			var suffix = string.Empty;
 			if (url?.StartsWith("/") == true)
 			{
@@ -102,17 +108,34 @@ namespace MiniWeb.Core
 			}
 			else
 			{
-				if (!string.IsNullOrWhiteSpace(foundPage.RedirectUrl))
+				result.Found = true;
+				if (string.IsNullOrWhiteSpace(foundPage.RedirectUrl))
 				{
-					var redirectPage = Pages.FirstOrDefault(p => p.Url == foundPage.RedirectUrl) ?? ContentStorage.GetSitePageByUrl(foundPage.RedirectUrl);
-					if (!editing && redirectPage != null)
+					if (foundPage.Url != url && $"{foundPage.Url}.{Configuration.PageExtension}" != url && (foundPage.Url != "404"))
 					{
-						foundPage = redirectPage;
+						if (!string.IsNullOrWhiteSpace(Configuration.PageExtension))
+						{
+							result.RedirectUrl = $"/{foundPage.Url}.{Configuration.PageExtension}";
+						}
+						else
+						{
+							result.RedirectUrl = $"/{foundPage.Url}";
+						}
 					}
+					if (Configuration.RedirectToFirstSub && foundPage.Pages.Any())
+					{
+						result.RedirectUrl = foundPage.Pages.First().Url;
+					}
+				}
+				else if (!editing)
+				{
+					//remove the redirectUrl s
+					result.RedirectUrl = foundPage.RedirectUrl;
 				}
 				Logger?.LogInformation($"Found page [{foundPage.Url}] from url: [{url}]");
 			}
-			return foundPage;
+			result.Page = foundPage;
+			return result;
 		}
 
 		public string GetPageUrl(ISitePage page)
@@ -133,9 +156,22 @@ namespace MiniWeb.Core
 			return user?.IsInRole(MiniWebAuthentication.MiniWebCmsRoleValue) == true;
 		}
 
-		public bool Authenticate(string user, string password)
+		public bool Authenticate(string username, string password)
 		{
-			return ContentStorage.Authenticate(user, password);
+			return ContentStorage.Authenticate(username, password);
+		}
+
+		public ClaimsPrincipal GetClaimsPrincipal(string username)
+		{
+			var claims = new[] {
+					new Claim(ClaimTypes.Name, username),
+					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
+				};
+
+			Logger?.LogInformation($"signing in as :{username}");
+			var identity = new ClaimsIdentity(claims, Configuration.Authentication.AuthenticationScheme);
+			var principal = new ClaimsPrincipal(identity);
+			return principal;
 		}
 
 		public void ReloadPages(bool forceReload = false)
