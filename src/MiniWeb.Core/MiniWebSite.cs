@@ -279,36 +279,5 @@ namespace MiniWeb.Core
 			}
 			return html;
 		}
-
-		//private byte[] ConvertToBytes(string base64)
-		//{
-		//	int index = base64.IndexOf("base64,", StringComparison.Ordinal) + 7;
-		//	return Convert.FromBase64String(base64.Substring(index));
-		//}
-
-		//private string SaveFileToDisk(byte[] bytes, string extension, string originalFilename)
-		//{
-		//	string relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + extension.Trim('.');
-		//	if (!string.IsNullOrWhiteSpace(originalFilename))
-		//	{
-		//		var originalDestFile = Path.Combine(HostingEnvironment.WebRootPath, Configuration.ImageSavePath, originalFilename);
-		//		if (!File.Exists(originalDestFile))
-		//		{
-		//			relative = Configuration.ImageSavePath + originalFilename;
-		//		}
-		//		else
-		//		{
-		//			//TODO(RC) find unique imagefilename without guid...
-		//			relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + originalFilename;
-		//		}
-		//		relative = relative.ToLowerInvariant();
-		//	}
-		//	string file = Path.Combine(HostingEnvironment.WebRootPath, relative);
-		//	File.WriteAllBytes(file, bytes);
-
-		//	//TODO(RC) is this correct, path for browser to wwwroot;
-		//	var absolutepath = $"/{relative}";
-		//	return absolutepath;
-		//}
 	}
 }
