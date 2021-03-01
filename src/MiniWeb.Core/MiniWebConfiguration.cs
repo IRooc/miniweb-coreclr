@@ -14,7 +14,6 @@ namespace MiniWeb.Core
 
 		public string PageTemplatePath { get; set; } = "/Views/Pages";
 		public string ItemTemplatePath { get; set; } = "/Views/Items";
-		public string ImageSavePath { get; set; } = "images/saved/";
 		public bool RedirectToFirstSub { get; set; } = false;
 		public bool StoreVersions { get; set; } = false;
 
@@ -62,6 +61,6 @@ namespace MiniWeb.Core
 		public string LoginPath { get; set; } = "/miniweb/login.html";
 		public string SocialLoginPath { get; set; } = "/miniweb/social-login.html";
 		public string LogoutPath { get; set; } = "/miniweb/logout.html";
-		public string AuthenticationType { get; set; } = typeof(MiniWebAuthentication).Namespace + ".MiniWebAuth";
+		public int LoginTimeoutInMinutes { get; set; } = 60;
 	}
 }

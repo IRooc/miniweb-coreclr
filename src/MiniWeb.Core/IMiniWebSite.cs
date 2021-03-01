@@ -21,20 +21,21 @@ namespace MiniWeb.Core
 		IEnumerable<string> ItemTemplates { get; }
 
 		void DeleteSitePage(ISitePage page);
-		ISitePage GetPageByUrl(string url, bool editing = false);
+		FindResult GetPageByUrl(string url, bool editing = false);
 		string GetPageUrl(ISitePage page);
 		void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
-		void ReloadPages();
+		void ReloadPages(bool forceReload = false);
 
 		IContentItem DummyContent(string template);
 
 		List<IPageSection> GetDefaultContentForTemplate(string template);
 		IEnumerable<IAsset> Assets { get; set; }
 		void DeleteAsset(IAsset asset);
-		void ReloadAssets();
+		void ReloadAssets(bool forceReload = false);
 
-		bool Authenticate(string user, string password);
+		bool Authenticate(string username, string password);
 		bool IsAuthenticated(ClaimsPrincipal user);
+		ClaimsPrincipal GetClaimsPrincipal(string username);
 
 	}
 }

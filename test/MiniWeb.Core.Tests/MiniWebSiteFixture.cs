@@ -5,6 +5,7 @@ using Xunit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MiniWeb.Core.Tests
 {
@@ -26,7 +27,7 @@ namespace MiniWeb.Core.Tests
 
 			var configOptions = Options.Create(new MiniWebConfiguration());
 
-			MiniWeb = new MiniWebSite(hostingEnv.Object, loggerFactory.Object, contentStorage.Object, assetStorage.Object, configOptions);
+			MiniWeb = new MiniWebSite(hostingEnv.Object, loggerFactory.Object, contentStorage.Object, assetStorage.Object, null, configOptions);
 		}
 
 		private Mock<ISitePage> GetLoginPage()

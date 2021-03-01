@@ -9,7 +9,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 		public static IServiceCollection AddMiniWebAssetFileSystemStorage(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<MiniWebAssetFileSystemConfig>(configuration.GetSection("MiniWebStorage"));
-			return services.AddSingleton<IMiniWebAssetStorage, MiniWebAssetFileSystemStorage>();
+			return services.AddScoped<IMiniWebAssetStorage, MiniWebAssetFileSystemStorage>();
 		}
     }
 }

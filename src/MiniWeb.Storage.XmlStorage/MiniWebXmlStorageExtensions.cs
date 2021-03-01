@@ -9,7 +9,7 @@ namespace MiniWeb.Storage.XmlStorage
 		public static IServiceCollection AddMiniWebXmlStorage(this IServiceCollection services, IConfiguration configuration)
 		{		
 			services.Configure<MiniWebXmlStorageConfig>(configuration.GetSection("MiniWebStorage"));
-			return services.AddSingleton<IMiniWebContentStorage, MiniWebXmlStorage>();
+			return services.AddScoped<IMiniWebContentStorage, MiniWebXmlStorage>();
 		}
 	}
 }

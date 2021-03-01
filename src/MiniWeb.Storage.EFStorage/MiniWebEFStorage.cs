@@ -19,6 +19,7 @@ namespace MiniWeb.Storage.EFStorage
 		{
 			StorageConfig = options.Value;		
 			Context = context;
+			Context.Database.EnsureCreated();
 		}
 
 		public IEnumerable<ISitePage> AllPages()
@@ -27,7 +28,7 @@ namespace MiniWeb.Storage.EFStorage
 			{
 				return Context.Pages.Include(p => p.Items).Select(GetSitePage);
 			}
-			return new List<ISitePage>() { this.MiniWeb404Page };
+			return new List<ISitePage>() { };
 		}
 
 		private static ISitePage GetSitePage(DbSitePage p)

@@ -1,368 +1,481 @@
-﻿body {
-	margin-top: 50px;
+﻿body.miniweb {
+	margin-top: 3.5em;
 }
 
-	body.preview {
-		margin-top: inherit;
-	}
-
-		body.preview miniwebadmin {
-			display: none;
-		}
-
-.admin {
-	margin-top: 50px;
+body.miniweb.preview {
+	margin-top: inherit;
 }
 
-#admin {
-	font: 12pt arial;
-	z-index: 5000;
+body.miniweb.preview miniwebadmin {
+	display: none;
+}
+body .miniweb-editor-toolbar *,
+body miniwebadmin * {
+	font-family: Arial, Helvetica, sans-serif!important;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+miniwebadmin input,
+miniwebadmin textarea,
+miniwebadmin select {
+	border: 1px solid black;
+	border-radius: 2px;
+	padding: 3px;
 }
 
-	#admin .navbar-inner {
-		min-height: 0;
-		padding-top: 8px;
-	}
-
-	#admin .navbar-nav li.divider {
-		border-left: 1px solid darkgray;
-		height: 33px;
-	}
-
-	#admin button:focus {
-		outline: 0;
-		white-space: nowrap;
-	}
-
-	#admin #tools {
-		position: relative;
-		top: 5px;
-		left: 10px;
-		margin: 0 1em;
-		display: none;
-	}
-
-		#admin #tools a {
-			font-size: 14px;
-			font-weight: bold;
-			padding: 0 9px;
-		}
-
-		#admin #tools div:not(:last-child) {
-			border-right: 1px solid gray;
-		}
-
-	#admin aside {
-		position: absolute;
-		top: 4em;
-		text-align: center;
-		width: 100%;
-		display: none;
-	}
-
-		#admin aside .alert {
-			display: inline-block;
-			padding: 8px 1em;
-		}
-
-	#admin #showHiddenPages {
-		position: relative;
-		top: 5px;
-		left: 10px;
-	}
-
-		#admin #showHiddenPages label {
-			display: inline;
-			position: relative;
-			left: 4px;
-			font-weight: normal;
-		}
-
-	#admin .navbar-header.offline {
-		background: red;
-	}
-
-		#admin .navbar-header.offline a {
-			color: white;
-		}
-
-	#admin .navbar-header .navbar-brand {
-		float: left;
-		height: 50px;
-		padding: 15px 5px;
-		font-size: 12px;
-		line-height: 20px;
-	}
-
-miniwebadmin .miniweb.modal-dialog {
-	margin-top: 60px;
+miniwebadmin button {
+	border: 1px solid darkgray;
+	background-color: lightgray;
+	border-radius: 2px;
+	padding: 3px 10px;
+	cursor: pointer;
+}
+miniwebadmin button:hover {
+	background-color: #444;
+	color:white;
+}
+miniwebadmin button.primary {
+	border: 1px solid #254d25;
+	background-color: #73a882;
+	color: #254d25;
+}
+miniwebadmin button.primary:hover {
+	background-color: rgb(41, 116, 41);
+	color:white;
+}
+miniwebadmin button.danger {
+	border: 1px solid rgb(243, 78, 78);
+	background-color: rgb(230, 100, 100);
+	color:#4f0202;
+}
+miniwebadmin button.danger:hover {
+	background-color: rgb(165, 14, 14);
+	color:white;
 }
 
-#newContentAdd .modal-dialog .item-link {
-	margin: 10px;
+miniwebadmin #miniweb-templates,
+miniwebadmin .miniweb-modal,
+miniwebadmin #miniweb-html-tools {display: none;}
+miniwebadmin .is-hidden {
+	display: none !important;
 }
 
-	#newContentAdd .modal-dialog .item-link span {
-		width: 100px;
-		display: inline-block;
-	}
+miniwebadmin > aside {
+	position: fixed;
+	top: 3rem;
+	width: 400px;
+	left: 40%;
+	z-index: 100;
+}
+miniwebadmin > aside .alert {
+	background-color: lightgray;
+	padding: 10px;
+	border-radius: 5px;	
+}
+miniwebadmin > aside .alert.alert-success {
+	color: #3c763d;
+    background-color: #dff0d8;
+}
 
 
-body.miniweb-editing [data-miniwebtemplate] {
+miniwebadmin .miniweb-modal.show {
+	display: block !important;
+	position: fixed;
+	top: 3em;
+	left: 0;
+	width: 100%; 
+	height: 100%;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 10;
+}
+miniwebadmin .miniweb-modal .miniweb-modal-header h4 {
+	margin: 1em 0;
+	font-size: 1.5em;
+}
+miniwebadmin .miniweb-modal .miniweb-modal-content {
+	width: 40em;
+	background-color: white;
+	height: 100%;
+	position: absolute;
+	top:0;
+	left:0;
+	padding-left: 40px;
+}
+miniwebadmin .miniweb-modal.miniweb-modal-right .miniweb-modal-content {
+	position: absolute;
+	right: 0;
+	top:0;
+	left:auto;
+}
+miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
+	left: calc(50% - 20em - 20px);
+}
+miniwebadmin .miniweb-modal .miniweb-modal-content .right {
+	position: absolute;
+	right: 0;
+	top:0;
+}
+miniwebadmin .miniweb-modal .miniweb-modal-footer {
+	text-align: right;
+	padding: 0 48px;
+}
+
+miniwebadmin .miniweb-tools {
+	position: fixed;
+	display: block;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 3.5em;
+	background-color: #f4f2df;
+	font-size: 10pt;
+}
+miniwebadmin .miniweb-tools .miniweb-tool {
+	float: left;
+}
+miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
+	width: 3em;
+	height: 100%;
+	background-color: red;
+}
+miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status a {
+	color:white;
+	margin-top: 1em;
+	padding:0;
+	display: inline-block;
+	font-size: 10px;
+	text-align: center;
+	width: 100%;
+	text-decoration: none;
+}
+miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status.published {
+	background-color:  #f4f2df;
+}
+miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list {
+	list-style: none;
+	margin: 0.5em 0;
+	padding-left:0;
+	display: inline-block;
+}
+miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list li {
+	display: inline-block;
+}
+miniwebadmin .pull-right {
+	float:right!important;
+}
+miniwebadmin .miniweb-tools label {
+	font-size: 12px;
+	cursor: pointer;
+}
+miniwebadmin .miniweb-tools label input {
+	margin:0
+}
+miniwebadmin .miniweb-tools  button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 5px 15px;
+	position: relative;
+}
+miniwebadmin .miniweb-tools  button:hover {
+	background-color: #dbd8be;
+	color:black;
+}
+miniwebadmin .miniweb-tools  button:disabled {
+	cursor: default;
+	color: lightgrey;
+	background: none;
+}
+miniwebadmin .miniweb-tools  button.icon {
+	padding-left:20px;
+}
+
+miniwebadmin .icon:before {
+	position: absolute;
+	font-size: 15px;
+	top:3px;
+	left: 2px;
+}
+
+miniwebadmin .icon.icon-props:before {
+	content: "\2634";
+}
+miniwebadmin .icon.icon-edit:before {
+	content: "\2710";
+}
+miniwebadmin .icon.icon-save:before {
+	content: "\1F5AB";
+	font-weight: 700;
+}
+miniwebadmin .icon.icon-cancel:before {
+	content: "\21ba";
+	font-size: 18px;
+	font-weight: 700;
+	top: 0px;
+}
+miniwebadmin .icon.icon-signout:before {
+	content: "\2BBF";
+}
+miniwebadmin .icon.icon-signout:hover:before {
+	color:red;
+}
+miniwebadmin .icon.icon-new:before {
+	content: "\002A";
+	font-size: 23px;
+}
+
+miniwebadmin .miniweb-form-group {
+	width: 100%;
+	margin: 0 0 10px;
+}
+miniwebadmin .miniweb-form-group label {
+	display: block;
+}
+miniwebadmin .miniweb-form-group label span {
+	display: inline-block;	
+	width: 30%;
+	font-size: 12px;
+	font-weight: normal;
+
+}
+miniwebadmin .miniweb-form-group label input,
+miniwebadmin .miniweb-form-group label select {
+	width:60%
+}
+miniwebadmin .miniweb-form-group label input[type="checkbox"] {
+	width: auto;
+}
+miniwebadmin .miniweb-form-group label .input-group {
+	display: inline-block;	
+	width:60%
+}
+miniwebadmin .miniweb-form-group label .input-group .addon {
+	display: inline-block;
+	width: auto;
+}
+miniwebadmin .miniweb-form-group .input-group .addon + input ,
+miniwebadmin .miniweb-form-group .input-group .addon + select {
+	width: 80%
+}
+
+.miniweb-hidden-menu {
+	display: none!important;
+}
+.miniweb-hidden-menu.show {
+	display: unset!important;
+}
+
+.miniweb-editing pre {
+	max-width: 100%;
+	white-space: pre-wrap;
+}
+.miniweb-editing [data-miniwebsection] {
+	border: 1px dotted transparent
+}
+.miniweb-editing [data-miniwebsection]:hover {
+	border-color: grey;
+}
+.miniweb-editing [data-miniwebtemplate] {
 	overflow: hidden;
-	padding: 1px;
+	border-bottom: 1px dashed black;
+	margin-bottom: 5px;
+	padding:1px;
 }
 
-body.miniweb-editing [contenteditable] {
+.miniweb-editing [contenteditable] {
 	outline: thin dashed #ccc;
 	width: 100%;
 	display: inline-block;
+	margin-top: 25px;
 }
-
-body.miniweb-editing img[contenteditable] {
-	width: auto;
-	overflow: hidden;
-	display: block;
+.miniweb-editing [contenteditable]:focus,
+.miniweb-editing [contenteditable]:hover {
+	outline: thin solid #ccc;
 }
-
-
-body.miniweb-editing [contenteditable][data-miniwebedittype="html"] {
-	min-height: 180px;
-}
-body.miniweb-editing div[contenteditable] {
-	margin-bottom: 10px;
-}
-
-body.miniweb-editing [contenteditable] img {
-	cursor: move;
-}
-
-body.miniweb-editing [contenteditable]:before {
-	background: #f4f2df;
-	color: #777;
-	content: attr(data-miniwebprop) ": ";
+.miniweb-editing [contenteditable]:before {
+	position: absolute;
+	background: #128fb5;
+	color: #fff;
+	content: attr(data-miniwebprop);
 	white-space: nowrap;
-	margin: 0 5px 0 0;
+	margin-top: -23px;
+	padding: 0 5px;
+	border-radius: 5px 5px 0 0;
 }
 
-body.miniweb-editing div[contenteditable]:before {
-	display: block;
-	margin: 0;
+.miniweb-editing .miniweb-template-actions button {
+	background:none;
+	border:none;
+	color: darkblue;
+	font-size: 1.3rem;
 }
-/*http://jsfiddle.net/wC2p7/1/ */
-body.miniweb-editing .miniweb-url-edit[contenteditable] {
-	width: 95%;
-}
-
-	body.miniweb-editing .miniweb-url-edit[contenteditable]::after {
-		content: "\e135";
-		font-family: "Glyphicons Halflings";
-		cursor: pointer;
-		float: right;
-		left: 95%;
-		position: absolute;
-	}
-
-/*http://jsfiddle.net/wC2p7/1/ */
-body.miniweb-editing .miniweb-asset-edit[contenteditable] {
-	width: 95%;
-}
-
-	body.miniweb-editing .miniweb-asset-edit[contenteditable]::after {
-		content: "\e060";
-		font-family: "Glyphicons Halflings";
-		cursor: pointer;
-		float: right;
-		left: 95%;
-		position: absolute;
-	}
-
-body.miniweb-editing .editor-toolbar .btn {
-	padding: 4px 8px;
-}
-
-body.miniweb-editing .miniweb-template-actions .btn.remove {
-	color: darkred;
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup {
 	display: inline-block;
 }
-
-body.miniweb-editing .miniweb-template-actions .btn.articleDown,
-body.miniweb-editing .miniweb-template-actions .btn.articleUp {
-	color: black;
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button {
+	margin: 0;
+	padding: 2px;
+	display: inline-block;
+	width: 25px;
+	border: 1px solid lightslategray;
+	background-color: white;
+	color: lightslategray;
+	border-radius: 12px;
+	cursor: pointer;
+	position: relative;
 }
-
-body.miniweb-editing .miniweb-editing [data-miniwebtemplate] {
-	margin: 10px -10px !important;
-	padding: 10px;
-	border: 1px dotted green;
-	overflow: hidden;
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.miniweb-leftalign:after {
+	content: "";
+	width: 0;
+	height: 0;
+	position: absolute;
+	left: 9px;
+	bottom: 2px;
+	border-bottom: 15px solid transparent;
+	border-right: 10px solid white;
+} 
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.miniweb-rightalign:after {
+	content: "";
+	width: 0;
+	height: 0;
+	position: absolute;
+	left: 5px;
+	bottom: 2px;
+	border-bottom: 15px solid transparent;
+	border-left: 10px solid white;
+} 
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.icon.icon-earth:before {
+	content: "\1F517";
+	font-size:10px;
 }
-body.miniweb-editing [data-miniwebtemplate]:first-of-type .miniweb-template-actions .btn.articleUp {
-	visibility: hidden;
+.miniweb-editing [data-miniwebedittype="asset"],
+.miniweb-editing [data-miniwebedittype="url"] {
+	width: 95%;
+	font-size: 12px;
 }
-/*last child is add content button*/
-body.miniweb-editing [data-miniwebtemplate]:last-of-type .miniweb-template-actions .btn.articleDown {
-	visibility: hidden;
+.miniweb-editing [data-miniwebedittype="url"]::after {
+	content: "\1F517";
+	cursor: pointer;
+	float: right;
+	left: 95%;
+	position: absolute;
 }
-
+.miniweb-editing [data-miniwebedittype="asset"]::after {
+	content: "\1F0ED";
+	cursor: pointer;
+	float: right;
+	left: 95%;
+	position: absolute;
+}
 .miniweb-attributes {
 	display: none;
-	padding: 5px 0 5px 24px;
-	margin: 5px 0;
-	background: #f9f9f9;
+}
+.miniweb-editing .miniweb-attributes {
+	display: inherit;
 }
 
-	.miniweb-attributes:before {
-		content: "\e144";
-		font-family: 'Glyphicons Halflings';
-		position: absolute;
-		left: 20px
-	}
-
-body.miniweb-editing .miniweb-attributes {
-	display: block;
+.miniweb-editing button.miniweb-button {
+	cursor: pointer;
 }
 
-body.miniweb-editing aside > [data-miniwebtemplate].aside .editor-toolbar a {
-	color: #428bca;
-	font-size: 10px;
-	padding: 4px;
+.miniweb-editing button.miniweb-danger {
+	color:red;
 }
 
-body.miniweb-editing .btn.disabled,
-body.miniweb-editing .btn[disabled],
-body.miniweb-editing fieldset[disabled] .btn {
-	opacity: 0.3;
-}
-
-.navbar-default .navbar-nav > li.miniweb-hidden-menu {
-	display: none;
-}
-
-	.navbar-default .navbar-nav > li.miniweb-hidden-menu > a {
-		color: grey;
-	}
-
-
-.miniweb-hidden-menu a:before {
-	content: '[';
-}
-
-.miniweb-hidden-menu a:after {
-	content: ']';
-}
-
-body.miniweb-editing .miniweb-insertcontent {
-	margin-top: 20px;
-}
-
-#miniweb-templates {
-	display: none;
-}
-
-body.miniweb-editing .miniweb-editonly {
-	display: block;
-}
-
-body.miniweb-editing #miniweb-assetlist {
+.miniweb-editing .miniweb-assetlist {
 	list-style: none;
 	display: block;
 	min-height: 80px;
 	overflow: hidden;
-	width: 100%;
+	width: 90%;
 	padding-left: 20px;
 }
 
-	body.miniweb-editing #miniweb-assetlist li {
-		width: 100px;
-		height: 100px;
-		display: none;
-		overflow: hidden;
-		border: 1px solid #ddd;
-		border-radius: 10px;
-		line-height: 94px;
-		background: #fafafa;
-		transition: all .2s ease-in-out;
-	}
+.miniweb-editing .miniweb-assetlist li {
+	width: 100px;
+	height: 100px;
+	display: inline-block;
+	overflow: hidden;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	line-height: 94px;
+	background: #fafafa;
+	transition: all .2s ease-in-out;
+}
 
-		body.miniweb-editing #miniweb-assetlist li .miniweb-asset-pick {
-			max-width: 100%;
-			max-height: 100%;
-		}
+.miniweb-editing .miniweb-assetlist li .miniweb-asset-pick {
+	max-width: 100%;
+	max-height: 100%;
+}
 
-		body.miniweb-editing #miniweb-assetlist li:nth-child(n+1):nth-child(-n+15) {
-			display: inline-block;
-		}
-
-body.miniweb-editing .miniweb-asset-pager {
+.miniweb-editing .miniweb-asset-pager {
 	position: absolute;
 	color: #2e6da4;
 	top: 150px;
-	font-size: 17px;
+	font-size: 25px;
 	left: 10px
 }
 
-body.miniweb-editing #miniweb-asset-page-right.miniweb-asset-pager {
+.miniweb-editing #miniweb-asset-page-right.miniweb-asset-pager {
 	right: 12px;
 	left: auto;
 }
 
-body.miniweb-editing .miniweb-asset-pager:hover {
+.miniweb-editing .miniweb-asset-pager:hover {
 	color: #337ab7;
 }
 
 
+
+
 @media (max-width: 1024px) {
-	#admin .nav > li {
-		display: inline-block;
+	miniwebadmin .miniweb-tools  button.icon  {
+		font-size: 0;
+		line-height: 15px;
 	}
 
-		#admin .nav > li button, #ispublished {
-			padding-left: 8px;
-			padding-right: 8px;
-		}
-
-	#admin .navbar-inner .btn i {
-		padding: 0 5px;
-	}
-
-	#admin #showHiddenPages label span {
+	miniwebadmin .miniweb-tools  button.icon span {
 		display: none;
+	}
+	miniwebadmin .hidden-xs {
+		display: none !important;
+	}
+	miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
+		width: 1em;
+	}
+	
+	miniwebadmin .miniweb-tools  button {
+		padding:0;
+		width:15px;
+		height: 22px;
+	}
+	miniwebadmin > aside {
+		width: 90%;
+		left:5%;
 	}
 }
 
-@media screen and (max-width: 767px) {
-	#admin .navbar-header {
-		float: left;
-	}
 
-	#admin .nav > li {
-		float: left;
-		padding: 0 5px;
-	}
 
-	#admin.navbar.navbar-default button {
-		margin: 0;
-		padding-left: 0;
-		padding-right: 0;
-		background: none;
-	}
+/**/
 
-	#admin .navbar-inner {
-		min-height: 0;
-		padding-top: 0px;
-	}
+.miniweb-hidden-menu {
+	display: none;
 
-	#admin .nav.navbar-nav form {
-		padding-right: 15px;
-	}
-
-	#admin .navbar-inner .btn span {
-		display: none;
-		padding: 0 10px;
-	}
 }
 
-miniwebadmin .is-hidden {
-	display: none !important;
+.miniweb-hidden-menu a:before {
+content: '[';
+}
+
+.miniweb-hidden-menu a:after {
+content: ']';
+}
+
+.miniweb-hidden-menu > a {
+	color: grey!important;
 }

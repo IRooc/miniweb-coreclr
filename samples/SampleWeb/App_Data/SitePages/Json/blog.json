@@ -10,7 +10,7 @@
   "ShowInMenu": true,
   "SortOrder": 20,
   "Created": "2015-09-17T00:00:00",
-  "LastModified": "2020-02-28T10:38:49.6801806+01:00",
+  "LastModified": "2021-02-26T15:51:10.0692191+01:00",
   "Sections": [
     {
       "Key": "content",
@@ -19,7 +19,7 @@
           "Template": "~/Views/Items/bloglist.cshtml",
           "Values": {
             "blogTitle": "Blog",
-            "pageSize": "3"
+            "pageSize": "2"
           }
         }
       ]

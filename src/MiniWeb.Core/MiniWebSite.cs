@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MiniWeb.Core
 {
-    public class MiniWebSite : IMiniWebSite
+	public class MiniWebSite : IMiniWebSite
 	{
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
 		public const string EmbeddedBase64FileInValueRegex = "(data:([^\"]+))";
@@ -20,6 +21,7 @@ namespace MiniWeb.Core
 		public ILogger Logger { get; }
 		public IMiniWebContentStorage ContentStorage { get; }
 		public IMiniWebAssetStorage AssetStorage { get; }
+		public IMemoryCache Cache { get; }
 
 		public IEnumerable<ISitePage> PageHierarchy { get; set; }
 		public IEnumerable<ISitePage> Pages { get; set; }
@@ -43,20 +45,25 @@ namespace MiniWeb.Core
 
 
 		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
-						   IOptions<MiniWebConfiguration> config)
+						   IMemoryCache cache, IOptions<MiniWebConfiguration> config)
 		{
-			Pages = Enumerable.Empty<ISitePage>(); 
+			Pages = Enumerable.Empty<ISitePage>();
 
 			HostingEnvironment = env;
 			Configuration = config.Value;
 			ContentStorage = storage;
 			AssetStorage = assetStorage;
+			Cache = cache;
 			Logger = SetupLogging(loggerfactory);
 
 			//pass on self to storage module
 			//cannot inject because of circular reference.
 			ContentStorage.MiniWebSite = this;
 			AssetStorage.MiniWebSite = this;
+
+			this.ReloadPages();
+			this.ReloadAssets();
+
 		}
 
 		private ILogger SetupLogging(ILoggerFactory loggerfactory)
@@ -68,9 +75,15 @@ namespace MiniWeb.Core
 			return null;
 		}
 
-		public ISitePage GetPageByUrl(string url, bool editing = false)
+		public FindResult GetPageByUrl(string url, bool editing = false)
 		{
+			var result = new FindResult();
 			Logger?.LogDebug($"Finding page {url}");
+			if (string.IsNullOrWhiteSpace(url) || url == "/")
+			{
+				Logger?.LogDebug("Homepage");
+				url = Configuration.DefaultPage;
+			}
 			var suffix = string.Empty;
 			if (url?.StartsWith("/") == true)
 			{
@@ -95,17 +108,34 @@ namespace MiniWeb.Core
 			}
 			else
 			{
-				if (!string.IsNullOrWhiteSpace(foundPage.RedirectUrl))
+				result.Found = true;
+				if (string.IsNullOrWhiteSpace(foundPage.RedirectUrl))
 				{
-					var redirectPage = Pages.FirstOrDefault(p => p.Url == foundPage.RedirectUrl) ?? ContentStorage.GetSitePageByUrl(foundPage.RedirectUrl);
-					if (!editing && redirectPage != null)
+					if (foundPage.Url != url && $"{foundPage.Url}.{Configuration.PageExtension}" != url && (foundPage.Url != "404"))
 					{
-						foundPage = redirectPage;
+						if (!string.IsNullOrWhiteSpace(Configuration.PageExtension))
+						{
+							result.RedirectUrl = $"/{foundPage.Url}.{Configuration.PageExtension}";
+						}
+						else
+						{
+							result.RedirectUrl = $"/{foundPage.Url}";
+						}
 					}
+					if (Configuration.RedirectToFirstSub && foundPage.Pages.Any())
+					{
+						result.RedirectUrl = foundPage.Pages.First().Url;
+					}
+				}
+				else if (!editing)
+				{
+					//remove the redirectUrl s
+					result.RedirectUrl = foundPage.RedirectUrl;
 				}
 				Logger?.LogInformation($"Found page [{foundPage.Url}] from url: [{url}]");
 			}
-			return foundPage;
+			result.Page = foundPage;
+			return result;
 		}
 
 		public string GetPageUrl(ISitePage page)
@@ -126,16 +156,44 @@ namespace MiniWeb.Core
 			return user?.IsInRole(MiniWebAuthentication.MiniWebCmsRoleValue) == true;
 		}
 
-		public bool Authenticate(string user, string password)
+		public bool Authenticate(string username, string password)
 		{
-			return ContentStorage.Authenticate(user, password);
+			return ContentStorage.Authenticate(username, password);
 		}
 
-		public void ReloadPages()
+		public ClaimsPrincipal GetClaimsPrincipal(string username)
 		{
-			Logger?.LogInformation("Reload pages");
-			Pages = ContentStorage.AllPages().ToList();
+			Claim[] claims = GetClaimsFor(username);
+			Logger?.LogInformation($"signing in as :{username}");
+			var identity = new ClaimsIdentity(claims, Configuration.Authentication.AuthenticationScheme);
+			var principal = new ClaimsPrincipal(identity);
+			return principal;
+		}
 
+		public static Claim[] GetClaimsFor(string username)
+		{
+			return new[] {
+					new Claim(ClaimTypes.Name, username),
+					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
+				};
+		}
+
+		public void ReloadPages(bool forceReload = false)
+		{
+			// Look for cache key.
+			IEnumerable<ISitePage> pages = null;
+			if (!forceReload && Cache?.TryGetValue("MWPAGES", out pages) == true)
+			{
+				Logger?.LogInformation("Cached pages");
+				Pages = pages;
+			}
+			else
+			{
+				Logger?.LogInformation("Reload pages");
+				Pages = ContentStorage.AllPages().ToList();
+
+				Cache?.Set("MWPAGES", Pages);
+			}
 			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 			foreach (var page in Pages)
 			{
@@ -173,14 +231,14 @@ namespace MiniWeb.Core
 				}
 			}
 			ContentStorage.StoreSitePage(page, currentRequest);
-			ReloadPages();
+			ReloadPages(true);
 		}
 
 		public void DeleteSitePage(ISitePage page)
 		{
 			Logger?.LogInformation($"Deleting page {page.Url}");
 			ContentStorage.DeleteSitePage(page);
-			ReloadPages();
+			ReloadPages(true);
 		}
 
 		public List<IPageSection> GetDefaultContentForTemplate(string template)
@@ -194,12 +252,24 @@ namespace MiniWeb.Core
 		public void DeleteAsset(IAsset asset)
 		{
 			AssetStorage.RemoveAsset(asset);
-			ReloadAssets();
+			ReloadAssets(true);
 		}
-		
-		public void ReloadAssets()
+
+		public void ReloadAssets(bool forceReload = false)
 		{
-			Assets = AssetStorage.GetAllAssets();
+			IEnumerable<IAsset> assets = null;
+			if (!forceReload && Cache?.TryGetValue("MWASSETS", out assets) == true)
+			{
+				Logger?.LogInformation("Cached assets");
+				Assets = assets;
+			}
+			else
+			{
+				Logger?.LogInformation("Reload assets");
+				Assets = AssetStorage.GetAllAssets();
+
+				Cache?.Set("MWASSETS", Assets);
+			}
 		}
 
 		public IContentItem DummyContent(string template)
@@ -219,7 +289,8 @@ namespace MiniWeb.Core
 			{
 				string filename = match.Groups[5].Value;
 				string base64String = match.Groups[2].Value;
-				if (!string.IsNullOrWhiteSpace(base64String)) {
+				if (!string.IsNullOrWhiteSpace(base64String))
+				{
 					//byte[] bytes = ConvertToBytes(base64String);
 					var newAsset = AssetStorage.CreateAsset(filename, base64String);
 					//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
@@ -248,36 +319,5 @@ namespace MiniWeb.Core
 			}
 			return html;
 		}
-
-		//private byte[] ConvertToBytes(string base64)
-		//{
-		//	int index = base64.IndexOf("base64,", StringComparison.Ordinal) + 7;
-		//	return Convert.FromBase64String(base64.Substring(index));
-		//}
-
-		//private string SaveFileToDisk(byte[] bytes, string extension, string originalFilename)
-		//{
-		//	string relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + extension.Trim('.');
-		//	if (!string.IsNullOrWhiteSpace(originalFilename))
-		//	{
-		//		var originalDestFile = Path.Combine(HostingEnvironment.WebRootPath, Configuration.ImageSavePath, originalFilename);
-		//		if (!File.Exists(originalDestFile))
-		//		{
-		//			relative = Configuration.ImageSavePath + originalFilename;
-		//		}
-		//		else
-		//		{
-		//			//TODO(RC) find unique imagefilename without guid...
-		//			relative = Configuration.ImageSavePath + Guid.NewGuid() + "." + originalFilename;
-		//		}
-		//		relative = relative.ToLowerInvariant();
-		//	}
-		//	string file = Path.Combine(HostingEnvironment.WebRootPath, relative);
-		//	File.WriteAllBytes(file, bytes);
-
-		//	//TODO(RC) is this correct, path for browser to wwwroot;
-		//	var absolutepath = $"/{relative}";
-		//	return absolutepath;
-		//}
 	}
 }
