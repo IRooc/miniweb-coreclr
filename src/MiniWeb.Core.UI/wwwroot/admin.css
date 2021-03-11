@@ -406,6 +406,7 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	flex: 1 0 17%;
 	justify-content: center;
     align-items: center;
+	position: relative;
 }
 
 .miniweb-editing .miniweb-assetlist li .miniweb-asset-pick {
@@ -413,6 +414,16 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	max-height: 100%;
 	object-fit: scale-down;
 	cursor: pointer;
+}
+
+.miniweb-editing .miniweb-assetlist li span.miniweb-asset-pick:before {
+    content: '\1F5CE';
+    position: absolute;
+    opacity: 0.5;
+    margin: 0 auto;
+	top: 0;
+	font-size: 4rem;
+	left: 35px;
 }
 
 .miniweb-editing .miniweb-asset-pager {

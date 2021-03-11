@@ -49,10 +49,10 @@ const miniwebAdminDefaults = {
                                 if (selectedRange.commonAncestorContainer.parentNode.tagName == 'A') {
                                     const curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
                                     if (curHref.indexOf('http') == 0) {
-                                        modal.querySelector('[name="Url"]').value = curHref;
+                                        (modal.querySelector('[name="Url"]')).value = curHref;
                                     }
                                     else {
-                                        modal.querySelector('[name="InternalUrl"]').value = curHref;
+                                        (modal.querySelector('[name="InternalUrl"]')).value = curHref;
                                     }
                                 }
                                 modal.dataset.miniwebLinkType = 'HTML';
@@ -201,7 +201,7 @@ const showMessage = function (success, message, isHtml = false) {
 const assetPageList = document.querySelector('.miniweb-assetlist');
 const showAssetPage = function (page) {
     const pageSize = 15;
-    const folder = document.querySelector('[name="miniwebAssetFolder"]').value;
+    const folder = (document.querySelector('[name="miniwebAssetFolder"]')).value;
     const assetList = document.querySelector('.miniweb-assetlist');
     assetPageList.dataset.miniwebPage = page.toString();
     assetList.innerHTML = '';

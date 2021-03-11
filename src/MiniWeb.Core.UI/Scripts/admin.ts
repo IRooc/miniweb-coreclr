@@ -53,9 +53,9 @@ const miniwebAdminDefaults = {
 								if (selectedRange.commonAncestorContainer.parentNode.tagName == 'A') {
 									const curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
 									if (curHref.indexOf('http') == 0) {
-										(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
+										(modal.querySelector<HTMLInputElement>('[name="Url"]')).value = curHref;
 									} else {
-										(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = curHref;
+										(modal.querySelector<HTMLInputElement>('[name="InternalUrl"]')).value = curHref;
 									}
 								}
 								modal.dataset.miniwebLinkType = 'HTML';
@@ -82,7 +82,7 @@ const miniwebAdminDefaults = {
 								modal.dataset.miniwebAssetIndex = index;
 								if (currentAsset.lastIndexOf('/') > 0) {
 									let folder = currentAsset.substr(0, currentAsset.lastIndexOf('/'));
-									(<HTMLInputElement>modal.querySelector('.select-asset-folder')).value = folder;
+									modal.querySelector<HTMLInputElement>('.select-asset-folder').value = folder;
 								}
 								modal.classList.add("show");
 								e.stopPropagation();
@@ -109,7 +109,7 @@ const miniwebAdminDefaults = {
 						modal.dataset.miniwebAssetIndex = index;
 						if (currentAsset.lastIndexOf('/') > 0) {
 							let folder = currentAsset.substr(0, currentAsset.lastIndexOf('/'));
-							(<HTMLInputElement>modal.querySelector('.select-asset-folder')).value = folder;
+							modal.querySelector<HTMLInputElement>('.select-asset-folder').value = folder;
 						}
 						modal.classList.add("show");
 						e.stopPropagation();
@@ -132,9 +132,9 @@ const miniwebAdminDefaults = {
 						const modal = document.getElementById('miniweb-addHyperLink');
 						const curHref = element.innerText;
 						if (curHref.indexOf('http') == 0) {
-							(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
+							modal.querySelector<HTMLInputElement>('[name="Url"]').value = curHref;
 						} else {
-							(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = curHref;
+							modal.querySelector<HTMLInputElement>('[name="InternalUrl"]').value = curHref;
 						}
 						modal.dataset.miniwebLinkType = 'URL';
 						modal.dataset.miniwebLinkIndex = index;
@@ -204,11 +204,11 @@ const showMessage = function (success: boolean, message: string, isHtml: boolean
 	}, timeout);
 };
 
-const assetPageList = <HTMLElement>document.querySelector('.miniweb-assetlist');
+const assetPageList = document.querySelector<HTMLElement>('.miniweb-assetlist');
 const showAssetPage = function (page: number) {
 	const pageSize = 15;
-	const folder = (<HTMLInputElement>document.querySelector('[name="miniwebAssetFolder"]')).value;
-	const assetList = <HTMLElement>document.querySelector('.miniweb-assetlist');
+	const folder = (document.querySelector<HTMLInputElement>('[name="miniwebAssetFolder"]')).value;
+	const assetList = document.querySelector<HTMLElement>('.miniweb-assetlist');
 	assetPageList.dataset.miniwebPage = page.toString();
 
 	assetList.innerHTML = '';
@@ -403,7 +403,7 @@ const saveContent = function (e) {
 		});
 };
 const savePage = function () {
-	const form = (<HTMLFormElement>document.querySelector('.show.miniweb-pageproperties form'));
+	const form = document.querySelector<HTMLFormElement>('.show.miniweb-pageproperties form');
 	const formData = new FormData(form);
 	formData.append('__RequestVerificationToken', options.afToken);
 	fetch(options.apiEndpoint + "savepage", {
@@ -421,7 +421,7 @@ const savePage = function () {
 			showMessage(false, 'failed to post');
 		});
 
-	(<HTMLInputElement>form.querySelector('[name="NewPage"]')).value = "false";
+	form.querySelector<HTMLInputElement>('[name="NewPage"]').value = "false";
 };
 const removePage = function () {
 	if (confirm('are you sure?')) {
@@ -482,8 +482,8 @@ const ctrl_s_save = function (event) {
 const addLink = function () {
 	const modal = document.getElementById('miniweb-addHyperLink');
 	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
-	let href = (<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value;
-	if (!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
+	let href = modal.querySelector<HTMLInputElement>('[name="InternalUrl"]').value;
+	if (!href) href = modal.querySelector<HTMLInputElement>('[name="Url"]').value;
 	if (modal.dataset.miniwebLinkType == 'HTML') {
 		restoreSelection();
 		document.execCommand("unlink", false, null);
@@ -497,8 +497,8 @@ const addLink = function () {
 	modal.classList.remove('show');
 	delete modal.dataset.miniwebLinkIndex;
 	delete modal.dataset.miniwebLinkType;
-	(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = null;
-	(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = null;
+	modal.querySelector<HTMLInputElement>('[name="InternalUrl"]').value = null;
+	modal.querySelector<HTMLInputElement>('[name="Url"]').value = null;
 }
 
 
@@ -549,11 +549,11 @@ document.addEventListener('click', (e) => {
 			console.error("unknown move", move, target);
 		}
 	} else if (target.classList.contains('miniweb-asset-pick')) {
-		const contentEditables = document.querySelectorAll('[data-miniwebprop]');
+		const contentEditables = document.querySelectorAll<HTMLElement>('[data-miniwebprop]');
 		const modal = document.getElementById('miniweb-addAsset');
 		const index = modal.dataset.miniwebAssetIndex;
 		log('add asset to', index)
-		const el = <HTMLElement>contentEditables[index];
+		const el = contentEditables[index];
 		if (modal.dataset.miniwebAssetType == 'ASSET') {
 			el.innerText = target.dataset.miniwebRelpath;
 		} else if (modal.dataset.miniwebAssetType == 'HTML') {
@@ -589,14 +589,14 @@ const miniwebAdminInit = function (userOptions) {
 	btnPageProperties.addEventListener('click', (e) => {
 		e.preventDefault();
 		e.stopPropagation();
-		const modal = document.querySelector('.miniweb-pageproperties') as HTMLElement;
-		(modal.querySelector('[name="NewPage"]') as HTMLInputElement).value = "false";
+		const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
+		modal.querySelector<HTMLInputElement>('[name="NewPage"]').value = "false";
 
 		//restore miniwebOldValue if new page was clicked
 		const form = modal.querySelector('form');
-		const elems = form.querySelectorAll('input,textarea');
+		const elems = form.querySelectorAll<HTMLInputElement>('input,textarea');
 		for (let i = 0; i < elems.length; i++) {
-			const elem = elems[i] as HTMLInputElement;
+			const elem = elems[i];
 			if (!elem.value && elem.dataset.miniwebOldValue) {
 				elem.value = elem.dataset.miniwebOldValue;
 				delete elem.dataset.miniwebOldValue;
@@ -738,7 +738,7 @@ const miniwebAdminInit = function (userOptions) {
 	});
 
 	if (sessionStorage.getItem('miniweb-li-showhiddenpages') === "true") {
-		(<HTMLInputElement>document.querySelector('#miniweb-li-showhiddenpages input')).checked = true
+		document.querySelector<HTMLInputElement>('#miniweb-li-showhiddenpages input').checked = true
 		toggleHiddenMenuItems(true);
 	} else {
 		toggleHiddenMenuItems(false);
