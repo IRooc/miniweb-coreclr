@@ -1,11 +1,12 @@
 ﻿@inject MiniWeb.Core.IMiniWebSite MiniWebSite
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @model MiniWeb.Core.ISitePage
 @{
 var isPublished = Model.Visible;
 var path = Model.Url;
 }
 
-<nav id="miniweb-admin-nav" class="miniweb-tools" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
+<nav id="miniweb-admin-nav" class="miniweb-tools" data-miniweb-path="@path" >
 	<div class="miniweb-tool miniweb-status @(isPublished ? " published" : "offline" )">
 		<a href="#" id="miniweb-button-reloadcache" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
 	</div>
@@ -274,7 +275,6 @@ var path = Model.Url;
 		@Html.Partial(s, MiniWebSite.DummyContent(s))
 	</div>
 	}
-	@Html.AntiForgeryToken()
 </div>
 
 <link rel="stylesheet" href="/miniweb-resources/admin.css" />

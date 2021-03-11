@@ -23,6 +23,7 @@ const extend: any = function (defaults, options) {
 
 const miniwebAdminDefaults = {
 	apiEndpoint: '/miniweb-api/',
+	afToken: '',
 	editTypes: [
 		{
 			key: 'html',
@@ -339,7 +340,7 @@ const saveContent = function (e) {
 	if (!document.querySelector('body').classList.contains('miniweb-editing')) return;
 
 	//set 'edit source' elements back to normal 
-	document.querySelectorAll('.miniweb-editing-source').forEach( (content, ix) =>{
+	document.querySelectorAll('.miniweb-editing-source').forEach((content, ix) => {
 		content.innerHTML = (<HTMLElement>content.firstElementChild).innerText;
 	});
 
@@ -390,7 +391,7 @@ const saveContent = function (e) {
 		});
 };
 const getVerificationToken = function () {
-	return (<HTMLInputElement>document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]')).value;
+	return  options.afToken;
 };
 const savePage = function () {
 	const form = (<HTMLFormElement>document.querySelector('.show.miniweb-pageproperties form'));
@@ -694,7 +695,7 @@ const miniwebAdminInit = function (userOptions) {
 			localStorage.removeItem('showLog');
 		} else {
 			console.log('turned logging on');
-			localStorage.setItem('showLog','true');
+			localStorage.setItem('showLog', 'true');
 		}
 		const data = new FormData();
 		data.append('__RequestVerificationToken', getVerificationToken());

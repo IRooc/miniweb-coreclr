@@ -21,6 +21,7 @@ const extend = function (defaults, options) {
 };
 const miniwebAdminDefaults = {
     apiEndpoint: '/miniweb-api/',
+    afToken: '',
     editTypes: [
         {
             key: 'html',
@@ -367,7 +368,7 @@ const saveContent = function (e) {
     });
 };
 const getVerificationToken = function () {
-    return document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]').value;
+    return options.afToken;
 };
 const savePage = function () {
     const form = document.querySelector('.show.miniweb-pageproperties form');
