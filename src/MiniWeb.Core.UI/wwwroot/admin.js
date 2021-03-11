@@ -200,44 +200,53 @@ const showMessage = function (success, message, isHtml = false) {
 };
 const assetPageList = document.querySelector('.miniweb-assetlist');
 const showAssetPage = function (page) {
+    const pageSize = 15;
+    const folder = document.querySelector('[name="miniwebAssetFolder"]').value;
+    const assetList = document.querySelector('.miniweb-assetlist');
     assetPageList.dataset.miniwebPage = page.toString();
-    const assets = assetPageList.querySelectorAll('li');
-    assets.forEach((li) => {
-        li.classList.add('is-hidden');
-        const img = li.querySelector('img');
-        if (img)
-            delete img.src;
-    });
-    const folder = document.querySelector('[name="miniweb-input-assetfolder"]').value;
-    const curEls = assetPageList.querySelectorAll('li[data-miniweb-path="' + folder + '"]');
-    for (let i = curEls.length; i > 0; i--) {
-        assetPageList.insertBefore(curEls[i - 1], assetPageList.childNodes[0]);
-    }
-    const newPage = (page * 16) + 1;
-    const toShow = document.querySelectorAll('.miniweb-assetlist li[data-miniweb-path="' + folder + '"]:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 15) + ')');
-    toShow.forEach((li) => {
-        const img = li.querySelector('img');
-        if (img && img.dataset.miniwebSrc) {
-            img.src = img.dataset.miniwebSrc;
+    assetList.innerHTML = '';
+    const addAsset = function (asset) {
+        const li = document.createElement('li');
+        li.dataset.miniwebPath = asset.folder;
+        if (asset.type == 0) {
+            li.innerHTML = '<img data-miniweb-src="' + asset.virtualPath + '" src="' + asset.virtualPath + '" data-miniweb-relpath="' + asset.virtualPath + '" class="miniweb-asset-pick" >';
         }
-        li.classList.remove('is-hidden');
+        else {
+            li.innerHTML = '<span data-miniweb-relpath="' + asset.virtualPath + '" class="miniweb-asset-pick"  >' + asset.fileName + '</span>';
+        }
+        assetList.appendChild(li);
+    };
+    var url = new URL(options.apiEndpoint + 'allassets', document.location.origin);
+    url.searchParams.set('page', page.toString());
+    url.searchParams.set('folder', folder);
+    url.searchParams.set('take', pageSize.toString());
+    console.log('fetching url', url, url.toString());
+    let isLast = false;
+    fetch(url.toString(), { headers: { "RequestVerificationToken": options.afToken } })
+        .then(res => res.json())
+        .then(data => {
+        if (data.assets != null && data.assets.length > 0) {
+            for (let i = 0; i < data.assets.length; i++) {
+                addAsset(data.assets[i]);
+            }
+        }
+        if (data.totalAssets <= (page + 1) * pageSize)
+            isLast = true;
+        checkAssetPagerVisibility(page == 0, isLast);
     });
-    checkAssetPagerVisibility(page, folder);
 };
-const checkAssetPagerVisibility = function (page, folder) {
-    const all = assetPageList.querySelectorAll('li[data-miniweb-path="' + folder + '"]');
-    const last = all[all.length - 1];
-    if (last.classList.contains('is-hidden')) {
-        document.getElementById('miniweb-asset-page-right').classList.remove('is-hidden');
-    }
-    else {
+const checkAssetPagerVisibility = function (isFirst, lastPage) {
+    if (lastPage) {
         document.getElementById('miniweb-asset-page-right').classList.add('is-hidden');
     }
-    if (page > 0) {
-        document.getElementById('miniweb-asset-page-left').classList.remove('is-hidden');
+    else {
+        document.getElementById('miniweb-asset-page-right').classList.remove('is-hidden');
+    }
+    if (isFirst) {
+        document.getElementById('miniweb-asset-page-left').classList.add('is-hidden');
     }
     else {
-        document.getElementById('miniweb-asset-page-left').classList.add('is-hidden');
+        document.getElementById('miniweb-asset-page-left').classList.remove('is-hidden');
     }
 };
 const toggleHiddenMenuItems = function (on) {
@@ -353,7 +362,7 @@ const saveContent = function (e) {
     const data = new FormData();
     data.append('url', document.getElementById("miniweb-admin-nav").dataset.miniwebPath);
     data.append('items', JSON.stringify(items));
-    data.append('__RequestVerificationToken', getVerificationToken());
+    data.append('__RequestVerificationToken', options.afToken);
     fetch(options.apiEndpoint + "savecontent", {
         method: "POST",
         body: data
@@ -367,13 +376,10 @@ const saveContent = function (e) {
         cancelEdit();
     });
 };
-const getVerificationToken = function () {
-    return options.afToken;
-};
 const savePage = function () {
     const form = document.querySelector('.show.miniweb-pageproperties form');
     const formData = new FormData(form);
-    formData.append('__RequestVerificationToken', getVerificationToken());
+    formData.append('__RequestVerificationToken', options.afToken);
     fetch(options.apiEndpoint + "savepage", {
         method: "POST",
         body: formData
@@ -395,7 +401,7 @@ const removePage = function () {
     if (confirm('are you sure?')) {
         const adminNav = document.getElementById('miniweb-admin-nav');
         const formData = new FormData();
-        formData.append('__RequestVerificationToken', getVerificationToken());
+        formData.append('__RequestVerificationToken', options.afToken);
         formData.append('url', adminNav.dataset.miniwebPath);
         fetch(options.apiEndpoint + "removepage", {
             method: "POST",
@@ -523,7 +529,7 @@ document.addEventListener('click', (e) => {
         const contentEditables = document.querySelectorAll('[data-miniwebprop]');
         const modal = document.getElementById('miniweb-addAsset');
         const index = modal.dataset.miniwebAssetIndex;
-        log('add link to', index);
+        log('add asset to', index);
         const el = contentEditables[index];
         if (modal.dataset.miniwebAssetType == 'ASSET') {
             el.innerText = target.dataset.miniwebRelpath;
@@ -600,7 +606,7 @@ const miniwebAdminInit = function (userOptions) {
         fileUpload.onchange = (e) => {
             log('selected asset', e);
             const formData = new FormData(form);
-            formData.append('__RequestVerificationToken', getVerificationToken());
+            formData.append('__RequestVerificationToken', options.afToken);
             log('formdata', formData);
             fetch(options.apiEndpoint + "saveassets", {
                 method: "POST",
@@ -609,22 +615,7 @@ const miniwebAdminInit = function (userOptions) {
                 .then(res => res.json())
                 .then(data => {
                 if (data && data.result) {
-                    for (var i = 0; i < data.assets.length; i++) {
-                        var asset = data.assets[i];
-                        const assetList = document.querySelector('.miniweb-assetlist');
-                        if (assetList.querySelector('[data-miniweb-relpath="' + asset.virtualPath + '"]'))
-                            continue;
-                        const li = document.createElement('li');
-                        li.dataset.miniwebPath = asset.folder;
-                        if (asset.type == 0) {
-                            li.innerHTML = '<img data-miniweb-src="' + asset.virtualPath + '" src="' + asset.virtualPath + '" data-miniweb-filename=' + asset.fileName + '" data-miniweb-relpath=' + asset.virtualPath + '" class="miniweb-asset-pick" >';
-                        }
-                        else {
-                            li.innerHTML = '<span data-miniweb-filename="' + asset.virtualPath + '" data-miniweb-relpath=' + asset.virtualPath + '" class="miniweb-asset-pick"  >' + asset.fileName + '</span>';
-                        }
-                        assetList.appendChild(li);
-                    }
-                    setTimeout(() => { showAssetPage(0); }, 500);
+                    showAssetPage(0);
                     showMessage(true, "The assets were saved successfully");
                 }
                 else {
@@ -643,7 +634,7 @@ const miniwebAdminInit = function (userOptions) {
         fileUpload.onchange = (e) => {
             log('selected asset', e);
             const formData = new FormData(form);
-            formData.append('__RequestVerificationToken', getVerificationToken());
+            formData.append('__RequestVerificationToken', options.afToken);
             log('formdata', formData);
             fetch(options.apiEndpoint + "multiplepages", {
                 method: "POST",
@@ -671,7 +662,7 @@ const miniwebAdminInit = function (userOptions) {
             localStorage.setItem('showLog', 'true');
         }
         const data = new FormData();
-        data.append('__RequestVerificationToken', getVerificationToken());
+        data.append('__RequestVerificationToken', options.afToken);
         fetch(options.apiEndpoint + "reloadcaches", {
             method: "POST",
             body: data
@@ -687,13 +678,13 @@ const miniwebAdminInit = function (userOptions) {
     });
     window.addEventListener('keydown', ctrl_s_save, true);
     cancelEdit();
-    document.querySelector('[name="miniweb-input-assetfolder"]').addEventListener('input', (e) => {
+    document.querySelector('[name="miniwebAssetFolder"]').addEventListener('input', (e) => {
         const input = e.target;
         const listId = input.getAttribute('list');
         const list = document.getElementById(listId);
+        showAssetPage(0);
         for (let i = 0; i < list.options.length; i++) {
             if (input.value == list.options[i].value) {
-                showAssetPage(0);
                 return;
             }
         }

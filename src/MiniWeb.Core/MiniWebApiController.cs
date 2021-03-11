@@ -27,9 +27,15 @@ namespace MiniWeb.Core
 			return Content($"{Environment.MachineName} {_webSite.HostingEnvironment.EnvironmentName} {_webSite.HostingEnvironment.ContentRootPath}");
 		}
 
-		public IActionResult LoadAssets()
+		[HttpGet]
+		[ValidateAntiForgeryToken]
+		public IActionResult AllAssets(int take = 16, int page = 0, string folder = "")
 		{
-			return new JsonResult(_webSite.Assets.Select(a => a.VirtualPath));
+			IEnumerable<IAsset> folderAssets = _webSite.Assets.Where(a => a.Folder.Equals(folder, StringComparison.CurrentCultureIgnoreCase));
+			return new JsonResult(new {
+				TotalAssets = folderAssets.Count(),
+				Assets= folderAssets.Select(a => new { a.VirtualPath, a.Type, a.FileName, a.Folder }).Skip(page * take).Take(take)
+			});
 		}
 
 		[HttpPost]

@@ -388,28 +388,31 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 
 .miniweb-editing .miniweb-assetlist {
 	list-style: none;
-	display: block;
-	min-height: 80px;
-	overflow: hidden;
+	display: flex;
+	min-height: 320px;
 	width: 90%;
 	padding-left: 20px;
+	flex-wrap: wrap;
 }
 
 .miniweb-editing .miniweb-assetlist li {
+	margin: 2px;
 	width: 100px;
 	height: 100px;
-	display: inline-block;
-	overflow: hidden;
 	border: 1px solid #ddd;
 	border-radius: 10px;
-	line-height: 94px;
 	background: #fafafa;
-	transition: all .2s ease-in-out;
+	display: flex;
+	flex: 1 0 17%;
+	justify-content: center;
+    align-items: center;
 }
 
 .miniweb-editing .miniweb-assetlist li .miniweb-asset-pick {
 	max-width: 100%;
 	max-height: 100%;
+	object-fit: scale-down;
+	cursor: pointer;
 }
 
 .miniweb-editing .miniweb-asset-pager {
@@ -417,7 +420,8 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	color: #2e6da4;
 	top: 150px;
 	font-size: 25px;
-	left: 10px
+	left: 10px;
+	text-decoration:none;
 }
 
 .miniweb-editing #miniweb-asset-page-right.miniweb-asset-pager {

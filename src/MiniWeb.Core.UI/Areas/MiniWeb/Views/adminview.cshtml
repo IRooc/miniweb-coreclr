@@ -15,7 +15,7 @@ var path = Model.Url;
 			<li class="hidden-xs"><input type="text" list="miniweb-datalist-pages" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
 					@foreach (var p in MiniWebSite.Pages)
 					{
-					<option value="@(MiniWebSite.GetPageUrl(p))" />
+					<option value="@(MiniWebSite.GetPageUrl(p))">@(MiniWebSite.GetPageUrl(p))</option>
 					}
 				</datalist></li>
 			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
@@ -228,7 +228,7 @@ var path = Model.Url;
 			<h4 class="miniweb-modal-title" id="miniweb-addimage-label">Add image</h4>
 			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
-		<form>
+		<div>
 			<div class="miniweb-modal-body">
 				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-miniweb-page-move="-1">&#10218;</a>
 				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-miniweb-page-move="1">&#10219;</a>
@@ -236,7 +236,7 @@ var path = Model.Url;
 				var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
 				var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
 				}
-				Folder: <input class="select-asset-folder" name="miniweb-input-assetfolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
+				Folder: <input class="select-asset-folder" name="miniwebAssetFolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
 				<datalist id="miniweb-folder-list">
 					@foreach(var f in allFolders)
 					{
@@ -245,18 +245,7 @@ var path = Model.Url;
 				</datalist>
 
 				<ul class="miniweb-assetlist" data-miniweb-page="0" data-asset-root-path="images/">
-					@foreach(var a in allAssets)
-					{
-					<li data-miniweb-path="@a.Folder" class="is-hidden">
-						@if (a.Type == MiniWeb.Core.AssetType.Image) {
-						<img data-miniweb-src="@a.VirtualPath" data-miniweb-filename="@a.FileName" data-miniweb-relpath="@a.VirtualPath" class="miniweb-asset-pick" />
-						}
-						else
-						{
-						<span data-miniweb-filename="@a.FileName" data-miniweb-relpath="@a.VirtualPath" class="miniweb-asset-pick">@a.FileName</span>
-						}
-					</li>
-					}
+					
 				</ul>
 				<button class="primary" id="miniweb-button-addasset" type="button">Add Asset</button>
 				<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0" />
@@ -264,7 +253,7 @@ var path = Model.Url;
 			<div class="miniweb-modal-footer">
 				<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
 			</div>
-		</form>
+		</div>
 	</div>
 </div>
 
