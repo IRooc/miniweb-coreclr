@@ -38,6 +38,13 @@ namespace MiniWeb.Core
 			});
 		}
 
+		[HttpGet]
+		[ValidateAntiForgeryToken]
+		public IActionResult GetItem(string viewPath)
+		{
+			return View(viewPath, _webSite.DummyContent(viewPath));
+		}
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)

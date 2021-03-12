@@ -15,7 +15,7 @@ var path = Model.Url;
 			<li class="hidden-xs"><input type="text" list="miniweb-datalist-pages" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
 					@foreach (var p in MiniWebSite.Pages)
 					{
-					<option value="@(MiniWebSite.GetPageUrl(p))">@(MiniWebSite.GetPageUrl(p))</option>
+						<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
 					}
 				</datalist></li>
 			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
@@ -212,7 +212,7 @@ var path = Model.Url;
 			<p>Select an item to add</p>
 			@foreach (var s in MiniWebSite.ItemTemplates)
 			{
-			<button data-miniweb-add-content-id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
+			<button data-miniweb-add-content-view="@s">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
 			}
 		</form>
 		<div class="miniweb-modal-footer">
@@ -248,22 +248,13 @@ var path = Model.Url;
 					
 				</ul>
 				<button class="primary" id="miniweb-button-addasset" type="button">Add Asset</button>
-				<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0" />
+				<input type="file" multiple name="files" class="miniweb-add-asset" style="position:absolute;width:0;height:0" />
 			</div>
 			<div class="miniweb-modal-footer">
 				<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
 			</div>
 		</div>
 	</div>
-</div>
-
-<div id="miniweb-templates">
-	@foreach (var s in MiniWebSite.ItemTemplates)
-	{
-	<div id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">
-		@Html.Partial(s, MiniWebSite.DummyContent(s))
-	</div>
-	}
 </div>
 
 <link rel="stylesheet" href="/miniweb-resources/admin.css" />
