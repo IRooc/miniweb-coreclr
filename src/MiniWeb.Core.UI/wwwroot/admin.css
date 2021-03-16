@@ -273,6 +273,7 @@ miniwebadmin .miniweb-add-asset {
 	width:0;
 	height:0;
 	border:0;
+	z-index: -1;
 }
 
 .miniweb-hidden-menu {

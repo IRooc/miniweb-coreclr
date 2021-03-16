@@ -185,7 +185,7 @@ const htmlEscape = function (str) {
 		.replace(/</g, '<');
 }
 
-const closeModals = function(){
+const closeModals = function () {
 	document.querySelectorAll('.miniweb-modal.show').forEach(el => {
 		el.classList.remove('show');
 	});
@@ -333,8 +333,8 @@ const cancelEdit = function () {
 
 const toggleContentInserts = function (on: boolean) {
 	if (on) {
-		document.querySelectorAll('[data-miniwebsection]').forEach(el => {
-			const section = (el as HTMLElement).dataset.miniwebsection;
+		document.querySelectorAll('[data-miniwebsection]').forEach((el: HTMLElement) => {
+			const section = el.dataset.miniwebsection;
 			el.insertAdjacentHTML('beforeend', '<button class="miniweb-button miniweb-insertcontent" data-miniweb-add-content-to="' + section + '">add content</button>');
 		});
 		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate] .miniweb-template-actions').forEach(el => el.remove());
@@ -456,8 +456,8 @@ const removePage = function () {
 	}
 };
 
-const addNewPage = function () {
-	const modal = document.querySelector('.miniweb-pageproperties') as HTMLElement;
+const addNewPageModal = function () {
+	const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
 	modal.classList.add("miniweb-modal-right");
 	const form = modal.querySelector('form');
 
@@ -524,7 +524,7 @@ document.addEventListener('click', (e) => {
 	} else if (target.dataset.miniwebAddContentTo) {
 		e.preventDefault();
 		const contentTarget = target.dataset.miniwebAddContentTo;
-		const modal = document.querySelector('#miniweb-content-add') as HTMLElement;
+		const modal = document.querySelector<HTMLElement>('#miniweb-content-add');
 		modal.dataset.miniwebTargetsection = contentTarget;
 		modal.classList.add('show');
 	} else if (target.dataset.miniwebAddContentView) {
@@ -546,7 +546,7 @@ document.addEventListener('click', (e) => {
 				editContent();
 				closeModals();
 			});
-		
+
 	} else if (target.dataset.miniwebContentMove) {
 		const move = target.dataset.miniwebContentMove;
 		const item = target.closest('[data-miniwebtemplate]');
@@ -573,7 +573,7 @@ document.addEventListener('click', (e) => {
 		} else if (modal.dataset.miniwebAssetType == 'HTML') {
 			document.execCommand('inserthtml', false, `<img src="${target.dataset.miniwebRelpath}"/>`);
 		}
-		
+
 		delete modal.dataset.miniwebAssetIndex;
 		delete modal.dataset.miniwebAssetType;
 		closeModals();
@@ -600,7 +600,11 @@ const miniwebAdminInit = function (userOptions) {
 	btnSavePage.addEventListener('click', savePage);
 	btnDeletePage.addEventListener('click', removePage);
 	btnAddLink.addEventListener('click', addLink);
-	btnNewPage.addEventListener('click', addNewPage);
+	btnNewPage.addEventListener('click', addNewPageModal);
+	btnEdit.addEventListener('click', editContent);
+	btnSave.addEventListener('click', saveContent);
+	btnCancel.addEventListener('click', cancelEdit);
+
 	btnPageProperties.addEventListener('click', (e) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -620,10 +624,6 @@ const miniwebAdminInit = function (userOptions) {
 		modal.classList.remove("miniweb-modal-right");
 		modal.classList.add("show");
 	});
-
-	btnEdit.addEventListener('click', editContent);
-	btnSave.addEventListener('click', saveContent);
-	btnCancel.addEventListener('click', cancelEdit);
 
 	document.getElementById('miniweb-datalist-navigateonenter').addEventListener('keypress', (e) => {
 		if (e.code == "Enter") {
@@ -719,22 +719,11 @@ const miniwebAdminInit = function (userOptions) {
 			});
 	});
 
-
 	window.addEventListener('keydown', ctrl_s_save, true);
-
-	cancelEdit();
 
 	//assets
 	document.querySelector('[name="miniwebAssetFolder"]').addEventListener('input', (e) => {
-		const input = (<HTMLInputElement>e.target);
-		const listId = input.getAttribute('list');
-		const list = <HTMLDataListElement>document.getElementById(listId);
 		showAssetPage(0);
-		for (let i = 0; i < list.options.length; i++) {
-			if (input.value == list.options[i].value) {
-				return;
-			}
-		}
 	});
 
 	document.querySelectorAll('.miniweb-asset-pager').forEach((elem, ix) => {
@@ -758,6 +747,9 @@ const miniwebAdminInit = function (userOptions) {
 	} else {
 		toggleHiddenMenuItems(false);
 	}
+
+	//start with cancel edit
+	cancelEdit();
 };
 
 export {

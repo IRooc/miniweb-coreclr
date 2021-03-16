@@ -314,7 +314,7 @@ const cancelEdit = function () {
 };
 const toggleContentInserts = function (on) {
     if (on) {
-        document.querySelectorAll('[data-miniwebsection]').forEach(el => {
+        document.querySelectorAll('[data-miniwebsection]').forEach((el) => {
             const section = el.dataset.miniwebsection;
             el.insertAdjacentHTML('beforeend', '<button class="miniweb-button miniweb-insertcontent" data-miniweb-add-content-to="' + section + '">add content</button>');
         });
@@ -429,7 +429,7 @@ const removePage = function () {
         });
     }
 };
-const addNewPage = function () {
+const addNewPageModal = function () {
     const modal = document.querySelector('.miniweb-pageproperties');
     modal.classList.add("miniweb-modal-right");
     const form = modal.querySelector('form');
@@ -571,7 +571,10 @@ const miniwebAdminInit = function (userOptions) {
     btnSavePage.addEventListener('click', savePage);
     btnDeletePage.addEventListener('click', removePage);
     btnAddLink.addEventListener('click', addLink);
-    btnNewPage.addEventListener('click', addNewPage);
+    btnNewPage.addEventListener('click', addNewPageModal);
+    btnEdit.addEventListener('click', editContent);
+    btnSave.addEventListener('click', saveContent);
+    btnCancel.addEventListener('click', cancelEdit);
     btnPageProperties.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -589,9 +592,6 @@ const miniwebAdminInit = function (userOptions) {
         modal.classList.remove("miniweb-modal-right");
         modal.classList.add("show");
     });
-    btnEdit.addEventListener('click', editContent);
-    btnSave.addEventListener('click', saveContent);
-    btnCancel.addEventListener('click', cancelEdit);
     document.getElementById('miniweb-datalist-navigateonenter').addEventListener('keypress', (e) => {
         if (e.code == "Enter") {
             document.location.href = e.target.value;
@@ -687,17 +687,8 @@ const miniwebAdminInit = function (userOptions) {
         });
     });
     window.addEventListener('keydown', ctrl_s_save, true);
-    cancelEdit();
     document.querySelector('[name="miniwebAssetFolder"]').addEventListener('input', (e) => {
-        const input = e.target;
-        const listId = input.getAttribute('list');
-        const list = document.getElementById(listId);
         showAssetPage(0);
-        for (let i = 0; i < list.options.length; i++) {
-            if (input.value == list.options[i].value) {
-                return;
-            }
-        }
     });
     document.querySelectorAll('.miniweb-asset-pager').forEach((elem, ix) => {
         elem.addEventListener('click', (e) => {
@@ -720,5 +711,6 @@ const miniwebAdminInit = function (userOptions) {
     else {
         toggleHiddenMenuItems(false);
     }
+    cancelEdit();
 };
 export { miniwebAdminInit };
