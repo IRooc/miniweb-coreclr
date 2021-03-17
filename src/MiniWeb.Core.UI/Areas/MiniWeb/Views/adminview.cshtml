@@ -1,5 +1,4 @@
 ﻿@inject MiniWeb.Core.IMiniWebSite MiniWebSite
-@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @model MiniWeb.Core.ISitePage
 @{
 var isPublished = Model.Visible;
@@ -87,13 +86,14 @@ var path = Model.Url;
 			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
 		<form>
-			<input type="hidden" name="NewPage" value="false" />
-			<input type="hidden" name="OldUrl" value="@Model.Url" />
-			<input type="hidden" name="Layout" value="@Model.Layout" />
+			@*INPUTS are not Type Hidden because form.reset() does not work on them,*@
+			<input type="text" class="is-hidden" name="NewPage" value="false" />
+			<input type="text" class="is-hidden" name="OldUrl" value="@Model.Url" />
+			<input type="text" class="is-hidden" name="Layout" value="@Model.Layout" />
 			<div class="miniweb-form-group">
 				<label>
 					<span>Page name</span>
-					<input type="text" name="Title" placeholder="Page name" value="@Model.Title" />
+					<input type="text" name="Title" placeholder="Page name" required value="@Model.Title" />
 				</label>
 			</div>
 			<div class="miniweb-form-group">
@@ -111,12 +111,18 @@ var path = Model.Url;
 			<div class="miniweb-form-group">
 				<label>
 					<span>Template</span>
-					<select name="Template">
+					<select name="Template" required >
 						@foreach (var s in MiniWebSite.PageTemplates)
 						{
 						<option value="@s" @(s.ToLowerInvariant() == Model.Template.ToLowerInvariant() ? "selected=\" selected\"" : "" )>@s.Substring(s.LastIndexOf("/") + 1)</option>
 						}
 					</select>
+				</label>	
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Date</span>
+					<input type="datetime-local" pattern="\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}" name="Date" placeholder="Date yyyy-MM-ddTHH:mm:ss" required  value="@((Model.Date ?? DateTime.Now).ToString("yyyy-MM-ddTHH:mm:ss"))" />
 				</label>	
 			</div>
 			<div class="miniweb-form-group">
@@ -142,7 +148,7 @@ var path = Model.Url;
 					<span>Url</span>
 					<div class="input-group">
 						<span class="addon">/</span>
-						<input type="text" name="Url" placeholder="url" value="@Model.Url" />
+						<input type="text" name="Url" placeholder="url" required value="@Model.Url" />
 						<span class="addon">.@MiniWebSite.Configuration.PageExtension</span>
 					</div>
 				</label>

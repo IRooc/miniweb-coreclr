@@ -151,12 +151,13 @@ namespace MiniWeb.Core
 			page.Layout = posted.Layout;
 			page.MetaDescription = posted.MetaDescription;
 			page.MetaTitle = posted.MetaTitle;
+			page.Date = posted.Date;
 			page.ShowInMenu = posted.ShowInMenu;
 			page.SortOrder = posted.SortOrder;
 			page.Template = posted.Template;
 			page.Title = posted.Title;
 			page.Visible = posted.Visible;
-
+			_webSite.Logger?.LogInformation("Save page {0}", posted.Url);
 			_webSite.SaveSitePage(page, Request, false);
 			return new JsonResult(new { result = true, url = _webSite.GetPageUrl(page) });
 		}

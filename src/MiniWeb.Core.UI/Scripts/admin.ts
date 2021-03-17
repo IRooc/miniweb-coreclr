@@ -6,8 +6,8 @@ const log = function (...args: any[]) {
 }
 
 const extend: any = function (defaults, options) {
-	var extended = {};
-	var prop;
+	const extended = {};
+	let prop;
 	for (prop in defaults) {
 		if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
 			extended[prop] = defaults[prop];
@@ -28,7 +28,7 @@ const miniwebAdminDefaults = {
 		{
 			key: 'html',
 			editStart: function (element: HTMLElement, index) {
-				var thisTools = <HTMLElement>(document.getElementById('miniweb-html-tools').cloneNode(true));
+				const thisTools = <HTMLElement>(document.getElementById('miniweb-html-tools').cloneNode(true));
 				thisTools.removeAttribute("id");
 				thisTools.classList.add('miniweb-editor-toolbar');
 
@@ -154,7 +154,7 @@ const miniwebAdminDefaults = {
 
 let selectedRange;
 const getCurrentRange = function () {
-	var sel = window.getSelection();
+	const sel = window.getSelection();
 	if (sel.getRangeAt && sel.rangeCount) {
 		return sel.getRangeAt(0);
 	}
@@ -163,7 +163,7 @@ const saveSelection = function () {
 	selectedRange = getCurrentRange();
 };
 const restoreSelection = function () {
-	var selection = window.getSelection();
+	const selection = window.getSelection();
 	if (selectedRange) {
 		try {
 			selection.removeAllRanges();
@@ -192,10 +192,14 @@ const closeModals = function () {
 }
 
 const txtMessage = document.querySelector("miniwebadmin .alert");
+let messageTimeout;
 const showMessage = function (success: boolean, message: string, isHtml: boolean = false) {
 	log('showMessage', ...arguments);
-	var className = success ? "alert-success" : "alert-danger";
-	var timeout = success ? 4000 : 8000;
+	const className = success ? "miniweb-alert-success" : "miniweb-alert-danger";
+	const timeout = success ? 4000 : 8000;
+	if (messageTimeout) { clearTimeout(messageTimeout); }
+	txtMessage.classList.remove(...txtMessage.classList);
+	txtMessage.classList.add('alert');
 	txtMessage.classList.add(className);
 	if (isHtml)
 		txtMessage.innerHTML = message;
@@ -203,7 +207,7 @@ const showMessage = function (success: boolean, message: string, isHtml: boolean
 		txtMessage.innerHTML = htmlEscape(message);
 	txtMessage.parentElement.classList.remove("is-hidden");
 
-	setTimeout(function () {
+	messageTimeout = setTimeout(function () {
 		txtMessage.classList.remove(className);
 		txtMessage.parentElement.classList.add("is-hidden");
 	}, timeout);
@@ -228,7 +232,7 @@ const showAssetPage = function (page: number) {
 		assetList.appendChild(li);
 	}
 
-	var url = new URL(options.apiEndpoint + 'allassets', document.location.origin);
+	const url = new URL(options.apiEndpoint + 'allassets', document.location.origin);
 	url.searchParams.set('page', page.toString());
 	url.searchParams.set('folder', folder);
 	url.searchParams.set('take', pageSize.toString());
@@ -274,13 +278,14 @@ const toggleHiddenMenuItems = function (on: Boolean) {
 };
 
 const editContent = function () {
+	closeModals();
 	document.querySelector('body').classList.add('miniweb-editing');
 	//reassign arrays so al new items are parsed
 	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
 	contentEditables.forEach(el => { if (el.tagName == 'IMG') { return; } el.setAttribute('contentEditable', "true") });
 
-	for (var i = 0; i < options.editTypes.length; i++) {
-		var editType = options.editTypes[i];
+	for (let i = 0; i < options.editTypes.length; i++) {
+		const editType = options.editTypes[i];
 
 		contentEditables.forEach((ce: HTMLElement, ix) => {
 			if (ce.dataset.miniwebedittype == editType.key) {
@@ -306,8 +311,8 @@ const cancelEdit = function () {
 	contentEditables.forEach(el => el.removeAttribute('contentEditable'));
 
 
-	for (var i = 0; i < options.editTypes.length; i++) {
-		var editType = options.editTypes[i];
+	for (let i = 0; i < options.editTypes.length; i++) {
+		const editType = options.editTypes[i];
 
 		contentEditables.forEach((ce: HTMLElement, ix) => {
 			if (ce.dataset.miniwebedittype == editType.key) {
@@ -346,7 +351,7 @@ const toggleContentInserts = function (on: boolean) {
 };
 
 const getParsedHtml = function (source: HTMLElement) {
-	var parsedDOM;
+	let parsedDOM;
 	parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
 	parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
 	/<body>([\s\S]*)<\/body>/im.exec(parsedDOM);
@@ -361,10 +366,10 @@ const saveContent = function (e) {
 	document.querySelectorAll('.miniweb-editing-source').forEach((content, ix) => {
 		content.innerHTML = (<HTMLElement>content.firstElementChild).innerText;
 	});
-
-	var items = [];
+	let valid = true;
+	const items = [];
 	document.querySelectorAll('[data-miniwebsection]').forEach((section: HTMLElement, index) => {
-		var sectionid = section.dataset.miniwebsection;
+		const sectionid = section.dataset.miniwebsection;
 		section.querySelectorAll('[data-miniwebtemplate]').forEach((tmpl: HTMLElement, tindex) => {
 			log('item', tmpl);
 			if (items[index] == null) {
@@ -372,26 +377,45 @@ const saveContent = function (e) {
 				items[index].Key = sectionid;
 				items[index].Items = [];
 			}
-			var item = {
+			const item = {
 				Template: tmpl.dataset.miniwebtemplate,
 				Values: {}
 			};
-			//find all dynamic properties
 
+			//find all dynamic properties
 			tmpl.querySelectorAll('[data-miniwebprop]').forEach((prop: HTMLElement, pindex) => {
-				var key = prop.getAttribute('data-miniwebprop')
-				var value = getParsedHtml(prop);
+				const key = prop.dataset.miniwebprop;
+				const value = getParsedHtml(prop);
+				const validation = prop.dataset.miniwebValidation;
+				prop.classList.remove('miniweb-invalid-item');
+				if (validation === 'required') {
+					if (!value || value === '<br />'){
+						valid = false;
+						prop.classList.add('miniweb-invalid-item');
+					}
+				} else if (validation) {
+					const reg = new RegExp(validation);
+					if (!reg.test(value)) {
+						valid = false;
+						prop.classList.add('miniweb-invalid-item');
+					}
+				}
+				log('itemfound', key, '[' + value + ']', validation, valid);
 				item.Values[key] = value;
 				//update attributes if any
 				if (key.indexOf(':') > 0) {
-					var orig = key.split(':')[0];
-					var attrib = key.split(':')[1];
+					const orig = key.split(':')[0];
+					const attrib = key.split(':')[1];
 					tmpl.querySelector('[data-miniwebprop="' + orig + '"]').setAttribute(attrib, value);
 				}
 			});
 			items[index].Items.push(item);
 		});
 	});
+	if (!valid) {
+		showMessage(false, "Check item validity");
+		return;
+	}
 
 	const data = new FormData();
 	data.append('url', document.getElementById("miniweb-admin-nav").dataset.miniwebPath);
@@ -411,6 +435,12 @@ const saveContent = function (e) {
 
 const savePage = function () {
 	const form = document.querySelector<HTMLFormElement>('.show.miniweb-pageproperties form');
+	form.classList.remove('miniweb-invalid');
+	if (!form.checkValidity()) {
+		showMessage(false, "Check form validity");
+		form.classList.add('miniweb-invalid');
+		return;
+	}
 	const formData = new FormData(form);
 	formData.append('__RequestVerificationToken', options.afToken);
 	fetch(options.apiEndpoint + "savepage", {
@@ -460,6 +490,7 @@ const addNewPageModal = function () {
 	const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
 	modal.classList.add("miniweb-modal-right");
 	const form = modal.querySelector('form');
+	form.classList.remove('miniweb-invalid');
 
 	const elems = form.querySelectorAll('input,textarea');
 
@@ -471,7 +502,6 @@ const addNewPageModal = function () {
 				break;
 			case 'Layout': break;
 			default:
-				elem.dataset.miniwebOldValue = elem.value;
 				elem.value = null;
 				break;
 		}
@@ -486,6 +516,14 @@ const ctrl_s_save = function (event) {
 			event.preventDefault();
 			saveContent(event);
 		};
+	} else {
+		const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
+		if (modal.classList.contains('show')) {
+			if (event.ctrlKey && event.keyCode == 83) {
+				event.preventDefault();
+				savePage();
+			}
+		}
 	}
 };
 
@@ -530,7 +568,7 @@ document.addEventListener('click', (e) => {
 	} else if (target.dataset.miniwebAddContentView) {
 		e.preventDefault();
 		const contentId = target.dataset.miniwebAddContentView;
-		var url = new URL(options.apiEndpoint + 'getitem', document.location.origin);
+		const url = new URL(options.apiEndpoint + 'getitem', document.location.origin);
 		url.searchParams.set('viewPath', contentId);
 		console.log('getitem', url.toString(), url);
 		fetch(url.toString(), { headers: { "RequestVerificationToken": options.afToken } })
@@ -611,16 +649,9 @@ const miniwebAdminInit = function (userOptions) {
 		const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
 		modal.querySelector<HTMLInputElement>('[name="NewPage"]').value = "false";
 
-		//restore miniwebOldValue if new page was clicked
+		//restore form to loaded values in HTML
 		const form = modal.querySelector('form');
-		const elems = form.querySelectorAll<HTMLInputElement>('input,textarea');
-		for (let i = 0; i < elems.length; i++) {
-			const elem = elems[i];
-			if (!elem.value && elem.dataset.miniwebOldValue) {
-				elem.value = elem.dataset.miniwebOldValue;
-				delete elem.dataset.miniwebOldValue;
-			}
-		}
+		form.reset();
 		modal.classList.remove("miniweb-modal-right");
 		modal.classList.add("show");
 	});

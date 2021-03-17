@@ -19,6 +19,7 @@ namespace MiniWeb.Storage.XmlStorage
 		public bool Visible { get; set; }
 		public bool ShowInMenu { get; set; }
 		public int SortOrder { get; set; }
+		public DateTime? Date { get; set; }
 		public DateTime Created { get; set; }
 		public DateTime LastModified { get; set; }
 

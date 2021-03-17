@@ -3,7 +3,7 @@
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 <article miniweb-template="@Model.Template">
     <h1 miniweb-prop="blogTitle">Foto's</h1>
-    <p miniweb-prop="folder" class="miniweb-editonly">/images/gallery/</p>
+    <p miniweb-prop="folder" miniweb-editonly="true" data-miniweb-validation="required">/images/gallery/</p>
 </article>
 
 @if (Model?.Page != null)

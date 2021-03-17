@@ -72,7 +72,7 @@ miniwebadmin .is-hidden {
 /*the alert*/
 miniwebadmin > aside {
 	position: fixed;
-	top: 3em;
+	top: 1.5em;
 	width: 400px;
 	left: 40%;
 	z-index: 100;
@@ -81,10 +81,20 @@ miniwebadmin > aside .alert {
 	background-color: lightgray;
 	padding: 10px;
 	border-radius: 5px;	
+	border-style: solid;
+	border-width: 1px;
 }
-miniwebadmin > aside .alert.alert-success {
+miniwebadmin > aside .alert.miniweb-alert-success {
 	color: #3c763d;
     background-color: #dff0d8;
+	border-color: #3c763d;
+	box-shadow: 0 0 8px #3c763d;
+}
+miniwebadmin > aside .alert.miniweb-alert-danger {
+	color: red;
+	background-color: #f0cac9;
+	border-color: red;
+	box-shadow: 0 0 8px red;
 }
 
 
@@ -251,6 +261,13 @@ miniwebadmin .miniweb-form-group label span {
 miniwebadmin .miniweb-form-group label input,
 miniwebadmin .miniweb-form-group label select {
 	width:60%
+}
+miniwebadmin .miniweb-form-group label input:invalid {
+	box-shadow: none;
+}
+.miniweb-invalid-item,
+miniwebadmin form.miniweb-invalid .miniweb-form-group label input:invalid {
+	background-color: rgba(200,0,0,0.2);
 }
 miniwebadmin .miniweb-form-group label input[type="checkbox"] {
 	width: auto;
