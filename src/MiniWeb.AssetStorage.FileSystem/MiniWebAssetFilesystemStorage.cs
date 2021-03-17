@@ -10,9 +10,9 @@ using MiniWeb.Core;
 
 namespace MiniWeb.AssetStorage.FileSystem
 {
-    // This project can output the Class library as a NuGet Package.
-    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
-    public class MiniWebAssetFileSystemStorage : IMiniWebAssetStorage
+	// This project can output the Class library as a NuGet Package.
+	// To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
+	public class MiniWebAssetFileSystemStorage : IMiniWebAssetStorage
 	{
 		public IMiniWebSite MiniWebSite { get; set; }
 		public ILogger Logger { get; }
@@ -43,13 +43,14 @@ namespace MiniWeb.AssetStorage.FileSystem
 		{
 			Logger?.LogInformation($"Create asset {fileName} in {Configuration.AssetRootPath}");
 			if (virtualFolder.StartsWith("/")) virtualFolder = virtualFolder.Substring(1);
-			var virtualPath = Path.Combine(Configuration.AssetRootPath, virtualFolder ?? string.Empty);
-			string path = Path.Combine(HostingEnvironment.WebRootPath, virtualPath);
-			Directory.CreateDirectory(path);
-			string file = Path.Combine(path, fileName);
-			File.WriteAllBytes(file, bytes);
-			IAsset a = new FileSystemAsset(HostingEnvironment, Configuration, file);
-			return a;
+			string filePath = Path.Combine(virtualFolder, fileName);
+			filePath = filePath.Replace("\\","/");
+			//should we check the assetrootpath?
+			string path = Path.Combine(HostingEnvironment.WebRootPath, filePath);
+			string folderName = Path.GetDirectoryName(path);
+			Directory.CreateDirectory(folderName);
+			File.WriteAllBytes(path, bytes);
+			return new FileSystemAsset(HostingEnvironment, Configuration, path);
 		}
 
 		public IAsset CreateAsset(string fileName, string base64String, string virtualFolder = null)
@@ -60,7 +61,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 			{
 				fileName = Path.GetRandomFileName() + "." + extFromBase64Type;
 			}
-			return CreateAsset(fileName, bytes, virtualFolder);
+			return CreateAsset(fileName, bytes, virtualFolder ?? Configuration.AssetRootPath);
 		}
 
 		public void RemoveAsset(IAsset asset)
@@ -68,7 +69,6 @@ namespace MiniWeb.AssetStorage.FileSystem
 			string file = Path.Combine(HostingEnvironment.WebRootPath, asset.VirtualPath);
 			File.Delete(file);
 		}
-		
 
 		private byte[] ConvertToBytes(string base64)
 		{
@@ -97,7 +97,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 			Configuration = config;
 			VirtualPath = GetVirtualPath(fullPath);
 			FileName = Path.GetFileName(VirtualPath);
-			Folder = Path.GetDirectoryName(VirtualPath.Substring(Configuration.AssetRootPath.Length)).Replace("\\", "/");
+			Folder = Path.GetDirectoryName(VirtualPath).Replace("\\", "/");
 		}
 		public FileInfo Info
 		{

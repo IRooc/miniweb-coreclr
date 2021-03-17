@@ -9,7 +9,7 @@ namespace MiniWeb.Storage.JsonStorage
 		public static IServiceCollection AddMiniWebJsonStorage(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<MiniWebJsonStorageConfig>(configuration.GetSection("MiniWebStorage"));
-			return services.AddSingleton<IMiniWebContentStorage, MiniWebJsonStorage>();
+			return services.AddScoped<IMiniWebContentStorage, MiniWebJsonStorage>();
 		}
 	}
 }

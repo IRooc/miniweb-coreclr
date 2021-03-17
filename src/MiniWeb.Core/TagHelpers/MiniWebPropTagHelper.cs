@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -29,6 +30,8 @@ namespace MiniWeb.Core.TagHelpers
 
 		[HtmlAttributeName(MiniWebEditAttributesTagname)]
 		public string EditAttributeString { get; set; }
+		[HtmlAttributeName("miniweb-editonly")]
+		public bool EditOnly { get; set; }
 
 		public string[] EditAttributes
 		{
@@ -73,6 +76,10 @@ namespace MiniWeb.Core.TagHelpers
 					output.Attributes.Add("data-miniwebprop", Property);
 				if (!string.IsNullOrWhiteSpace(EditType))
 					output.Attributes.Add("data-miniwebedittype", EditType);
+				
+				if (EditOnly) {
+					output.AddClass("miniweb-editonly", HtmlEncoder.Default);
+				}
 
 				if (EditAttributes.Any())
 				{
@@ -92,6 +99,8 @@ namespace MiniWeb.Core.TagHelpers
 					}
 					output.PostElement.AppendHtml("</div>");
 				}
+			} else if (EditOnly){
+				output.SuppressOutput();
 			}
 		}
 	}

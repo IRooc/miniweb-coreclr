@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -14,26 +15,26 @@ namespace MiniWeb.Core.UI.TagHelpers
 
         private readonly IMiniWebSite _webSite;
         private readonly IHtmlHelper _htmlHelper;
+		private readonly IAntiforgery _antiforgery;
 
-        [ViewContext]
+		[ViewContext]
         public ViewContext ViewContext { get; set; }
 
         [HtmlAttributeName(MiniWebIgnoreAdminStartTagname)]
         public bool IgnoreAdminStart { get; set; }
 
-        public MiniWebAdminTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
+        public MiniWebAdminTagHelper(IMiniWebSite webSite, IHtmlHelper helper, IAntiforgery antiforgery)
         {
             _webSite = webSite;
             _htmlHelper = helper;
-        }
+			_antiforgery = antiforgery;
+		}
 
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (_webSite.IsAuthenticated(ViewContext.HttpContext.User))
             {
                 output.TagMode = TagMode.StartTagAndEndTag;
-                output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//code.jquery.com/jquery-2.2.4.min.js\"></script>");
-                output.Content.AppendHtml("<script type=\"text/javascript\" src=\"//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>");
 
                 //add the own contents.
                 var ownContent = await output.GetChildContentAsync();
@@ -45,9 +46,9 @@ namespace MiniWeb.Core.UI.TagHelpers
 
                 output.PreContent.AppendHtml(content);
 
-                if (!IgnoreAdminStart)
+                if (!IgnoreAdminStart) 
                 {
-                    output.Content.AppendHtml($"<script>$(function(){{ window.currentMiniweb = $('{MiniWebAdminTag}').miniwebAdmin({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\"}});}});</script>");
+                    output.Content.AppendHtml($"<script type=\"module\">import {{ miniwebAdminInit }} from '/miniweb-resources/admin.js';miniwebAdminInit({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\", \"afToken\":\"{_antiforgery.GetAndStoreTokens(ViewContext.HttpContext).RequestToken}\"}});</script>");
                 }
             }
             else

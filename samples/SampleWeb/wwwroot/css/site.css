@@ -6,6 +6,9 @@ h1, h2, h3, h4 {
 	color: #5555ff;
 	margin-bottom: 20px;
 }
+a {
+	color: #5555ff;
+}
 
 h1 {
 	font-size: 26px;

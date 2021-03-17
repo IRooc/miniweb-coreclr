@@ -80,12 +80,13 @@ namespace MiniWeb.Core.TagHelpers
 			if (items.Any())
 			{
 				//remember the current model
-				object currentModel = ViewContext.ViewData.Model;
+				var currentModel = ViewContext.ViewData.Model as ISitePage;
 				for(var i =0; i < items.Count(); i++)				
 				{
 					var page = items.ElementAt(i);
 					//override the model to the current child page
 					ViewContext.ViewBag.MenuIteratorIndex = i;
+					ViewContext.ViewBag.CurrentUrl = currentModel.Url;
 					ViewContext.ViewData.Model = page;
 
 					//render child without cached results.

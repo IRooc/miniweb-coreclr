@@ -1,319 +1,268 @@
 ﻿@inject MiniWeb.Core.IMiniWebSite MiniWebSite
 @model MiniWeb.Core.ISitePage
 @{
-	var isPublished = Model.Visible;
-	var path = Model.Url;
+var isPublished = Model.Visible;
+var path = Model.Url;
 }
 
-<nav id="admin" class="navbar navbar-default navbar-fixed-top" data-ispublished="@isPublished" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
-	<div class="navbar-header @(isPublished ? "published" : "offline")">
-		<a href="#" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
+<nav id="miniweb-admin-nav" class="miniweb-tools" data-miniweb-path="@path" >
+	<div class="miniweb-tool miniweb-status @(isPublished ? " published" : "offline" )">
+		<a href="#" id="miniweb-button-reloadcache" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
 	</div>
-	<div class="navbar-inner pull-right">
-		<ul class="nav navbar-nav">
-			<li class="hidden-xs"><input type="text" list="pages" class="form-control" id="navigateOnEnter"/><datalist id="pages">
-				@foreach (var p in MiniWebSite.Pages)
-				{
-					<option value="@(MiniWebSite.GetPageUrl(p))"/>
-				}				
-			</datalist></li>
-			<li><button class="btn btn-link" onclick="document.querySelector('body').classList.add('preview')"><span>Preview</span></button></li>
-			<li id="showHiddenPages"><label class="btn btn-link"><input type="checkbox" /> <span>Show hidden pages</span></label></li>
-			<li><button class="btn btn-link" id="newPage"><i class="glyphicon glyphicon-asterisk"></i> <span>New page</span></button></li>
+	<div class="miniweb-tool pull-right">
+		<ul class="miniweb-horizontal-list">
+			<li class="hidden-xs"><input type="text" list="miniweb-datalist-pages" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
+					@foreach (var p in MiniWebSite.Pages)
+					{
+						<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
+					}
+				</datalist></li>
+			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
+			<li id="miniweb-li-showhiddenpages"><label class="btn btn-link"><input type="checkbox" /><span class="hidden-xs">Show hidden pages</span></label></li>
+			<li><button class="icon icon-new" id="miniweb-button-newpage">New page</button></li>
 			<li class="divider"></li>
 			<li>
 				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
 					<input type="hidden" name="returnUrl" value="@MiniWebSite.GetPageUrl(Model)" />
-					<button type="submit" title="Signed in as @User.Identity.Name" class="btn btn-link">
-						<span>Sign out&nbsp;</span><i class="glyphicon glyphicon-log-out"></i>
-					</button>
+					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout">Sign out</button>
 				</form>
 			</li>
 		</ul>
 	</div>
-	<div class="navbar-inner">
-		<ul class="nav navbar-nav">
-			<li><button class="btn btn-link" data-toggle="modal" data-target="#pageProperties"><i class="glyphicon glyphicon-list"></i> <span>Page properties</span></button></li>
+	<div class="miniweb-tool">
+		<ul class="miniweb-horizontal-list">
+			<li><button class="icon icon-props" id="miniweb-button-pageprops">Page properties</button></li>
 			<li class="divider"></li>
-			<li><button class="btn btn-link" id="btnEdit"><i class="glyphicon glyphicon-pencil"></i> <span>Edit Content</span></button></li>
-			<li><button class="btn btn-link" id="btnSave" disabled><i class="glyphicon glyphicon-floppy-disk"></i> <span>Save Content</span></button></li>
-			<li><button class="btn btn-link" id="btnCancel" disabled><i class="glyphicon glyphicon-repeat"></i> <span>Cancel</span></button></li>
+			<li><button class="icon icon-edit" id="miniweb-button-edit">Edit Content</button></li>
+			<li><button class="icon icon-save" id="miniweb-button-save" disabled>Save Content</button></li>
+			<li><button class="icon icon-cancel" id="miniweb-button-cancel" disabled>Cancel</button></li>
 		</ul>
 	</div>
-	<aside>
-		<p class="alert"></p>
-	</aside>
 
 	<!--Html Tools-->
-	<div id="tools" data-role="editor-toolbar">
-
-		<div class="btn-group">
-			<a class="btn btn-mini" data-edit="formatBlock <h1>">H1</a>
-			<a class="btn btn-mini" data-edit="formatBlock <h2>">H2</a>
-			<a class="btn btn-mini" data-edit="formatBlock <h3>">H3</a>
+	<div id="miniweb-html-tools">
+		<div class="miniweb-buttongroup">
+			<button data-miniweb-edit="formatBlock <h1>" title="Heading 1">H1</button>
+			<button data-miniweb-edit="formatBlock <h2>" title="Heading 2">H2</button>
+			<button data-miniweb-edit="formatBlock <h3>" title="Heading 3">H3</button>
+			<button data-miniweb-edit="italic" title="Italic"><em>I</em></button>
+			<button data-miniweb-edit="bold" title="Bold"><strong>B</strong></button>
+			<button data-miniweb-edit="underline" title="Underline"><ins>U</ins></button>
+			<button data-miniweb-edit="strikethrough" title="Strikethrough"><s>S</s></button>
 		</div>
 
-		<div class="btn-group">
-			<a class="btn btn-mini" data-edit="italic"><em>I</em></a>
-			<a class="btn btn-mini" data-edit="bold"><strong>B</strong></a>
-			<a class="btn btn-mini" data-edit="underline"><ins>U</ins></a>
-			<a class="btn btn-mini" data-edit="strikethrough"><s>S</s></a>
+		<div class="miniweb-buttongroup">
+			<button data-miniweb-edit="justifyleft" title="Justify left" class="miniweb-leftalign">&#9778;</button>
+			<button data-miniweb-edit="justifycenter" title="Justify center">&#9778;</button>
+			<button data-miniweb-edit="justifyright" title="Justify right" class="miniweb-rightalign">&#9778;</button>
+			<button data-miniweb-edit="justifyfull" title="Justify full">&#9783;</button>
+			<button data-miniweb-edit="insertunorderedlist" title="Bullet points">&#9679;</button>
+			<button data-miniweb-edit="insertorderedlist" title="Numbered bullet points">&#9352;</button>
+			<button data-miniweb-edit="outdent" title="Indent left">&#11104;</button>
+			<button data-miniweb-edit="indent" title="Indent right">&#11106;</button>
 		</div>
 
-		<div class="btn-group">
-			<a class="btn btn-mini" data-edit="justifyleft" title="Justify left"><i class="glyphicon glyphicon-align-left"></i></a>
-			<a class="btn btn-mini" data-edit="justifycenter" title="Justify center"><i class="glyphicon glyphicon-align-center"></i></a>
-			<a class="btn btn-mini" data-edit="justifyright" title="Justify right"><i class="glyphicon glyphicon-align-right"></i></a>
-			<a class="btn btn-mini" data-edit="justifyfull" title="Justify full"><i class="glyphicon glyphicon-align-justify"></i></a>
+		<div class="miniweb-buttongroup">
+			<button data-miniweb-custom="createLink" title="Hyperlink" class="icon icon-earth"></button>
+			<button data-miniweb-edit="unlink" title="Remove hyperlink">&#11198;</button>
+			<button data-miniweb-custom="insertAsset" title="Insert Asset">&#127203;</button>
 		</div>
 
-		<div class="btn-group">
-			<a class="btn btn-mini" data-edit="insertunorderedlist" title="Bullet points"><i class="glyphicon glyphicon-list"></i></a>
-			<a class="btn btn-mini" data-edit="insertorderedlist" title="Numbered bullet points"><i class="glyphicon glyphicon-th-list"></i></a>
-			<a class="btn btn-mini" data-edit="outdent" title="Indent left"><i class="glyphicon glyphicon-indent-left"></i></a>
-			<a class="btn btn-mini" data-edit="indent" title="Indent right"><i class="glyphicon glyphicon-indent-right"></i></a>
-		</div>
-
-		<div class="btn-group">
-			<a class="btn btn-mini" data-edit="createLink" title="Hyperlink"><i class="glyphicon glyphicon-globe"></i></a>
-			<a class="btn btn-mini" data-edit="unlink" title="Remove hyperlink"><i class="glyphicon glyphicon-remove"></i></a>
-			<a class="btn btn-mini" data-edit="insertAsset"><i class="glyphicon glyphicon-picture"></i></a>
-		</div>
-
-		<input type="file" class="txtImage" data-edit="insertImage" style="width:0; height: 0;position:absolute" />
-
-		<div class="btn-group">
-			<a class="btn btn-mini source" data-cmd="source" title="Toggle source/design view"><i class="glyphicon glyphicon-eye-open"></i></a>
+		<div class="miniweb-buttongroup">
+			<button class="source" data-miniweb-custom="showSource" title="Toggle source/design view">&#128065;</button>
 		</div>
 	</div>
+	<input type="file" class="txtImage is-hidden" data-miniweb-edit="insertImage" />
 </nav>
+<aside class="is-hidden">
+	<p class="alert"></p>
+</aside>
 
 <!-- Modal -->
-<div class="modal fade" id="pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
-	<div class="modal-dialog miniweb">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalPageLabel">Page properties</h4>
-			</div>
-			<form class="form-horizontal">
-				<div class="modal-body">
-					<input type="hidden" name="OldUrl" value="@Model.Url" />
-					<input type="hidden" name="Layout" value="@Model.Layout" />
-					<div class="form-group">
-						<label for="name" class="col-sm-4 control-label">Page name</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="name" name="Title" placeholder="Page name" value="@Model.Title">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="metatitle" class="col-sm-4 control-label">Browser title</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="metatitle" name="MetaTitle" placeholder="Browser title" value="@Model.MetaTitle">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="metadescription" class="col-sm-4 control-label">Meta description</label>
-						<div class="col-sm-8">
-							<textarea type="text" class="form-control" id="metadescription" name="MetaDescription" placeholder="Meta description" value="">@Model.MetaDescription</textarea>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="template" class="col-sm-4 control-label">Template</label>
-						<div class="col-sm-8">
-							<select name="Template" id="template" data-curval="@Model.Template">
-								@foreach (var s in MiniWebSite.PageTemplates)
-								{
-									<option value="@s" @(s.ToLowerInvariant() == Model.Template.ToLowerInvariant() ? "selected=\"selected\"" : "")>@s.Substring(s.LastIndexOf("/") + 1)</option>
-								}
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-8 col-sm-offset-4">
-							<label class="control-label">
-								<input type="checkbox" id="visible" name="Visible" @(Model.Visible ? "checked=\"checked\"" : "") value="true">
-								Visible
-							</label>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-8 col-sm-offset-4">
-							<label class="control-label">
-								<input type="checkbox" id="ShowInMenu" name="ShowInMenu" @(Model.ShowInMenu ? "checked=\"checked\"" : "") value="true">
-								Show in menu
-							</label>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="Sortorder" class="col-sm-4 control-label">Sortorder</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="Sortorder" name="Sortorder" placeholder="Sortorder" value="@Model.SortOrder">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">Url</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<span class="input-group-addon">/</span>
-								<input type="text" class="form-control" id="url" name="Url" placeholder="url" value="@Model.Url">
-								<span class="input-group-addon">.@MiniWebSite.Configuration.PageExtension</span>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">RedirectUrl</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<span class="input-group-addon">/</span>
-								<input type="text" class="form-control" id="url" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl">
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-			<div class="modal-footer">
-				<div class="is-hidden">
-					<form>
-						<input type="file" multiple name="files" class="add-multiplepages" style="position:absolute;width:0;height:0"/>
-						<label>force<input type="checkbox" name="force" value="true"/></label>
-						<button type="button" class="btn btn-default add-multiplepages">Upload Pages</button>
-					</form>
-				</div>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-danger">Delete Page</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
-			</div>
+<div class="miniweb-modal miniweb-pageproperties" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
+			<h4 id="myModalPageLabel">Page properties</h4>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
-	<div class="modal-dialog miniweb">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalHyperlinkLabel">Add hyperlink</h4>
+		<form>
+			@*INPUTS are not Type Hidden because form.reset() does not work on them,*@
+			<input type="text" class="is-hidden" name="NewPage" value="false" />
+			<input type="text" class="is-hidden" name="OldUrl" value="@Model.Url" />
+			<input type="text" class="is-hidden" name="Layout" value="@Model.Layout" />
+			<div class="miniweb-form-group">
+				<label>
+					<span>Page name</span>
+					<input type="text" name="Title" placeholder="Page name" required value="@Model.Title" />
+				</label>
 			</div>
-			<form class="form-horizontal">
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">Internal URL</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<span class="input-group-addon">/</span>
-								<select id="createInternalUrl" class="form-control">
-									<option value="">Choose url or enter custom</option>
-									@foreach (var p in MiniWebSite.Pages)
-									{
-										<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
-									}
-								</select>
-							</div>
-						</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Browser title</span>
+					<input type="text" name="MetaTitle" placeholder="Browser title" value="@Model.MetaTitle" />
+				</label>
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Meta description</span>
+					<textarea type="text" name="MetaDescription" placeholder="Meta description" value="">@Model.MetaDescription</textarea>
+				</label>	
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Template</span>
+					<select name="Template" required >
+						@foreach (var s in MiniWebSite.PageTemplates)
+						{
+						<option value="@s" @(s.ToLowerInvariant() == Model.Template.ToLowerInvariant() ? "selected=\" selected\"" : "" )>@s.Substring(s.LastIndexOf("/") + 1)</option>
+						}
+					</select>
+				</label>	
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Date</span>
+					<input type="datetime-local" pattern="\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}" name="Date" placeholder="Date yyyy-MM-ddTHH:mm:ss" required  value="@((Model.Date ?? DateTime.Now).ToString("yyyy-MM-ddTHH:mm:ss"))" />
+				</label>	
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Visible</span>
+					<input type="checkbox" name="Visible" @(Model.Visible ? "checked=\" checked\"" : "" ) value="true" />
+				</label>	
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Show in menu</span>
+					<input type="checkbox" name="ShowInMenu" @(Model.ShowInMenu ? "checked=\" checked\"" : "" ) value="true" />
+				</label>
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Sortorder</span>
+					<input type=" text" name="Sortorder" placeholder="Sortorder" value="@Model.SortOrder" />
+				</label>
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Url</span>
+					<div class="input-group">
+						<span class="addon">/</span>
+						<input type="text" name="Url" placeholder="url" required value="@Model.Url" />
+						<span class="addon">.@MiniWebSite.Configuration.PageExtension</span>
 					</div>
-					<div class="form-group">
-						<label for="url" class="col-sm-4 control-label">Custom URL</label>
-						<div class="col-sm-8">
-							<div class="input-group">
-								<input type="text" class="form-control" id="createLinkUrl" name="Url" placeholder="custom url" value="http://" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary">Add link</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				</div>
+				</label>
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>RedirectUrl</span>
+					<input type="text" name="RedirectUrl" placeholder="RedirectUrl" value="@Model.RedirectUrl" />
+				</label>
+			</div>
+		</form>
+		<div class="miniweb-modal-footer">
+			<button data-miniweb-dismiss=".miniweb-modal">Close</button>
+			<button id="miniweb-button-deletepage" class="danger">Delete Page</button>
+			<button id="miniweb-button-savepage" class="primary">Save properties</button>
+		</div>
+		<div class="is-hidden">
+			<form>
+				<label>force<input type="checkbox" name="force" value="true" /></label>
+				<button type="button" id="miniweb-button-addmultiplepages">Upload Pages</button>
+				<input type="file" multiple name="files" style="position:absolute;width:0;height:0" />
 			</form>
 		</div>
 	</div>
 </div>
 
-<div class="modal fade" id="newContentAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog miniweb">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">Add content</h4>
+<div class="miniweb-modal" id="miniweb-addHyperLink" tabindex="-1" role="dialog" aria-labelledby="myModalHyperlinkLabel" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
+			<h4 id="myModalHyperlinkLabel">Add hyperlink</h4>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
+		</div>
+		<form>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Internal URL</span>
+					<select name="InternalUrl">
+						<option value="">Choose url or enter custom</option>
+						@foreach (var p in MiniWebSite.Pages)
+						{
+						<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
+						}
+					</select>
+				</label>
 			</div>
-			<form class="form-horizontal">
-				<div class="modal-body">
-					@foreach (var s in MiniWebSite.ItemTemplates)
-					{
-						<div class="item-link ">
-							<span>@System.IO.Path.GetFileNameWithoutExtension(s)</span>:
-							<button type="button" class="btn btn-primary" data-contentid="content-@System.IO.Path.GetFileNameWithoutExtension(s)">Add content item</button>
-						</div>
-					}
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				</div>
-			</form>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Custom URL</span>
+					<input type="text" name="Url" placeholder="custom url" value="https://" />
+				</label>	
+			</div>
+		</form>
+		<div class="miniweb-modal-footer">
+			<button id="miniweb-button-addlink" class="primary">Add link</button>
+			<button data-miniweb-dismiss=".miniweb-modal">Cancel</button>
+		</div>
+	</div>
+</div>
+
+<div class="miniweb-modal miniweb-modal-center" id="miniweb-content-add" tabindex="-1" role="dialog" aria-labelledby="miniweb-addcontent-label" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
+			<h4 class="miniweb-modal-title" id="miniweb-addcontent-label">Add content</h4>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
+		</div>
+		<form>
+			<p>Select an item to add</p>
+			@foreach (var s in MiniWebSite.ItemTemplates)
+			{
+			<button data-miniweb-add-content-view="@s">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
+			}
+		</form>
+		<div class="miniweb-modal-footer">
+			<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
 		</div>
 	</div>
 </div>
 
 
-<div class="modal fade" id="imageAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog miniweb">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">Add image</h4>
-			</div>
-			<form class="form-horizontal">
-				<div class="modal-body">
-					<a href="#" id="miniweb-asset-page-reset" class="miniweb-asset-pager is-hidden" data-page-move="-10000" style="display:none;position:absolute;width:0;height:0"><span class="glyphicon glyphicon-chevron-left"></span></a>
-					<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-page-move="-1" style="display:none;"><span class="glyphicon glyphicon-chevron-left"></span></a>
-					<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-page-move="1" style="display:none;"><span class="glyphicon glyphicon-chevron-right"></span></a>
-					@{ 
-						var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
-						var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
-					}
-					Folder: <input class="select-asset-folder" name="virtualFolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
-					<datalist id="miniweb-folder-list">
+<div class="miniweb-modal" id="miniweb-addAsset" tabindex="-1" role="dialog" aria-labelledby="miniweb-addimage-label" aria-hidden="true">
+	<div class="miniweb-modal-content">
+		<div class="miniweb-modal-header">
+			<h4 class="miniweb-modal-title" id="miniweb-addimage-label">Add image</h4>
+			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
+		</div>
+		<div>
+			<div class="miniweb-modal-body">
+				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-miniweb-page-move="-1">&#10218;</a>
+				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-miniweb-page-move="1">&#10219;</a>
+				@{
+				var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
+				var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
+				}
+				Folder: <input class="select-asset-folder" name="miniwebAssetFolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
+				<datalist id="miniweb-folder-list">
 					@foreach(var f in allFolders)
 					{
-						<option value="@f">@f</option>
+					<option value="@f">@f</option>
 					}
-					</datalist>
+				</datalist>
 
-					<ul id="miniweb-assetlist" data-page="0">
-					@foreach(var a in allAssets){
-						<li data-path="@a.Folder" class="is-hidden">
-						@if (a.Type == MiniWeb.Core.AssetType.Image) {
-							<img data-src="@a.VirtualPath" data-filename="@a.FileName" class="miniweb-asset-pick"/>
-						} 
-						else 
-						{
-							<a href="@a.VirtualPath" class="miniweb-asset-pick">@a.FileName</a>
-						}
-						</li>
-					}
-					</ul>
-					<button type="button" class="btn btn-primary add-asset">Add Asset</button>
-					<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0"/>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				</div>
-			</form>
+				<ul class="miniweb-assetlist" data-miniweb-page="0">
+					
+				</ul>
+			</div>
+			<div class="miniweb-modal-footer">
+				<button class="primary" id="miniweb-button-addasset" type="button">Add Asset</button>
+				<input type="file" multiple name="files" class="miniweb-add-asset" />
+				<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
+			</div>
 		</div>
 	</div>
-</div>
-
-<div id="miniweb-templates">
-	@foreach (var s in MiniWebSite.ItemTemplates)
-	{
-		<div id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">
-			@Html.Partial(s, MiniWebSite.DummyContent(s))
-		</div>
-	}
-	@Html.AntiForgeryToken()
 </div>
 
 <link rel="stylesheet" href="/miniweb-resources/admin.css" />
-<script src="/miniweb-resources/bootstrap-wysiwyg.js" defer></script>
-<script src="/miniweb-resources/admin.js" defer></script>
+<!-- <script src="/miniweb-resources/bootstrap-wysiwyg.js" defer></script> -->
+<script src="/miniweb-resources/admin.js" type="module"></script>

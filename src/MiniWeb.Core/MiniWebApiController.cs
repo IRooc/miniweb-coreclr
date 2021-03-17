@@ -27,25 +27,37 @@ namespace MiniWeb.Core
 			return Content($"{Environment.MachineName} {_webSite.HostingEnvironment.EnvironmentName} {_webSite.HostingEnvironment.ContentRootPath}");
 		}
 
-		public IActionResult LoadAssets()
+		[HttpGet]
+		[ValidateAntiForgeryToken]
+		public IActionResult AllAssets(int take = 16, int page = 0, string folder = "")
 		{
-			_webSite.ReloadAssets();
-			return new JsonResult(_webSite.Assets.Select(a => a.VirtualPath));
+			IEnumerable<IAsset> folderAssets = _webSite.Assets.Where(a => a.Folder.Equals(folder, StringComparison.CurrentCultureIgnoreCase));
+			return new JsonResult(new {
+				TotalAssets = folderAssets.Count(),
+				Assets= folderAssets.Select(a => new { a.VirtualPath, a.Type, a.FileName, a.Folder }).Skip(page * take).Take(take)
+			});
+		}
+
+		[HttpGet]
+		[ValidateAntiForgeryToken]
+		public IActionResult GetItem(string viewPath)
+		{
+			return View(viewPath, _webSite.DummyContent(viewPath));
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)
 		{
-			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
-			if (page != null)
+			var result = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
+			if (result.Found)
 			{
-				_webSite.Logger?.LogInformation($"save PAGE found {page.Url}");
+				_webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");
 				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items, _webSite.ContentStorage.JsonInterfaceConverter);
-				page.Sections.Clear();
-				page.Sections.AddRange(newSections);
+				result.Page.Sections.Clear();
+				result.Page.Sections.AddRange(newSections);
 
-				_webSite.SaveSitePage(page, Request, true);
+				_webSite.SaveSitePage(result.Page, Request, true);
 				return new JsonResult(new { result = true });
 			}
 			return new JsonResult(new { result = false });
@@ -53,7 +65,7 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SaveAssets(string virtualFolder, List<IFormFile> files)
+		public IActionResult SaveAssets(string miniwebAssetFolder, List<IFormFile> files)
 		{
 			if (files.Count > 0)
 			{
@@ -64,8 +76,16 @@ namespace MiniWeb.Core
 					{
 						file.CopyTo(ms);
 						var fileBytes = ms.ToArray();
-						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, virtualFolder);
-						assets.Add(newAsset);
+						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, miniwebAssetFolder);
+						if (newAsset != null)
+						{
+							assets.Add(newAsset);
+							_webSite.ReloadAssets(true);
+						}
+						else
+						{
+							return new JsonResult(new { result = false });
+						}
 					}
 				}
 				return new JsonResult(new { result = true, assets = assets.Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
@@ -88,7 +108,7 @@ namespace MiniWeb.Core
 						if (_webSite.Pages.FirstOrDefault(p => p.Url == sitePage.Url) == null || force)
 						{
 							_webSite.SaveSitePage(sitePage, Request);
-						} 
+						}
 						else if (!force)
 						{
 							return new JsonResult(new { result = false, message = $"Page with url {sitePage.Url} already exists" });
@@ -99,13 +119,13 @@ namespace MiniWeb.Core
 			}
 			return new JsonResult(new { result = false });
 		}
-		
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SavePage([FromForm]SitePageBasicPostModel posted)
+		public IActionResult SavePage([FromForm] SitePageBasicPostModel posted)
 		{
 			//ignore move for now...
-			if (Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != posted.Url)
+			if (posted.NewPage != true && Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != posted.Url)
 			{
 				string message = $"Moving pages not allowed yet, tried to move {Request.Form["OldUrl"]} to new location: {posted.Url}";
 				_webSite.Logger?.LogError(message);
@@ -116,6 +136,10 @@ namespace MiniWeb.Core
 			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == posted.Url);
 			if (page == null)
 			{
+				if (posted.NewPage != true)
+				{
+					return new JsonResult(new { result = false, message = $"Page with url {posted.Url} already exists" });
+				}
 				//new page
 				page = _webSite.ContentStorage.NewPage();
 				page.Url = posted.Url;
@@ -127,12 +151,13 @@ namespace MiniWeb.Core
 			page.Layout = posted.Layout;
 			page.MetaDescription = posted.MetaDescription;
 			page.MetaTitle = posted.MetaTitle;
+			page.Date = posted.Date;
 			page.ShowInMenu = posted.ShowInMenu;
 			page.SortOrder = posted.SortOrder;
 			page.Template = posted.Template;
 			page.Title = posted.Title;
 			page.Visible = posted.Visible;
-
+			_webSite.Logger?.LogInformation("Save page {0}", posted.Url);
 			_webSite.SaveSitePage(page, Request, false);
 			return new JsonResult(new { result = true, url = _webSite.GetPageUrl(page) });
 		}
@@ -146,6 +171,15 @@ namespace MiniWeb.Core
 			_webSite.DeleteSitePage(page);
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
 			return new JsonResult(new { result = true, url = redirectUrl });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult ReloadCaches()
+		{
+			_webSite.ReloadAssets(true);
+			_webSite.ReloadPages(true);
+			return new JsonResult(new { result = true });
 		}
 	}
 }
