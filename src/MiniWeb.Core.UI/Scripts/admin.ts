@@ -508,6 +508,8 @@ const addNewPageModal = function () {
 	}
 
 	modal.classList.add('show');
+	modal.scrollIntoView(true);
+
 };
 
 const ctrl_s_save = function (event) {
@@ -565,6 +567,7 @@ document.addEventListener('click', (e) => {
 		const modal = document.querySelector<HTMLElement>('#miniweb-content-add');
 		modal.dataset.miniwebTargetsection = contentTarget;
 		modal.classList.add('show');
+		modal.scrollIntoView(true);
 	} else if (target.dataset.miniwebAddContentView) {
 		e.preventDefault();
 		const contentId = target.dataset.miniwebAddContentView;
@@ -582,6 +585,13 @@ document.addEventListener('click', (e) => {
 				section.append(el.firstChild);
 				cancelEdit();
 				editContent();
+				const newEl =  section.querySelector('[data-miniwebtemplate]:last-of-type');
+				newEl.scrollIntoView(true);
+				const firstInput = newEl.querySelector<HTMLElement>('[contenteditable]');
+				if (firstInput){
+					firstInput.focus();
+					document.execCommand('selectAll',false,null);
+				}
 				closeModals();
 			});
 

@@ -11,7 +11,7 @@ var path = Model.Url;
 	</div>
 	<div class="miniweb-tool pull-right">
 		<ul class="miniweb-horizontal-list">
-			<li class="hidden-xs"><input type="text" list="miniweb-datalist-pages" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
+			<li><input type="text" list="miniweb-datalist-pages" class="miniweb-nav-input" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
 					@foreach (var p in MiniWebSite.Pages)
 					{
 						<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
@@ -19,23 +19,23 @@ var path = Model.Url;
 				</datalist></li>
 			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
 			<li id="miniweb-li-showhiddenpages"><label class="btn btn-link"><input type="checkbox" /><span class="hidden-xs">Show hidden pages</span></label></li>
-			<li><button class="icon icon-new" id="miniweb-button-newpage">New page</button></li>
+			<li><button class="icon icon-new" id="miniweb-button-newpage"><span>New page</span></button></li>
 			<li class="divider"></li>
 			<li>
 				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
 					<input type="hidden" name="returnUrl" value="@MiniWebSite.GetPageUrl(Model)" />
-					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout">Sign out</button>
+					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout"><span>Sign out</span></button>
 				</form>
 			</li>
 		</ul>
 	</div>
 	<div class="miniweb-tool">
 		<ul class="miniweb-horizontal-list">
-			<li><button class="icon icon-props" id="miniweb-button-pageprops">Page properties</button></li>
+			<li><button class="icon icon-props" id="miniweb-button-pageprops"><span>Page properties</span></button></li>
 			<li class="divider"></li>
-			<li><button class="icon icon-edit" id="miniweb-button-edit">Edit Content</button></li>
-			<li><button class="icon icon-save" id="miniweb-button-save" disabled>Save Content</button></li>
-			<li><button class="icon icon-cancel" id="miniweb-button-cancel" disabled>Cancel</button></li>
+			<li><button class="icon icon-edit" id="miniweb-button-edit"><span>Edit Content</span></button></li>
+			<li><button class="icon icon-save" id="miniweb-button-save" disabled><span>Save Content</span></button></li>
+			<li><button class="icon icon-cancel" id="miniweb-button-cancel" disabled><span>Cancel</span></button></li>
 		</ul>
 	</div>
 
@@ -80,6 +80,7 @@ var path = Model.Url;
 
 <!-- Modal -->
 <div class="miniweb-modal miniweb-pageproperties" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
+	<div class="miniweb-modal-backdrop"></div>
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
 			<h4 id="myModalPageLabel">Page properties</h4>
@@ -209,6 +210,7 @@ var path = Model.Url;
 </div>
 
 <div class="miniweb-modal miniweb-modal-center" id="miniweb-content-add" tabindex="-1" role="dialog" aria-labelledby="miniweb-addcontent-label" aria-hidden="true">
+	<div class="miniweb-modal-backdrop"></div>
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
 			<h4 class="miniweb-modal-title" id="miniweb-addcontent-label">Add content</h4>

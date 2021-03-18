@@ -38,6 +38,8 @@ namespace MiniWeb.Core
 		{
 			get
 			{
+				
+
 				string basePath = HostingEnvironment.ContentRootPath;
 				return System.IO.Directory.GetFiles(basePath + Configuration.ItemTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
 			}
