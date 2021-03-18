@@ -230,6 +230,7 @@ miniwebadmin .miniweb-tools  button.icon {
 miniwebadmin .icon:before {
 	position: absolute;
 	font-size: 15px;
+	font-family: Arial, Helvetica;
 	top:3px;
 	left: 2px;
 }
@@ -249,7 +250,7 @@ miniwebadmin .icon.icon-cancel:before {
 	font-weight: 700;
 }
 miniwebadmin .icon.icon-signout:before {
-	content: "\2BBF";
+	content: "\2297";
 }
 miniwebadmin .icon.icon-signout:hover:before {
 	color:red;
@@ -324,6 +325,9 @@ miniwebadmin .miniweb-add-asset {
 .miniweb-editing [data-miniwebsection]:hover {
 	border-color: grey;
 }
+.miniweb-editing [data-miniwebtemplate]:focus-within {
+    background: rgba(0,0,0,0.01);
+}ss
 .miniweb-editing [data-miniwebtemplate] {
 	overflow: hidden;
 	border-bottom: 1px dashed black;
@@ -446,7 +450,7 @@ miniwebadmin .miniweb-add-asset {
 	display: flex;
 	min-height: 320px;
 	width: 90%;
-	padding-left: 20px;
+	padding-left: 10px;
 	flex-wrap: wrap;
 }
 
