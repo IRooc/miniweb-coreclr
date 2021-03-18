@@ -1,42 +1,47 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <!--[if lt IE 9]>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+	<link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+	<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+	<!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>Miniweb asp.net core by IRooc</title>
-  </head>
+	<title>Miniweb asp.net core by IRooc</title>
+</head>
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1><a href="index.html">Miniweb asp.net core</a></h1>
-        <h2>Embedded razor views in your assembly and serve them on runtime</h2>
-        <a href="https://github.com/IRooc/miniweb-coreclr" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+<body>
+	<header>
+		<div class="inner">
+			<h1><a href="index.html">Miniweb asp.net core</a></h1>
+			<h2>Embedded razor views in your assembly and serve them on runtime</h2>
+			<a href="https://github.com/IRooc/miniweb-coreclr" class="button"><small>View project on</small> GitHub</a>
+		</div>
+	</header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1><a id="miniweb-small-cms-for-aspnet-core" class="anchor" href="#miniweb-small-cms-for-aspnet-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Embedded razor views in your assembly</h1>
-<p>To embed Razor Views into your assembly you not only need the same setupt as normal assets in the project.json file<p>
-    <div class="highlight highlight-text-html-basic"><pre>
+	<div id="content-wrapper">
+		<div class="inner clearfix">
+			<section id="main-content">
+				<h1><a id="miniweb-small-cms-for-aspnet-core" class="anchor" href="#miniweb-small-cms-for-aspnet-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>This used to require some work, but...</h1>
+				<p>But now we can just create just use a <a href="https://docs.microsoft.com/en-us/aspnet/core/blazor/components/class-libraries?view=aspnetcore-5.0&tabs=visual-studio">Razor Class Library</a>. The old way used to work fine as well, will leave it here for reference if needed:<br/><br/><br/></p>
+				<h2><a id="miniweb-small-cms-for-aspnet-core" class="anchor" href="#miniweb-small-cms-for-aspnet-core" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Embedded razor views in your assembly</h2>
+				<p>To embed Razor Views into your assembly you not only need the same setupt as normal assets in the project.json file
+				<p>
+				<div class="highlight highlight-text-html-basic">
+					<pre>
 <span class="pl-s">"resource"</span>: <span class="pl-s">"Resources/admin.js;Resources/admin.css;Resources/bootstrap-wysiwyg.js;Resources/adminview.cshtml"</span>,
 </pre>
-</div>
-<p>But you also need to create an EmbeddedFileProvider that either serves your embedded file when it is called for by a specific path, which mostly will be a path other than the embedded path itself. You can create an EmbeddedFileProvider like this:
-    <div class="highlight highlight-text-html-basic">
-        <pre>
+				</div>
+				<p>But you also need to create an EmbeddedFileProvider that either serves your embedded file when it is called for by a specific path, which mostly will be a path other than the embedded path itself. You can create an EmbeddedFileProvider like this:
+				<div class="highlight highlight-text-html-basic">
+					<pre>
 <span class="pl-k">using</span> ....
 <span class="pl-k">using</span> Microsoft.Extensions.FileProviders<span class="pl-k">;</span>
 
@@ -81,42 +86,43 @@
     }
 }
         </pre>
-</div>
-<p>
-    So the main takeway is that you can listen for the file on a different path than the embedded path itself which is a good idea. This way you can make the listening path configurable so it will never clash with the paths fo the application that is uses the embedded views. 
-</p>
-<p>
-I don't think you need the GetDirectoryContens overload but you could easily implement it to switch on the filepath, and for serving multiple files you could try to find the in the embedded files by filename and return the specific FileInfo from that.
-</p>
-<p>Finally you need to register you fileprovider in the ConfigureServices method of the Startup class of your application. Best to Insert it into the ProviderList at the zero index, this way the embedded file will take presidence above any other physical files.</p>
-<div class="highlight highlight-text-html-basic">
-<pre>
+				</div>
+				<p>
+					So the main takeway is that you can listen for the file on a different path than the embedded path itself which is a good idea. This way you can make the listening path configurable so it will never clash with the paths fo the application that is uses the embedded views.
+				</p>
+				<p>
+					I don't think you need the GetDirectoryContens overload but you could easily implement it to switch on the filepath, and for serving multiple files you could try to find the in the embedded files by filename and return the specific FileInfo from that.
+				</p>
+				<p>Finally you need to register you fileprovider in the ConfigureServices method of the Startup class of your application. Best to Insert it into the ProviderList at the zero index, this way the embedded file will take presidence above any other physical files.</p>
+				<div class="highlight highlight-text-html-basic">
+					<pre>
     services.Configure&lt;<span class="pl-en">RazorViewEngineOptions</span>&gt;(options => { options.FileProviders.Insert(0, <span class="pl-k">new</span> <span class="pl-en">MiniWebFileProvider</span>(embeddedFilePath)); });
 </pre>
-</div>
+				</div>
 
-<p>Thanks,</p>
-<p>Rooc</p>
-</section>
+				<p>Thanks,</p>
+				<p>Rooc</p>
+			</section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/IRooc/miniweb-coreclr/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/IRooc/miniweb-coreclr/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+			<aside id="sidebar">
+				<a href="https://github.com/IRooc/miniweb-coreclr/zipball/master" class="button">
+					<small>Download</small>
+					.zip file
+				</a>
+				<a href="https://github.com/IRooc/miniweb-coreclr/tarball/master" class="button">
+					<small>Download</small>
+					.tar.gz file
+				</a>
 
-          <p class="repo-owner"><a href="https://github.com/IRooc/miniweb-coreclr">MiniWeb</a> is maintained by <a href="https://github.com/IRooc">IRooc</a>.</p>
-          <p class="repo-owner"><a href="index.html">Back to main page</a>.</p>
+				<p class="repo-owner"><a href="https://github.com/IRooc/miniweb-coreclr">MiniWeb</a> is maintained by <a href="https://github.com/IRooc">IRooc</a>.</p>
+				<p class="repo-owner"><a href="index.html">Back to main page</a>.</p>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
+				<p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+			</aside>
+		</div>
+	</div>
 
-  
-  </body>
+
+</body>
+
 </html>

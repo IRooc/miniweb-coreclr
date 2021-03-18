@@ -90,16 +90,9 @@ For this to work the miniweb taghelpers need to be registered for instance in th
 
 <div class="highlight highlight-source-cs"><pre><span class="pl-k">public</span> IConfiguration Configuration { <span class="pl-k">get</span>; <span class="pl-k">set</span>; }
 
-<span class="pl-k">public</span> Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
-{
-    <span class="pl-c">// Setup configuration sources, not needed if defaults are used</span>
-    <span class="pl-k">var</span> configuration = <span class="pl-k">new</span> ConfigurationBuilder(appEnv.ApplicationBasePath)
-                    .AddJsonFile(<span class="pl-s"><span class="pl-pds">"</span>miniweb.json<span class="pl-pds">"</span></span>, optional: <span class="pl-c1">true</span>)
-                    .AddJsonFile($<span class="pl-s"><span class="pl-pds">"</span>miniweb.{env.EnvironmentName}.json<span class="pl-pds">"</span></span>, optional: <span class="pl-c1">true</span>)
-                    .AddEnvironmentVariables();
-
-    <span class="pl-c">//Remember Configuration for use in ConfigureServices</span>
-    Configuration = configuration.Build();
+<span class="pl-k">public</span> Startup(IConfiguration configuration)
+{  
+    Configuration = configuration;
 }
 
 <span class="pl-k">public</span> <span class="pl-k">void</span> ConfigureServices(IServiceCollection services)
@@ -109,7 +102,8 @@ For this to work the miniweb taghelpers need to be registered for instance in th
     services.AddMvc();
 
     <span class="pl-c">//registers miniweb and json storage provider</span>
-    services.AddMiniWebJsonStorage(Configuration);
+    services.AddMiniWebJsonStorage(Configuration)
+	    .AddMiniWebAssetFileSystemStorage(Configuration);
 }
 
 <span class="pl-k">public</span> <span class="pl-k">void</span> Configure(IApplicationBuilder app)
@@ -129,21 +123,21 @@ For this to work the miniweb taghelpers need to be registered for instance in th
 <ul>
 <li>MiniWeb.Storage.JsonStorage</li>
 <li>MiniWeb.Storage.XmlStorage</li>
-<li>MiniWeb.Storage.EFStorage (using SQL not tested on *nix)</li>
+<li>MiniWeb.Storage.EFStorage</li>
 </ul>
 
-<p>both are filesystem stores and store their files in the /App_Data/Sitepages folder</p>
+<p>all are filesystem stores and store their files in the /App_Data/Sitepages folder</p>
+<p>Files are stored with the AssetStorage package, currently only the FileSystem assetstorage is available</p>
+<ul>
+	<li>MiniWeb.AssetStorage.FileSystem</li>
+</ul>
 
 <h2>
 <a id="todo" class="anchor" href="#todo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODO</h2>
 
 <ul>
-<li>Multiple edittypes</li>
-<li>Extra Storage Provider examples (documentdb, sql)</li>
-<li>Better image handling (enable picking existing images as well)</li>
-<li>Upgrade to new bootstrap</li>
-<li>Setup integration with clientside packages (bower grunt and so on)</li>
-<li>Wait for .net core release :D</li>
+	<li>Checkout razorpages setup option</li>
+	<li>Work with precompiled views</li>
 </ul>
         </section>
 
