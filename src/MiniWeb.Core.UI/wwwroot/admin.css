@@ -103,19 +103,18 @@ miniwebadmin > aside .alert.miniweb-alert-danger {
 
 miniwebadmin .miniweb-modal.show {
 	display: block !important;
-	position: absolute;
-	top: 0;
+	position: fixed;
+	top: 3em;
 	left: 0;
 	bottom: 0;
 	right: 0;
 	z-index: 10;
-	height: 100vh;
+	height: calc(100vh -3em);
 }
 
 miniwebadmin .miniweb-modal.show .miniweb-modal-backdrop {
 	position: fixed;
 	top: 3em;
-	left: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
@@ -125,15 +124,13 @@ miniwebadmin .miniweb-modal.show .miniweb-modal-backdrop {
 miniwebadmin .miniweb-modal .miniweb-modal-header h4 {
 	padding: 1em 0;
 	font-size: 1.5em;
-	position: relative;
 }
 miniwebadmin .miniweb-modal .miniweb-modal-content {
 	width: 40em;
 	background-color: white;
-	height: calc(95% - 3em);
+	height: calc(100vh - 3em);
 	overflow: scroll;;
-	position: relative;
-	top: 3em;
+	position: fixed;
 	left:0;
 	padding-left: 20px;
 	padding-bottom: 20px;
@@ -150,13 +147,26 @@ miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
 miniwebadmin .miniweb-modal .miniweb-modal-content .right {
 	position: absolute;
 	right: 0;
-	top:0;
 }
 miniwebadmin .miniweb-modal .miniweb-modal-footer {
 	text-align: right;
 	padding: 0 48px 20px;
 }
 
+miniwebadmin .miniweb-content-items {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+miniwebadmin .miniweb-content-items button {
+    display: flex;
+    flex: 1 0 20%;
+    justify-content: center;
+    align-items: center;
+    max-width: 19%;
+    margin: 1% 1% 1% 0;
+
+}
 miniwebadmin .miniweb-tools {
 	position: fixed;
 	display: block;
@@ -424,7 +434,7 @@ miniwebadmin .miniweb-add-asset {
 	font-size: 1em;
 }
 .miniweb-editing [data-miniwebedittype="asset"]::after {
-	content: "\1F0ED";
+	content: "\1F5BD";
 	cursor: pointer;
 	right: -25px;
 	position: absolute;
@@ -479,7 +489,7 @@ miniwebadmin .miniweb-add-asset {
 
 .miniweb-editing .miniweb-assetlist li span.miniweb-asset-pick:before {
 	font-family: Arial, Helvetica, sans-serif;
-	content: '\1F5CE';
+	content: '\1F5BD';
 	position: absolute;
 	opacity: 0.2;
 	margin: 0 auto;

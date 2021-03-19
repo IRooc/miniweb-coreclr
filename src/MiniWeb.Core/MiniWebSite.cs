@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Razor.Hosting;
+using System.IO;
 
 namespace MiniWeb.Core
 {
@@ -29,20 +31,39 @@ namespace MiniWeb.Core
 		{
 			get
 			{
-				string basePath = HostingEnvironment.ContentRootPath;
-				return System.IO.Directory.GetFiles(basePath + Configuration.PageTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+				var templatePath = Configuration.PageTemplatePath;
+				return GetTemplatesForPath(templatePath);
 			}
 		}
-
 		public IEnumerable<string> ItemTemplates
 		{
 			get
 			{
-				
-
-				string basePath = HostingEnvironment.ContentRootPath;
-				return System.IO.Directory.GetFiles(basePath + Configuration.ItemTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+				var templatePath = Configuration.ItemTemplatePath;
+				return GetTemplatesForPath(templatePath);
 			}
+		}
+		private IEnumerable<string> GetTemplatesForPath(string templatePath)
+		{
+			var basePath = HostingEnvironment.ContentRootPath;
+			var result = Enumerable.Empty<string>();
+			if (HostingEnvironment.IsDevelopment() && Directory.Exists(basePath + templatePath))
+			{
+				result = System.IO.Directory.GetFiles(basePath + templatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+			}
+			if (!result.Any())
+			{
+				//find assemblies with precompiled views
+				var assemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetCustomAttributes(typeof(RazorCompiledItemAttribute), false).Any());
+				var resultList = new List<string>();
+				foreach (var assembly in assemblies)
+				{
+					var attribs = assembly.GetCustomAttributes(typeof(RazorCompiledItemAttribute), false).OfType<RazorCompiledItemAttribute>();
+					resultList.AddRange(attribs.Where(a => a.Identifier.StartsWith(templatePath)).Select(a => a.Identifier));
+				}
+				result = resultList.ToArray();
+			}
+			return result;
 		}
 
 

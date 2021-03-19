@@ -83,8 +83,8 @@ var path = Model.Url;
 	<div class="miniweb-modal-backdrop"></div>
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
-			<h4 id="myModalPageLabel">Page properties</h4>
 			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
+			<h4 id="myModalPageLabel">Page properties</h4>
 		</div>
 		<form>
 			@*INPUTS are not Type Hidden because form.reset() does not work on them,*@
@@ -213,15 +213,17 @@ var path = Model.Url;
 	<div class="miniweb-modal-backdrop"></div>
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
-			<h4 class="miniweb-modal-title" id="miniweb-addcontent-label">Add content</h4>
 			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
+			<h4 class="miniweb-modal-title" id="miniweb-addcontent-label">Add content</h4>
 		</div>
 		<form>
 			<p>Select an item to add</p>
-			@foreach (var s in MiniWebSite.ItemTemplates)
-			{
-			<button data-miniweb-add-content-view="@s">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
-			}
+			<div class="miniweb-content-items">
+				@foreach (var s in MiniWebSite.ItemTemplates)
+				{
+				<button data-miniweb-add-content-view="@s" class="primary">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
+				}
+			</div>
 		</form>
 		<div class="miniweb-modal-footer">
 			<button data-miniweb-dismiss="miniweb-modal">Cancel</button>

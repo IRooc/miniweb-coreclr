@@ -1,8 +1,6 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,11 +14,6 @@ using MiniWeb.Storage.JsonStorage;
 //using MiniWeb.Storage.XmlStorage;
 //using MiniWeb.Storage.EFStorage;
 using Newtonsoft.Json.Linq;
-using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
-using System;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 
@@ -39,11 +32,10 @@ namespace SampleWeb
 		{
 			// Default services used by MiniWeb
 			services.AddAntiforgery();
-			var builder = services.AddMvc(options =>
+			services.AddMvc(options =>
 			{
 				options.EnableEndpointRouting = false;  //for now...
-			})
-			.AddRazorRuntimeCompilation(); //needed for miniweb for now.
+			}); 
 
 			services.AddMiniWeb(Configuration)
 					.AddMiniWebJsonStorage(Configuration)

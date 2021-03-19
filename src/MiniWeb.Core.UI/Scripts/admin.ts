@@ -293,10 +293,12 @@ const editContent = function () {
 			}
 		});
 	}
+	const btnPageProperties = document.getElementById("miniweb-button-pageprops");
 	const btnNew = document.getElementById("miniweb-button-newpage");
 	const btnEdit = document.getElementById("miniweb-button-edit");
 	const btnSave = document.getElementById("miniweb-button-save");
 	const btnCancel = document.getElementById("miniweb-button-cancel");
+	btnPageProperties.setAttribute("disabled", "true");
 	btnNew.setAttribute("disabled", "true");
 	btnEdit.setAttribute("disabled", "true");
 	btnSave.removeAttribute("disabled");
@@ -323,17 +325,19 @@ const cancelEdit = function () {
 		});
 	}
 
+	const btnPageProperties = document.getElementById("miniweb-button-pageprops");
 	const btnNew = document.getElementById("miniweb-button-newpage");
 	const btnEdit = document.getElementById("miniweb-button-edit");
 	const btnSave = document.getElementById("miniweb-button-save");
 	const btnCancel = document.getElementById("miniweb-button-cancel");
+	btnPageProperties.removeAttribute("disabled");
 	btnNew.removeAttribute("disabled");
 	btnEdit.removeAttribute("disabled");
 	btnSave.setAttribute("disabled", "true");
 	btnCancel.setAttribute("disabled", "true");
 
 	toggleContentInserts(false);
-
+	closeModals();
 };
 
 const toggleContentInserts = function (on: boolean) {
