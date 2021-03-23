@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +24,7 @@ namespace MiniWeb.Core
 		void DeleteSitePage(ISitePage page);
 		FindResult GetPageByUrl(string url, ClaimsPrincipal user);
 		string GetPageUrl(ISitePage page);
-		void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
+		Task SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
 		void ReloadPages(bool forceReload = false);
 
 		IContentItem DummyContent(string template);
@@ -31,7 +32,7 @@ namespace MiniWeb.Core
 		List<IPageSection> GetDefaultContentForTemplate(string template);
 		IEnumerable<IAsset> Assets { get; set; }
 		void DeleteAsset(IAsset asset);
-		void ReloadAssets(bool forceReload = false);
+		Task ReloadAssets(bool forceReload = false);
 
 		bool Authenticate(string username, string password);
 		bool IsAuthenticated(ClaimsPrincipal user);

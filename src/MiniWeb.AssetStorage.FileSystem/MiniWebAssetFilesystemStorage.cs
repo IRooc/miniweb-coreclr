@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -27,19 +28,19 @@ namespace MiniWeb.AssetStorage.FileSystem
 		}
 
 
-		public IEnumerable<IAsset> GetAllAssets()
+		public Task<IEnumerable<IAsset>> GetAllAssets()
 		{
 			string folder = Path.Combine(HostingEnvironment.WebRootPath, Configuration.AssetRootPath);
 			if (!string.IsNullOrWhiteSpace(Configuration.AssetRootPath) && !Configuration.AssetRootPath.Contains("..") && Directory.Exists(folder))
 			{
 				var allFiles = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
-				return allFiles.Select(f => new FileSystemAsset(HostingEnvironment, Configuration, f));
+				return Task.FromResult<IEnumerable<IAsset>>(allFiles.Select(f => new FileSystemAsset(HostingEnvironment, Configuration, f)));
 			}
 			Logger?.LogWarning($"Folder not present {folder} no assets loaded");
-			return Enumerable.Empty<IAsset>();
+			return Task.FromResult(Enumerable.Empty<IAsset>());
 		}
 
-		public IAsset CreateAsset(string fileName, byte[] bytes, string virtualFolder = null)
+		public Task<IAsset> CreateAsset(string fileName, byte[] bytes, string virtualFolder = null)
 		{
 			Logger?.LogInformation($"Create asset {fileName} in {Configuration.AssetRootPath}");
 			if (virtualFolder.StartsWith("/")) virtualFolder = virtualFolder.Substring(1);
@@ -50,10 +51,10 @@ namespace MiniWeb.AssetStorage.FileSystem
 			string folderName = Path.GetDirectoryName(path);
 			Directory.CreateDirectory(folderName);
 			File.WriteAllBytes(path, bytes);
-			return new FileSystemAsset(HostingEnvironment, Configuration, path);
+			return Task.FromResult<IAsset>(new FileSystemAsset(HostingEnvironment, Configuration, path));
 		}
 
-		public IAsset CreateAsset(string fileName, string base64String, string virtualFolder = null)
+		public Task<IAsset>  CreateAsset(string fileName, string base64String, string virtualFolder = null)
 		{
 			byte[] bytes = ConvertToBytes(base64String);
 			string extFromBase64Type = Regex.Match(base64String, "^([^/]+)/([a-z]+);base64").Groups[2].Value;
@@ -64,10 +65,11 @@ namespace MiniWeb.AssetStorage.FileSystem
 			return CreateAsset(fileName, bytes, virtualFolder ?? Configuration.AssetRootPath);
 		}
 
-		public void RemoveAsset(IAsset asset)
+		public Task RemoveAsset(IAsset asset)
 		{
 			string file = Path.Combine(HostingEnvironment.WebRootPath, asset.VirtualPath);
 			File.Delete(file);
+			return Task.FromResult(0);
 		}
 
 		private byte[] ConvertToBytes(string base64)

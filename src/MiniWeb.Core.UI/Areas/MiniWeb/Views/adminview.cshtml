@@ -243,7 +243,7 @@ var path = Model.Url;
 				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-miniweb-page-move="-1">&#10218;</a>
 				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-miniweb-page-move="1">&#10219;</a>
 				@{
-				var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
+				var allAssets = await MiniWebSite.AssetStorage.GetAllAssets();
 				var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
 				}
 				Folder: <input class="select-asset-folder" name="miniwebAssetFolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">

@@ -65,7 +65,7 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SaveAssets(string miniwebAssetFolder, List<IFormFile> files)
+		public async Task<IActionResult> SaveAssets(string miniwebAssetFolder, List<IFormFile> files)
 		{
 			if (files.Count > 0)
 			{
@@ -76,7 +76,7 @@ namespace MiniWeb.Core
 					{
 						file.CopyTo(ms);
 						var fileBytes = ms.ToArray();
-						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, miniwebAssetFolder);
+						var newAsset = await _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, miniwebAssetFolder);
 						if (newAsset != null)
 						{
 							assets.Add(newAsset);

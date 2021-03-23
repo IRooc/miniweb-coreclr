@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -233,7 +234,7 @@ namespace MiniWeb.Core
 			}
 		}
 
-		public void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false)
+		public async Task SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false)
 		{
 			Logger?.LogInformation($"Saving page {page.Url}");
 			page.LastModified = DateTime.Now;
@@ -251,7 +252,7 @@ namespace MiniWeb.Core
 					for (var i = 0; i < item.Values.Count; i++)
 					{
 						var kv = item.Values.ElementAt(i);
-						item.Values[kv.Key] = SaveEmbeddedImages(item.Values[kv.Key]);
+						item.Values[kv.Key] = await SaveEmbeddedImages(item.Values[kv.Key]);
 					}
 				}
 			}
@@ -280,7 +281,7 @@ namespace MiniWeb.Core
 			ReloadAssets(true);
 		}
 
-		public void ReloadAssets(bool forceReload = false)
+		public async Task ReloadAssets(bool forceReload = false)
 		{
 			IEnumerable<IAsset> assets = null;
 			if (!forceReload && Cache?.TryGetValue("MWASSETS", out assets) == true)
@@ -291,7 +292,7 @@ namespace MiniWeb.Core
 			else
 			{
 				Logger?.LogInformation("Reload assets");
-				Assets = AssetStorage.GetAllAssets();
+				Assets = await AssetStorage.GetAllAssets();
 
 				Cache?.Set("MWASSETS", Assets);
 			}
@@ -306,7 +307,7 @@ namespace MiniWeb.Core
 		}
 
 
-		private string SaveEmbeddedImages(string html)
+		private async Task<string> SaveEmbeddedImages(string html)
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
 			Match match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
@@ -317,7 +318,7 @@ namespace MiniWeb.Core
 				if (!string.IsNullOrWhiteSpace(base64String))
 				{
 					//byte[] bytes = ConvertToBytes(base64String);
-					var newAsset = AssetStorage.CreateAsset(filename, base64String);
+					var newAsset = await AssetStorage.CreateAsset(filename, base64String);
 					//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
 					string path = newAsset.VirtualPath;// SaveFileToDisk(bytes, extension, filename);
 
@@ -339,7 +340,7 @@ namespace MiniWeb.Core
 				var fileNameMatch = Regex.Match(base64String, "(;filename=(.*?));base64");
 				var fileName = fileNameMatch.Groups[2].Value;
 				base64String = base64String.Replace(fileNameMatch.Groups[1].Value, "");
-				var newAsset = AssetStorage.CreateAsset(fileName, base64String);
+				var newAsset = await AssetStorage.CreateAsset(fileName, base64String);
 				html = newAsset.VirtualPath;
 			}
 			return html;
