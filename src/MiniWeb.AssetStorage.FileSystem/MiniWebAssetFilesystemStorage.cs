@@ -42,12 +42,13 @@ namespace MiniWeb.AssetStorage.FileSystem
 
 		public Task<IAsset> CreateAsset(string fileName, byte[] bytes, string virtualFolder = null)
 		{
-			Logger?.LogInformation($"Create asset {fileName} in {Configuration.AssetRootPath}");
-			if (virtualFolder.StartsWith("/")) virtualFolder = virtualFolder.Substring(1);
+			if (virtualFolder == null) virtualFolder = string.Empty;
+			Logger?.LogInformation($"Create asset {virtualFolder}/{fileName} in {Configuration.AssetRootPath}");
+			if (virtualFolder.StartsWith("/") == true) virtualFolder = virtualFolder.Substring(1);
 			string filePath = Path.Combine(virtualFolder, fileName);
 			filePath = filePath.Replace("\\","/");
 			//should we check the assetrootpath?
-			string path = Path.Combine(HostingEnvironment.WebRootPath, filePath);
+			string path = Path.Combine(HostingEnvironment.WebRootPath, Configuration.AssetRootPath, filePath);
 			string folderName = Path.GetDirectoryName(path);
 			Directory.CreateDirectory(folderName);
 			File.WriteAllBytes(path, bytes);

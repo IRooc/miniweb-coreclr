@@ -86,8 +86,6 @@ namespace MiniWeb.Core
 			ContentStorage.MiniWebSite = this;
 			AssetStorage.MiniWebSite = this;
 
-			this.ReloadPages();
-			this.ReloadAssets();
 
 		}
 
@@ -100,8 +98,11 @@ namespace MiniWeb.Core
 			return null;
 		}
 
-		public FindResult GetPageByUrl(string url, ClaimsPrincipal user)
+		public async Task<FindResult> GetPageByUrl(string url, ClaimsPrincipal user)
 		{
+			if (Pages?.Any() != true){
+				await ReloadPages();
+			}
 			bool editing = IsAuthenticated(user);
 			var result = new FindResult();
 			Logger?.LogDebug($"Finding page {url}");
@@ -126,9 +127,10 @@ namespace MiniWeb.Core
 				}
 			}
 
-			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? ContentStorage.GetSitePageByUrl(url) ?? ContentStorage.MiniWeb404Page;
-			var foundPage = pageByUrl.Visible || editing ? pageByUrl : ContentStorage.MiniWeb404Page;
-			if (foundPage == ContentStorage.MiniWeb404Page)
+			ISitePage notFoundPage = await ContentStorage.MiniWeb404Page();
+			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? (await ContentStorage.GetSitePageByUrl(url)) ?? notFoundPage;
+			var foundPage = pageByUrl.Visible || editing ? pageByUrl : notFoundPage;
+			if (foundPage == notFoundPage)
 			{
 				Logger?.LogWarning($"Could not find page [{url}] found page: [{foundPage.Url}]");
 			}
@@ -182,9 +184,9 @@ namespace MiniWeb.Core
 			return user?.IsInRole(MiniWebAuthentication.MiniWebCmsRoleValue) == true;
 		}
 
-		public bool Authenticate(string username, string password)
+		public async Task<bool> Authenticate(string username, string password)
 		{
-			return ContentStorage.Authenticate(username, password);
+			return await ContentStorage.Authenticate(username, password);
 		}
 
 		public ClaimsPrincipal GetClaimsPrincipal(string username)
@@ -204,7 +206,7 @@ namespace MiniWeb.Core
 				};
 		}
 
-		public void ReloadPages(bool forceReload = false)
+		public async Task ReloadPages(bool forceReload = false)
 		{
 			// Look for cache key.
 			IEnumerable<ISitePage> pages = null;
@@ -216,7 +218,7 @@ namespace MiniWeb.Core
 			else
 			{
 				Logger?.LogInformation("Reload pages");
-				Pages = ContentStorage.AllPages().ToList();
+				Pages = (await ContentStorage.AllPages()).ToList();
 
 				Cache?.Set("MWPAGES", Pages);
 			}
@@ -245,7 +247,7 @@ namespace MiniWeb.Core
 			if (storeImages)
 			{
 				//NOTE(RC): save current with base 64 so at least it's saved.
-				ContentStorage.StoreSitePage(page, currentRequest);
+				await ContentStorage.StoreSitePage(page, currentRequest);
 				//NOTE(RC): can this be done saner?
 				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
 				{
@@ -256,29 +258,29 @@ namespace MiniWeb.Core
 					}
 				}
 			}
-			ContentStorage.StoreSitePage(page, currentRequest);
-			ReloadPages(true);
+			await ContentStorage.StoreSitePage(page, currentRequest);
+			await ReloadPages(true);
 		}
 
-		public void DeleteSitePage(ISitePage page)
+		public async Task DeleteSitePage(ISitePage page)
 		{
 			Logger?.LogInformation($"Deleting page {page.Url}");
-			ContentStorage.DeleteSitePage(page);
-			ReloadPages(true);
+			await ContentStorage.DeleteSitePage(page);
+			await ReloadPages(true);
 		}
 
-		public List<IPageSection> GetDefaultContentForTemplate(string template)
+		public async Task<List<IPageSection>> GetDefaultContentForTemplate(string template)
 		{
 			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template, template) == 0);
-			return ContentStorage.GetDefaultSectionContent(defaultContent);
+			return await ContentStorage.GetDefaultSectionContent(defaultContent);
 		}
 
 
 		public IEnumerable<IAsset> Assets { get; set; }
-		public void DeleteAsset(IAsset asset)
+		public async Task DeleteAsset(IAsset asset)
 		{
-			AssetStorage.RemoveAsset(asset);
-			ReloadAssets(true);
+			await AssetStorage.RemoveAsset(asset);
+			await ReloadAssets(true);
 		}
 
 		public async Task ReloadAssets(bool forceReload = false)

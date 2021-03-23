@@ -16,11 +16,11 @@ namespace MiniWeb.Core
 			_webSite = website;
 		}
 
-		public IActionResult Index(string url)
+		public async Task<IActionResult> Index(string url)
 		{
 			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");
 
-			var result = _webSite.GetPageByUrl(url, User);
+			var result = await _webSite.GetPageByUrl(url, User);
 
 			//redirect if not editing?
 			if (!string.IsNullOrWhiteSpace(result.RedirectUrl))
@@ -34,27 +34,28 @@ namespace MiniWeb.Core
 			return View(result.Page.Template, result.Page);
 		}
 
-		public IActionResult Login()
+		public async Task<IActionResult> Login()
 		{
 			_webSite.Logger?.LogInformation("login action");
-			return base.View(_webSite.Configuration.LoginView, _webSite.ContentStorage.MiniWebLoginPage);
+			var model =  await _webSite.ContentStorage.MiniWebLoginPage();
+			return base.View(_webSite.Configuration.LoginView, model);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Login(string username, string password)
 		{
 			_webSite.Logger?.LogInformation("login post");
-			if (_webSite.Authenticate(username, password))
+			if (await _webSite.Authenticate(username, password))
 			{
 				var principal = _webSite.GetClaimsPrincipal(username);
 				await HttpContext.SignInAsync(_webSite.Configuration.Authentication.AuthenticationScheme, principal);
 				return Redirect(_webSite.Configuration.DefaultPage);
 			}
 			ViewBag.ErrorMessage = $"Failed to login as {username}";
-			return Login();
+			return await Login();
 		}
 
-		public IActionResult SocialLogin()
+		public async Task<IActionResult> SocialLogin()
 		{
 			if (_webSite.IsAuthenticated(User))
 			{
@@ -71,7 +72,7 @@ namespace MiniWeb.Core
 				_webSite.Logger?.LogInformation($"Social login {provider}");
 				return new ChallengeResult(provider, properties);
 			}
-			return Login();
+			return await Login();
 		}
 
 		[HttpPost]
@@ -83,8 +84,7 @@ namespace MiniWeb.Core
 				await HttpContext.SignOutAsync(_webSite.Configuration.Authentication.AuthenticationScheme);
 				return Redirect(returnUrl);
 			}
-			return Index(_webSite.Configuration.DefaultPage);
+			return await Index(_webSite.Configuration.DefaultPage);
 		}
 	}
-
 }

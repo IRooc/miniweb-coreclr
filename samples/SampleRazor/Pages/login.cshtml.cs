@@ -29,7 +29,7 @@ namespace SampleRazor.Pages
         public async Task<IActionResult> OnPostAsync()
 		{
 			Miniweb.Logger?.LogInformation("login post");
-			if (Miniweb.Authenticate(Username, Password))
+			if (await Miniweb.Authenticate(Username, Password))
 			{
 				var principal = Miniweb.GetClaimsPrincipal(Username);
 				await HttpContext.SignInAsync(Miniweb.Configuration.Authentication.AuthenticationScheme, principal);

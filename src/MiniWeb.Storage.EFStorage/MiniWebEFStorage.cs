@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using MiniWeb.Core;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace MiniWeb.Storage.EFStorage
 {
@@ -17,57 +18,58 @@ namespace MiniWeb.Storage.EFStorage
 
 		public MiniWebEFStorage(MiniWebEFDbContext context, IOptions<MiniWebEFStorageConfig> options)
 		{
-			StorageConfig = options.Value;		
+			StorageConfig = options.Value;
 			Context = context;
 			Context.Database.EnsureCreated();
 		}
 
-		public IEnumerable<ISitePage> AllPages()
+		public Task<IEnumerable<ISitePage>> AllPages()
 		{
+			IEnumerable<ISitePage> result = Enumerable.Empty<ISitePage>();
 			if (Context.Pages.Any())
 			{
-				return Context.Pages.Include(p => p.Items).Select(GetSitePage);
+				result = Context.Pages.Include(p => p.Items).Select(GetSitePage);
 			}
-			return new List<ISitePage>() { };
+			return Task.FromResult(result);
 		}
 
 		private static ISitePage GetSitePage(DbSitePage p)
 		{
 			//make sure Sections Collection is Set
 			p.Sections = p.Items?.GroupBy(i => i.SectionKey).Select(g => new PageSection()
+			{
+				Key = g.Key,
+				Items = g.Select(i => new ContentItem()
 				{
-					Key = g.Key,
-					Items = g.Select(i => new ContentItem()
-					{
-						Template = i.Template,
-						Page = p,
-						Values = JsonConvert.DeserializeObject<Dictionary<string, string>>(i.Values)
-					}).ToList<IContentItem>() ?? new List<IContentItem>()
-				}).ToList<IPageSection>() ?? new List<IPageSection>();
+					Template = i.Template,
+					Page = p,
+					Values = JsonConvert.DeserializeObject<Dictionary<string, string>>(i.Values)
+				}).ToList<IContentItem>() ?? new List<IContentItem>()
+			}).ToList<IPageSection>() ?? new List<IPageSection>();
 			return p;
 		}
 
 
-		public bool Authenticate(string username, string password)
+		public async Task<bool> Authenticate(string username, string password)
 		{
 			//TODO(RC):Fix hashing and stuff...
-			var user = Context.Users.FirstOrDefault(u => u.UserName == username && u.Active);
+			var user = await Context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.Active);
 			return user?.Password == password;
 		}
 
-		public void DeleteSitePage(ISitePage sitePage)
+		public async Task DeleteSitePage(ISitePage sitePage)
 		{
 			Context.RemoveRange(Context.ContentItems.Where(c => c.PageUrl == sitePage.Url));
 			Context.Remove(Context.Pages.First(p => p.Url == sitePage.Url));
-			Context.SaveChanges();
+			await Context.SaveChangesAsync();
 		}
 
-		public ISitePage GetSitePageByUrl(string url)
+		public async Task<ISitePage> GetSitePageByUrl(string url)
 		{
-			return Context.Pages.Where(p => p.Url == url).Select(p => GetSitePage(p)).SingleOrDefault();
+			return await Context.Pages.Where(p => p.Url == url).Select(p => GetSitePage(p)).SingleOrDefaultAsync();
 		}
 
-		public void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
+		public async Task StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
 		{
 			var oldPage = Context.Pages.FirstOrDefault(p => p.Url == sitePage.Url);
 			if (oldPage != null)
@@ -86,7 +88,7 @@ namespace MiniWeb.Storage.EFStorage
 
 				//todo(rc): can this be done without?
 				Context.RemoveRange(Context.ContentItems.Where(c => c.PageUrl == sitePage.Url));
-				Context.SaveChanges();
+				await Context.SaveChangesAsync();
 
 				//need to clear because items are removed but still in page.items collection
 				oldPage.Items.Clear();
@@ -132,13 +134,13 @@ namespace MiniWeb.Storage.EFStorage
 					}));
 				}
 			}
-			Context.SaveChanges();
+			await Context.SaveChangesAsync();
 		}
-		
-		
-		public List<IPageSection> GetDefaultSectionContent(DefaultContent defaultContent)
+
+
+		public Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent)
 		{
-			return defaultContent?.Content?.Select(c => new PageSection()
+			var result = defaultContent?.Content?.Select(c => new PageSection()
 			{
 				Key = c.Section,
 				Items = c.Items?.Select(i => new ContentItem()
@@ -147,25 +149,24 @@ namespace MiniWeb.Storage.EFStorage
 					Values = new Dictionary<string, string>()
 				}).ToList<IContentItem>()
 			}).ToList<IPageSection>();
+			return Task.FromResult(result);
 		}
 
-		public ISitePage Deserialize(string filecontent)
+		public Task<ISitePage> Deserialize(string filecontent)
 		{
 			throw new NotImplementedException();
 		}
 
-		public ISitePage MiniWeb404Page
+		public async Task<ISitePage> MiniWeb404Page()
 		{
-			get
+			return (await AllPages()).FirstOrDefault(p => p.Url == "404") ?? new DbSitePage()
 			{
-				return AllPages().FirstOrDefault(p => p.Url == "404") ?? new DbSitePage()
-				{
-					Title = "Page Not Found : 404",
-					MetaTitle = "Page Not Found : 404",
-					Layout = StorageConfig.Layout,
-					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
-					Visible = true,
-					Sections = new List<IPageSection>()
+				Title = "Page Not Found : 404",
+				MetaTitle = "Page Not Found : 404",
+				Layout = StorageConfig.Layout,
+				Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+				Visible = true,
+				Sections = new List<IPageSection>()
 					{
 						new PageSection()
 						{
@@ -183,26 +184,23 @@ namespace MiniWeb.Storage.EFStorage
 							}
 						}
 						},
-					Url = "404"
-				};
-			}
+				Url = "404"
+			};
 		}
 
-		public ISitePage MiniWebLoginPage
+		public Task<ISitePage> MiniWebLoginPage()
 		{
-			get
+			var result = new DbSitePage()
 			{
-				return new DbSitePage()
-				{
-					Title = "Login",
-					MetaTitle = "Login",
-					Layout = StorageConfig.Layout,
-					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
-					Sections = new List<IPageSection>(),
-					Url = "miniweb/login",
-					Visible = true
-				};
-			}
+				Title = "Login",
+				MetaTitle = "Login",
+				Layout = StorageConfig.Layout,
+				Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+				Sections = new List<IPageSection>(),
+				Url = "miniweb/login",
+				Visible = true
+			};
+			return Task.FromResult<ISitePage>(result);
 		}
 
 		public JsonConverter JsonInterfaceConverter
@@ -212,9 +210,9 @@ namespace MiniWeb.Storage.EFStorage
 				return new JsonInterfaceConverter();
 			}
 		}
-		public ISitePage NewPage()
+		public Task<ISitePage> NewPage()
 		{
-			return new DbSitePage();
+			return Task.FromResult<ISitePage>(new DbSitePage());
 		}
 	}
 }

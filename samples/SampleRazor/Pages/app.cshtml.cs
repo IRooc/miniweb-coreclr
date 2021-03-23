@@ -24,7 +24,7 @@ namespace SampleRazor.Pages
 		{
 			Miniweb.Logger?.LogInformation($"index action {Request.Path.Value}");
 
-			var result = Miniweb.GetPageByUrl(PageUrl, User);
+			var result = await Miniweb.GetPageByUrl(PageUrl, User);
 
 			//redirect if not editing?
 			if (!string.IsNullOrWhiteSpace(result.RedirectUrl))
