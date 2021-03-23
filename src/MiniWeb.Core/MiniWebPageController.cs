@@ -20,8 +20,7 @@ namespace MiniWeb.Core
 		{
 			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");
 
-			bool editing = _webSite.IsAuthenticated(User);
-			var result = _webSite.GetPageByUrl(url, editing);
+			var result = _webSite.GetPageByUrl(url, User);
 
 			//redirect if not editing?
 			if (!string.IsNullOrWhiteSpace(result.RedirectUrl))

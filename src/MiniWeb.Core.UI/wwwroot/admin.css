@@ -9,6 +9,11 @@ body.miniweb.preview {
 body.miniweb.preview miniwebadmin {
 	display: none;
 }
+body .miniweb-editor-toolbar,
+body miniwebadmin {
+	font-size: 14px; /*everything relative to this*/
+	line-height: 1.42857143;	
+}
 body .miniweb-editor-toolbar *,
 body miniwebadmin * {
 	font-family: Arial, Helvetica, sans-serif!important;
@@ -18,6 +23,7 @@ body miniwebadmin * {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	box-sizing: content-box;
 }
 miniwebadmin input,
 miniwebadmin textarea,
@@ -56,6 +62,9 @@ miniwebadmin button.danger:hover {
 	background-color: rgb(165, 14, 14);
 	color:white;
 }
+miniwebadmin .miniweb-nav-input {
+	max-width: 13vw;
+}
 
 miniwebadmin #miniweb-templates,
 miniwebadmin .miniweb-modal,
@@ -63,10 +72,10 @@ miniwebadmin #miniweb-html-tools {display: none;}
 miniwebadmin .is-hidden {
 	display: none !important;
 }
-
+/*the alert*/
 miniwebadmin > aside {
 	position: fixed;
-	top: 3rem;
+	top: 1.5em;
 	width: 400px;
 	left: 40%;
 	z-index: 100;
@@ -75,10 +84,20 @@ miniwebadmin > aside .alert {
 	background-color: lightgray;
 	padding: 10px;
 	border-radius: 5px;	
+	border-style: solid;
+	border-width: 1px;
 }
-miniwebadmin > aside .alert.alert-success {
+miniwebadmin > aside .alert.miniweb-alert-success {
 	color: #3c763d;
     background-color: #dff0d8;
+	border-color: #3c763d;
+	box-shadow: 0 0 8px #3c763d;
+}
+miniwebadmin > aside .alert.miniweb-alert-danger {
+	color: red;
+	background-color: #f0cac9;
+	border-color: red;
+	box-shadow: 0 0 8px red;
 }
 
 
@@ -87,28 +106,39 @@ miniwebadmin .miniweb-modal.show {
 	position: fixed;
 	top: 3em;
 	left: 0;
-	width: 100%; 
-	height: 100%;
+	bottom: 0;
+	right: 0;
+	z-index: 10;
+	height: calc(100vh -3em);
+}
+
+miniwebadmin .miniweb-modal.show .miniweb-modal-backdrop {
+	position: fixed;
+	top: 3em;
+	left: 0;
+	bottom: 0;
+	right: 0;
 	background-color: rgba(0,0,0,0.7);
 	z-index: 10;
 }
 miniwebadmin .miniweb-modal .miniweb-modal-header h4 {
-	margin: 1em 0;
+	padding: 1em 0;
 	font-size: 1.5em;
 }
 miniwebadmin .miniweb-modal .miniweb-modal-content {
 	width: 40em;
 	background-color: white;
-	height: 100%;
-	position: absolute;
-	top:0;
+	height: calc(100vh - 3em);
+	overflow: scroll;;
+	position: fixed;
 	left:0;
-	padding-left: 40px;
+	padding-left: 20px;
+	padding-bottom: 20px;
+	z-index: 11;
 }
 miniwebadmin .miniweb-modal.miniweb-modal-right .miniweb-modal-content {
 	position: absolute;
 	right: 0;
-	top:0;
 	left:auto;
 }
 miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
@@ -117,13 +147,26 @@ miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
 miniwebadmin .miniweb-modal .miniweb-modal-content .right {
 	position: absolute;
 	right: 0;
-	top:0;
 }
 miniwebadmin .miniweb-modal .miniweb-modal-footer {
 	text-align: right;
-	padding: 0 48px;
+	padding: 0 48px 20px;
 }
 
+miniwebadmin .miniweb-content-items {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+miniwebadmin .miniweb-content-items button {
+    display: flex;
+    flex: 1 0 20%;
+    justify-content: center;
+    align-items: center;
+    max-width: 19%;
+    margin: 1% 1% 1% 0;
+
+}
 miniwebadmin .miniweb-tools {
 	position: fixed;
 	display: block;
@@ -197,6 +240,7 @@ miniwebadmin .miniweb-tools  button.icon {
 miniwebadmin .icon:before {
 	position: absolute;
 	font-size: 15px;
+	font-family: Arial, Helvetica;
 	top:3px;
 	left: 2px;
 }
@@ -212,20 +256,17 @@ miniwebadmin .icon.icon-save:before {
 	font-weight: 700;
 }
 miniwebadmin .icon.icon-cancel:before {
-	content: "\21ba";
-	font-size: 18px;
+	content: "\2B6E";
 	font-weight: 700;
-	top: 0px;
 }
 miniwebadmin .icon.icon-signout:before {
-	content: "\2BBF";
+	content: "\2297";
 }
 miniwebadmin .icon.icon-signout:hover:before {
 	color:red;
 }
 miniwebadmin .icon.icon-new:before {
-	content: "\002A";
-	font-size: 23px;
+	content: "\2606";
 }
 
 miniwebadmin .miniweb-form-group {
@@ -246,6 +287,13 @@ miniwebadmin .miniweb-form-group label input,
 miniwebadmin .miniweb-form-group label select {
 	width:60%
 }
+miniwebadmin .miniweb-form-group label input:invalid {
+	box-shadow: none;
+}
+.miniweb-invalid-item,
+miniwebadmin form.miniweb-invalid .miniweb-form-group label input:invalid {
+	background-color: rgba(200,0,0,0.2);
+}
 miniwebadmin .miniweb-form-group label input[type="checkbox"] {
 	width: auto;
 }
@@ -259,7 +307,15 @@ miniwebadmin .miniweb-form-group label .input-group .addon {
 }
 miniwebadmin .miniweb-form-group .input-group .addon + input ,
 miniwebadmin .miniweb-form-group .input-group .addon + select {
-	width: 80%
+	width: 75%
+}
+
+miniwebadmin .miniweb-add-asset {
+	position:absolute;
+	width:0;
+	height:0;
+	border:0;
+	z-index: -1;
 }
 
 .miniweb-hidden-menu {
@@ -279,11 +335,15 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 .miniweb-editing [data-miniwebsection]:hover {
 	border-color: grey;
 }
+.miniweb-editing [data-miniwebtemplate]:focus-within {
+    background: rgba(0,0,0,0.01);
+}ss
 .miniweb-editing [data-miniwebtemplate] {
 	overflow: hidden;
 	border-bottom: 1px dashed black;
 	margin-bottom: 5px;
 	padding:1px;
+	scroll-margin-top: 50px;
 }
 
 .miniweb-editing [contenteditable] {
@@ -291,27 +351,35 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	width: 100%;
 	display: inline-block;
 	margin-top: 25px;
+	position: relative;
 }
+
+.miniweb-editing [contenteditable][data-miniwebedittype="html"] {
+	min-height: 10em;
+}
+
 .miniweb-editing [contenteditable]:focus,
 .miniweb-editing [contenteditable]:hover {
 	outline: thin solid #ccc;
 }
 .miniweb-editing [contenteditable]:before {
 	position: absolute;
-	background: #128fb5;
+	background: #888247;
 	color: #fff;
 	content: attr(data-miniwebprop);
 	white-space: nowrap;
-	margin-top: -23px;
+	top: -18px;
+	height: 18px;
 	padding: 0 5px;
 	border-radius: 5px 5px 0 0;
+	font-size: 14px;
+	left:0;
 }
 
 .miniweb-editing .miniweb-template-actions button {
 	background:none;
 	border:none;
 	color: darkblue;
-	font-size: 1.3rem;
 }
 .miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup {
 	display: inline-block;
@@ -320,7 +388,7 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	margin: 0;
 	padding: 2px;
 	display: inline-block;
-	width: 25px;
+	width: 20px;
 	border: 1px solid lightslategray;
 	background-color: white;
 	color: lightslategray;
@@ -355,20 +423,19 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 .miniweb-editing [data-miniwebedittype="asset"],
 .miniweb-editing [data-miniwebedittype="url"] {
 	width: 95%;
-	font-size: 12px;
 }
 .miniweb-editing [data-miniwebedittype="url"]::after {
 	content: "\1F517";
 	cursor: pointer;
-	float: right;
-	left: 95%;
+	
+	right: -25px;
 	position: absolute;
+	font-size: 1em;
 }
 .miniweb-editing [data-miniwebedittype="asset"]::after {
-	content: "\1F0ED";
+	content: "\1F5BD";
 	cursor: pointer;
-	float: right;
-	left: 95%;
+	right: -25px;
 	position: absolute;
 }
 .miniweb-attributes {
@@ -380,6 +447,7 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 
 .miniweb-editing button.miniweb-button {
 	cursor: pointer;
+	float: right;
 }
 
 .miniweb-editing button.miniweb-danger {
@@ -388,28 +456,45 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 
 .miniweb-editing .miniweb-assetlist {
 	list-style: none;
-	display: block;
-	min-height: 80px;
-	overflow: hidden;
+	display: flex;
+	min-height: 320px;
 	width: 90%;
-	padding-left: 20px;
+	padding-left: 10px;
+	flex-wrap: wrap;
 }
 
 .miniweb-editing .miniweb-assetlist li {
+	margin: 2px;
 	width: 100px;
+	max-width: 100px;
 	height: 100px;
-	display: inline-block;
-	overflow: hidden;
+	max-height: 100px;
 	border: 1px solid #ddd;
 	border-radius: 10px;
-	line-height: 94px;
 	background: #fafafa;
-	transition: all .2s ease-in-out;
+	display: flex;
+	flex: 1 0 17%;
+	justify-content: center;
+    align-items: center;
+	position: relative;
 }
 
 .miniweb-editing .miniweb-assetlist li .miniweb-asset-pick {
 	max-width: 100%;
 	max-height: 100%;
+	object-fit: scale-down;
+	cursor: pointer;
+}
+
+.miniweb-editing .miniweb-assetlist li span.miniweb-asset-pick:before {
+	font-family: Arial, Helvetica, sans-serif;
+	content: '\1F5BD';
+	position: absolute;
+	opacity: 0.2;
+	margin: 0 auto;
+	top: 10px;
+	font-size: 4em;
+	left: 30px;
 }
 
 .miniweb-editing .miniweb-asset-pager {
@@ -417,7 +502,8 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	color: #2e6da4;
 	top: 150px;
 	font-size: 25px;
-	left: 10px
+	left: 10px;
+	text-decoration:none;
 }
 
 .miniweb-editing #miniweb-asset-page-right.miniweb-asset-pager {
@@ -433,13 +519,25 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 
 
 @media (max-width: 1024px) {
+	miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content,
+	miniwebadmin .miniweb-modal .miniweb-modal-content {
+		width: 95vw;
+		padding-left: 5vw;
+		left:0;
+	}
+	miniwebadmin .miniweb-nav-input {
+		max-width: 20vw;
+		max-height: 1rem;
+	}
 	miniwebadmin .miniweb-tools  button.icon  {
-		font-size: 0;
 		line-height: 15px;
 	}
 
 	miniwebadmin .miniweb-tools  button.icon span {
 		display: none;
+	}
+	miniwebadmin .icon:before {
+		left:11px;
 	}
 	miniwebadmin .hidden-xs {
 		display: none !important;
@@ -447,7 +545,9 @@ miniwebadmin .miniweb-form-group .input-group .addon + select {
 	miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
 		width: 1em;
 	}
-	
+	miniwebadmin .miniweb-modal .miniweb-modal-footer {
+		padding:0 21px 1rem;
+	}
 	miniwebadmin .miniweb-tools  button {
 		padding:0;
 		width:15px;

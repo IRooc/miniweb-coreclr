@@ -6,8 +6,8 @@ const log = function (...args: any[]) {
 }
 
 const extend: any = function (defaults, options) {
-	var extended = {};
-	var prop;
+	const extended = {};
+	let prop;
 	for (prop in defaults) {
 		if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
 			extended[prop] = defaults[prop];
@@ -23,11 +23,12 @@ const extend: any = function (defaults, options) {
 
 const miniwebAdminDefaults = {
 	apiEndpoint: '/miniweb-api/',
+	afToken: '',
 	editTypes: [
 		{
 			key: 'html',
 			editStart: function (element: HTMLElement, index) {
-				var thisTools = <HTMLElement>(document.getElementById('miniweb-html-tools').cloneNode(true));
+				const thisTools = <HTMLElement>(document.getElementById('miniweb-html-tools').cloneNode(true));
 				thisTools.removeAttribute("id");
 				thisTools.classList.add('miniweb-editor-toolbar');
 
@@ -52,9 +53,9 @@ const miniwebAdminDefaults = {
 								if (selectedRange.commonAncestorContainer.parentNode.tagName == 'A') {
 									const curHref = selectedRange.commonAncestorContainer.parentNode.getAttribute('href');
 									if (curHref.indexOf('http') == 0) {
-										(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
+										(modal.querySelector<HTMLInputElement>('[name="Url"]')).value = curHref;
 									} else {
-										(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = curHref;
+										(modal.querySelector<HTMLInputElement>('[name="InternalUrl"]')).value = curHref;
 									}
 								}
 								modal.dataset.miniwebLinkType = 'HTML';
@@ -81,7 +82,7 @@ const miniwebAdminDefaults = {
 								modal.dataset.miniwebAssetIndex = index;
 								if (currentAsset.lastIndexOf('/') > 0) {
 									let folder = currentAsset.substr(0, currentAsset.lastIndexOf('/'));
-									(<HTMLInputElement>modal.querySelector('.select-asset-folder')).value = folder;
+									modal.querySelector<HTMLInputElement>('.select-asset-folder').value = folder;
 								}
 								modal.classList.add("show");
 								e.stopPropagation();
@@ -108,7 +109,7 @@ const miniwebAdminDefaults = {
 						modal.dataset.miniwebAssetIndex = index;
 						if (currentAsset.lastIndexOf('/') > 0) {
 							let folder = currentAsset.substr(0, currentAsset.lastIndexOf('/'));
-							(<HTMLInputElement>modal.querySelector('.select-asset-folder')).value = folder;
+							modal.querySelector<HTMLInputElement>('.select-asset-folder').value = folder;
 						}
 						modal.classList.add("show");
 						e.stopPropagation();
@@ -131,9 +132,9 @@ const miniwebAdminDefaults = {
 						const modal = document.getElementById('miniweb-addHyperLink');
 						const curHref = element.innerText;
 						if (curHref.indexOf('http') == 0) {
-							(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = curHref;
+							modal.querySelector<HTMLInputElement>('[name="Url"]').value = curHref;
 						} else {
-							(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = curHref;
+							modal.querySelector<HTMLInputElement>('[name="InternalUrl"]').value = curHref;
 						}
 						modal.dataset.miniwebLinkType = 'URL';
 						modal.dataset.miniwebLinkIndex = index;
@@ -153,7 +154,7 @@ const miniwebAdminDefaults = {
 
 let selectedRange;
 const getCurrentRange = function () {
-	var sel = window.getSelection();
+	const sel = window.getSelection();
 	if (sel.getRangeAt && sel.rangeCount) {
 		return sel.getRangeAt(0);
 	}
@@ -162,7 +163,7 @@ const saveSelection = function () {
 	selectedRange = getCurrentRange();
 };
 const restoreSelection = function () {
-	var selection = window.getSelection();
+	const selection = window.getSelection();
 	if (selectedRange) {
 		try {
 			selection.removeAllRanges();
@@ -184,12 +185,21 @@ const htmlEscape = function (str) {
 		.replace(/</g, '<');
 }
 
+const closeModals = function () {
+	document.querySelectorAll('.miniweb-modal.show').forEach(el => {
+		el.classList.remove('show');
+	});
+}
 
 const txtMessage = document.querySelector("miniwebadmin .alert");
+let messageTimeout;
 const showMessage = function (success: boolean, message: string, isHtml: boolean = false) {
 	log('showMessage', ...arguments);
-	var className = success ? "alert-success" : "alert-danger";
-	var timeout = success ? 4000 : 8000;
+	const className = success ? "miniweb-alert-success" : "miniweb-alert-danger";
+	const timeout = success ? 4000 : 8000;
+	if (messageTimeout) { clearTimeout(messageTimeout); }
+	txtMessage.classList.remove(...txtMessage.classList);
+	txtMessage.classList.add('alert');
 	txtMessage.classList.add(className);
 	if (isHtml)
 		txtMessage.innerHTML = message;
@@ -197,53 +207,62 @@ const showMessage = function (success: boolean, message: string, isHtml: boolean
 		txtMessage.innerHTML = htmlEscape(message);
 	txtMessage.parentElement.classList.remove("is-hidden");
 
-	setTimeout(function () {
+	messageTimeout = setTimeout(function () {
 		txtMessage.classList.remove(className);
 		txtMessage.parentElement.classList.add("is-hidden");
 	}, timeout);
 };
 
-const assetPageList = <HTMLElement>document.querySelector('.miniweb-assetlist');
+const assetPageList = document.querySelector<HTMLElement>('.miniweb-assetlist');
 const showAssetPage = function (page: number) {
-
+	const pageSize = 15;
+	const folder = (document.querySelector<HTMLInputElement>('[name="miniwebAssetFolder"]')).value;
+	const assetList = document.querySelector<HTMLElement>('.miniweb-assetlist');
 	assetPageList.dataset.miniwebPage = page.toString();
-	const assets = assetPageList.querySelectorAll('li');
-	assets.forEach((li: HTMLElement) => {
-		li.classList.add('is-hidden');
-		const img = li.querySelector('img');
-		if (img) delete img.src;
-	});
 
-	//move current folder to top sa paging selector works
-	const folder = (<HTMLInputElement>document.querySelector('[name="miniweb-input-assetfolder"]')).value;
-	const curEls = assetPageList.querySelectorAll('li[data-miniweb-path="' + folder + '"]');
-	for (let i = curEls.length; i > 0; i--) {
-		assetPageList.insertBefore(curEls[i - 1], assetPageList.childNodes[0]);
-	}
-
-	const newPage = (page * 16) + 1;
-	const toShow = document.querySelectorAll('.miniweb-assetlist li[data-miniweb-path="' + folder + '"]:nth-child(n+' + newPage + '):nth-child(-n+' + (newPage + 15) + ')');
-	toShow.forEach((li: HTMLElement) => {
-		const img = li.querySelector('img') as HTMLImageElement;
-		if (img && img.dataset.miniwebSrc) {
-			img.src = img.dataset.miniwebSrc;
+	assetList.innerHTML = '';
+	const addAsset = function (asset: any) {
+		const li = document.createElement('li');
+		li.dataset.miniwebPath = asset.folder;
+		if (asset.type == 0) {
+			li.innerHTML = '<img data-miniweb-src="' + asset.virtualPath + '" src="' + asset.virtualPath + '" data-miniweb-relpath="' + asset.virtualPath + '" class="miniweb-asset-pick" >';
+		} else {
+			li.innerHTML = '<span data-miniweb-relpath="' + asset.virtualPath + '" class="miniweb-asset-pick"  >' + asset.fileName + '</span>';
 		}
-		li.classList.remove('is-hidden');
-	});
-	checkAssetPagerVisibility(page, folder);
-}
-const checkAssetPagerVisibility = function (page: number, folder: String) {
-	const all = assetPageList.querySelectorAll('li[data-miniweb-path="' + folder + '"]');
-	const last = all[all.length - 1];
-	if (last.classList.contains('is-hidden')) {
-		document.getElementById('miniweb-asset-page-right').classList.remove('is-hidden');
-	} else {
-		document.getElementById('miniweb-asset-page-right').classList.add('is-hidden');
+		assetList.appendChild(li);
 	}
-	if (page > 0) {
-		document.getElementById('miniweb-asset-page-left').classList.remove('is-hidden');
+
+	const url = new URL(options.apiEndpoint + 'allassets', document.location.origin);
+	url.searchParams.set('page', page.toString());
+	url.searchParams.set('folder', folder);
+	url.searchParams.set('take', pageSize.toString());
+
+	console.log('fetching url', url.toString(), url);
+	let isLast = false;
+	fetch(url.toString(), { headers: { "RequestVerificationToken": options.afToken } })
+		.then(res => res.json())
+		.then(data => {
+
+			if (data.assets != null && data.assets.length > 0) {
+				for (let i = 0; i < data.assets.length; i++) {
+					addAsset(data.assets[i]);
+				}
+			}
+			if (data.totalAssets <= (page + 1) * pageSize) isLast = true;
+			checkAssetPagerVisibility(page == 0, isLast);
+		});
+}
+
+const checkAssetPagerVisibility = function (isFirst: boolean, lastPage: Boolean) {
+	if (lastPage) {
+		document.getElementById('miniweb-asset-page-right').classList.add('is-hidden');
 	} else {
+		document.getElementById('miniweb-asset-page-right').classList.remove('is-hidden');
+	}
+	if (isFirst) {
 		document.getElementById('miniweb-asset-page-left').classList.add('is-hidden');
+	} else {
+		document.getElementById('miniweb-asset-page-left').classList.remove('is-hidden');
 	}
 }
 
@@ -259,13 +278,14 @@ const toggleHiddenMenuItems = function (on: Boolean) {
 };
 
 const editContent = function () {
+	closeModals();
 	document.querySelector('body').classList.add('miniweb-editing');
 	//reassign arrays so al new items are parsed
 	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
-	contentEditables.forEach(el => el.setAttribute('contentEditable', "true"));
+	contentEditables.forEach(el => { if (el.tagName == 'IMG') { return; } el.setAttribute('contentEditable', "true") });
 
-	for (var i = 0; i < options.editTypes.length; i++) {
-		var editType = options.editTypes[i];
+	for (let i = 0; i < options.editTypes.length; i++) {
+		const editType = options.editTypes[i];
 
 		contentEditables.forEach((ce: HTMLElement, ix) => {
 			if (ce.dataset.miniwebedittype == editType.key) {
@@ -273,10 +293,12 @@ const editContent = function () {
 			}
 		});
 	}
+	const btnPageProperties = document.getElementById("miniweb-button-pageprops");
 	const btnNew = document.getElementById("miniweb-button-newpage");
 	const btnEdit = document.getElementById("miniweb-button-edit");
 	const btnSave = document.getElementById("miniweb-button-save");
 	const btnCancel = document.getElementById("miniweb-button-cancel");
+	btnPageProperties.setAttribute("disabled", "true");
 	btnNew.setAttribute("disabled", "true");
 	btnEdit.setAttribute("disabled", "true");
 	btnSave.removeAttribute("disabled");
@@ -284,14 +306,15 @@ const editContent = function () {
 
 	toggleContentInserts(true);
 };
+
 const cancelEdit = function () {
 	document.querySelector('body').classList.remove('miniweb-editing');
 	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
 	contentEditables.forEach(el => el.removeAttribute('contentEditable'));
 
 
-	for (var i = 0; i < options.editTypes.length; i++) {
-		var editType = options.editTypes[i];
+	for (let i = 0; i < options.editTypes.length; i++) {
+		const editType = options.editTypes[i];
 
 		contentEditables.forEach((ce: HTMLElement, ix) => {
 			if (ce.dataset.miniwebedittype == editType.key) {
@@ -302,22 +325,25 @@ const cancelEdit = function () {
 		});
 	}
 
+	const btnPageProperties = document.getElementById("miniweb-button-pageprops");
 	const btnNew = document.getElementById("miniweb-button-newpage");
 	const btnEdit = document.getElementById("miniweb-button-edit");
 	const btnSave = document.getElementById("miniweb-button-save");
 	const btnCancel = document.getElementById("miniweb-button-cancel");
+	btnPageProperties.removeAttribute("disabled");
 	btnNew.removeAttribute("disabled");
 	btnEdit.removeAttribute("disabled");
 	btnSave.setAttribute("disabled", "true");
 	btnCancel.setAttribute("disabled", "true");
 
 	toggleContentInserts(false);
-
+	closeModals();
 };
+
 const toggleContentInserts = function (on: boolean) {
 	if (on) {
-		document.querySelectorAll('[data-miniwebsection]').forEach(el => {
-			const section = (el as HTMLElement).dataset.miniwebsection;
+		document.querySelectorAll('[data-miniwebsection]').forEach((el: HTMLElement) => {
+			const section = el.dataset.miniwebsection;
 			el.insertAdjacentHTML('beforeend', '<button class="miniweb-button miniweb-insertcontent" data-miniweb-add-content-to="' + section + '">add content</button>');
 		});
 		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate] .miniweb-template-actions').forEach(el => el.remove());
@@ -327,25 +353,27 @@ const toggleContentInserts = function (on: boolean) {
 		document.querySelectorAll('.miniweb-insertcontent, .miniweb-template-actions').forEach(el => el.remove());
 	}
 };
+
 const getParsedHtml = function (source: HTMLElement) {
-	var parsedDOM;
+	let parsedDOM;
 	parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
 	parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
 	/<body>([\s\S]*)<\/body>/im.exec(parsedDOM);
 	parsedDOM = RegExp.$1;
 	return parsedDOM;
 };
+
 const saveContent = function (e) {
 	if (!document.querySelector('body').classList.contains('miniweb-editing')) return;
 
 	//set 'edit source' elements back to normal 
-	document.querySelectorAll('.miniweb-editing-source').forEach( (content, ix) =>{
+	document.querySelectorAll('.miniweb-editing-source').forEach((content, ix) => {
 		content.innerHTML = (<HTMLElement>content.firstElementChild).innerText;
 	});
-
-	var items = [];
+	let valid = true;
+	const items = [];
 	document.querySelectorAll('[data-miniwebsection]').forEach((section: HTMLElement, index) => {
-		var sectionid = section.dataset.miniwebsection;
+		const sectionid = section.dataset.miniwebsection;
 		section.querySelectorAll('[data-miniwebtemplate]').forEach((tmpl: HTMLElement, tindex) => {
 			log('item', tmpl);
 			if (items[index] == null) {
@@ -353,31 +381,50 @@ const saveContent = function (e) {
 				items[index].Key = sectionid;
 				items[index].Items = [];
 			}
-			var item = {
+			const item = {
 				Template: tmpl.dataset.miniwebtemplate,
 				Values: {}
 			};
-			//find all dynamic properties
 
+			//find all dynamic properties
 			tmpl.querySelectorAll('[data-miniwebprop]').forEach((prop: HTMLElement, pindex) => {
-				var key = prop.getAttribute('data-miniwebprop')
-				var value = getParsedHtml(prop);
+				const key = prop.dataset.miniwebprop;
+				const value = getParsedHtml(prop);
+				const validation = prop.dataset.miniwebValidation;
+				prop.classList.remove('miniweb-invalid-item');
+				if (validation === 'required') {
+					if (!value || value === '<br />'){
+						valid = false;
+						prop.classList.add('miniweb-invalid-item');
+					}
+				} else if (validation) {
+					const reg = new RegExp(validation);
+					if (!reg.test(value)) {
+						valid = false;
+						prop.classList.add('miniweb-invalid-item');
+					}
+				}
+				log('itemfound', key, '[' + value + ']', validation, valid);
 				item.Values[key] = value;
 				//update attributes if any
 				if (key.indexOf(':') > 0) {
-					var orig = key.split(':')[0];
-					var attrib = key.split(':')[1];
+					const orig = key.split(':')[0];
+					const attrib = key.split(':')[1];
 					tmpl.querySelector('[data-miniwebprop="' + orig + '"]').setAttribute(attrib, value);
 				}
 			});
 			items[index].Items.push(item);
 		});
 	});
+	if (!valid) {
+		showMessage(false, "Check item validity");
+		return;
+	}
 
 	const data = new FormData();
 	data.append('url', document.getElementById("miniweb-admin-nav").dataset.miniwebPath);
 	data.append('items', JSON.stringify(items));
-	data.append('__RequestVerificationToken', getVerificationToken());
+	data.append('__RequestVerificationToken', options.afToken);
 	fetch(options.apiEndpoint + "savecontent", {
 		method: "POST",
 		body: data
@@ -389,13 +436,17 @@ const saveContent = function (e) {
 			cancelEdit();
 		});
 };
-const getVerificationToken = function () {
-	return (<HTMLInputElement>document.querySelector('#miniweb-templates input[name=__RequestVerificationToken]')).value;
-};
+
 const savePage = function () {
-	const form = (<HTMLFormElement>document.querySelector('.show.miniweb-pageproperties form'));
+	const form = document.querySelector<HTMLFormElement>('.show.miniweb-pageproperties form');
+	form.classList.remove('miniweb-invalid');
+	if (!form.checkValidity()) {
+		showMessage(false, "Check form validity");
+		form.classList.add('miniweb-invalid');
+		return;
+	}
 	const formData = new FormData(form);
-	formData.append('__RequestVerificationToken', getVerificationToken());
+	formData.append('__RequestVerificationToken', options.afToken);
 	fetch(options.apiEndpoint + "savepage", {
 		method: "POST",
 		body: formData
@@ -403,7 +454,7 @@ const savePage = function () {
 		.then(data => {
 			if (data.result) {
 				showMessage(true, "saved page successfully");
-				document.querySelector('.miniweb-modal.show').classList.remove('show');
+				closeModals();
 			} else {
 				showMessage(false, data.message);
 			}
@@ -411,13 +462,14 @@ const savePage = function () {
 			showMessage(false, 'failed to post');
 		});
 
-	(<HTMLInputElement>form.querySelector('[name="NewPage"]')).value = "false";
+	form.querySelector<HTMLInputElement>('[name="NewPage"]').value = "false";
 };
+
 const removePage = function () {
 	if (confirm('are you sure?')) {
 		const adminNav = document.getElementById('miniweb-admin-nav');
 		const formData = new FormData();
-		formData.append('__RequestVerificationToken', getVerificationToken());
+		formData.append('__RequestVerificationToken', options.afToken);
 		formData.append('url', adminNav.dataset.miniwebPath);
 		fetch(options.apiEndpoint + "removepage", {
 			method: "POST",
@@ -437,10 +489,12 @@ const removePage = function () {
 			});
 	}
 };
-const addNewPage = function () {
-	const modal = document.querySelector('.miniweb-pageproperties') as HTMLElement;
+
+const addNewPageModal = function () {
+	const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
 	modal.classList.add("miniweb-modal-right");
 	const form = modal.querySelector('form');
+	form.classList.remove('miniweb-invalid');
 
 	const elems = form.querySelectorAll('input,textarea');
 
@@ -452,28 +506,38 @@ const addNewPage = function () {
 				break;
 			case 'Layout': break;
 			default:
-				elem.dataset.miniwebOldValue = elem.value;
 				elem.value = null;
 				break;
 		}
 	}
 
 	modal.classList.add('show');
+	modal.scrollIntoView(true);
+
 };
+
 const ctrl_s_save = function (event) {
 	if (document.querySelector('body').classList.contains('miniweb-editing')) {
 		if (event.ctrlKey && event.keyCode == 83) {
 			event.preventDefault();
 			saveContent(event);
 		};
+	} else {
+		const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
+		if (modal.classList.contains('show')) {
+			if (event.ctrlKey && event.keyCode == 83) {
+				event.preventDefault();
+				savePage();
+			}
+		}
 	}
 };
 
 const addLink = function () {
 	const modal = document.getElementById('miniweb-addHyperLink');
 	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
-	let href = (<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value;
-	if (!href) href = (<HTMLInputElement>modal.querySelector('[name="Url"]')).value;
+	let href = modal.querySelector<HTMLInputElement>('[name="InternalUrl"]').value;
+	if (!href) href = modal.querySelector<HTMLInputElement>('[name="Url"]').value;
 	if (modal.dataset.miniwebLinkType == 'HTML') {
 		restoreSelection();
 		document.execCommand("unlink", false, null);
@@ -484,13 +548,12 @@ const addLink = function () {
 		const el = <HTMLElement>contentEditables[index];
 		el.innerText = href;
 	}
-	modal.classList.remove('show');
 	delete modal.dataset.miniwebLinkIndex;
 	delete modal.dataset.miniwebLinkType;
-	(<HTMLInputElement>modal.querySelector('[name="InternalUrl"]')).value = null;
-	(<HTMLInputElement>modal.querySelector('[name="Url"]')).value = null;
+	closeModals();
+	modal.querySelector<HTMLInputElement>('[name="InternalUrl"]').value = null;
+	modal.querySelector<HTMLInputElement>('[name="Url"]').value = null;
 }
-
 
 //global events...
 //global events...
@@ -501,28 +564,41 @@ document.addEventListener('click', (e) => {
 	if (!target) return;
 	if (target.dataset.miniwebDismiss) {
 		e.preventDefault();
-		document.querySelectorAll('.miniweb-modal.show').forEach(el => {
-			el.classList.remove('show');
-		});
+		closeModals();
 	} else if (target.dataset.miniwebAddContentTo) {
 		e.preventDefault();
 		const contentTarget = target.dataset.miniwebAddContentTo;
-		const modal = document.querySelector('#miniweb-content-add') as HTMLElement;
+		const modal = document.querySelector<HTMLElement>('#miniweb-content-add');
 		modal.dataset.miniwebTargetsection = contentTarget;
 		modal.classList.add('show');
-	} else if (target.dataset.miniwebAddContentId) {
+		modal.scrollIntoView(true);
+	} else if (target.dataset.miniwebAddContentView) {
 		e.preventDefault();
-		const contentId = target.dataset.miniwebAddContentId;
-		const targetSection = (<HTMLElement>target.closest('.miniweb-modal')).dataset.miniwebTargetsection;
-		const el = <HTMLElement>(document.getElementById(contentId).firstElementChild.cloneNode(true));
-		const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
-		log(target, contentId, targetSection, section, el);
-		section.append(el);
-		cancelEdit();
-		editContent();
-		document.querySelectorAll('.miniweb-modal.show').forEach(el => {
-			el.classList.remove('show');
-		});
+		const contentId = target.dataset.miniwebAddContentView;
+		const url = new URL(options.apiEndpoint + 'getitem', document.location.origin);
+		url.searchParams.set('viewPath', contentId);
+		console.log('getitem', url.toString(), url);
+		fetch(url.toString(), { headers: { "RequestVerificationToken": options.afToken } })
+			.then(res => res.text())
+			.then(data => {
+				const targetSection = (<HTMLElement>target.closest('.miniweb-modal')).dataset.miniwebTargetsection;
+				const el = document.createElement('div');
+				el.innerHTML = data;
+				const section = document.querySelector('[data-miniwebsection=' + targetSection + ']');
+				log(target, contentId, targetSection, section, el);
+				section.append(el.firstChild);
+				cancelEdit();
+				editContent();
+				const newEl =  section.querySelector('[data-miniwebtemplate]:last-of-type');
+				newEl.scrollIntoView(true);
+				const firstInput = newEl.querySelector<HTMLElement>('[contenteditable]');
+				if (firstInput){
+					firstInput.focus();
+					document.execCommand('selectAll',false,null);
+				}
+				closeModals();
+			});
+
 	} else if (target.dataset.miniwebContentMove) {
 		const move = target.dataset.miniwebContentMove;
 		const item = target.closest('[data-miniwebtemplate]');
@@ -539,19 +615,20 @@ document.addEventListener('click', (e) => {
 			console.error("unknown move", move, target);
 		}
 	} else if (target.classList.contains('miniweb-asset-pick')) {
-		const contentEditables = document.querySelectorAll('[data-miniwebprop]');
+		const contentEditables = document.querySelectorAll<HTMLElement>('[data-miniwebprop]');
 		const modal = document.getElementById('miniweb-addAsset');
 		const index = modal.dataset.miniwebAssetIndex;
-		log('add link to', index)
-		const el = <HTMLElement>contentEditables[index];
+		log('add asset to', index)
+		const el = contentEditables[index];
 		if (modal.dataset.miniwebAssetType == 'ASSET') {
 			el.innerText = target.dataset.miniwebRelpath;
 		} else if (modal.dataset.miniwebAssetType == 'HTML') {
 			document.execCommand('inserthtml', false, `<img src="${target.dataset.miniwebRelpath}"/>`);
 		}
-		modal.classList.remove('show');
+
 		delete modal.dataset.miniwebAssetIndex;
 		delete modal.dataset.miniwebAssetType;
+		closeModals();
 	}
 });
 
@@ -575,36 +652,30 @@ const miniwebAdminInit = function (userOptions) {
 	btnSavePage.addEventListener('click', savePage);
 	btnDeletePage.addEventListener('click', removePage);
 	btnAddLink.addEventListener('click', addLink);
-	btnNewPage.addEventListener('click', addNewPage);
-	btnPageProperties.addEventListener('click', (e) => {
-		e.preventDefault();
-		e.stopPropagation();
-		const modal = document.querySelector('.miniweb-pageproperties') as HTMLElement;
-		(modal.querySelector('[name="NewPage"]') as HTMLInputElement).value = "false";
-
-		//restore miniwebOldValue if new page was clicked
-		const form = modal.querySelector('form');
-		const elems = form.querySelectorAll('input,textarea');
-		for (let i = 0; i < elems.length; i++) {
-			const elem = elems[i] as HTMLInputElement;
-			if (!elem.value && elem.dataset.miniwebOldValue) {
-				elem.value = elem.dataset.miniwebOldValue;
-				delete elem.dataset.miniwebOldValue;
-			}
-		}
-		modal.classList.remove("miniweb-modal-right");
-		modal.classList.add("show");
-	});
-
+	btnNewPage.addEventListener('click', addNewPageModal);
 	btnEdit.addEventListener('click', editContent);
 	btnSave.addEventListener('click', saveContent);
 	btnCancel.addEventListener('click', cancelEdit);
+
+	btnPageProperties.addEventListener('click', (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
+		modal.querySelector<HTMLInputElement>('[name="NewPage"]').value = "false";
+
+		//restore form to loaded values in HTML
+		const form = modal.querySelector('form');
+		form.reset();
+		modal.classList.remove("miniweb-modal-right");
+		modal.classList.add("show");
+	});
 
 	document.getElementById('miniweb-datalist-navigateonenter').addEventListener('keypress', (e) => {
 		if (e.code == "Enter") {
 			document.location.href = (<HTMLInputElement>e.target).value;
 		}
 	});
+
 	document.getElementById('miniweb-datalist-navigateonenter').addEventListener('input', (e) => {
 		const input = (<HTMLInputElement>e.target);
 		const listId = input.getAttribute('list');
@@ -626,32 +697,15 @@ const miniwebAdminInit = function (userOptions) {
 		fileUpload.onchange = (e) => {
 			log('selected asset', e);
 			const formData = new FormData(form);
-			formData.append('__RequestVerificationToken', getVerificationToken());
+			formData.append('__RequestVerificationToken', options.afToken);
 			log('formdata', formData);
 			fetch(options.apiEndpoint + "saveassets", {
 				method: "POST",
 				body: formData
-			})
-				.then(res => res.json())
+			}).then(res => res.json())
 				.then(data => {
 					if (data && data.result) {
-						for (var i = 0; i < data.assets.length; i++) {
-							var asset = data.assets[i];
-							const assetList = <HTMLElement>document.querySelector('.miniweb-assetlist');
-							//does it already exist? continue
-							if (assetList.querySelector('[data-miniweb-relpath="' + asset.virtualPath + '"]'))
-								continue;
-							const li = document.createElement('li');
-							li.dataset.miniwebPath = asset.folder;
-
-							if (asset.type == 0) {
-								li.innerHTML = '<img data-miniweb-src="' + asset.virtualPath + '" src="' + asset.virtualPath + '" data-miniweb-filename=' + asset.fileName + '" data-miniweb-relpath=' + asset.virtualPath + '" class="miniweb-asset-pick" >';
-							} else {
-								li.innerHTML = '<span data-miniweb-filename="' + asset.virtualPath + '" data-miniweb-relpath=' + asset.virtualPath + '" class="miniweb-asset-pick"  >' + asset.fileName + '</span>';
-							}
-							assetList.appendChild(li);
-						}
-						setTimeout(() => { showAssetPage(0) }, 500);
+						showAssetPage(0);
 						showMessage(true, "The assets were saved successfully");
 					} else {
 						showMessage(false, "Save assets failed");
@@ -660,6 +714,7 @@ const miniwebAdminInit = function (userOptions) {
 		};
 		fileUpload.click();
 	});
+
 	btnAddMultiplePages.addEventListener('click', (e) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -669,7 +724,7 @@ const miniwebAdminInit = function (userOptions) {
 		fileUpload.onchange = (e) => {
 			log('selected asset', e);
 			const formData = new FormData(form);
-			formData.append('__RequestVerificationToken', getVerificationToken());
+			formData.append('__RequestVerificationToken', options.afToken);
 			log('formdata', formData);
 			fetch(options.apiEndpoint + "multiplepages", {
 				method: "POST",
@@ -685,7 +740,6 @@ const miniwebAdminInit = function (userOptions) {
 				});
 		};
 		fileUpload.click();
-
 	});
 
 	btnReload.addEventListener('click', (e) => {
@@ -694,10 +748,10 @@ const miniwebAdminInit = function (userOptions) {
 			localStorage.removeItem('showLog');
 		} else {
 			console.log('turned logging on');
-			localStorage.setItem('showLog','true');
+			localStorage.setItem('showLog', 'true');
 		}
 		const data = new FormData();
-		data.append('__RequestVerificationToken', getVerificationToken());
+		data.append('__RequestVerificationToken', options.afToken);
 		fetch(options.apiEndpoint + "reloadcaches", {
 			method: "POST",
 			body: data
@@ -710,23 +764,11 @@ const miniwebAdminInit = function (userOptions) {
 			});
 	});
 
-
 	window.addEventListener('keydown', ctrl_s_save, true);
 
-	cancelEdit();
-
 	//assets
-	document.querySelector('[name="miniweb-input-assetfolder"]').addEventListener('input', (e) => {
-		const input = (<HTMLInputElement>e.target);
-		const listId = input.getAttribute('list');
-		const list = <HTMLDataListElement>document.getElementById(listId);
-		for (let i = 0; i < list.options.length; i++) {
-			if (input.value == list.options[i].value) {
-				showAssetPage(0);
-				return;
-			}
-		}
-
+	document.querySelector('[name="miniwebAssetFolder"]').addEventListener('input', (e) => {
+		showAssetPage(0);
 	});
 
 	document.querySelectorAll('.miniweb-asset-pager').forEach((elem, ix) => {
@@ -745,11 +787,14 @@ const miniwebAdminInit = function (userOptions) {
 	});
 
 	if (sessionStorage.getItem('miniweb-li-showhiddenpages') === "true") {
-		(<HTMLInputElement>document.querySelector('#miniweb-li-showhiddenpages input')).checked = true
+		document.querySelector<HTMLInputElement>('#miniweb-li-showhiddenpages input').checked = true
 		toggleHiddenMenuItems(true);
 	} else {
 		toggleHiddenMenuItems(false);
 	}
+
+	//start with cancel edit
+	cancelEdit();
 };
 
 export {

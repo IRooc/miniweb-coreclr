@@ -27,16 +27,29 @@ namespace MiniWeb.Core
 			return Content($"{Environment.MachineName} {_webSite.HostingEnvironment.EnvironmentName} {_webSite.HostingEnvironment.ContentRootPath}");
 		}
 
-		public IActionResult LoadAssets()
+		[HttpGet]
+		[ValidateAntiForgeryToken]
+		public IActionResult AllAssets(int take = 16, int page = 0, string folder = "")
 		{
-			return new JsonResult(_webSite.Assets.Select(a => a.VirtualPath));
+			IEnumerable<IAsset> folderAssets = _webSite.Assets.Where(a => a.Folder.Equals(folder, StringComparison.CurrentCultureIgnoreCase));
+			return new JsonResult(new {
+				TotalAssets = folderAssets.Count(),
+				Assets= folderAssets.Select(a => new { a.VirtualPath, a.Type, a.FileName, a.Folder }).Skip(page * take).Take(take)
+			});
+		}
+
+		[HttpGet]
+		[ValidateAntiForgeryToken]
+		public IActionResult GetItem(string viewPath)
+		{
+			return View(viewPath, _webSite.DummyContent(viewPath));
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)
 		{
-			var result = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
+			var result = _webSite.GetPageByUrl(url, User);
 			if (result.Found)
 			{
 				_webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");
@@ -138,12 +151,13 @@ namespace MiniWeb.Core
 			page.Layout = posted.Layout;
 			page.MetaDescription = posted.MetaDescription;
 			page.MetaTitle = posted.MetaTitle;
+			page.Date = posted.Date;
 			page.ShowInMenu = posted.ShowInMenu;
 			page.SortOrder = posted.SortOrder;
 			page.Template = posted.Template;
 			page.Title = posted.Title;
 			page.Visible = posted.Visible;
-
+			_webSite.Logger?.LogInformation("Save page {0}", posted.Url);
 			_webSite.SaveSitePage(page, Request, false);
 			return new JsonResult(new { result = true, url = _webSite.GetPageUrl(page) });
 		}

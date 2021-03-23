@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Razor.Hosting;
+using System.IO;
 
 namespace MiniWeb.Core
 {
@@ -16,7 +19,7 @@ namespace MiniWeb.Core
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
 		public const string EmbeddedBase64FileInValueRegex = "(data:([^\"]+))";
 		public MiniWebConfiguration Configuration { get; }
-		public IHostingEnvironment HostingEnvironment { get; }
+		public IWebHostEnvironment HostingEnvironment { get; }
 
 		public ILogger Logger { get; }
 		public IMiniWebContentStorage ContentStorage { get; }
@@ -29,22 +32,43 @@ namespace MiniWeb.Core
 		{
 			get
 			{
-				string basePath = HostingEnvironment.ContentRootPath;
-				return System.IO.Directory.GetFiles(basePath + Configuration.PageTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+				var templatePath = Configuration.PageTemplatePath;
+				return GetTemplatesForPath(templatePath);
 			}
 		}
-
 		public IEnumerable<string> ItemTemplates
 		{
 			get
 			{
-				string basePath = HostingEnvironment.ContentRootPath;
-				return System.IO.Directory.GetFiles(basePath + Configuration.ItemTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+				var templatePath = Configuration.ItemTemplatePath;
+				return GetTemplatesForPath(templatePath);
 			}
+		}
+		private IEnumerable<string> GetTemplatesForPath(string templatePath)
+		{
+			var basePath = HostingEnvironment.ContentRootPath;
+			var result = Enumerable.Empty<string>();
+			if (HostingEnvironment.IsDevelopment() && Directory.Exists(basePath + templatePath))
+			{
+				result = System.IO.Directory.GetFiles(basePath + templatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+			}
+			if (!result.Any())
+			{
+				//find assemblies with precompiled views
+				var assemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetCustomAttributes(typeof(RazorCompiledItemAttribute), false).Any());
+				var resultList = new List<string>();
+				foreach (var assembly in assemblies)
+				{
+					var attribs = assembly.GetCustomAttributes(typeof(RazorCompiledItemAttribute), false).OfType<RazorCompiledItemAttribute>();
+					resultList.AddRange(attribs.Where(a => a.Identifier.StartsWith(templatePath)).Select(a => a.Identifier));
+				}
+				result = resultList.ToArray();
+			}
+			return result;
 		}
 
 
-		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
+		public MiniWebSite(IWebHostEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
 						   IMemoryCache cache, IOptions<MiniWebConfiguration> config)
 		{
 			Pages = Enumerable.Empty<ISitePage>();
@@ -75,8 +99,9 @@ namespace MiniWeb.Core
 			return null;
 		}
 
-		public FindResult GetPageByUrl(string url, bool editing = false)
+		public FindResult GetPageByUrl(string url, ClaimsPrincipal user)
 		{
+			bool editing = IsAuthenticated(user);
 			var result = new FindResult();
 			Logger?.LogDebug($"Finding page {url}");
 			if (string.IsNullOrWhiteSpace(url) || url == "/")

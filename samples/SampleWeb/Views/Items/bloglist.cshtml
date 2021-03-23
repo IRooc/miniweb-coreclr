@@ -1,8 +1,8 @@
 ﻿@model MiniWeb.Core.IContentItem
 @inject MiniWeb.Core.IMiniWebSite MiniWebSite
 <article miniweb-template="@Model.Template">
-    <h1 miniweb-prop="blogTitle">Blog</h1>
-    <p miniweb-prop="pageSize" class="miniweb-editonly">4</p>
+    <h1 miniweb-prop="blogTitle" data-miniweb-validation="required">Blog</h1>
+    <p miniweb-prop="pageSize" miniweb-editonly="true" data-miniweb-validation="^\d+$">4</p>
 </article>
 
 @if (Model?.Page != null)
@@ -10,11 +10,11 @@
 	 //just a blog example 
 	 //add pages under the sitepage where this content items is added to show all subs
 	 //TODO: Loads of stuff like what to do about the content item page
-	 //		show only exerpt etc
+	 //		show only excerpt etc
 	 var pageSize = Model.Get<int>("pageSize", 2);
-	 var pages = Model.Page.Pages;
+	 var pages = Model.Page.Pages.Where(p => p.Visible);
 	 var pageIndex = Convert.ToInt32((string)Context.Request.Query["page"] ?? "0");
-	 var shownPages = pages.OrderByDescending(p => p.Created).Skip(pageIndex * pageSize).Take(pageSize);
+	 var shownPages = pages.OrderByDescending(p => p.Date ?? p.Created).Skip(pageIndex * pageSize).Take(pageSize);
 	
 	 
 	 foreach (var p in shownPages)
@@ -22,7 +22,7 @@
 		var firstContentItem = p.Sections.FirstOrDefault(s => s.Key == "content")?.Items.FirstOrDefault(s => s .Template == "~/Views/Items/blogitem.cshtml");
         <article>
             <h2><a href="@(MiniWebSite.GetPageUrl(p))">@(firstContentItem?.GetValue("title"))</a></h2>
-				<p>@@ @p.Created</p>
+				<p>@@ @(p.Date?.ToString("yyyy-MM-ddTHH:mm:ss"))</p>
             <div>
 				 @Html.Raw(firstContentItem?.GetValue("content"))
 			</div>

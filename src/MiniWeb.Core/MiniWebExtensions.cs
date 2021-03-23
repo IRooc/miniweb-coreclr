@@ -75,6 +75,12 @@ namespace MiniWeb.Core
 			return app;
 		}
 
+		public static ControllerActionEndpointConventionBuilder MapMiniwebApiRoute(this IEndpointRouteBuilder endpoints, MiniWebConfiguration config)
+		{
+			Console.WriteLine($"{config.ApiEndpoint.Substring(1)}{{action}}");
+			return endpoints.MapControllerRoute("miniwebapi", $"{config.ApiEndpoint.Substring(1)}{{action}}", new { controller = "MiniWebApi" });
+		}
+
 
 		public static IServiceCollection AddMiniWeb(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -111,18 +117,18 @@ namespace MiniWeb.Core
 				throw new ArgumentNullException("configuration");
 			}
 
-            var authConfig = configuration.Get<MiniWebConfiguration>().Authentication;
+			var authConfig = configuration.Get<MiniWebConfiguration>().Authentication;
 
-            var result = services.AddAuthentication(c =>
-            {
-                c.DefaultScheme = authConfig.AuthenticationScheme;
-            })
-            .AddCookie(authConfig.AuthenticationScheme, o =>
-            {
-                o.LoginPath = new PathString(authConfig.LoginPath);
-                o.LogoutPath = new PathString(authConfig.LogoutPath);
+			var result = services.AddAuthentication(c =>
+			{
+				c.DefaultScheme = authConfig.AuthenticationScheme;
+			})
+			.AddCookie(authConfig.AuthenticationScheme, o =>
+			{
+				o.LoginPath = new PathString(authConfig.LoginPath);
+				o.LogoutPath = new PathString(authConfig.LogoutPath);
 				o.ExpireTimeSpan = TimeSpan.FromMinutes(authConfig.LoginTimeoutInMinutes);
-            });
+			});
 			return result;
 		}
 	}

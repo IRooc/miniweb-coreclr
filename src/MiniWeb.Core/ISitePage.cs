@@ -21,7 +21,7 @@ namespace MiniWeb.Core
 		string Url { get; set; }
 		string RedirectUrl { get; set; }
 		bool Visible { get; set; }
-
+		DateTime? Date { get; set; }
 		DateTime Created { get; set; }
 		DateTime LastModified { get; set; }
 		string BaseUrl { get; }

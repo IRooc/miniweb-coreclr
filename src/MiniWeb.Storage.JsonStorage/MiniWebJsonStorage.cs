@@ -156,6 +156,10 @@ namespace MiniWeb.Storage.JsonStorage
 			using (MemoryStream ms = new MemoryStream())
 			{
 				string fileContent = JsonConvert.SerializeObject(obj, new JsonSerializerSettings{Formatting = Formatting.Indented});
+				var folder = Path.GetDirectoryName(filename);
+				if (!Directory.Exists(folder)) {
+					Directory.CreateDirectory(folder);
+				}
 				if (File.Exists(filename))
 					File.Delete(filename);
 				File.WriteAllText(filename, fileContent);

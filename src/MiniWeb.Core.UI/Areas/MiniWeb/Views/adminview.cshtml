@@ -5,37 +5,37 @@ var isPublished = Model.Visible;
 var path = Model.Url;
 }
 
-<nav id="miniweb-admin-nav" class="miniweb-tools" data-miniweb-path="@path" data-miniweb-apiendpoint="@MiniWebSite.Configuration.ApiEndpoint">
+<nav id="miniweb-admin-nav" class="miniweb-tools" data-miniweb-path="@path" >
 	<div class="miniweb-tool miniweb-status @(isPublished ? " published" : "offline" )">
 		<a href="#" id="miniweb-button-reloadcache" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
 	</div>
 	<div class="miniweb-tool pull-right">
 		<ul class="miniweb-horizontal-list">
-			<li class="hidden-xs"><input type="text" list="miniweb-datalist-pages" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
+			<li><input type="text" list="miniweb-datalist-pages" class="miniweb-nav-input" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
 					@foreach (var p in MiniWebSite.Pages)
 					{
-					<option value="@(MiniWebSite.GetPageUrl(p))" />
+						<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
 					}
 				</datalist></li>
 			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
-			<li id="miniweb-li-showhiddenpages"><label class="btn btn-link"><input type="checkbox" /><span class="hidden-xs">Show hidden pages</span></label></li>
-			<li><button class="icon icon-new" id="miniweb-button-newpage">New page</button></li>
+			<li id="miniweb-li-showhiddenpages" class="hidden-xs"><label><input type="checkbox" /><span class="hidden-xs">Show hidden pages</span></label></li>
+			<li><button class="icon icon-new" id="miniweb-button-newpage"><span>New page</span></button></li>
 			<li class="divider"></li>
 			<li>
 				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
 					<input type="hidden" name="returnUrl" value="@MiniWebSite.GetPageUrl(Model)" />
-					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout">Sign out</button>
+					<button type="submit" title="Signed in as @User.Identity.Name" class="icon icon-signout"><span>Sign out</span></button>
 				</form>
 			</li>
 		</ul>
 	</div>
 	<div class="miniweb-tool">
 		<ul class="miniweb-horizontal-list">
-			<li><button class="icon icon-props" id="miniweb-button-pageprops">Page properties</button></li>
+			<li><button class="icon icon-props" id="miniweb-button-pageprops"><span>Page properties</span></button></li>
 			<li class="divider"></li>
-			<li><button class="icon icon-edit" id="miniweb-button-edit">Edit Content</button></li>
-			<li><button class="icon icon-save" id="miniweb-button-save" disabled>Save Content</button></li>
-			<li><button class="icon icon-cancel" id="miniweb-button-cancel" disabled>Cancel</button></li>
+			<li><button class="icon icon-edit" id="miniweb-button-edit"><span>Edit Content</span></button></li>
+			<li><button class="icon icon-save" id="miniweb-button-save" disabled><span>Save Content</span></button></li>
+			<li><button class="icon icon-cancel" id="miniweb-button-cancel" disabled><span>Cancel</span></button></li>
 		</ul>
 	</div>
 
@@ -80,19 +80,21 @@ var path = Model.Url;
 
 <!-- Modal -->
 <div class="miniweb-modal miniweb-pageproperties" id="miniweb-pageProperties" tabindex="-1" role="dialog" aria-labelledby="myModalPageLabel" aria-hidden="true">
+	<div class="miniweb-modal-backdrop"></div>
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
-			<h4 id="myModalPageLabel">Page properties</h4>
 			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
+			<h4 id="myModalPageLabel">Page properties</h4>
 		</div>
 		<form>
-			<input type="hidden" name="NewPage" value="false" />
-			<input type="hidden" name="OldUrl" value="@Model.Url" />
-			<input type="hidden" name="Layout" value="@Model.Layout" />
+			@*INPUTS are not Type Hidden because form.reset() does not work on them,*@
+			<input type="text" class="is-hidden" name="NewPage" value="false" />
+			<input type="text" class="is-hidden" name="OldUrl" value="@Model.Url" />
+			<input type="text" class="is-hidden" name="Layout" value="@Model.Layout" />
 			<div class="miniweb-form-group">
 				<label>
 					<span>Page name</span>
-					<input type="text" name="Title" placeholder="Page name" value="@Model.Title" />
+					<input type="text" name="Title" placeholder="Page name" required value="@Model.Title" />
 				</label>
 			</div>
 			<div class="miniweb-form-group">
@@ -110,12 +112,18 @@ var path = Model.Url;
 			<div class="miniweb-form-group">
 				<label>
 					<span>Template</span>
-					<select name="Template">
+					<select name="Template" required >
 						@foreach (var s in MiniWebSite.PageTemplates)
 						{
 						<option value="@s" @(s.ToLowerInvariant() == Model.Template.ToLowerInvariant() ? "selected=\" selected\"" : "" )>@s.Substring(s.LastIndexOf("/") + 1)</option>
 						}
 					</select>
+				</label>	
+			</div>
+			<div class="miniweb-form-group">
+				<label>
+					<span>Date</span>
+					<input type="datetime-local" pattern="\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}" name="Date" placeholder="Date yyyy-MM-ddTHH:mm:ss" required  value="@((Model.Date ?? DateTime.Now).ToString("yyyy-MM-ddTHH:mm:ss"))" />
 				</label>	
 			</div>
 			<div class="miniweb-form-group">
@@ -141,7 +149,7 @@ var path = Model.Url;
 					<span>Url</span>
 					<div class="input-group">
 						<span class="addon">/</span>
-						<input type="text" name="Url" placeholder="url" value="@Model.Url" />
+						<input type="text" name="Url" placeholder="url" required value="@Model.Url" />
 						<span class="addon">.@MiniWebSite.Configuration.PageExtension</span>
 					</div>
 				</label>
@@ -202,17 +210,20 @@ var path = Model.Url;
 </div>
 
 <div class="miniweb-modal miniweb-modal-center" id="miniweb-content-add" tabindex="-1" role="dialog" aria-labelledby="miniweb-addcontent-label" aria-hidden="true">
+	<div class="miniweb-modal-backdrop"></div>
 	<div class="miniweb-modal-content">
 		<div class="miniweb-modal-header">
-			<h4 class="miniweb-modal-title" id="miniweb-addcontent-label">Add content</h4>
 			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
+			<h4 class="miniweb-modal-title" id="miniweb-addcontent-label">Add content</h4>
 		</div>
 		<form>
 			<p>Select an item to add</p>
-			@foreach (var s in MiniWebSite.ItemTemplates)
-			{
-			<button data-miniweb-add-content-id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
-			}
+			<div class="miniweb-content-items">
+				@foreach (var s in MiniWebSite.ItemTemplates)
+				{
+				<button data-miniweb-add-content-view="@s" class="primary">@System.IO.Path.GetFileNameWithoutExtension(s) </button>
+				}
+			</div>
 		</form>
 		<div class="miniweb-modal-footer">
 			<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
@@ -227,7 +238,7 @@ var path = Model.Url;
 			<h4 class="miniweb-modal-title" id="miniweb-addimage-label">Add image</h4>
 			<button class="icon right" data-miniweb-dismiss=".miniweb-modal">&times;</button>
 		</div>
-		<form>
+		<div>
 			<div class="miniweb-modal-body">
 				<a href="#" id="miniweb-asset-page-left" class="miniweb-asset-pager" data-miniweb-page-move="-1">&#10218;</a>
 				<a href="#" id="miniweb-asset-page-right" class="miniweb-asset-pager" data-miniweb-page-move="1">&#10219;</a>
@@ -235,7 +246,7 @@ var path = Model.Url;
 				var allAssets = MiniWebSite.AssetStorage.GetAllAssets();
 				var allFolders = allAssets.Select(a => a.Folder).Distinct().OrderBy(s => s).ToArray();
 				}
-				Folder: <input class="select-asset-folder" name="miniweb-input-assetfolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
+				Folder: <input class="select-asset-folder" name="miniwebAssetFolder" list="miniweb-folder-list" value="@(allFolders.Any()? allFolders[0]:"")">
 				<datalist id="miniweb-folder-list">
 					@foreach(var f in allFolders)
 					{
@@ -243,38 +254,17 @@ var path = Model.Url;
 					}
 				</datalist>
 
-				<ul class="miniweb-assetlist" data-miniweb-page="0" data-asset-root-path="images/">
-					@foreach(var a in allAssets)
-					{
-					<li data-miniweb-path="@a.Folder" class="is-hidden">
-						@if (a.Type == MiniWeb.Core.AssetType.Image) {
-						<img data-miniweb-src="@a.VirtualPath" data-miniweb-filename="@a.FileName" data-miniweb-relpath="@a.VirtualPath" class="miniweb-asset-pick" />
-						}
-						else
-						{
-						<span data-miniweb-filename="@a.FileName" data-miniweb-relpath="@a.VirtualPath" class="miniweb-asset-pick">@a.FileName</span>
-						}
-					</li>
-					}
+				<ul class="miniweb-assetlist" data-miniweb-page="0">
+					
 				</ul>
-				<button class="primary" id="miniweb-button-addasset" type="button">Add Asset</button>
-				<input type="file" multiple name="files" class="add-asset" style="position:absolute;width:0;height:0" />
 			</div>
 			<div class="miniweb-modal-footer">
+				<button class="primary" id="miniweb-button-addasset" type="button">Add Asset</button>
+				<input type="file" multiple name="files" class="miniweb-add-asset" />
 				<button data-miniweb-dismiss="miniweb-modal">Cancel</button>
 			</div>
-		</form>
+		</div>
 	</div>
-</div>
-
-<div id="miniweb-templates">
-	@foreach (var s in MiniWebSite.ItemTemplates)
-	{
-	<div id="content-@System.IO.Path.GetFileNameWithoutExtension(s)">
-		@Html.Partial(s, MiniWebSite.DummyContent(s))
-	</div>
-	}
-	@Html.AntiForgeryToken()
 </div>
 
 <link rel="stylesheet" href="/miniweb-resources/admin.css" />
