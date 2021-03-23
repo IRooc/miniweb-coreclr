@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -41,14 +42,17 @@ namespace MiniWeb.Core.UI.TagHelpers
                 output.Content.AppendHtml(ownContent);
 
                 (_htmlHelper as IViewContextAware)?.Contextualize(ViewContext);
+				var view = ViewContext.View as RazorView;
+				var viewPage = view?.RazorPage as RazorPage<ISitePage>;
                 //admin content
-                var content = await _htmlHelper.PartialAsync("/Areas/MiniWeb/Views/adminview.cshtml");
+                var content = await _htmlHelper.PartialAsync("/Areas/MiniWeb/Views/adminview.cshtml", viewPage.Model);
 
                 output.PreContent.AppendHtml(content);
 
                 if (!IgnoreAdminStart) 
                 {
-                    output.Content.AppendHtml($"<script type=\"module\">import {{ miniwebAdminInit }} from '/miniweb-resources/admin.js';miniwebAdminInit({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\", \"afToken\":\"{_antiforgery.GetAndStoreTokens(ViewContext.HttpContext).RequestToken}\"}});</script>");
+					var tokens = _antiforgery.GetAndStoreTokens(ViewContext.HttpContext);
+                    output.Content.AppendHtml($"<script type=\"module\">import {{ miniwebAdminInit }} from '/miniweb-resources/admin.js';miniwebAdminInit({{ \"apiEndpoint\":\"{_webSite.Configuration.ApiEndpoint}\", \"afToken\":\"{tokens.RequestToken}\"}});</script>");
                 }
             }
             else

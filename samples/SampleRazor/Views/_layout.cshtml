@@ -1,0 +1,58 @@
+﻿@model SampleRazor.Pages.AppModel
+@using MiniWeb.Core
+@inject IMiniWebSite MiniWebSite
+<!DOCTYPE html>
+
+<html>
+
+<head prefix="og: http://ogp.me/ns#">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>@Model.SitePage.MetaTitle - @MiniWebSite.Configuration.Title</title>
+	<meta name="description" content="@Model.SitePage.MetaDescription" />
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/css/site.css" />
+
+	<meta name="application-name" content="@MiniWebSite.Configuration.Title" />
+	<meta name="msapplication-TileColor" content="#ffffff" />
+
+	<meta property="og:title" content="@Model.SitePage.MetaTitle" />
+	<meta property="og:type" content="website" />
+
+</head>
+
+<body class="@Model.SitePage.GetBodyCss()">
+	<div class="container">
+		<header role="banner">
+			HEADER
+		</header>
+		<div role="navigation" class="mainmenu navbar navbar-default">
+			<div class="navbar-header">
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="navbar-collapse collapse">
+				<partial name="_menu" model="Model.SitePage" />
+			</div>
+		</div>
+		@RenderBody()
+	</div>
+	<div class="container">
+		<footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+			<span>
+				Footer
+			</span>
+		</footer>
+	</div>
+
+
+	<!--model needs to be ISitePage-->
+	<partial name="_miniwebAdmin" model="Model.SitePage" />
+
+</body>
+
+</html>

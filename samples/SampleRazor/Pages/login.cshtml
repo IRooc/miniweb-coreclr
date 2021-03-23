@@ -1,0 +1,78 @@
+@page
+@model SampleRazor.Pages.LoginModel
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.Extensions.DependencyInjection
+<!DOCTYPE html>
+
+<html>
+
+<head prefix="og: http://ogp.me/ns#">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>Login</title>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/css/site.css" />
+
+	<meta name="msapplication-TileColor" content="#ffffff" />
+
+
+</head>
+
+<body>
+	<div class="container">
+		<header role="banner">
+			HEADER
+		</header>
+		<div role="navigation" class="mainmenu navbar navbar-default">
+			<div class="navbar-header">
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="navbar-collapse collapse">
+			</div>
+		</div>
+		<div>
+			<form method="post" role="form" class="col-md-5 col-md-offset-3 miniweb-login" id="login">
+				<fieldset>
+					<h1 class="text-center">Sign in</h1>
+					@if (Model.ErrorMessage != null)
+					{
+					<div class="alert alert-danger" role="alert">
+						@Model.ErrorMessage
+					</div>
+					}
+
+					<div class="form-group">
+						<label asp-for="Username">Username</label>
+						<input type="text" class="form-control" asp-for="Username"  placeholder="Username" required autofocus />
+					</div>
+
+					<div class="form-group">
+						<label asp-for="Password">Password</label>
+						<input type="password"  class="form-control"asp-for="Password"  placeholder="Password" required />
+					</div>
+
+					<button type="submit" class="btn btn-primary">Sign in</button>
+				</fieldset>
+
+			</form>
+
+
+		</div>
+	</div>
+	<div class="container">
+		<footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+			<span>
+				Footer
+			</span>
+		</footer>
+	</div>
+
+</body>
+</html>

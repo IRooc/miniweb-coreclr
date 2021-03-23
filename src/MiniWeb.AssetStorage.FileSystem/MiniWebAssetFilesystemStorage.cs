@@ -16,10 +16,10 @@ namespace MiniWeb.AssetStorage.FileSystem
 	{
 		public IMiniWebSite MiniWebSite { get; set; }
 		public ILogger Logger { get; }
-		public IHostingEnvironment HostingEnvironment { get; }
+		public IWebHostEnvironment HostingEnvironment { get; }
 		public MiniWebAssetFileSystemConfig Configuration { get; }
 
-		public MiniWebAssetFileSystemStorage(IHostingEnvironment env, ILoggerFactory loggerfactory, IOptions<MiniWebAssetFileSystemConfig> config)
+		public MiniWebAssetFileSystemStorage(IWebHostEnvironment env, ILoggerFactory loggerfactory, IOptions<MiniWebAssetFileSystemConfig> config)
 		{
 			HostingEnvironment = env;
 			Configuration = config.Value;
@@ -89,9 +89,9 @@ namespace MiniWeb.AssetStorage.FileSystem
 	public class FileSystemAsset : IAsset
 	{
 		private string[] ImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
-		public IHostingEnvironment HostingEnvironment { get; }
+		public IWebHostEnvironment HostingEnvironment { get; }
 		public MiniWebAssetFileSystemConfig Configuration { get; }
-		public FileSystemAsset(IHostingEnvironment env, MiniWebAssetFileSystemConfig config, string fullPath)
+		public FileSystemAsset(IWebHostEnvironment env, MiniWebAssetFileSystemConfig config, string fullPath)
 		{
 			HostingEnvironment = env;
 			Configuration = config;

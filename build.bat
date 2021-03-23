@@ -2,21 +2,21 @@ pushd %~dp0
 
 dotnet restore
 
-pushd src\MiniWeb.Core
-dotnet  build
-popd
-pushd src\MiniWeb.Core.UI
-dotnet  build
-popd
-pushd src\MiniWeb.Storage.JsonStorage
-dotnet build
-popd
-pushd src\MiniWeb.Storage.XmlStorage
-rem dotnet build
-popd
-rem pushd src\MiniWeb.Storage.EFStorage
-dotnet build
-popd
+REM pushd src\MiniWeb.Core
+REM dotnet  build
+REM popd
+REM pushd src\MiniWeb.Core.UI
+REM dotnet  build
+REM popd
+REM pushd src\MiniWeb.Storage.JsonStorage
+REM dotnet build
+REM popd
+REM pushd src\MiniWeb.Storage.XmlStorage
+REM rem dotnet build
+REM popd
+REM rem pushd src\MiniWeb.Storage.EFStorage
+REM dotnet build
+REM popd
 pushd samples\SampleWeb
 dotnet build
 popd

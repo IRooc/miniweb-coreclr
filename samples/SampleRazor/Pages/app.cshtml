@@ -1,0 +1,7 @@
+@page
+@model SampleRazor.Pages.AppModel
+@{
+	Layout = Model.SitePage.Layout;
+}
+
+<partial name="@Model.SitePage.Template" model="@Model.SitePage"/>

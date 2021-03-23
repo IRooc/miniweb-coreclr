@@ -49,7 +49,7 @@ namespace MiniWeb.Core
 		[ValidateAntiForgeryToken]
 		public IActionResult SaveContent(string url, string items)
 		{
-			var result = _webSite.GetPageByUrl(url, _webSite.IsAuthenticated(User));
+			var result = _webSite.GetPageByUrl(url, User);
 			if (result.Found)
 			{
 				_webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");

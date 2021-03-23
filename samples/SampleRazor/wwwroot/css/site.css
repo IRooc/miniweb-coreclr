@@ -1,0 +1,155 @@
+﻿body {
+	font-family: Verdana,Helvetica,sans-serif;
+}
+
+h1, h2, h3, h4 {
+	color: #5555ff;
+	margin-bottom: 20px;
+}
+a {
+	color: #5555ff;
+}
+
+h1 {
+	font-size: 26px;
+}
+h2 {
+	font-size: 22px;
+}
+
+h3 {
+	font-size: 18px;
+}
+
+.container header {
+	background: #5555ff;
+	height: 120px;
+	text-align: center;
+	color: #fff;
+	font-size: 80px;
+}
+
+img {
+	max-width: 100%;
+}
+
+img[align=left], div[align=left] {
+	padding: 0 10px 10px 0;
+	float: left;
+}
+
+img[align=right], div[align=right] {
+	padding: 0 0 10px 10px;
+	float: right;
+}
+
+.navbar {
+	border-radius: 0;
+	margin: 0;
+	border: 0;
+	background: #f4f2df;
+}
+
+.navbar-default .navbar-nav > li > a {
+	color: #5555ff;
+	font-size: 18px;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	background: #ffffff;
+	color: #5555ff;
+}
+
+.submenu.navbar-default .navbar-nav > .active > a, .submenu.navbar-default .navbar-nav > .active > a:hover, .submenu.navbar-default .navbar-nav > .active > a:focus {
+	background: none;
+	font-weight: bold;
+}
+
+.mainmenu .nav > li {
+	border-left: 1px solid #ccc;
+}
+
+.mainmenu ul.nav {
+	border-right: 1px solid #ccc;
+	margin: 0;
+}
+
+.submenu.navbar {
+	background:#fafaef;
+	min-height: 20px;
+}
+
+.submenu .navbar-nav > li > a {
+	padding: 8px 15px;
+	font-size: 14px;
+}
+
+footer {
+	border-top: 1px solid #5555ff;
+	margin: 40px 0 0;
+	padding: 10px 0;
+}
+
+aside > article.aside {
+	margin: 15px 0;
+}
+
+aside > article.aside > div {
+	padding: 5px;
+	margin: 0;
+	display: block;
+	font-size: 12px;
+}
+
+aside > article.aside > h3 {
+	padding: 5px;
+	margin: 0;
+	font-size: 15px;
+	background: #f4f2df;
+}
+
+aside > article.aside > div a {
+	color: black;
+}
+
+
+.galleryimage {
+	width: 250px;
+	height: 200px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	overflow: hidden;
+	float: left;
+	text-align: center;
+}
+
+	.galleryimage img {
+		max-width: 100%;
+		max-height: 90%;
+		margin: auto;
+	}
+
+.miniweb-editonly {display:none;}
+
+
+
+@media screen and (max-width:767px) {
+
+
+	.container header {
+		text-align: center;
+		background: #5555ff;
+		height: 60px;
+		font-size: 40px;
+
+	}
+
+	.navbar.navbar-default {
+		min-height: 0px;
+	}
+
+	.navbar.navbar-default button {
+		margin-top: -50px;
+		background: white;
+	}
+}

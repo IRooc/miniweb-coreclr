@@ -8,7 +8,7 @@ namespace MiniWeb.Core
 {
     public interface IMiniWebSite
 	{
-		IHostingEnvironment HostingEnvironment { get; }
+		IWebHostEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }
 		MiniWebConfiguration Configuration { get; }
 
@@ -21,7 +21,7 @@ namespace MiniWeb.Core
 		IEnumerable<string> ItemTemplates { get; }
 
 		void DeleteSitePage(ISitePage page);
-		FindResult GetPageByUrl(string url, bool editing = false);
+		FindResult GetPageByUrl(string url, ClaimsPrincipal user);
 		string GetPageUrl(ISitePage page);
 		void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
 		void ReloadPages(bool forceReload = false);

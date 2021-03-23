@@ -1,0 +1,13 @@
+@model MiniWeb.Core.ISitePage
+@using MiniWeb.Core
+@inject IMiniWebSite MiniWebSite
+
+
+<ul class="nav navbar-nav" miniweb-menu="/">
+	<miniweb-menuitem>
+		@*Model here is the Child SitePage that is rendered currently so Model is still a SitePage but the "wrong" one *@
+		<li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
+			<a href="@(MiniWebSite.GetPageUrl(Model))">@Model.Title</a>
+		</li>
+	</miniweb-menuitem>
+</ul>
