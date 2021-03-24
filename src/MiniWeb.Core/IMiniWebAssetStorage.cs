@@ -11,8 +11,7 @@ namespace MiniWeb.Core
 
 		Task<IEnumerable<IAsset>> GetAllAssets();
 		
-		Task RemoveAsset(IAsset asset);
-		
+		Task RemoveAsset(IAsset asset);		
 		Task<IAsset> CreateAsset(string fileName, byte[] bytes, string virtualFolder = null);
 		Task<IAsset> CreateAsset(string fileName, string base64String, string virtualFolder = null);
     }
