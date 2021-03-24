@@ -30,16 +30,17 @@ namespace MiniWeb.Storage.JsonStorage
 		public Task<ISitePage> GetSitePageByUrl(string url)
 		{
 			string name = GetSitePageFileName(url.ToLowerInvariant());
+			ISitePage result = null;
 			if (File.Exists(name))
 			{
-				return Task.FromResult<ISitePage>(DeSerializeFile<SitePage>(name));
+				result = DeSerializeFile<JsonSitePage>(name);
 			}
-			return null;
+			return Task.FromResult(result);
 		}
 
 		public Task<ISitePage> Deserialize(string filecontent)
 		{
-			return Task.FromResult<ISitePage>(JsonConvert.DeserializeObject<SitePage>(filecontent, JsonInterfaceConverter));
+			return Task.FromResult<ISitePage>(JsonConvert.DeserializeObject<JsonSitePage>(filecontent, JsonInterfaceConverter));
 		}
 
 		public Task StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
@@ -65,14 +66,14 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public Task<IEnumerable<ISitePage>> AllPages()
 		{
-			List<SitePage> pages = new List<SitePage>();
+			List<JsonSitePage> pages = new List<JsonSitePage>();
 			if (Directory.Exists(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder))
 			{
 				string[] pageFiles = Directory.GetFiles(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder, "*.json");
 				foreach (string page in pageFiles)
 				{
 					MiniWebSite.Logger?.LogDebug($"Loading page from disc {page}");
-					pages.Add(DeSerializeFile<SitePage>(page));
+					pages.Add(DeSerializeFile<JsonSitePage>(page));
 				}
 			}
 			return Task.FromResult<IEnumerable<ISitePage>>(pages);
@@ -80,10 +81,10 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent)
 		{
-			var result = defaultContent?.Content?.Select(c => new PageSection()
+			var result = defaultContent?.Content?.Select(c => new JsonPageSection()
 			{
 				Key = c.Section,
-				Items = c.Items?.Select(i => new ContentItem()
+				Items = c.Items?.Select(i => new JsonContentItem()
 				{
 					Template = i,
 					Values = new Dictionary<string, string>()
@@ -94,7 +95,7 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public async Task<ISitePage> MiniWeb404Page()
 		{
-			return (await AllPages()).FirstOrDefault(p => p.Url == "404") ?? new SitePage()
+			return (await AllPages()).FirstOrDefault(p => p.Url == "404") ?? new JsonSitePage()
 			{
 				Title = "Page Not Found : 404",
 				MetaTitle = "Page Not Found : 404",
@@ -103,12 +104,12 @@ namespace MiniWeb.Storage.JsonStorage
 				Visible = true,
 				Sections = new List<IPageSection>()
 					{
-						new PageSection()
+						new JsonPageSection()
 						{
 							Key = "content",
 							Items = new List<IContentItem>()
 							{
-								new ContentItem {
+								new JsonContentItem {
 									Template = $"~{StorageConfig.ItemTemplatePath}/item.cshtml",
 									Values =
 									{
@@ -125,7 +126,7 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public Task<ISitePage> MiniWebLoginPage()
 		{
-			var result = new SitePage()
+			var result = new JsonSitePage()
 			{
 				Title = "Login",
 				MetaTitle = "Login",
@@ -148,7 +149,7 @@ namespace MiniWeb.Storage.JsonStorage
 
 		public Task<ISitePage> NewPage()
 		{
-			return Task.FromResult<ISitePage>(new SitePage());
+			return Task.FromResult<ISitePage>(new JsonSitePage());
 		}
 
 		private void SerializeObject(string filename, object obj)

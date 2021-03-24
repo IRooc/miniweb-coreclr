@@ -9,8 +9,9 @@
   "Visible": true,
   "ShowInMenu": true,
   "SortOrder": 0,
+  "Date": null,
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2020-11-19T10:42:32.9801571+01:00",
+  "LastModified": "2021-03-24T16:41:21.1402323+01:00",
   "Sections": [
     {
       "Key": "content",
@@ -26,6 +27,13 @@
             "image:alt": "image",
             "URL": "",
             "ASSET": ""
+          }
+        },
+        {
+          "Template": "~/Views/Items/item.cshtml",
+          "Values": {
+            "title": "Enter titlefdsafdsafsda",
+            "content": "Enter content"
           }
         }
       ]

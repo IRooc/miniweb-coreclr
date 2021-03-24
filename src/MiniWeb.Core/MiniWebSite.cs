@@ -19,6 +19,8 @@ namespace MiniWeb.Core
 	{
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
 		public const string EmbeddedBase64FileInValueRegex = "(data:([^\"]+))";
+		public const string PagesCacheKey = "MiniWebPagesCacheKey";
+		public const string AssetsCacheKey = "MiniWebAssetsCacheKey";
 		public MiniWebConfiguration Configuration { get; }
 		public IWebHostEnvironment HostingEnvironment { get; }
 
@@ -27,8 +29,6 @@ namespace MiniWeb.Core
 		public IMiniWebAssetStorage AssetStorage { get; }
 		public IMemoryCache Cache { get; }
 
-		public IEnumerable<ISitePage> PageHierarchy { get; set; }
-		public IEnumerable<ISitePage> Pages { get; set; }
 		public IEnumerable<string> PageTemplates
 		{
 			get
@@ -72,8 +72,6 @@ namespace MiniWeb.Core
 		public MiniWebSite(IWebHostEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
 						   IMemoryCache cache, IOptions<MiniWebConfiguration> config)
 		{
-			Pages = Enumerable.Empty<ISitePage>();
-
 			HostingEnvironment = env;
 			Configuration = config.Value;
 			ContentStorage = storage;
@@ -100,9 +98,6 @@ namespace MiniWeb.Core
 
 		public async Task<FindResult> GetPageByUrl(string url, ClaimsPrincipal user)
 		{
-			if (Pages?.Any() != true){
-				await ReloadPages();
-			}
 			bool editing = IsAuthenticated(user);
 			var result = new FindResult();
 			Logger?.LogDebug($"Finding page {url}");
@@ -128,7 +123,7 @@ namespace MiniWeb.Core
 			}
 
 			ISitePage notFoundPage = await ContentStorage.MiniWeb404Page();
-			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? (await ContentStorage.GetSitePageByUrl(url)) ?? notFoundPage;
+			var pageByUrl = (await Pages()).FirstOrDefault(p => p.Url == url) ?? (await ContentStorage.GetSitePageByUrl(url)) ?? notFoundPage;
 			var foundPage = pageByUrl.Visible || editing ? pageByUrl : notFoundPage;
 			if (foundPage == notFoundPage)
 			{
@@ -206,34 +201,30 @@ namespace MiniWeb.Core
 				};
 		}
 
-		public async Task ReloadPages(bool forceReload = false)
+		public async Task<IEnumerable<ISitePage>> Pages(bool forceReload = false)
 		{
 			// Look for cache key.
-			IEnumerable<ISitePage> pages = null;
-			if (!forceReload && Cache?.TryGetValue("MWPAGES", out pages) == true)
-			{
-				Logger?.LogInformation("Cached pages");
-				Pages = pages;
-			}
-			else
+			List<ISitePage> result = null;
+			if (forceReload || (Cache?.TryGetValue(PagesCacheKey, out result)) != true)
 			{
 				Logger?.LogInformation("Reload pages");
-				Pages = (await ContentStorage.AllPages()).ToList();
+				result = (await ContentStorage.AllPages()).ToList();
 
-				Cache?.Set("MWPAGES", Pages);
+				Cache?.Set(PagesCacheKey, result);
 			}
-			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
-			foreach (var page in Pages)
+			//Create Hierarchy
+			foreach (var page in result)
 			{
 				string urlStart = page.Url + "/";
-				page.Pages = Pages.Where(p => p.Url.StartsWith(urlStart) && !p.Url.Replace(urlStart, "").Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
+				page.Pages = result.Where(p => p.Url.StartsWith(urlStart) && !p.Url.Replace(urlStart, "").Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 				if (page.Url.Contains("/"))
 				{
 					//set parent
 					var parentUrl = page.Url.Substring(0, page.Url.LastIndexOf("/"));
-					page.Parent = Pages.FirstOrDefault(p => p.Url == parentUrl);
+					page.Parent = result.FirstOrDefault(p => p.Url == parentUrl);
 				}
 			}
+			return result;
 		}
 
 		public async Task SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false)
@@ -259,14 +250,14 @@ namespace MiniWeb.Core
 				}
 			}
 			await ContentStorage.StoreSitePage(page, currentRequest);
-			await ReloadPages(true);
+			Cache?.Remove(PagesCacheKey);
 		}
 
 		public async Task DeleteSitePage(ISitePage page)
 		{
 			Logger?.LogInformation($"Deleting page {page.Url}");
 			await ContentStorage.DeleteSitePage(page);
-			await ReloadPages(true);
+			Cache?.Remove(PagesCacheKey);
 		}
 
 		public async Task<List<IPageSection>> GetDefaultContentForTemplate(string template)
@@ -276,29 +267,26 @@ namespace MiniWeb.Core
 		}
 
 
-		public IEnumerable<IAsset> Assets { get; set; }
+		public async Task<IEnumerable<IAsset>> Assets(bool forceReload = false)
+		{
+			IEnumerable<IAsset> result = null;
+			if (forceReload || (Cache?.TryGetValue(AssetsCacheKey, out result)) != true)
+			{
+				Logger?.LogInformation("Reload assets");
+				result = await AssetStorage.GetAllAssets();
+
+				Cache?.Set(AssetsCacheKey, result);
+			}
+			return result;
+
+		}
+
 		public async Task DeleteAsset(IAsset asset)
 		{
 			await AssetStorage.RemoveAsset(asset);
-			await ReloadAssets(true);
+			Cache?.Remove(AssetsCacheKey);
 		}
 
-		public async Task ReloadAssets(bool forceReload = false)
-		{
-			IEnumerable<IAsset> assets = null;
-			if (!forceReload && Cache?.TryGetValue("MWASSETS", out assets) == true)
-			{
-				Logger?.LogInformation("Cached assets");
-				Assets = assets;
-			}
-			else
-			{
-				Logger?.LogInformation("Reload assets");
-				Assets = await AssetStorage.GetAllAssets();
-
-				Cache?.Set("MWASSETS", Assets);
-			}
-		}
 
 		public IContentItem DummyContent(string template)
 		{

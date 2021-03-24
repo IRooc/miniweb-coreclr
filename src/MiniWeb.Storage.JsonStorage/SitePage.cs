@@ -5,7 +5,7 @@ using MiniWeb.Core;
 
 namespace MiniWeb.Storage.JsonStorage
 {
-    public class SitePage : ISitePage
+    public class JsonSitePage : ISitePage
 	{
 		public string Url { get; set; }
 		public string RedirectUrl { get; set; }
@@ -39,7 +39,7 @@ namespace MiniWeb.Storage.JsonStorage
 			}
 		}
 
-		public SitePage()
+		public JsonSitePage()
 		{
 			Pages = new List<ISitePage>();
 			LastModified = DateTime.MinValue;
@@ -59,13 +59,13 @@ namespace MiniWeb.Storage.JsonStorage
 	}
 	
 
-	public class PageSection : IPageSection
+	public class JsonPageSection : IPageSection
 	{
 		public string Key { get; set; }
 		public List<IContentItem> Items { get; set; }
 	}
 
-	public class ContentItem : IContentItem
+	public class JsonContentItem : IContentItem
 	{
 		[IgnoreDataMember]
 		public ISitePage Page { get; set; }

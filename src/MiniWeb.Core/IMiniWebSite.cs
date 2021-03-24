@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace MiniWeb.Core
 {
-    public interface IMiniWebSite
+	public interface IMiniWebSite
 	{
 		IWebHostEnvironment HostingEnvironment { get; }
 		ILogger Logger { get; }
@@ -15,28 +15,24 @@ namespace MiniWeb.Core
 
 		IMiniWebContentStorage ContentStorage { get; }
 		IMiniWebAssetStorage AssetStorage { get; }
-
-		IEnumerable<ISitePage> Pages { get; set; }
-		IEnumerable<ISitePage> PageHierarchy { get; set; }
 		IEnumerable<string> PageTemplates { get; }
 		IEnumerable<string> ItemTemplates { get; }
 
+		Task<IEnumerable<ISitePage>> Pages(bool reload = false);
+
 		Task DeleteSitePage(ISitePage page);
 		Task<FindResult> GetPageByUrl(string url, ClaimsPrincipal user);
-		string GetPageUrl(ISitePage page);
 		Task SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
-		Task ReloadPages(bool forceReload = false);
-
-		IContentItem DummyContent(string template);
 
 		Task<List<IPageSection>> GetDefaultContentForTemplate(string template);
-		IEnumerable<IAsset> Assets { get; set; }
+		
+		Task<IEnumerable<IAsset>> Assets(bool reload = false);
 		Task DeleteAsset(IAsset asset);
-		Task ReloadAssets(bool forceReload = false);
-
 		Task<bool> Authenticate(string username, string password);
-		bool IsAuthenticated(ClaimsPrincipal user);
+		IContentItem DummyContent(string template);
 		ClaimsPrincipal GetClaimsPrincipal(string username);
+		bool IsAuthenticated(ClaimsPrincipal user);
+		string GetPageUrl(ISitePage page);
 
 	}
 }

@@ -29,13 +29,13 @@ namespace MiniWeb.Core
 
 		[HttpGet]
 		[ValidateAntiForgeryToken]
-		public IActionResult AllAssets(int take = 16, int page = 0, string folder = "")
+		public async Task<IActionResult> AllAssets(int take = 16, int page = 0, string folder = "")
 		{
-			_webSite.ReloadAssets();
-			IEnumerable<IAsset> folderAssets = _webSite.Assets.Where(a => a.Folder.Equals(folder, StringComparison.CurrentCultureIgnoreCase));
-			return new JsonResult(new {
+			IEnumerable<IAsset> folderAssets = (await _webSite.Assets()).Where(a => a.Folder.Equals(folder, StringComparison.CurrentCultureIgnoreCase));
+			return new JsonResult(new
+			{
 				TotalAssets = folderAssets.Count(),
-				Assets= folderAssets.Select(a => new { a.VirtualPath, a.Type, a.FileName, a.Folder }).Skip(page * take).Take(take)
+				Assets = folderAssets.Select(a => new { a.VirtualPath, a.Type, a.FileName, a.Folder }).Skip(page * take).Take(take)
 			});
 		}
 
@@ -70,26 +70,20 @@ namespace MiniWeb.Core
 		{
 			if (files.Count > 0)
 			{
-				List<IAsset> assets = new List<IAsset>();
 				foreach (var file in files)
 				{
 					using (var ms = new MemoryStream())
 					{
-						file.CopyTo(ms);
+						await file.CopyToAsync(ms);
 						var fileBytes = ms.ToArray();
 						var newAsset = await _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, miniwebAssetFolder);
-						if (newAsset != null)
-						{
-							assets.Add(newAsset);
-							await _webSite.ReloadAssets(true);
-						}
-						else
+						if (newAsset == null)
 						{
 							return new JsonResult(new { result = false });
 						}
 					}
 				}
-				return new JsonResult(new { result = true, assets = assets.Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
+				return new JsonResult(new { result = true, assets = (await _webSite.Assets(true)).Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
 			}
 			return new JsonResult(new { result = false });
 		}
@@ -106,7 +100,7 @@ namespace MiniWeb.Core
 					{
 						var content = await reader.ReadToEndAsync();
 						var sitePage = await _webSite.ContentStorage.Deserialize(content);
-						if (_webSite.Pages.FirstOrDefault(p => p.Url == sitePage.Url) == null || force)
+						if ((await _webSite.Pages()).FirstOrDefault(p => p.Url == sitePage.Url) == null || force)
 						{
 							await _webSite.SaveSitePage(sitePage, Request);
 						}
@@ -134,7 +128,7 @@ namespace MiniWeb.Core
 			}
 
 			//find current page
-			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == posted.Url);
+			ISitePage page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == posted.Url);
 			if (page == null)
 			{
 				if (posted.NewPage != true)
@@ -165,21 +159,21 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult RemovePage(string url)
+		public async Task<IActionResult> RemovePage(string url)
 		{
 			_webSite.Logger?.LogInformation($"remove {url}");
-			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
-			_webSite.DeleteSitePage(page);
+			ISitePage page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == url);
+			await _webSite.DeleteSitePage(page);
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
 			return new JsonResult(new { result = true, url = redirectUrl });
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult ReloadCaches()
+		public async Task<IActionResult> ReloadCaches()
 		{
-			_webSite.ReloadAssets(true);
-			_webSite.ReloadPages(true);
+			await _webSite.Pages(true);
+			await _webSite.Assets(true);
 			return new JsonResult(new { result = true });
 		}
 	}

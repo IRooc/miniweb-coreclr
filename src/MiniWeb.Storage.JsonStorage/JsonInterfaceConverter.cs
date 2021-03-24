@@ -14,11 +14,11 @@ namespace MiniWeb.Storage.JsonStorage
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			if (objectType == typeof(ISitePage))
-				return serializer.Deserialize<SitePage>(reader);
+				return serializer.Deserialize<JsonSitePage>(reader);
 			if (objectType == typeof(IPageSection))
-				return serializer.Deserialize<PageSection>(reader);
+				return serializer.Deserialize<JsonPageSection>(reader);
 			if (objectType == typeof(IContentItem))
-				return serializer.Deserialize<ContentItem>(reader);
+				return serializer.Deserialize<JsonContentItem>(reader);
 			return null;
 		}
 
