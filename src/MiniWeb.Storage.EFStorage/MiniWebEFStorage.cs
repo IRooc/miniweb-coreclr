@@ -23,14 +23,14 @@ namespace MiniWeb.Storage.EFStorage
 			Context.Database.EnsureCreated();
 		}
 
-		public Task<IEnumerable<ISitePage>> AllPages()
+		public async Task<IEnumerable<ISitePage>> AllPages()
 		{
 			IEnumerable<ISitePage> result = Enumerable.Empty<ISitePage>();
 			if (Context.Pages.Any())
 			{
-				result = Context.Pages.Include(p => p.Items).Select(GetSitePage);
+				result = (await Context.Pages.Include(p => p.Items).ToListAsync()).Select(GetSitePage);
 			}
-			return Task.FromResult(result);
+			return result;
 		}
 
 		private static ISitePage GetSitePage(DbSitePage p)
