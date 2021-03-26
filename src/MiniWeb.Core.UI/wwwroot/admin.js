@@ -341,8 +341,8 @@ const getParsedHtml = function (source) {
     let parsedDOM;
     parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
     parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
-    /<body>([\s\S]*)<\/body>/im.exec(parsedDOM);
-    parsedDOM = RegExp.$1;
+    const result = /<body>([\s\S]*?)(<br \/>)?<\/body>/im.exec(parsedDOM);
+    parsedDOM = result[1];
     return parsedDOM;
 };
 const saveContent = function (e) {
@@ -384,6 +384,7 @@ const saveContent = function (e) {
                         prop.classList.add('miniweb-invalid-item');
                     }
                 }
+                prop.innerHTML = value;
                 log('itemfound', key, '[' + value + ']', validation, valid);
                 item.Values[key] = value;
                 if (key.indexOf(':') > 0) {

@@ -36,10 +36,10 @@ namespace MiniWeb.Storage.EFStorage
 		private static ISitePage GetSitePage(DbSitePage p)
 		{
 			//make sure Sections Collection is Set
-			p.Sections = p.Items?.GroupBy(i => i.SectionKey).Select(g => new PageSection()
+			p.Sections = p.Items?.GroupBy(i => i.SectionKey).Select(g => new EFPageSection()
 			{
 				Key = g.Key,
-				Items = g.Select(i => new ContentItem()
+				Items = g.Select(i => new EFContentItem()
 				{
 					Template = i.Template,
 					Page = p,
@@ -140,16 +140,30 @@ namespace MiniWeb.Storage.EFStorage
 
 		public Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent)
 		{
-			var result = defaultContent?.Content?.Select(c => new PageSection()
+			var result = defaultContent?.Content?.Select(c => new EFPageSection()
 			{
 				Key = c.Section,
-				Items = c.Items?.Select(i => new ContentItem()
+				Items = c.Items?.Select(i => new EFContentItem()
 				{
 					Template = i,
 					Values = new Dictionary<string, string>()
 				}).ToList<IContentItem>()
 			}).ToList<IPageSection>();
 			return Task.FromResult(result);
+		}
+
+		public IPageSection GetPageSection(SitePageSectionPostModel section)
+		{
+			var result = new EFPageSection
+			{
+				Key = section.Key,
+				Items = section.Items.Select(i => new EFContentItem
+				{
+					Template = i.Template,
+					Values = i.Values
+				}).ToList<IContentItem>()
+			};
+			return result;
 		}
 
 		public Task<ISitePage> Deserialize(string filecontent)
@@ -168,12 +182,12 @@ namespace MiniWeb.Storage.EFStorage
 				Visible = true,
 				Sections = new List<IPageSection>()
 					{
-						new PageSection()
+						new EFPageSection()
 						{
 							Key = "content",
 							Items = new List<IContentItem>()
 							{
-								new ContentItem {
+								new EFContentItem {
 									Template = $"~{StorageConfig.ItemTemplatePath}/item.cshtml",
 									Values =
 									{
@@ -203,13 +217,6 @@ namespace MiniWeb.Storage.EFStorage
 			return Task.FromResult<ISitePage>(result);
 		}
 
-		public JsonConverter JsonInterfaceConverter
-		{
-			get
-			{
-				return new JsonInterfaceConverter();
-			}
-		}
 		public Task<ISitePage> NewPage()
 		{
 			return Task.FromResult<ISitePage>(new DbSitePage());

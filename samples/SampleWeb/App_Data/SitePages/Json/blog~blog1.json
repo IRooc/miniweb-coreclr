@@ -11,7 +11,7 @@
   "SortOrder": 1,
   "Date": "2020-03-16T10:35:30",
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2021-03-17T13:37:21.9157114+01:00",
+  "LastModified": "2021-03-25T09:38:40.4756495+01:00",
   "Sections": [
     {
       "Key": "content",
@@ -19,8 +19,8 @@
         {
           "Template": "~/Views/Items/blogitem.cshtml",
           "Values": {
-            "title": "Blog 1",
-            "content": "Blog test is this the one option?<br />Test"
+            "title": "Blog 1 d",
+            "content": "Blog test is this the one option?<br />Testfsd"
           }
         }
       ]

@@ -18,9 +18,7 @@ namespace MiniWeb.Core
 		Task<ISitePage> Deserialize(string filecontent);
 
 		Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent);
-
-		//Used to deserialize the Posted JSON to concrete classes.
-		JsonConverter JsonInterfaceConverter { get; }
+		IPageSection GetPageSection(SitePageSectionPostModel section);
 
 
 		Task<ISitePage> MiniWebLoginPage();

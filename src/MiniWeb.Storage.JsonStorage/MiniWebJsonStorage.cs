@@ -93,6 +93,20 @@ namespace MiniWeb.Storage.JsonStorage
 			return Task.FromResult(result);
 		}
 
+		public IPageSection GetPageSection(SitePageSectionPostModel section)
+		{
+			var result = new JsonPageSection
+			{
+				Key = section.Key,
+				Items = section.Items.Select(i => new JsonContentItem
+				{
+					Template = i.Template,
+					Values = i.Values
+				}).ToList<IContentItem>()
+			};
+			return result;
+		}
+
 		public async Task<ISitePage> MiniWeb404Page()
 		{
 			return (await AllPages()).FirstOrDefault(p => p.Url == "404") ?? new JsonSitePage()

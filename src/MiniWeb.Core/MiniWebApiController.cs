@@ -54,9 +54,10 @@ namespace MiniWeb.Core
 			if (result.Found)
 			{
 				_webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");
-				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items, _webSite.ContentStorage.JsonInterfaceConverter);
+				var newSections = JsonConvert.DeserializeObject<IEnumerable<SitePageSectionPostModel>>(items);
 				result.Page.Sections.Clear();
-				result.Page.Sections.AddRange(newSections);
+				var sections = newSections.Select(section => _webSite.ContentStorage.GetPageSection(section));
+				result.Page.Sections.AddRange(sections);
 
 				await _webSite.SaveSitePage(result.Page, Request, true);
 				return new JsonResult(new { result = true });
@@ -88,6 +89,8 @@ namespace MiniWeb.Core
 			return new JsonResult(new { result = false });
 		}
 
+
+		//'hibben' feature to bulk upload files only implemented in JSON storage
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> MultiplePages(List<IFormFile> files, bool force)
@@ -128,7 +131,7 @@ namespace MiniWeb.Core
 			}
 
 			//find current page
-			ISitePage page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == posted.Url);
+			var page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == posted.Url);
 			if (page == null)
 			{
 				if (posted.NewPage != true)
@@ -162,7 +165,7 @@ namespace MiniWeb.Core
 		public async Task<IActionResult> RemovePage(string url)
 		{
 			_webSite.Logger?.LogInformation($"remove {url}");
-			ISitePage page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == url);
+			var page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == url);
 			await _webSite.DeleteSitePage(page);
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
 			return new JsonResult(new { result = true, url = redirectUrl });

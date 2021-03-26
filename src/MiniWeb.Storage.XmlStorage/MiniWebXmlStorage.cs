@@ -82,10 +82,10 @@ namespace MiniWeb.Storage.XmlStorage
 
 		public Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent)
 		{
-			var result = defaultContent?.Content?.Select(c => new PageSection()
+			var result = defaultContent?.Content?.Select(c => new XmlPageSection()
 			{
 				Key = c.Section,
-				Items = c.Items?.Select(i => new ContentItem()
+				Items = c.Items?.Select(i => new XmlContentItem()
 				{
 					Template = i,
 					Values = new Dictionary<string, string>()
@@ -93,6 +93,21 @@ namespace MiniWeb.Storage.XmlStorage
 			}).ToList<IPageSection>();
 			return Task.FromResult<List<IPageSection>>(result);
 		}
+
+		public IPageSection GetPageSection(SitePageSectionPostModel section)
+		{
+			var result = new XmlPageSection
+			{
+				Key = section.Key,
+				Items = section.Items.Select(i => new XmlContentItem
+				{
+					Template = i.Template,
+					Values = i.Values
+				}).ToList<IContentItem>()
+			};
+			return result;
+		}
+
 
 		public async Task<ISitePage> MiniWeb404Page()
 		{
@@ -105,12 +120,12 @@ namespace MiniWeb.Storage.XmlStorage
 				Visible = true,
 				Sections = new List<IPageSection>()
 					{
-						new PageSection()
+						new XmlPageSection()
 						{
 							Key = "content",
 							Items = new List<IContentItem>()
 							{
-								new ContentItem {
+								new XmlContentItem {
 									Template = $"~{StorageConfig.ItemTemplatePath}/item.cshtml",
 									Values =
 									{
@@ -139,14 +154,6 @@ namespace MiniWeb.Storage.XmlStorage
 				Visible = true
 			};
 			return Task.FromResult<ISitePage>(result);
-		}
-
-		public JsonConverter JsonInterfaceConverter
-		{
-			get
-			{
-				return new JsonInterfaceConverter();
-			}
 		}
 		public Task<ISitePage> NewPage()
 		{
@@ -193,7 +200,7 @@ namespace MiniWeb.Storage.XmlStorage
 
 		private static DataContractSerializer GetSerializer<T>()
 		{
-			return new DataContractSerializer(typeof(T), new[] { typeof(XmlSitePage), typeof(PageSection), typeof(ContentItem) });
+			return new DataContractSerializer(typeof(T), new[] { typeof(XmlSitePage), typeof(XmlPageSection), typeof(XmlContentItem) });
 		}
 
 		/// <summary>

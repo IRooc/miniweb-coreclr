@@ -59,13 +59,13 @@ namespace MiniWeb.Storage.XmlStorage
 		}
 	}
 
-	public class PageSection : IPageSection
+	public class XmlPageSection : IPageSection
 	{
 		public string Key { get; set; }
 		public List<IContentItem> Items { get; set; }
 	}
 
-	public class ContentItem : IContentItem
+	public class XmlContentItem : IContentItem
 	{
 		[IgnoreDataMember]
 		public ISitePage Page { get; set; }
