@@ -205,7 +205,9 @@ miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list {
 	display: inline-block;
 }
 miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list li {
-	display: inline-block;
+	float: left;
+	position: relative;
+	height: 3rem;
 }
 miniwebadmin .pull-right {
 	float:right!important;
@@ -213,6 +215,7 @@ miniwebadmin .pull-right {
 miniwebadmin .miniweb-tools label {
 	font-size: 12px;
 	cursor: pointer;
+	padding: 5px;
 }
 miniwebadmin .miniweb-tools label input {
 	margin:0
@@ -256,7 +259,7 @@ miniwebadmin .icon.icon-save:before {
 	font-weight: 700;
 }
 miniwebadmin .icon.icon-cancel:before {
-	content: "\2B6E";
+	content: "\27F2";
 	font-weight: 700;
 }
 miniwebadmin .icon.icon-signout:before {
@@ -433,7 +436,7 @@ miniwebadmin .miniweb-add-asset {
 	font-size: 1em;
 }
 .miniweb-editing [data-miniwebedittype="asset"]::after {
-	content: "\1F5BD";
+	content: "\1F5BC";
 	cursor: pointer;
 	right: -25px;
 	position: absolute;
@@ -527,10 +530,12 @@ miniwebadmin .miniweb-add-asset {
 	}
 	miniwebadmin .miniweb-nav-input {
 		max-width: 20vw;
-		max-height: 1rem;
 	}
 	miniwebadmin .miniweb-tools  button.icon  {
 		line-height: 15px;
+	}
+	miniwebadmin .miniweb-tools  button.icon.icon-signout  {
+		color:red;
 	}
 
 	miniwebadmin .miniweb-tools  button.icon span {

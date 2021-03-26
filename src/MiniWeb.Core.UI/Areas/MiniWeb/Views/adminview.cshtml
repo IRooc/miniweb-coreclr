@@ -7,7 +7,7 @@ var path = Model.Url;
 
 <nav id="miniweb-admin-nav" class="miniweb-tools" data-miniweb-path="@path">
 	<div class="miniweb-tool miniweb-status @(isPublished ? " published" : "offline" )">
-		<a href="#" id="miniweb-button-reloadcache" class="navbar-brand">@(isPublished ? "" : "Offline")</a>
+		<a href="#" id="miniweb-button-reloadcache" class="navbar-brand">&nbsp;</a>
 	</div>
 	<div class="miniweb-tool pull-right">
 		<ul class="miniweb-horizontal-list">
@@ -64,8 +64,8 @@ var path = Model.Url;
 
 		<div class="miniweb-buttongroup">
 			<button data-miniweb-custom="createLink" title="Hyperlink" class="icon icon-earth"></button>
-			<button data-miniweb-edit="unlink" title="Remove hyperlink">&#11198;</button>
-			<button data-miniweb-custom="insertAsset" title="Insert Asset">&#127203;</button>
+			<button data-miniweb-edit="unlink" title="Remove hyperlink">&CircleTimes;</button>
+			<button data-miniweb-custom="insertAsset" title="Insert Asset">&#x1F5BC;</button>
 		</div>
 
 		<div class="miniweb-buttongroup">
