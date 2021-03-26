@@ -93,7 +93,7 @@ namespace MiniWeb.Storage.JsonStorage
 			return Task.FromResult(result);
 		}
 
-		public IPageSection GetPageSection(SitePageSectionPostModel section)
+		public Task<IPageSection> GetPageSection(SitePageSectionPostModel section)
 		{
 			var result = new JsonPageSection
 			{
@@ -104,7 +104,7 @@ namespace MiniWeb.Storage.JsonStorage
 					Values = i.Values
 				}).ToList<IContentItem>()
 			};
-			return result;
+			return Task.FromResult<IPageSection>(result);
 		}
 
 		public async Task<ISitePage> MiniWeb404Page()

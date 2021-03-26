@@ -56,8 +56,11 @@ namespace MiniWeb.Core
 				_webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");
 				var newSections = JsonConvert.DeserializeObject<IEnumerable<SitePageSectionPostModel>>(items);
 				result.Page.Sections.Clear();
-				var sections = newSections.Select(section => _webSite.ContentStorage.GetPageSection(section));
-				result.Page.Sections.AddRange(sections);
+				foreach (var item in newSections)
+				{
+					var resultsectios = await _webSite.ContentStorage.GetPageSection(item);
+					result.Page.Sections.Add(resultsectios);
+				}
 
 				await _webSite.SaveSitePage(result.Page, Request, true);
 				return new JsonResult(new { result = true });

@@ -152,7 +152,7 @@ namespace MiniWeb.Storage.EFStorage
 			return Task.FromResult(result);
 		}
 
-		public IPageSection GetPageSection(SitePageSectionPostModel section)
+		public Task<IPageSection> GetPageSection(SitePageSectionPostModel section)
 		{
 			var result = new EFPageSection
 			{
@@ -163,7 +163,7 @@ namespace MiniWeb.Storage.EFStorage
 					Values = i.Values
 				}).ToList<IContentItem>()
 			};
-			return result;
+			return Task.FromResult<IPageSection>(result);
 		}
 
 		public Task<ISitePage> Deserialize(string filecontent)

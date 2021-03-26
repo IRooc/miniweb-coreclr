@@ -18,7 +18,7 @@ namespace MiniWeb.Core
 		Task<ISitePage> Deserialize(string filecontent);
 
 		Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent);
-		IPageSection GetPageSection(SitePageSectionPostModel section);
+		Task<IPageSection> GetPageSection(SitePageSectionPostModel section);
 
 
 		Task<ISitePage> MiniWebLoginPage();

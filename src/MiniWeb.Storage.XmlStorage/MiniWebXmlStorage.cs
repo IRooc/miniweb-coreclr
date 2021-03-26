@@ -94,7 +94,7 @@ namespace MiniWeb.Storage.XmlStorage
 			return Task.FromResult<List<IPageSection>>(result);
 		}
 
-		public IPageSection GetPageSection(SitePageSectionPostModel section)
+		public Task<IPageSection> GetPageSection(SitePageSectionPostModel section)
 		{
 			var result = new XmlPageSection
 			{
@@ -105,8 +105,9 @@ namespace MiniWeb.Storage.XmlStorage
 					Values = i.Values
 				}).ToList<IContentItem>()
 			};
-			return result;
+			return Task.FromResult<IPageSection>(result);
 		}
+
 
 
 		public async Task<ISitePage> MiniWeb404Page()
