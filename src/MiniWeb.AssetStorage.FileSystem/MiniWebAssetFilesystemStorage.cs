@@ -63,14 +63,15 @@ namespace MiniWeb.AssetStorage.FileSystem
 			{
 				fileName = Path.GetRandomFileName() + "." + extFromBase64Type;
 			}
-			return CreateAsset(fileName, bytes, virtualFolder ?? Configuration.AssetRootPath);
+			return CreateAsset(fileName, bytes, virtualFolder);
 		}
 
-		public Task RemoveAsset(IAsset asset)
+		public Task<bool> RemoveAsset(IAsset asset)
 		{
 			string file = Path.Combine(HostingEnvironment.WebRootPath, asset.VirtualPath);
+			if (!File.Exists(file)) return Task.FromResult(false);
 			File.Delete(file);
-			return Task.FromResult(0);
+			return Task.FromResult(true);
 		}
 
 		private byte[] ConvertToBytes(string base64)
