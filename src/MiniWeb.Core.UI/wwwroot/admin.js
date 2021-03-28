@@ -19,6 +19,32 @@ const extend = function (defaults, options) {
     }
     return extended;
 };
+const hotKeys = [
+    ['b', false, 'bold'],
+    ['i', false, 'italic'],
+    ['u', false, 'underline'],
+    ['z', false, 'undo'],
+    ['z', true, 'redo']
+];
+const executeHotkey = function (e) {
+    console.log(e);
+    if (e.ctrlKey || e.metaKey) {
+        for (let i = 0; i < hotKeys.length; i++) {
+            var hotkeySetting = hotKeys[i];
+            if (e.key == hotkeySetting[0] && e.shiftKey == hotkeySetting[1]) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.execCommand(hotkeySetting[2] + '');
+            }
+        }
+    }
+};
+const bindHotKeys = function (element) {
+    element.addEventListener('keydown', executeHotkey);
+};
+const unbindHotKeys = function (element) {
+    element.removeEventListener('keydown', executeHotkey);
+};
 const miniwebAdminDefaults = {
     apiEndpoint: '/miniweb-api/',
     afToken: '',
@@ -92,9 +118,11 @@ const miniwebAdminDefaults = {
                         }
                     });
                 });
+                bindHotKeys(element);
             },
-            editEnd: function (index) {
+            editEnd: function (element, index) {
                 document.querySelectorAll(".miniweb-editor-toolbar").forEach(tb => tb.remove());
+                unbindHotKeys(element);
             }
         },
         {
@@ -331,7 +359,7 @@ const toggleContentInserts = function (on) {
             el.insertAdjacentHTML('beforeend', '<button class="miniweb-button miniweb-insertcontent" data-miniweb-add-content-to="' + section + '">add content</button>');
         });
         document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate] .miniweb-template-actions').forEach(el => el.remove());
-        document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate]').forEach(el => el.insertAdjacentHTML('beforeend', '<div class="pull-right miniweb-template-actions"><button class="miniweb-button" data-miniweb-content-move="up" title="Move up">&#11014;</button><button class="miniweb-button" data-miniweb-content-move="down" title="Move down">&#11015;</button>	<button class="miniweb-button miniweb-danger" data-miniweb-content-move="delete" title="Delete item">&#11199;</button></div>'));
+        document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate]').forEach(el => el.insertAdjacentHTML('beforeend', '<div class="pull-right miniweb-template-actions"><button tabindex="-1" class="miniweb-button" data-miniweb-content-move="up" title="Move up">&#11014;</button><button tabindex="-1" class="miniweb-button" data-miniweb-content-move="down" title="Move down">&#11015;</button>	<button tabindex="-1" class="miniweb-button miniweb-danger" data-miniweb-content-move="delete" title="Delete item">&#11199;</button></div>'));
     }
     else {
         document.querySelectorAll('.miniweb-insertcontent, .miniweb-template-actions').forEach(el => el.remove());

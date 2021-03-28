@@ -20,6 +20,34 @@ const extend: any = function (defaults, options) {
 	}
 	return extended;
 };
+const hotKeys = [
+	['b', false, 'bold'],
+	['i', false, 'italic'],
+	['u', false, 'underline'],
+	['z', false, 'undo'],
+	['z', true, 'redo']
+];
+
+const executeHotkey = function (e : KeyboardEvent) {
+	console.log(e);
+	if (e.ctrlKey || e.metaKey) {
+		for (let i = 0; i < hotKeys.length; i++) {
+			var hotkeySetting = hotKeys[i];
+			if (e.key == hotkeySetting[0] && e.shiftKey == hotkeySetting[1]) {
+				e.preventDefault();
+				e.stopPropagation();
+				document.execCommand(hotkeySetting[2]+'');
+			}
+		}
+	}
+}
+
+const bindHotKeys = function (element: HTMLElement) {
+	element.addEventListener('keydown', executeHotkey);
+}
+const unbindHotKeys = function (element: HTMLElement) {
+	element.removeEventListener('keydown', executeHotkey);
+}
 
 const miniwebAdminDefaults = {
 	apiEndpoint: '/miniweb-api/',
@@ -92,9 +120,11 @@ const miniwebAdminDefaults = {
 						}
 					});
 				});
+				bindHotKeys(element);
 			},
-			editEnd: function (index) {
+			editEnd: function (element: HTMLElement, index) {
 				document.querySelectorAll(".miniweb-editor-toolbar").forEach(tb => tb.remove());
+				unbindHotKeys(element);
 			}
 		},
 		{
@@ -347,7 +377,7 @@ const toggleContentInserts = function (on: boolean) {
 			el.insertAdjacentHTML('beforeend', '<button class="miniweb-button miniweb-insertcontent" data-miniweb-add-content-to="' + section + '">add content</button>');
 		});
 		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate] .miniweb-template-actions').forEach(el => el.remove());
-		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate]').forEach(el => el.insertAdjacentHTML('beforeend', '<div class="pull-right miniweb-template-actions"><button class="miniweb-button" data-miniweb-content-move="up" title="Move up">&#11014;</button><button class="miniweb-button" data-miniweb-content-move="down" title="Move down">&#11015;</button>	<button class="miniweb-button miniweb-danger" data-miniweb-content-move="delete" title="Delete item">&#11199;</button></div>'));
+		document.querySelectorAll('[data-miniwebsection] [data-miniwebtemplate]').forEach(el => el.insertAdjacentHTML('beforeend', '<div class="pull-right miniweb-template-actions"><button tabindex="-1" class="miniweb-button" data-miniweb-content-move="up" title="Move up">&#11014;</button><button tabindex="-1" class="miniweb-button" data-miniweb-content-move="down" title="Move down">&#11015;</button>	<button tabindex="-1" class="miniweb-button miniweb-danger" data-miniweb-content-move="delete" title="Delete item">&#11199;</button></div>'));
 
 	} else {
 		document.querySelectorAll('.miniweb-insertcontent, .miniweb-template-actions').forEach(el => el.remove());
@@ -359,7 +389,7 @@ const getParsedHtml = function (source: HTMLElement) {
 	parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
 	parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
 	//remove trailing br that some browsers add in content editable
-	const result =  /<body>([\s\S]*?)(<br \/>)?<\/body>/im.exec(parsedDOM);
+	const result = /<body>([\s\S]*?)(<br \/>)?<\/body>/im.exec(parsedDOM);
 	parsedDOM = result[1];
 	return parsedDOM;
 };
@@ -394,7 +424,7 @@ const saveContent = function (e) {
 				const validation = prop.dataset.miniwebValidation;
 				prop.classList.remove('miniweb-invalid-item');
 				if (validation === 'required') {
-					if (!value || value === '<br />'){
+					if (!value || value === '<br />') {
 						valid = false;
 						prop.classList.add('miniweb-invalid-item');
 					}
@@ -591,12 +621,12 @@ document.addEventListener('click', (e) => {
 				section.append(el.firstChild);
 				cancelEdit();
 				editContent();
-				const newEl =  section.querySelector('[data-miniwebtemplate]:last-of-type');
+				const newEl = section.querySelector('[data-miniwebtemplate]:last-of-type');
 				newEl.scrollIntoView(true);
 				const firstInput = newEl.querySelector<HTMLElement>('[contenteditable]');
-				if (firstInput){
+				if (firstInput) {
 					firstInput.focus();
-					document.execCommand('selectAll',false,null);
+					document.execCommand('selectAll', false, null);
 				}
 				closeModals();
 			});
