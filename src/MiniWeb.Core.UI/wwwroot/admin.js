@@ -27,14 +27,14 @@ const hotKeys = [
     ['z', true, 'redo']
 ];
 const executeHotkey = function (e) {
-    console.log(e);
+    log('executeHotkey', e);
     if (e.ctrlKey || e.metaKey) {
         for (let i = 0; i < hotKeys.length; i++) {
-            var hotkeySetting = hotKeys[i];
+            const hotkeySetting = hotKeys[i];
             if (e.key == hotkeySetting[0] && e.shiftKey == hotkeySetting[1]) {
                 e.preventDefault();
                 e.stopPropagation();
-                document.execCommand(hotkeySetting[2] + '');
+                document.execCommand(hotkeySetting[2]);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace MiniWeb.Core
 
 		public async Task<IActionResult> Index(string url)
 		{
-			_webSite.Logger?.LogInformation($"index action {Request.Path.Value}");
+			_webSite.Logger?.LogDebug($"index action {url}");
 
 			var result = await _webSite.GetPageByUrl(url, User);
 

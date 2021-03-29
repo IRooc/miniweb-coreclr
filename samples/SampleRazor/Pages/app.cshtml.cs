@@ -22,7 +22,7 @@ namespace SampleRazor.Pages
 
 		public async Task OnGet()
 		{
-			Miniweb.Logger?.LogInformation($"index action {Request.Path.Value}");
+			Miniweb.Logger?.LogDebug($"index action {Request.Path.Value}");
 
 			var result = await Miniweb.GetPageByUrl(PageUrl, User);
 

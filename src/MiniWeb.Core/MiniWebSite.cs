@@ -100,30 +100,31 @@ namespace MiniWeb.Core
 		{
 			bool editing = IsAuthenticated(user);
 			var result = new FindResult();
+			var urlToFind = url;
 			Logger?.LogDebug($"Finding page {url}");
-			if (string.IsNullOrWhiteSpace(url) || url == "/")
+			if (string.IsNullOrWhiteSpace(urlToFind) || urlToFind == "/")
 			{
 				Logger?.LogDebug("Homepage");
-				url = Configuration.DefaultPage;
+				urlToFind = Configuration.DefaultPage;
 			}
 			var suffix = string.Empty;
-			if (url?.StartsWith("/") == true)
+			if (urlToFind?.StartsWith("/") == true)
 			{
-				url = url.Substring(1);
+				urlToFind = urlToFind.Substring(1);
 			}
-			if (!string.IsNullOrWhiteSpace(Configuration.PageExtension) && url.Contains(Configuration.PageExtension))
+			if (!string.IsNullOrWhiteSpace(Configuration.PageExtension) && urlToFind.Contains(Configuration.PageExtension))
 			{
 				string urlPattern = $"^(.*?)\\.{Configuration.PageExtension}(.*?)$";
-				Match match = Regex.Match(url, urlPattern);
+				Match match = Regex.Match(urlToFind, urlPattern);
 				if (match.Success)
 				{
-					url = match.Groups[1].Value;
+					urlToFind = match.Groups[1].Value;
 					suffix = match.Groups[2].Value;
 				}
 			}
 
 			ISitePage notFoundPage = await ContentStorage.MiniWeb404Page();
-			var pageByUrl = (await Pages()).FirstOrDefault(p => p.Url == url) ?? (await ContentStorage.GetSitePageByUrl(url)) ?? notFoundPage;
+			var pageByUrl = (await Pages()).FirstOrDefault(p => p.Url == urlToFind) ?? (await ContentStorage.GetSitePageByUrl(urlToFind)) ?? notFoundPage;
 			var foundPage = pageByUrl.Visible || editing ? pageByUrl : notFoundPage;
 			if (foundPage == notFoundPage)
 			{
@@ -134,7 +135,7 @@ namespace MiniWeb.Core
 				result.Found = true;
 				if (string.IsNullOrWhiteSpace(foundPage.RedirectUrl))
 				{
-					if (foundPage.Url != url && $"{foundPage.Url}.{Configuration.PageExtension}" != url && (foundPage.Url != "404"))
+					if (foundPage.Url != urlToFind && $"{foundPage.Url}.{Configuration.PageExtension}" != urlToFind && (foundPage.Url != "404"))
 					{
 						if (!string.IsNullOrWhiteSpace(Configuration.PageExtension))
 						{
