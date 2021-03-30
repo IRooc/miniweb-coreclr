@@ -22,7 +22,6 @@
 			<li class="hidden-xs"><button onclick="document.querySelector('body').classList.add('preview')">Preview</button></li>
 			<li id="miniweb-li-showhiddenpages" class="hidden-xs"><label><input type="checkbox" /><span class="hidden-xs">Show hidden pages</span></label></li>
 			<li><button class="icon icon-new" id="miniweb-button-newpage"><span>New page</span></button></li>
-			<li class="divider"></li>
 			<li>
 				<form action="@MiniWebSite.Configuration.Authentication.LogoutPath" method="post">
 					<input type="hidden" name="returnUrl" value="@MiniWebSite.GetPageUrl(Model)" />
@@ -34,7 +33,6 @@
 	<div class="miniweb-tool">
 		<ul class="miniweb-horizontal-list">
 			<li><button class="icon icon-props" id="miniweb-button-pageprops"><span>Page properties</span></button></li>
-			<li class="divider"></li>
 			<li><button class="icon icon-edit" id="miniweb-button-edit"><span>Edit Content</span></button></li>
 			<li><button class="icon icon-save" id="miniweb-button-save" disabled><span>Save Content</span></button></li>
 			<li><button class="icon icon-cancel" id="miniweb-button-cancel" disabled><span>Cancel</span></button></li>
