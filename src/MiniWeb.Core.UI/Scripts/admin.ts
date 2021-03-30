@@ -485,8 +485,9 @@ const savePage = function () {
 	}).then(res => res.json())
 		.then(data => {
 			if (data.result) {
-				showMessage(true, "saved page successfully");
-				closeModals();
+				showMessage(true, "saved page successfully, reloading...");
+				localStorage.setItem('miniweb-reloadedmessage', 'page saved successfully');
+				window.setTimeout(() => document.location.reload(), 1000);
 			} else {
 				showMessage(false, data.message);
 			}
@@ -823,6 +824,16 @@ const miniwebAdminInit = function (userOptions) {
 		toggleHiddenMenuItems(true);
 	} else {
 		toggleHiddenMenuItems(false);
+	}
+
+	const message = localStorage.getItem('miniweb-reloadedmessage');
+	if (message) {
+		if (message.startsWith('!')) {
+			showMessage(false, message.substring(1));
+		} else {
+			showMessage(true, message);
+		}
+		localStorage.removeItem('miniweb-reloadedmessage');
 	}
 
 	//start with cancel edit
