@@ -7,18 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SampleRazor.Pages
 {
-	public class AppModel : PageModel
+	public class MiniwebModel : PageModel
 	{
 		public readonly IMiniWebSite Miniweb;
 		public ISitePage SitePage {get;set;}
 
 		[BindProperty(SupportsGet = true)]
 		public string PageUrl { get; set; }
-		public AppModel(IMiniWebSite miniweb)
+
+		public MiniwebModel(IMiniWebSite miniweb)
 		{
 			Miniweb = miniweb;
 		}
-
 
 		public async Task OnGet()
 		{
@@ -36,7 +36,6 @@ namespace SampleRazor.Pages
 				Response.StatusCode = 404;
 			}
 			SitePage = result.Page;
-
 		}
 	}
 }
