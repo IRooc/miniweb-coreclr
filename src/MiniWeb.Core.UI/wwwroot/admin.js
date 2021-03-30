@@ -379,6 +379,9 @@ const addNewPageModal = function () {
             case 'NewPage':
                 elem.value = "true";
                 break;
+            case 'Date':
+                elem.value = elem.dataset.miniwebNewdate;
+                break;
             case 'Layout': break;
             default:
                 elem.value = null;
@@ -668,7 +671,6 @@ const miniwebAdminInit = function (userOptions) {
         e.preventDefault();
         e.stopPropagation();
         const modal = document.querySelector('.miniweb-pageproperties');
-        modal.querySelector('[name="NewPage"]').value = "false";
         const form = modal.querySelector('form');
         form.reset();
         modal.classList.remove("miniweb-modal-right");
