@@ -87,6 +87,10 @@ namespace MiniWeb.Storage.EFStorage
 		{
 			return Visible && ShowInMenu;
 		}
+		public bool IsActiveFor(string url)
+		{
+			return url.StartsWith(this.Url + "/") || url == this.Url;
+		}
 	}
 
 

@@ -5,7 +5,7 @@ using MiniWeb.Core;
 
 namespace MiniWeb.Storage.JsonStorage
 {
-    public class JsonSitePage : ISitePage
+	public class JsonSitePage : ISitePage
 	{
 		public string Url { get; set; }
 		public string RedirectUrl { get; set; }
@@ -56,8 +56,13 @@ namespace MiniWeb.Storage.JsonStorage
 		{
 			return Visible && ShowInMenu;
 		}
+
+		public bool IsActiveFor(string url)
+		{
+			return url.StartsWith(this.Url + "/") || url == this.Url;
+		}
 	}
-	
+
 
 	public class JsonPageSection : IPageSection
 	{
@@ -92,6 +97,6 @@ namespace MiniWeb.Storage.JsonStorage
 				return default(T);
 			}
 		}
-		
+
 	}
 }

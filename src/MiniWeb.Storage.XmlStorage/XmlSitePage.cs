@@ -57,6 +57,10 @@ namespace MiniWeb.Storage.XmlStorage
 		{
 			return Visible && ShowInMenu;
 		}
+		public bool IsActiveFor(string url)
+		{
+			return url.StartsWith(this.Url + "/") || url == this.Url;
+		}
 	}
 
 	public class XmlPageSection : IPageSection

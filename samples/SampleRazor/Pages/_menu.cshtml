@@ -8,7 +8,7 @@
 			var sitePage = ViewData["MenuSitePage"] as ISitePage;
 			var currentUrl = ViewData["CurrentUrl"] as string;
 		}
-		<li class="@(ViewBag.CurrentUrl.StartsWith(sitePage.Url + "/") || currentUrl == sitePage.Url ? "active" : "") @(!sitePage.ShowInMenu || !sitePage.Visible ? "miniweb-hidden-menu" : "")">
+		<li class="@(sitePage.IsActiveFor(currentUrl) ? "active" : "") @(!sitePage.ShowInMenu || !sitePage.Visible ? "miniweb-hidden-menu" : "")">
 			<a href="@(MiniWebSite.GetPageUrl(sitePage))">@sitePage.Title</a>
 		</li>
 	</miniweb-menuitem>

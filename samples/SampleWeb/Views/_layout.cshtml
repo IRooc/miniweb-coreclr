@@ -40,7 +40,7 @@
 							var sitePage = ViewData["MenuSitePage"] as ISitePage;
 							var currentUrl = ViewData["CurrentUrl"] as string;
 						}
-						<li class="@(ViewBag.CurrentUrl.StartsWith(sitePage.Url + "/") || currentUrl == sitePage.Url ? "active" : "") @(!sitePage.ShowInMenu || !sitePage.Visible ? "miniweb-hidden-menu" : "")">
+						<li class="@(sitePage.IsActiveFor(currentUrl) ? "active" : "") @(!sitePage.ShowInMenu || !sitePage.Visible ? "miniweb-hidden-menu" : "")">
 							<a href="@(MiniWebSite.GetPageUrl(sitePage))">@sitePage.Title</a>
 						</li>
 					</miniweb-menuitem>
@@ -58,7 +58,7 @@
 								var subSitePage = ViewData["MenuSitePage"] as ISitePage;
 								var subCurrentUrl = ViewData["CurrentUrl"] as string;
 							}
-							<li class="@(ViewBag.CurrentUrl.StartsWith(subSitePage.Url + "/") || subCurrentUrl == subSitePage.Url ? "active" : "") @(!subSitePage.ShowInMenu || !subSitePage.Visible ? "miniweb-hidden-menu" : "")">
+							<li class="@(subSitePage.IsActiveFor(subCurrentUrl) ? "active" : "") @(!subSitePage.ShowInMenu || !subSitePage.Visible ? "miniweb-hidden-menu" : "")">
 								<a href="@(MiniWebSite.GetPageUrl(subSitePage))">@subSitePage.Title</a>
 							</li>
 						</miniweb-menuitem>
