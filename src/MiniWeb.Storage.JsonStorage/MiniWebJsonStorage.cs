@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using MiniWeb.Core;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace MiniWeb.Storage.JsonStorage
 {
@@ -20,27 +21,29 @@ namespace MiniWeb.Storage.JsonStorage
 			StorageConfig = config.Value;
 		}
 
-		public bool Authenticate(string username, string password)
+		public Task<bool> Authenticate(string username, string password)
 		{
-			return StorageConfig.Users?.Any(u => string.Compare(u.Key, username, true) == 0 && !string.IsNullOrEmpty(u.Value)  && string.Compare(u.Value, password) == 0) == true;
+			var result = StorageConfig.Users?.Any(u => string.Compare(u.Key, username, true) == 0 && !string.IsNullOrEmpty(u.Value) && string.Compare(u.Value, password) == 0) == true;
+			return Task.FromResult(result);
 		}
 
-		public ISitePage GetSitePageByUrl(string url)
+		public Task<ISitePage> GetSitePageByUrl(string url)
 		{
 			string name = GetSitePageFileName(url.ToLowerInvariant());
+			ISitePage result = null;
 			if (File.Exists(name))
 			{
-				return DeSerializeFile<SitePage>(name);
+				result = DeSerializeFile<JsonSitePage>(name);
 			}
-			return null;
+			return Task.FromResult(result);
 		}
 
-		public ISitePage Deserialize(string filecontent)
+		public Task<ISitePage> Deserialize(string filecontent)
 		{
-			return JsonConvert.DeserializeObject<SitePage>(filecontent, JsonInterfaceConverter);
+			return Task.FromResult<ISitePage>(JsonConvert.DeserializeObject<JsonSitePage>(filecontent, JsonInterfaceConverter));
 		}
 
-		public void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
+		public Task StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
 		{
 			string name = GetSitePageFileName(sitePage.Url.ToLowerInvariant());
 			if (MiniWebSite.Configuration.StoreVersions && File.Exists(name))
@@ -51,61 +54,76 @@ namespace MiniWeb.Storage.JsonStorage
 				File.Copy(name, version);
 			}
 			SerializeObject(name, sitePage);
+			return Task.FromResult(0);
 		}
 
-		public void DeleteSitePage(ISitePage sitePage)
+		public Task DeleteSitePage(ISitePage sitePage)
 		{
 			string name = GetSitePageFileName(sitePage.Url.ToLowerInvariant());
 			File.Delete(name);
+			return Task.FromResult(0);
 		}
 
-		public IEnumerable<ISitePage> AllPages()
+		public Task<IEnumerable<ISitePage>> AllPages()
 		{
-			List<SitePage> pages = new List<SitePage>();
+			List<JsonSitePage> pages = new List<JsonSitePage>();
 			if (Directory.Exists(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder))
 			{
 				string[] pageFiles = Directory.GetFiles(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder, "*.json");
 				foreach (string page in pageFiles)
 				{
 					MiniWebSite.Logger?.LogDebug($"Loading page from disc {page}");
-					pages.Add(DeSerializeFile<SitePage>(page));
+					pages.Add(DeSerializeFile<JsonSitePage>(page));
 				}
 			}
-			return pages;
+			return Task.FromResult<IEnumerable<ISitePage>>(pages);
 		}
-		
-		public List<IPageSection> GetDefaultSectionContent(DefaultContent defaultContent)
+
+		public Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent)
 		{
-			return defaultContent?.Content?.Select(c => new PageSection()
+			var result = defaultContent?.Content?.Select(c => new JsonPageSection()
 			{
 				Key = c.Section,
-				Items = c.Items?.Select(i => new ContentItem()
+				Items = c.Items?.Select(i => new JsonContentItem()
 				{
 					Template = i,
 					Values = new Dictionary<string, string>()
 				}).ToList<IContentItem>()
 			}).ToList<IPageSection>();
+			return Task.FromResult(result);
 		}
-		
-		public ISitePage MiniWeb404Page
+
+		public Task<IPageSection> GetPageSection(SitePageSectionPostModel section)
 		{
-			get
+			var result = new JsonPageSection
 			{
-				return AllPages().FirstOrDefault(p => p.Url == "404") ?? new SitePage()
+				Key = section.Key,
+				Items = section.Items.Select(i => new JsonContentItem
 				{
-					Title = "Page Not Found : 404",
-					MetaTitle = "Page Not Found : 404",
-					Layout = StorageConfig.Layout,
-					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
-					Visible = true,
-					Sections = new List<IPageSection>()
+					Template = i.Template,
+					Values = i.Values
+				}).ToList<IContentItem>()
+			};
+			return Task.FromResult<IPageSection>(result);
+		}
+
+		public async Task<ISitePage> MiniWeb404Page()
+		{
+			return (await AllPages()).FirstOrDefault(p => p.Url == "404") ?? new JsonSitePage()
+			{
+				Title = "Page Not Found : 404",
+				MetaTitle = "Page Not Found : 404",
+				Layout = StorageConfig.Layout,
+				Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+				Visible = true,
+				Sections = new List<IPageSection>()
 					{
-						new PageSection()
+						new JsonPageSection()
 						{
 							Key = "content",
 							Items = new List<IContentItem>()
 							{
-								new ContentItem {
+								new JsonContentItem {
 									Template = $"~{StorageConfig.ItemTemplatePath}/item.cshtml",
 									Values =
 									{
@@ -116,26 +134,23 @@ namespace MiniWeb.Storage.JsonStorage
 							}
 						}
 						},
-					Url = "404"
-				};
-			}
+				Url = "404"
+			};
 		}
 
-		public ISitePage MiniWebLoginPage
+		public Task<ISitePage> MiniWebLoginPage()
 		{
-			get
+			var result = new JsonSitePage()
 			{
-				return new SitePage()
-				{
-					Title = "Login",
-					MetaTitle = "Login",
-					Layout = StorageConfig.Layout,
-					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
-					Sections = new List<IPageSection>(),
-					Url = "miniweb/login",
-					Visible = true
-				};
-			}
+				Title = "Login",
+				MetaTitle = "Login",
+				Layout = StorageConfig.Layout,
+				Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+				Sections = new List<IPageSection>(),
+				Url = "miniweb/login",
+				Visible = true
+			};
+			return Task.FromResult<ISitePage>(result);
 		}
 
 		public JsonConverter JsonInterfaceConverter
@@ -146,18 +161,19 @@ namespace MiniWeb.Storage.JsonStorage
 			}
 		}
 
-		public ISitePage NewPage()
+		public Task<ISitePage> NewPage()
 		{
-			return new SitePage();
+			return Task.FromResult<ISitePage>(new JsonSitePage());
 		}
 
 		private void SerializeObject(string filename, object obj)
 		{
 			using (MemoryStream ms = new MemoryStream())
 			{
-				string fileContent = JsonConvert.SerializeObject(obj, new JsonSerializerSettings{Formatting = Formatting.Indented});
+				string fileContent = JsonConvert.SerializeObject(obj, new JsonSerializerSettings { Formatting = Formatting.Indented });
 				var folder = Path.GetDirectoryName(filename);
-				if (!Directory.Exists(folder)) {
+				if (!Directory.Exists(folder))
+				{
 					Directory.CreateDirectory(folder);
 				}
 				if (File.Exists(filename))

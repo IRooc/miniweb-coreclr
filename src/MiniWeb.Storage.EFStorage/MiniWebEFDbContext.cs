@@ -87,6 +87,10 @@ namespace MiniWeb.Storage.EFStorage
 		{
 			return Visible && ShowInMenu;
 		}
+		public bool IsActiveFor(string url)
+		{
+			return url.StartsWith(this.Url + "/") || url == this.Url;
+		}
 	}
 
 
@@ -111,13 +115,13 @@ namespace MiniWeb.Storage.EFStorage
 	}
 
 
-	public class PageSection : IPageSection
+	public class EFPageSection : IPageSection
 	{
 		public string Key { get; set; }
 		public List<IContentItem> Items { get; set; }
 	}
 
-	public class ContentItem : IContentItem
+	public class EFContentItem : IContentItem
 	{
 		public ISitePage Page { get; set; }
 		public string Template { get; set; }

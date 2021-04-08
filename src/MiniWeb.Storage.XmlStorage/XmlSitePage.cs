@@ -57,15 +57,19 @@ namespace MiniWeb.Storage.XmlStorage
 		{
 			return Visible && ShowInMenu;
 		}
+		public bool IsActiveFor(string url)
+		{
+			return url.StartsWith(this.Url + "/") || url == this.Url;
+		}
 	}
 
-	public class PageSection : IPageSection
+	public class XmlPageSection : IPageSection
 	{
 		public string Key { get; set; }
 		public List<IContentItem> Items { get; set; }
 	}
 
-	public class ContentItem : IContentItem
+	public class XmlContentItem : IContentItem
 	{
 		[IgnoreDataMember]
 		public ISitePage Page { get; set; }

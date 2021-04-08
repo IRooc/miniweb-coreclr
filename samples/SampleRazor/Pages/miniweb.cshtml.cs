@@ -7,24 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SampleRazor.Pages
 {
-	public class AppModel : PageModel
+	public class MiniwebModel : PageModel
 	{
 		public readonly IMiniWebSite Miniweb;
 		public ISitePage SitePage {get;set;}
 
 		[BindProperty(SupportsGet = true)]
 		public string PageUrl { get; set; }
-		public AppModel(IMiniWebSite miniweb)
+
+		public MiniwebModel(IMiniWebSite miniweb)
 		{
 			Miniweb = miniweb;
 		}
 
-
 		public async Task OnGet()
 		{
-			Miniweb.Logger?.LogInformation($"index action {Request.Path.Value}");
+			Miniweb.Logger?.LogDebug($"index action {Request.Path.Value}");
 
-			var result = Miniweb.GetPageByUrl(PageUrl, User);
+			var result = await Miniweb.GetPageByUrl(PageUrl, User);
 
 			//redirect if not editing?
 			if (!string.IsNullOrWhiteSpace(result.RedirectUrl))
@@ -36,7 +36,6 @@ namespace SampleRazor.Pages
 				Response.StatusCode = 404;
 			}
 			SitePage = result.Page;
-
 		}
 	}
 }

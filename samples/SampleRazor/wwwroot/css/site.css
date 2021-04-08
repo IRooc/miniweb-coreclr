@@ -29,6 +29,8 @@ h3 {
 	font-size: 80px;
 }
 
+article {overflow: hidden;}
+
 img {
 	max-width: 100%;
 }

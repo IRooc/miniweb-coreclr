@@ -5,75 +5,81 @@
 
 <html>
 <head prefix="og: http://ogp.me/ns#">
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@Model.MetaTitle - @MiniWebSite.Configuration.Title</title>
-    <meta name="description" content="@Model.MetaDescription" />
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/site.css" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>@Model.MetaTitle - @MiniWebSite.Configuration.Title</title>
+	<meta name="description" content="@Model.MetaDescription" />
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/css/site.css" />
 
-    <meta name="application-name" content="@MiniWebSite.Configuration.Title" />
-    <meta name="msapplication-TileColor" content="#ffffff" />
+	<meta name="application-name" content="@MiniWebSite.Configuration.Title" />
+	<meta name="msapplication-TileColor" content="#ffffff" />
 
-    <meta property="og:title" content="@Model.MetaTitle" />
-    <meta property="og:type" content="website" />
+	<meta property="og:title" content="@Model.MetaTitle" />
+	<meta property="og:type" content="website" />
 
 </head>
 <body class="@Model.GetBodyCss()">
-    <div class="container">
-        <header role="banner">
-            HEADER
-        </header>
-        <div role="navigation" class="mainmenu navbar navbar-default">
-            <div class="navbar-header">
-                <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav" miniweb-menu="/">
-                    <miniweb-menuitem>
-                        @*Model here is the Child SitePage that is rendered currently so Model is still a SitePage but the "wrong" one *@
-                        <li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
-                            <a href="@(MiniWebSite.GetPageUrl(Model))">@Model.Title</a>
-                        </li>
-                    </miniweb-menuitem>
-                </ul>
-            </div>
-        </div>
-        @*Do we show submenu?*@
-        @if (MiniWebSite.Pages.Any(p => Model.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu())))
-		  {
-            <div role="navigation" class="submenu navbar navbar-default">
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl">
-                        <miniweb-menuitem>
-                            @*Model here is the Child SitePage that is rendered currently so Model is still a SitePage but the "wrong" one *@
-                            <li class="@(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? "active" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
-                                <a href="@(MiniWebSite.GetPageUrl(Model))">@Model.Title</a>
-                            </li>
-                        </miniweb-menuitem>
-                    </ul>
-                </div>
-            </div>
-		  }
-        @RenderBody()
-    </div>
-    <div class="container">
-        <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
-            <span>
-                Footer
-            </span>
-        </footer>
-    </div>
-   
+	<div class="container">
+		<header role="banner">
+			HEADER
+		</header>
+		<div role="navigation" class="mainmenu navbar navbar-default">
+			<div class="navbar-header">
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav" miniweb-menu="/">
+					<miniweb-menuitem>
+						@{
+							var sitePage = ViewData["MenuSitePage"] as ISitePage;
+							var currentUrl = ViewData["CurrentUrl"] as string;
+						}
+						<li class="@(sitePage.IsActiveFor(currentUrl) ? "active" : "") @(!sitePage.ShowInMenu || !sitePage.Visible ? "miniweb-hidden-menu" : "")">
+							<a href="@(MiniWebSite.GetPageUrl(sitePage))">@sitePage.Title</a>
+						</li>
+					</miniweb-menuitem>
+				</ul>
+			</div>
+		</div>
+		@*Do we show submenu?*@
+		@if ((await MiniWebSite.Pages()).Any(p => Model.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu())))
+		{
+			<div role="navigation" class="submenu navbar navbar-default">
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl">
+						<miniweb-menuitem>
+							@{
+								var subSitePage = ViewData["MenuSitePage"] as ISitePage;
+								var subCurrentUrl = ViewData["CurrentUrl"] as string;
+							}
+							<li class="@(subSitePage.IsActiveFor(subCurrentUrl) ? "active" : "") @(!subSitePage.ShowInMenu || !subSitePage.Visible ? "miniweb-hidden-menu" : "")">
+								<a href="@(MiniWebSite.GetPageUrl(subSitePage))">@subSitePage.Title</a>
+							</li>
+						</miniweb-menuitem>
+					</ul>
+				</div>
+			</div>
+		}
+		@RenderBody()
+	</div>
+	<div class="container">
+		<footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+			<span>
+				Footer
+			</span>
+		</footer>
+	</div>
 
-    <script src="/scripts/site.js"></script>
 
-    <miniwebadmin />
+	<script src="/scripts/site.js"></script>
+
+	<miniwebadmin />
 
 </body>
 </html>

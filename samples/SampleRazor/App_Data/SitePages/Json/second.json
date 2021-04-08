@@ -1,0 +1,36 @@
+{
+  "Url": "second",
+  "RedirectUrl": null,
+  "Title": "Second",
+  "Template": "~/Views/Pages/TwoColumn.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
+  "MetaTitle": "Secondpage",
+  "MetaDescription": null,
+  "Visible": true,
+  "ShowInMenu": true,
+  "SortOrder": 2,
+  "Date": "2021-03-24T11:51:01",
+  "Created": "2021-03-24T11:51:18.6650187+01:00",
+  "LastModified": "2021-03-30T09:45:09.6444693+02:00",
+  "Sections": [
+    {
+      "Key": "content",
+      "Items": [
+        {
+          "Template": "~/Views/Items/item.cshtml",
+          "Values": {
+            "title": "Enter title1",
+            "content": "Enter content11"
+          }
+        },
+        {
+          "Template": "~/Views/Items/item.cshtml",
+          "Values": {
+            "title": "Enter title2",
+            "content": "Enter content22"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -56,14 +56,13 @@ namespace SampleRazor
 			app.UseAuthentication();
 			app.UseAuthorization();
 
-			MiniWebConfiguration config = app.GetMiniWebConfig();
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapMiniwebApiRoute(config);
+				endpoints.MapMiniwebApiRoute();
 				endpoints.MapRazorPages();
 				
 				//this fallback page handles all the Miniweb Pages
-				endpoints.MapFallbackToPage("{*pageUrl}", "/app");
+				endpoints.MapFallbackToPage("{*pageUrl}", "/miniweb");
 			});
 		}
 	}

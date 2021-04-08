@@ -75,9 +75,9 @@ namespace MiniWeb.Core
 			return app;
 		}
 
-		public static ControllerActionEndpointConventionBuilder MapMiniwebApiRoute(this IEndpointRouteBuilder endpoints, MiniWebConfiguration config)
+		public static ControllerActionEndpointConventionBuilder MapMiniwebApiRoute(this IEndpointRouteBuilder endpoints)
 		{
-			Console.WriteLine($"{config.ApiEndpoint.Substring(1)}{{action}}");
+			var config = endpoints.ServiceProvider.GetRequiredService<IOptions<MiniWebConfiguration>>().Value;
 			return endpoints.MapControllerRoute("miniwebapi", $"{config.ApiEndpoint.Substring(1)}{{action}}", new { controller = "MiniWebApi" });
 		}
 

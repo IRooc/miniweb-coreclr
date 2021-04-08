@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MiniWeb.Core
 {
@@ -8,7 +9,7 @@ namespace MiniWeb.Core
 		public string MetaDescription { get; set; }
 		public string MetaTitle { get; set; }
 
-		public DateTime Date {get;set;}
+		public DateTime Date { get; set; }
 		public bool ShowInMenu { get; set; }
 		public int SortOrder { get; set; }
 		public string Template { get; set; }
@@ -17,5 +18,17 @@ namespace MiniWeb.Core
 		public string RedirectUrl { get; set; }
 		public bool Visible { get; set; }
 		public bool? NewPage { get; set; }
+	}
+
+
+	public class SitePageSectionPostModel
+	{
+		public List<SitePageContentPostModel> Items { get;set; }
+		public string Key { get; set; }
+	}
+	public class SitePageContentPostModel 
+	{
+		public string Template { get; set; }
+		public Dictionary<string, string> Values { get; set; }
 	}
 }

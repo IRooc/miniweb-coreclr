@@ -29,12 +29,13 @@ namespace MiniWeb.Core
 
 		[HttpGet]
 		[ValidateAntiForgeryToken]
-		public IActionResult AllAssets(int take = 16, int page = 0, string folder = "")
+		public async Task<IActionResult> AllAssets(int take = 16, int page = 0, string folder = "")
 		{
-			IEnumerable<IAsset> folderAssets = _webSite.Assets.Where(a => a.Folder.Equals(folder, StringComparison.CurrentCultureIgnoreCase));
-			return new JsonResult(new {
+			IEnumerable<IAsset> folderAssets = (await _webSite.Assets()).Where(a => a.Folder.Equals(folder, StringComparison.CurrentCultureIgnoreCase));
+			return new JsonResult(new
+			{
 				TotalAssets = folderAssets.Count(),
-				Assets= folderAssets.Select(a => new { a.VirtualPath, a.Type, a.FileName, a.Folder }).Skip(page * take).Take(take)
+				Assets = folderAssets.Select(a => new { a.VirtualPath, a.Type, a.FileName, a.Folder }).Skip(page * take).Take(take)
 			});
 		}
 
@@ -47,17 +48,21 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SaveContent(string url, string items)
+		public async Task<IActionResult> SaveContent(string url, string items)
 		{
-			var result = _webSite.GetPageByUrl(url, User);
+			var result = await _webSite.GetPageByUrl(url, User);
 			if (result.Found)
 			{
 				_webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");
-				var newSections = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<IPageSection>>(items, _webSite.ContentStorage.JsonInterfaceConverter);
+				var newSections = JsonConvert.DeserializeObject<IEnumerable<SitePageSectionPostModel>>(items);
 				result.Page.Sections.Clear();
-				result.Page.Sections.AddRange(newSections);
+				foreach (var item in newSections)
+				{
+					var resultsectios = await _webSite.ContentStorage.GetPageSection(item);
+					result.Page.Sections.Add(resultsectios);
+				}
 
-				_webSite.SaveSitePage(result.Page, Request, true);
+				await _webSite.SaveSitePage(result.Page, Request, true);
 				return new JsonResult(new { result = true });
 			}
 			return new JsonResult(new { result = false });
@@ -65,34 +70,30 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SaveAssets(string miniwebAssetFolder, List<IFormFile> files)
+		public async Task<IActionResult> SaveAssets(string miniwebAssetFolder, List<IFormFile> files)
 		{
 			if (files.Count > 0)
 			{
-				List<IAsset> assets = new List<IAsset>();
 				foreach (var file in files)
 				{
 					using (var ms = new MemoryStream())
 					{
-						file.CopyTo(ms);
+						await file.CopyToAsync(ms);
 						var fileBytes = ms.ToArray();
-						var newAsset = _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, miniwebAssetFolder);
-						if (newAsset != null)
-						{
-							assets.Add(newAsset);
-							_webSite.ReloadAssets(true);
-						}
-						else
+						var newAsset = await _webSite.AssetStorage.CreateAsset(file.FileName, fileBytes, miniwebAssetFolder);
+						if (newAsset == null)
 						{
 							return new JsonResult(new { result = false });
 						}
 					}
 				}
-				return new JsonResult(new { result = true, assets = assets.Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
+				return new JsonResult(new { result = true, assets = (await _webSite.Assets(true)).Select(a => new { a.FileName, a.Folder, a.VirtualPath, a.Type }) });
 			}
 			return new JsonResult(new { result = false });
 		}
 
+
+		//'hibben' feature to bulk upload files only implemented in JSON storage
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> MultiplePages(List<IFormFile> files, bool force)
@@ -104,10 +105,10 @@ namespace MiniWeb.Core
 					using (var reader = new StreamReader(file.OpenReadStream()))
 					{
 						var content = await reader.ReadToEndAsync();
-						var sitePage = _webSite.ContentStorage.Deserialize(content);
-						if (_webSite.Pages.FirstOrDefault(p => p.Url == sitePage.Url) == null || force)
+						var sitePage = await _webSite.ContentStorage.Deserialize(content);
+						if ((await _webSite.Pages()).FirstOrDefault(p => p.Url == sitePage.Url) == null || force)
 						{
-							_webSite.SaveSitePage(sitePage, Request);
+							await _webSite.SaveSitePage(sitePage, Request);
 						}
 						else if (!force)
 						{
@@ -122,7 +123,7 @@ namespace MiniWeb.Core
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult SavePage([FromForm] SitePageBasicPostModel posted)
+		public async Task<IActionResult> SavePage([FromForm] SitePageBasicPostModel posted)
 		{
 			//ignore move for now...
 			if (posted.NewPage != true && Request.Form.ContainsKey("OldUrl") && (string)Request.Form["OldUrl"] != posted.Url)
@@ -133,7 +134,7 @@ namespace MiniWeb.Core
 			}
 
 			//find current page
-			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == posted.Url);
+			var page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == posted.Url);
 			if (page == null)
 			{
 				if (posted.NewPage != true)
@@ -141,10 +142,10 @@ namespace MiniWeb.Core
 					return new JsonResult(new { result = false, message = $"Page with url {posted.Url} already exists" });
 				}
 				//new page
-				page = _webSite.ContentStorage.NewPage();
+				page = await _webSite.ContentStorage.NewPage();
 				page.Url = posted.Url;
 				page.Created = DateTime.Now;
-				page.Sections = _webSite.GetDefaultContentForTemplate(page.Template);
+				page.Sections = await _webSite.GetDefaultContentForTemplate(page.Template);
 			}
 			//only reset properties of posted model on page
 			page.RedirectUrl = posted.RedirectUrl;
@@ -158,27 +159,27 @@ namespace MiniWeb.Core
 			page.Title = posted.Title;
 			page.Visible = posted.Visible;
 			_webSite.Logger?.LogInformation("Save page {0}", posted.Url);
-			_webSite.SaveSitePage(page, Request, false);
+			await _webSite.SaveSitePage(page, Request, false);
 			return new JsonResult(new { result = true, url = _webSite.GetPageUrl(page) });
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult RemovePage(string url)
+		public async Task<IActionResult> RemovePage(string url)
 		{
 			_webSite.Logger?.LogInformation($"remove {url}");
-			ISitePage page = _webSite.Pages.FirstOrDefault(p => p.Url == url);
-			_webSite.DeleteSitePage(page);
+			var page = (await _webSite.Pages()).FirstOrDefault(p => p.Url == url);
+			await _webSite.DeleteSitePage(page);
 			var redirectUrl = page.Parent == null ? _webSite.Configuration.DefaultPage : _webSite.GetPageUrl(page.Parent);
 			return new JsonResult(new { result = true, url = redirectUrl });
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult ReloadCaches()
+		public async Task<IActionResult> ReloadCaches()
 		{
-			_webSite.ReloadAssets(true);
-			_webSite.ReloadPages(true);
+			await _webSite.Pages(true);
+			await _webSite.Assets(true);
 			return new JsonResult(new { result = true });
 		}
 	}
