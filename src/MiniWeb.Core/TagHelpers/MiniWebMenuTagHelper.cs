@@ -85,7 +85,7 @@ namespace MiniWeb.Core.TagHelpers
 				for(var i =0; i < items.Count(); i++)				
 				{
 					var page = items.ElementAt(i);
-					//override the model to the current child page
+					//set ViewData needed in child template
 					ViewContext.ViewData["MenuIteratorIndex"] = i;
 					ViewContext.ViewData["CurrentUrl"] = currentModel.Url;
 					ViewContext.ViewData["MenuSitePage"]= page;
@@ -96,7 +96,6 @@ namespace MiniWeb.Core.TagHelpers
 					//get the current parsed ItemTemplate from the context
 					output.Content.AppendHtml(menuContext.ItemTemplate);
 				}
-				//reset the current model
 			}
 			else
 			{
