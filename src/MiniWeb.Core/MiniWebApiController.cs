@@ -120,6 +120,27 @@ namespace MiniWeb.Core
 			}
 			return new JsonResult(new { result = false });
 		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DownloadPages(string url, bool all)
+		{
+			var content = string.Empty;
+			if (all)
+			{
+				var allPages = await _webSite.Pages(true);
+				content = JsonConvert.SerializeObject(allPages);
+			}
+			else
+			{
+				var result = await _webSite.GetPageByUrl(url, User);
+				content = JsonConvert.SerializeObject(result);
+			}
+			return new ContentResult
+			{
+				Content = content,
+				ContentType = "application/json"
+			};
+		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]

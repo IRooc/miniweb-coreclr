@@ -32,8 +32,8 @@ namespace SampleRazor
 			
 			services.AddMiniWeb(Configuration)
 					.AddMiniWebJsonStorage(Configuration)
-					.AddMiniWebAssetFileSystemStorage(Configuration);
-			services.AddMiniwebBasicAuth(Configuration);
+					.AddMiniWebAssetFileSystemStorage(Configuration)
+					.AddMiniwebBasicAuth(Configuration);
 					
 			services.AddMvc();
 			services.AddRazorPages().AddRazorPagesOptions(options =>{

@@ -1,24 +1,34 @@
 {
 	// See http://go.microsoft.com/fwlink/?LinkId=733558
 	// for the documentation about the tasks.json format
-	"version": "0.1.0",
+	"version": "2.0.0",
 	"command": "cmd",
 	"isShellCommand": true,
-    "args": ["/C"],
-	"showOutput": "always",	
+	"args": [
+		"/C"
+	],
+	
     "echoCommand": true,
     "suppressTaskName": true,
 	"tasks": [
 		{
-			"taskName": "build",
-			"args": ["build.bat"],
-			"isBuildCommand": true,
-			"problemMatcher": "$msCompile"
+			"label": "build",
+			"type": "shell",
+			"args": [
+				"/C",
+				"build.bat"
+			],
+			"problemMatcher": "$msCompile",
+			"group": "build"
 		},
-        {
-			"taskName": "typescript",
-			"args": ["typescript.bat"],
+		{
+			"label": "typescript",
+			"type": "shell",
+			"args": [
+				"/C",
+				"typescript.bat"
+			],
 			"problemMatcher": "$tsc"
-        }
+		}
 	]
 }

@@ -689,6 +689,7 @@ const miniwebAdminInit = function (userOptions) {
 	const btnAddLink = document.getElementById("miniweb-button-addlink");
 	const btnAddAsset = document.getElementById('miniweb-button-addasset');
 	const btnAddMultiplePages = document.getElementById('miniweb-button-addmultiplepages');
+	const btnDownloadPages = document.getElementById('miniweb-button-downloadpagejson');
 	const btnReload = document.getElementById('miniweb-button-reloadcache');
 
 	btnSavePage.addEventListener('click', savePage);
@@ -781,6 +782,41 @@ const miniwebAdminInit = function (userOptions) {
 				});
 		};
 		fileUpload.click();
+	});
+
+	btnDownloadPages.addEventListener('click', (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const button = e.target as HTMLElement;
+		const form = button.closest<HTMLFormElement>('form');
+		const formData = new FormData(form);
+		formData.append('__RequestVerificationToken', options.afToken);
+		fetch(options.apiEndpoint + "downloadpages", {
+			method: "POST",
+			body: formData
+		})
+			.then(res => res.text())
+			.then(content => {
+				const a = document.createElement('a');
+				const mimeType = 'application/json';
+				const fileName = 'page.json';
+				if (navigator.msSaveBlob) { // IE10
+					navigator.msSaveBlob(new Blob([content], {
+						type: mimeType
+					}), fileName);
+				} else if (URL && 'download' in a) { //html5 A[download]
+					a.href = URL.createObjectURL(new Blob([content], {
+						type: mimeType
+					}));
+					a.setAttribute('download', fileName);
+					document.body.appendChild(a);
+					a.click();
+					document.body.removeChild(a);
+				} else {
+					location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+				}
+			});
+
 	});
 
 	btnReload.addEventListener('click', (e) => {

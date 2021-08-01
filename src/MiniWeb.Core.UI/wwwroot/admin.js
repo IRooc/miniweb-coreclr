@@ -659,6 +659,7 @@ const miniwebAdminInit = function (userOptions) {
     const btnAddLink = document.getElementById("miniweb-button-addlink");
     const btnAddAsset = document.getElementById('miniweb-button-addasset');
     const btnAddMultiplePages = document.getElementById('miniweb-button-addmultiplepages');
+    const btnDownloadPages = document.getElementById('miniweb-button-downloadpagejson');
     const btnReload = document.getElementById('miniweb-button-reloadcache');
     btnSavePage.addEventListener('click', savePage);
     btnDeletePage.addEventListener('click', removePage);
@@ -745,6 +746,41 @@ const miniwebAdminInit = function (userOptions) {
             });
         };
         fileUpload.click();
+    });
+    btnDownloadPages.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const button = e.target;
+        const form = button.closest('form');
+        const formData = new FormData(form);
+        formData.append('__RequestVerificationToken', options.afToken);
+        fetch(options.apiEndpoint + "downloadpages", {
+            method: "POST",
+            body: formData
+        })
+            .then(res => res.text())
+            .then(content => {
+            const a = document.createElement('a');
+            const mimeType = 'application/json';
+            const fileName = 'page.json';
+            if (navigator.msSaveBlob) {
+                navigator.msSaveBlob(new Blob([content], {
+                    type: mimeType
+                }), fileName);
+            }
+            else if (URL && 'download' in a) {
+                a.href = URL.createObjectURL(new Blob([content], {
+                    type: mimeType
+                }));
+                a.setAttribute('download', fileName);
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+            else {
+                location.href = 'data:application/octet-stream,' + encodeURIComponent(content);
+            }
+        });
     });
     btnReload.addEventListener('click', (e) => {
         e.preventDefault();
