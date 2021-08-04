@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width" />
 	<title>@Model.MetaTitle - @MiniWebSite.Configuration.Title</title>
 	<meta name="description" content="@Model.MetaDescription" />
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<link rel="stylesheet" href="/css/site.css" />
 
 	<meta name="application-name" content="@MiniWebSite.Configuration.Title" />
@@ -24,48 +24,49 @@
 		<header role="banner">
 			HEADER
 		</header>
-		<div role="navigation" class="mainmenu navbar navbar-default">
-			<div class="navbar-header">
-				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<div class="container-fluid">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				  <span class="navbar-toggler-icon"></span>
 				</button>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav" miniweb-menu="/">
-					<miniweb-menuitem>
-						@{
-							var sitePage = ViewData["MenuSitePage"] as ISitePage;
-							var currentUrl = ViewData["CurrentUrl"] as string;
-						}
-						<li class="@(sitePage.IsActiveFor(currentUrl) ? "active" : "") @(!sitePage.ShowInMenu || !sitePage.Visible ? "miniweb-hidden-menu" : "")">
-							<a href="@(MiniWebSite.GetPageUrl(sitePage))">@sitePage.Title</a>
-						</li>
-					</miniweb-menuitem>
-				</ul>
-			</div>
-		</div>
-		@*Do we show submenu?*@
-		@if ((await MiniWebSite.Pages()).Any(p => Model.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu())))
-		{
-			<div role="navigation" class="submenu navbar navbar-default">
 				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl">
+					<ul class="nav navbar-nav" miniweb-menu="/">
 						<miniweb-menuitem>
 							@{
-								var subSitePage = ViewData["MenuSitePage"] as ISitePage;
-								var subCurrentUrl = ViewData["CurrentUrl"] as string;
+								var sitePage = ViewData["MenuSitePage"] as ISitePage;
+								var currentUrl = ViewData["CurrentUrl"] as string;
 							}
-							<li class="@(subSitePage.IsActiveFor(subCurrentUrl) ? "active" : "") @(!subSitePage.ShowInMenu || !subSitePage.Visible ? "miniweb-hidden-menu" : "")">
-								<a href="@(MiniWebSite.GetPageUrl(subSitePage))">@subSitePage.Title</a>
+							<li class="nav-item @(!sitePage.ShowInMenu || !sitePage.Visible ? "miniweb-hidden-menu" : "")">
+								<a class="nav-link @(sitePage.IsActiveFor(currentUrl) ? "active" : "")" href="@(MiniWebSite.GetPageUrl(sitePage))">@sitePage.Title</a>
 							</li>
 						</miniweb-menuitem>
 					</ul>
 				</div>
 			</div>
+			</nav>
+		@*Do we show submenu?*@
+		@if ((await MiniWebSite.Pages()).Any(p => Model.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu())))
+		{
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<div role="navigation" class="container-fluid">
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl">
+							<miniweb-menuitem>
+								@{
+									var subSitePage = ViewData["MenuSitePage"] as ISitePage;
+									var subCurrentUrl = ViewData["CurrentUrl"] as string;
+								}
+								<li class="nav-item @(!subSitePage.ShowInMenu || !subSitePage.Visible ? "miniweb-hidden-menu" : "")">
+									<a class="nav-link @(subSitePage.IsActiveFor(subCurrentUrl) ? "active" : "")" href="@(MiniWebSite.GetPageUrl(subSitePage))">@subSitePage.Title</a>
+								</li>
+							</miniweb-menuitem>
+						</ul>
+					</div>
+				</div>
+			</nav>
 		}
+	</div>
+	<div class="container">
 		@RenderBody()
 	</div>
 	<div class="container">

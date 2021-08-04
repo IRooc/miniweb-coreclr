@@ -21,12 +21,24 @@ h3 {
 	font-size: 18px;
 }
 
+.basic h1, .bye h2, .bye h3, .bye h4 {
+	color: #111;
+} 
 .container header {
 	background: #5555ff;
 	height: 120px;
 	text-align: center;
 	color: #fff;
 	font-size: 80px;
+}
+.basic .container header {
+	background: transparent;
+	height: auto;
+	margin: 10px 0
+}
+.container>.row {
+	margin-top: 1em;
+	margin: 1em;
 }
 
 img {
@@ -89,7 +101,9 @@ footer {
 	margin: 40px 0 0;
 	padding: 10px 0;
 }
-
+article {
+	margin-bottom: 30px;
+}
 aside > article.aside {
 	margin: 15px 0;
 }

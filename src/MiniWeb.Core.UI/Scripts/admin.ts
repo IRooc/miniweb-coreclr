@@ -195,7 +195,14 @@ const editContent = function () {
 	document.querySelector('body').classList.add('miniweb-editing');
 	//reassign arrays so al new items are parsed
 	const contentEditables = document.querySelectorAll('[data-miniwebprop]');
-	contentEditables.forEach(el => { if (el.tagName === 'IMG') { return; } el.setAttribute('contentEditable', "true") });
+
+	contentEditables.forEach((el: HTMLElement) => {
+		if (el.classList.contains('miniweb-input-value')) {
+			(el as HTMLInputElement).value = el.dataset.miniwebinputvalue;
+			return;
+		}
+		el.setAttribute('contentEditable', "true")
+	});
 
 	for (let i = 0; i < options.editTypes.length; i++) {
 		const editType = options.editTypes[i];
@@ -253,14 +260,18 @@ const cancelEdit = function () {
 	closeModals();
 };
 
-const getParsedHtml = function (source: HTMLElement) {
-	let parsedDOM;
-	parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
-	parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
-	//remove trailing br that some browsers add in content editable
-	const result = /<body>([\s\S]*?)(<br \/>)?<\/body>/im.exec(parsedDOM);
-	parsedDOM = result[1];
-	return parsedDOM;
+const getItemValue = function (source: HTMLElement) {
+	log('getItemValue', source.contentEditable);
+	if (source.contentEditable === "true") {
+		let parsedDOM;
+		parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
+		parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
+		//remove trailing br that some browsers add in content editable
+		const result = /<body>([\s\S]*?)(<br \/>)?<\/body>/im.exec(parsedDOM);
+		parsedDOM = result[1];
+		return parsedDOM;
+	}
+	return (source as HTMLInputElement)?.value
 };
 
 const saveContent = function () {
@@ -289,7 +300,7 @@ const saveContent = function () {
 			//find all dynamic properties
 			tmpl.querySelectorAll('[data-miniwebprop]').forEach((prop: HTMLElement) => {
 				const key = prop.dataset.miniwebprop;
-				const value = getParsedHtml(prop);
+				const value = getItemValue(prop);
 				const validation = prop.dataset.miniwebValidation;
 				prop.classList.remove('miniweb-invalid-item');
 				if (validation === 'required') {
@@ -304,7 +315,12 @@ const saveContent = function () {
 						prop.classList.add('miniweb-invalid-item');
 					}
 				}
-				prop.innerHTML = value;
+				if (prop.contentEditable == "true"){
+									prop.innerHTML = value;
+				} else if (prop as HTMLInputElement != null){
+					const ht = (prop as HTMLInputElement);
+					ht.value = value;
+				}
 				log('itemfound', key, '[' + value + ']', validation, valid);
 				item.Values[key] = value;
 				//update attributes if any

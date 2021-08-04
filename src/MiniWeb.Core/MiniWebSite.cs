@@ -205,11 +205,11 @@ namespace MiniWeb.Core
 		public async Task<IEnumerable<ISitePage>> Pages(bool forceReload = false)
 		{
 			// Look for cache key.
-			List<ISitePage> result = null;
+			IEnumerable<ISitePage> result = null;
 			if (forceReload || (Cache?.TryGetValue(PagesCacheKey, out result)) != true)
 			{
 				Logger?.LogInformation("Reload pages");
-				result = (await ContentStorage.AllPages()).ToList();
+				result = (await ContentStorage.AllPages()).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 
 				Cache?.Set(PagesCacheKey, result);
 			}

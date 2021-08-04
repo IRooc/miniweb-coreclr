@@ -11,7 +11,7 @@
   "SortOrder": 1,
   "Date": null,
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2021-03-25T09:39:12.5305886+01:00",
+  "LastModified": "2021-08-03T14:05:10.2431997+02:00",
   "Sections": [
     {
       "Key": "content",
@@ -21,6 +21,16 @@
           "Values": {
             "title": "Item sub 1",
             "content": "<p>Lorem ipsum, proin venenatis, mauris nec efficitur euismod, arcu arcu fringilla eros,\n nec viverra diam leo eu quam. Proin elementum mauris non sem mollis \nultricies. Nulla viverra ligula a erat condimentum, ut eleifend tellus \nmaximus. Quisque sit amet lorem purus. <a href=\"/item3.html\">Vestibulum </a>ut sapien at nibh \npharetra vulputate. Donec gravida volutpat nunc, sed sagittis nisl \nlobortis vitae. Suspendisse vel scelerisque metus, id aliquet urna. \nCurabitur at blandit lectus. In non lectus vel orci imperdiet iaculis. \nMauris sit amet commodo tortor, vel posuere erat. Donec sit amet auctor \nmassa.\n\n</p><p>\nSuspendisse vestibulum orci magna, finibus facilisis enim finibus id. \nCurabitur auctor, mi vel venenatis vulputate, ex orci gravida dolor, id \ninterdum metus ligula blandit dui. Etiam tristique nec elit nec \nvestibulum. Suspendisse vitae tortor nec ex egestas mattis. Mauris erat \ndolor, bibendum in lorem a, commodo consectetur felis. Suspendisse \ndignissim, neque sed faucibus fringilla, neque velit blandit est, ac \ntempus nibh purus in tortor. Fusce consectetur sodales nulla, et \nplacerat turpis congue eget. Nunc accumsan, ipsum a gravida congue, \nmetus libero egestas lectus, at condimentum libero magna in dolor. \nAenean fermentum sollicitudin cursus. Praesent consectetur sagittis leo \nnec consectetur. In et fermentum nisl.\n</p>"
+          }
+        },
+        {
+          "Template": "~/Views/Items/image-text.cshtml",
+          "Values": {
+            "image": "",
+            "image:src": "/images/icon.png",
+            "image:alt": "image",
+            "content": "Enter content",
+            "imagelocation": "right"
           }
         }
       ]

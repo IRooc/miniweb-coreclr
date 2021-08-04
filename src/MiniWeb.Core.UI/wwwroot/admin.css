@@ -340,7 +340,7 @@ miniwebadmin .miniweb-add-asset {
 }
 .miniweb-editing [data-miniwebtemplate]:focus-within {
     background: rgba(0,0,0,0.01);
-}ss
+}
 .miniweb-editing [data-miniwebtemplate] {
 	overflow: hidden;
 	border-bottom: 1px dashed black;
@@ -349,6 +349,14 @@ miniwebadmin .miniweb-add-asset {
 	scroll-margin-top: 50px;
 }
 
+.miniweb-editing .miniweb-editonly{
+	display: inherit;
+}
+.miniweb-editing .miniweb-input-value {
+	display: inline-block;
+	margin-top: 25px;
+	position: relative;
+}
 .miniweb-editing [contenteditable] {
 	outline: thin dashed #ccc;
 	width: 100%;

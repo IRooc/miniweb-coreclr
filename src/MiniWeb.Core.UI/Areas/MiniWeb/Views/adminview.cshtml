@@ -1,4 +1,5 @@
 ﻿@inject MiniWeb.Core.IMiniWebSite MiniWebSite
+@using System.Linq;
 @model MiniWeb.Core.ISitePage
 @{
 	var isPublished = Model.Visible;
@@ -13,7 +14,7 @@
 		<ul class="miniweb-horizontal-list">
 			<li>
 				<input type="text" list="miniweb-datalist-pages" class="miniweb-nav-input" id="miniweb-datalist-navigateonenter" placeholder="Navigate to page" /><datalist id="miniweb-datalist-pages">
-					@foreach (var p in await MiniWebSite.Pages())
+					@foreach (var p in (await MiniWebSite.Pages()).OrderBy(p => p.Url))
 					{
 						<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
 					}
@@ -193,7 +194,7 @@
 					<span>Internal URL</span>
 					<select name="InternalUrl">
 						<option value="">Choose url or enter custom</option>
-						@foreach (var p in await MiniWebSite.Pages())
+						@foreach (var p in (await MiniWebSite.Pages()).OrderBy(p => p.Url))
 						{
 							<option value="@(MiniWebSite.GetPageUrl(p))">/@p.Url (@p.Title)</option>
 						}

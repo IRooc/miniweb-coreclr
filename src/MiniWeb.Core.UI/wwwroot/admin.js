@@ -183,9 +183,13 @@ const editContent = function () {
     closeModals();
     document.querySelector('body').classList.add('miniweb-editing');
     const contentEditables = document.querySelectorAll('[data-miniwebprop]');
-    contentEditables.forEach(el => { if (el.tagName === 'IMG') {
-        return;
-    } el.setAttribute('contentEditable', "true"); });
+    contentEditables.forEach((el) => {
+        if (el.classList.contains('miniweb-input-value')) {
+            el.value = el.dataset.miniwebinputvalue;
+            return;
+        }
+        el.setAttribute('contentEditable', "true");
+    });
     for (let i = 0; i < options.editTypes.length; i++) {
         const editType = options.editTypes[i];
         contentEditables.forEach((ce, ix) => {
@@ -232,13 +236,18 @@ const cancelEdit = function () {
     toggleContentInserts(false);
     closeModals();
 };
-const getParsedHtml = function (source) {
-    let parsedDOM;
-    parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
-    parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
-    const result = /<body>([\s\S]*?)(<br \/>)?<\/body>/im.exec(parsedDOM);
-    parsedDOM = result[1];
-    return parsedDOM;
+const getItemValue = function (source) {
+    var _a;
+    log('getItemValue', source.contentEditable);
+    if (source.contentEditable === "true") {
+        let parsedDOM;
+        parsedDOM = new DOMParser().parseFromString(source.innerHTML, 'text/html');
+        parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
+        const result = /<body>([\s\S]*?)(<br \/>)?<\/body>/im.exec(parsedDOM);
+        parsedDOM = result[1];
+        return parsedDOM;
+    }
+    return (_a = source) === null || _a === void 0 ? void 0 : _a.value;
 };
 const saveContent = function () {
     if (!document.querySelector('body').classList.contains('miniweb-editing'))
@@ -263,7 +272,7 @@ const saveContent = function () {
             };
             tmpl.querySelectorAll('[data-miniwebprop]').forEach((prop) => {
                 const key = prop.dataset.miniwebprop;
-                const value = getParsedHtml(prop);
+                const value = getItemValue(prop);
                 const validation = prop.dataset.miniwebValidation;
                 prop.classList.remove('miniweb-invalid-item');
                 if (validation === 'required') {
@@ -279,7 +288,13 @@ const saveContent = function () {
                         prop.classList.add('miniweb-invalid-item');
                     }
                 }
-                prop.innerHTML = value;
+                if (prop.contentEditable == "true") {
+                    prop.innerHTML = value;
+                }
+                else if (prop != null) {
+                    const ht = prop;
+                    ht.value = value;
+                }
                 log('itemfound', key, '[' + value + ']', validation, valid);
                 item.Values[key] = value;
                 if (key.indexOf(':') > 0) {

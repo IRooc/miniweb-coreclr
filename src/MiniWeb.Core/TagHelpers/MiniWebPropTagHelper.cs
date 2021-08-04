@@ -30,8 +30,12 @@ namespace MiniWeb.Core.TagHelpers
 
 		[HtmlAttributeName(MiniWebEditAttributesTagname)]
 		public string EditAttributeString { get; set; }
+
 		[HtmlAttributeName("miniweb-editonly")]
 		public bool EditOnly { get; set; }
+
+		[HtmlAttributeName("miniweb-form-input")]
+		public bool FormInput { get; set; }
 
 		public string[] EditAttributes
 		{
@@ -55,9 +59,16 @@ namespace MiniWeb.Core.TagHelpers
 				var view = ViewContext.View as RazorView;
 				var viewItem = view.RazorPage as RazorPage<IContentItem>;
 				var htmlContent = viewItem.Model.GetValue(Property, output.GetChildContentAsync().Result?.GetContent(HtmlEncoder.Default));
-				output.Content.Clear();
-				output.Content.AppendHtml(htmlContent);
-
+				if (FormInput)
+				{
+					output.AddClass("miniweb-input-value",HtmlEncoder.Default);
+					output.Attributes.SetAttribute("data-miniwebinputvalue", htmlContent);
+				}
+				else
+				{
+					output.Content.Clear();
+					output.Content.AppendHtml(htmlContent);
+				}
 				foreach (var attr in EditAttributes)
 				{
 					var curAttr = attr;
@@ -76,8 +87,9 @@ namespace MiniWeb.Core.TagHelpers
 					output.Attributes.Add("data-miniwebprop", Property);
 				if (!string.IsNullOrWhiteSpace(EditType))
 					output.Attributes.Add("data-miniwebedittype", EditType);
-				
-				if (EditOnly) {
+
+				if (EditOnly)
+				{
 					output.AddClass("miniweb-editonly", HtmlEncoder.Default);
 				}
 
@@ -93,13 +105,15 @@ namespace MiniWeb.Core.TagHelpers
 						{
 							curAttr = attrEls[0];
 							curType = $" data-miniwebedittype=\"{attrEls[1]}\"";
-                        }
+						}
 						var attrEditItem = string.Format("<span data-miniwebprop=\"{0}:{1}\" {3}>{2}</span>", Property, curAttr, output.Attributes[curAttr].Value, curType);
 						output.PostElement.AppendHtml(attrEditItem);
 					}
 					output.PostElement.AppendHtml("</div>");
 				}
-			} else if (EditOnly){
+			}
+			else if (EditOnly)
+			{
 				output.SuppressOutput();
 			}
 		}
