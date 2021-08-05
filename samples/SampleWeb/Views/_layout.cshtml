@@ -26,10 +26,10 @@
 		</header>
 		<nav class="navbar navbar-expand-lg navbar-light">
 			<div class="container-fluid">
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent,#navbarSupportedSubContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				  <span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="navbar-collapse collapse">
+				<div class="navbar-collapse collapse" id="navbarSupportedContent">
 					<ul class="nav navbar-nav" miniweb-menu="/">
 						<miniweb-menuitem>
 							@{
@@ -43,13 +43,13 @@
 					</ul>
 				</div>
 			</div>
-			</nav>
+		</nav>
 		@*Do we show submenu?*@
 		@if ((await MiniWebSite.Pages()).Any(p => Model.BaseUrl == p.Url && p.Pages.Any(s => s.VisibleInMenu())))
 		{
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 				<div role="navigation" class="container-fluid">
-					<div class="navbar-collapse collapse">
+					<div class="navbar-collapse collapse" id="navbarSupportedSubContent">
 						<ul class="nav navbar-nav" miniweb-menu="/@Model.BaseUrl">
 							<miniweb-menuitem>
 								@{
