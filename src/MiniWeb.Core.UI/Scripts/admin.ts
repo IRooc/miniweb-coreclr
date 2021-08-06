@@ -316,7 +316,7 @@ const saveContent = function () {
 					}
 				}
 				if (prop.contentEditable == "true"){
-									prop.innerHTML = value;
+					prop.innerHTML = value;
 				} else if (prop as HTMLInputElement != null){
 					const ht = (prop as HTMLInputElement);
 					ht.value = value;

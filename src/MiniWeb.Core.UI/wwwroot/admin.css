@@ -348,7 +348,9 @@ miniwebadmin .miniweb-add-asset {
 	padding:1px;
 	scroll-margin-top: 50px;
 }
-
+.miniweb-editonly{
+	display: none;
+}
 .miniweb-editing .miniweb-editonly{
 	display: inherit;
 }
