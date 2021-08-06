@@ -11,34 +11,32 @@ a {
 }
 
 h1 {
-	font-size: 26px;
+	font-size:  2em;
 }
 h2 {
-	font-size: 22px;
+	font-size:  1.8em;
 }
-
 h3 {
-	font-size: 18px;
+	font-size: 1.5em;
 }
-
-.basic h1, .bye h2, .bye h3, .bye h4 {
-	color: #111;
-} 
-.container header {
+header {
 	background: #5555ff;
 	height: 120px;
 	text-align: center;
 	color: #fff;
-	font-size: 80px;
+	font-size: 4.5em;
 }
-.basic .container header {
+
+.basic h1, .basic h2, .basic h3, .basic h4 {
+	color: #111;
+} 
+.basic header {
 	background: transparent;
 	height: auto;
 	margin: 10px 0
 }
 .container>.row {
-	margin-top: 1em;
-	margin: 1em;
+	margin: 1em 0.5em;
 }
 
 img {
@@ -62,32 +60,28 @@ img[align=right], div[align=right] {
 	padding: 0;
 }
 
-
 footer {
 	border-top: 1px solid #5555ff;
 	margin: 40px 0 0;
 	padding: 10px 0;
 }
-article {
-	margin-bottom: 30px;
+article + article {
+	margin: 2em 0 0;
 }
+
 aside > article.aside > div {
-	padding: 5px;
+	padding: 0.25em;
 	margin: 0;
-	display: block;
-	font-size: 12px;
+	font-size: 0.9em;
 }
 
 aside > article.aside > h3 {
-	padding: 5px;
+	padding: 0.25em;
 	margin: 0;
-	font-size: 15px;
+	font-size: 1em;
 	background: #f4f2df;
 }
 
-aside > article.aside > div a {
-	color: black;
-}
 
 
 .galleryimage {
@@ -100,17 +94,18 @@ aside > article.aside > div a {
 	text-align: center;
 }
 
-	.galleryimage img {
-		max-width: 100%;
-		max-height: 90%;
-		margin: auto;
-	}
+.galleryimage img {
+	max-width: 100%;
+	max-height: 90%;
+	margin: auto;
+}
 
 
 
 
 @media screen and (min-width:990px) {
-	body>.container{
+	body>.container-md, 
+	body>.container {
 		padding-right: 5rem !important;
 		padding-left: 5rem !important;
 	}

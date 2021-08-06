@@ -13,6 +13,10 @@ body .miniweb-editor-toolbar,
 body miniwebadmin {
 	font-size: 14px; /*everything relative to this*/
 	line-height: 1.42857143;	
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
 }
 body .miniweb-editor-toolbar *,
 body miniwebadmin * {
@@ -168,10 +172,7 @@ miniwebadmin .miniweb-content-items button {
 
 }
 miniwebadmin .miniweb-tools {
-	position: fixed;
 	display: block;
-	top:0;
-	left:0;
 	width: 100%;
 	height: 3.5em;
 	background-color: #f4f2df;
