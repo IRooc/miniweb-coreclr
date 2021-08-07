@@ -11,22 +11,32 @@ a {
 }
 
 h1 {
-	font-size: 26px;
+	font-size:  2em;
 }
 h2 {
-	font-size: 22px;
+	font-size:  1.8em;
 }
-
 h3 {
-	font-size: 18px;
+	font-size: 1.5em;
 }
-
-.container header {
+header {
 	background: #5555ff;
 	height: 120px;
 	text-align: center;
 	color: #fff;
-	font-size: 80px;
+	font-size: 4.5em;
+}
+
+.basic h1, .basic h2, .basic h3, .basic h4 {
+	color: #111;
+} 
+.basic header {
+	background: transparent;
+	height: auto;
+	margin: 10px 0
+}
+.container>.row {
+	margin: 1em 0.5em;
 }
 
 img {
@@ -44,44 +54,10 @@ img[align=right], div[align=right] {
 }
 
 .navbar {
-	border-radius: 0;
-	margin: 0;
-	border: 0;
 	background: #f4f2df;
 }
-
-.navbar-default .navbar-nav > li > a {
-	color: #5555ff;
-	font-size: 18px;
-}
-
-.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-	background: #ffffff;
-	color: #5555ff;
-}
-
-.submenu.navbar-default .navbar-nav > .active > a, .submenu.navbar-default .navbar-nav > .active > a:hover, .submenu.navbar-default .navbar-nav > .active > a:focus {
-	background: none;
-	font-weight: bold;
-}
-
-.mainmenu .nav > li {
-	border-left: 1px solid #ccc;
-}
-
-.mainmenu ul.nav {
-	border-right: 1px solid #ccc;
-	margin: 0;
-}
-
-.submenu.navbar {
-	background:#fafaef;
-	min-height: 20px;
-}
-
-.submenu .navbar-nav > li > a {
-	padding: 8px 15px;
-	font-size: 14px;
+.navbar.submenu {
+	padding: 0;
 }
 
 footer {
@@ -89,28 +65,23 @@ footer {
 	margin: 40px 0 0;
 	padding: 10px 0;
 }
-
-aside > article.aside {
-	margin: 15px 0;
+article + article {
+	margin: 2em 0 0;
 }
 
 aside > article.aside > div {
-	padding: 5px;
+	padding: 0.25em;
 	margin: 0;
-	display: block;
-	font-size: 12px;
+	font-size: 0.9em;
 }
 
 aside > article.aside > h3 {
-	padding: 5px;
+	padding: 0.25em;
 	margin: 0;
-	font-size: 15px;
+	font-size: 1em;
 	background: #f4f2df;
 }
 
-aside > article.aside > div a {
-	color: black;
-}
 
 
 .galleryimage {
@@ -123,33 +94,19 @@ aside > article.aside > div a {
 	text-align: center;
 }
 
-	.galleryimage img {
-		max-width: 100%;
-		max-height: 90%;
-		margin: auto;
-	}
-
-.miniweb-editonly {display:none;}
+.galleryimage img {
+	max-width: 100%;
+	max-height: 90%;
+	margin: auto;
+}
 
 
 
-@media screen and (max-width:767px) {
 
-
-	.container header {
-		text-align: center;
-		background: #5555ff;
-		height: 60px;
-		font-size: 40px;
-
-	}
-
-	.navbar.navbar-default {
-		min-height: 0px;
-	}
-
-	.navbar.navbar-default button {
-		margin-top: -50px;
-		background: white;
+@media screen and (min-width:990px) {
+	body>.container-md, 
+	body>.container {
+		padding-right: 5rem !important;
+		padding-left: 5rem !important;
 	}
 }

@@ -1,0 +1,29 @@
+{
+  "Url": "home",
+  "RedirectUrl": null,
+  "Title": "Home",
+  "Template": "~/Views/Pages/OneColumn.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
+  "MetaTitle": "Home",
+  "MetaDescription": "Homepage",
+  "Visible": true,
+  "ShowInMenu": true,
+  "SortOrder": 1,
+  "Date": "2021-03-23T09:08:30",
+  "Created": "2021-03-23T09:08:15.8630399+01:00",
+  "LastModified": "2021-03-23T09:09:06.9692236+01:00",
+  "Sections": [
+    {
+      "Key": "content",
+      "Items": [
+        {
+          "Template": "~/Views/Items/item.cshtml",
+          "Values": {
+            "title": "Homepage",
+            "content": "This is the homepage<br />"
+          }
+        }
+      ]
+    }
+  ]
+}

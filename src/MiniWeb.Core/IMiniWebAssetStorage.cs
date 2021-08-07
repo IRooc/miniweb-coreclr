@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
@@ -8,12 +9,11 @@ namespace MiniWeb.Core
 		//Set explicitly to avoid circular dependency injection
 		IMiniWebSite MiniWebSite { get; set; }
 
-		IEnumerable<IAsset> GetAllAssets();
+		Task<IEnumerable<IAsset>> GetAllAssets();
 		
-		void RemoveAsset(IAsset asset);
-		
-		IAsset CreateAsset(string fileName, byte[] bytes, string virtualFolder = null);
-		IAsset CreateAsset(string fileName, string base64String, string virtualFolder = null);
+		Task<bool> RemoveAsset(IAsset asset);		
+		Task<IAsset> CreateAsset(string fileName, byte[] bytes, string virtualFolder = null);
+		Task<IAsset> CreateAsset(string fileName, string base64String, string virtualFolder = null);
     }
 
 	public enum AssetType

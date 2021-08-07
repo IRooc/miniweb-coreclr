@@ -31,6 +31,8 @@ namespace MiniWeb.Core
 
 		string GetBodyCss();
 		bool VisibleInMenu();
+
+		bool IsActiveFor(string url);
 	}
 	
 	public interface IPageSection

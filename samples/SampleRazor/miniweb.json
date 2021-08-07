@@ -1,0 +1,28 @@
+{
+	"MiniWeb": {
+		"Title": "New Title from Config",
+		"DefaultPage": "/home.html",
+		"ApiEndpoint": "/miniweb-api-endpoint/",
+		"DefaultContent": [
+			{
+				"Template": "~/Views/Pages/OneColumn.cshtml",
+				"Content": [ { "Section": "content", "Items": [ "~/Views/Items/item.cshtml","~/Views/Items/href.cshtml"] } ]
+			}
+		]
+	},
+	"MiniWebStorage": {
+		"Users": {
+			"demo":"demo"
+		}
+	},
+	"urls": "http://localhost:5003;https://localhost:5004",
+	"Logging": {
+		"EnableConsole": true,
+		"EnableFile": false,
+		"LogLevel": {
+			"Default": "Warning",
+			"Microsoft.Hosting.Lifetime": "Information",
+			"MiniWeb": "Information"
+		}
+	}
+}

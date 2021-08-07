@@ -1,0 +1,17 @@
+﻿@model MiniWeb.Core.IContentItem
+<article miniweb-template="@Model.Template">
+	<div class="row">
+		<div class="col-md-4 @(Model.Get<string>("imagelocation")=="right" ? "col-md-push-8 order-1" : "" )">
+			<img src="" alt="image" miniweb-prop="image" miniweb-attributes="src|asset,alt" />
+		</div>
+		<div class="col-md-8 @(Model.Get<string>("imagelocation")=="right" ? "col-md-pull-4" : "" )">
+			<div miniweb-prop="content" miniweb-edittype="html">Enter content</div>
+		</div>
+	</div>
+	<label miniweb-prop="" miniweb-editonly="true"> Image location
+		<select miniweb-prop="imagelocation" miniweb-form-input="true" miniweb-editonly="true">
+			<option value="left">Left</option>
+			<option value="right">Right</option>
+		</select>
+	</label>
+</article>

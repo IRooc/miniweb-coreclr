@@ -3,14 +3,15 @@
   "RedirectUrl": null,
   "Title": "Not Found",
   "Template": "~/Views/Pages/OneColumn.cshtml",
-  "Layout": "~/Views/_home.cshtml",
+  "Layout": "~/Views/_basic.cshtml",
   "MetaTitle": "Page not found",
   "MetaDescription": "Page not found",
   "Visible": true,
   "ShowInMenu": false,
   "SortOrder": 999,
+  "Date": "2021-08-04T17:23:34",
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2020-02-28T10:38:59.232253+01:00",
+  "LastModified": "2021-08-04T17:23:50.047791+02:00",
   "Sections": [
     {
       "Key": "content",

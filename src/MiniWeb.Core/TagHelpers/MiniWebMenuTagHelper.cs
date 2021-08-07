@@ -63,14 +63,15 @@ namespace MiniWeb.Core.TagHelpers
 			context.Items.Add(typeof(MiniWebMenuContext), menuContext);
 
 			var items = Enumerable.Empty<ISitePage>();
-
+			var pages = await _webSite.Pages();
 			if (MenuRoot == "/")
 			{
-				items = _webSite.PageHierarchy.Where(p => p.VisibleInMenu() || _webSite.IsAuthenticated(ViewContext.HttpContext.User));
+				//get all URL's without / in them.
+				items = pages.Where(p => !p.Url.Contains('/') && ( p.VisibleInMenu() || _webSite.IsAuthenticated(ViewContext.HttpContext.User)));
 			}
-			else if (_webSite.Pages.Any(p => ("/" + p.Url) == MenuRoot))
+			else if (pages.Any(p => ("/" + p.Url) == MenuRoot))
 			{
-				items = _webSite.Pages.First(p => ("/" + p.Url) == MenuRoot).Pages.Where(p => p.VisibleInMenu() || _webSite.IsAuthenticated(ViewContext.HttpContext.User));
+				items = pages.First(p => ("/" + p.Url) == MenuRoot).Pages.Where(p => p.VisibleInMenu() || _webSite.IsAuthenticated(ViewContext.HttpContext.User));
 			}
 			else
 			{
@@ -84,10 +85,10 @@ namespace MiniWeb.Core.TagHelpers
 				for(var i =0; i < items.Count(); i++)				
 				{
 					var page = items.ElementAt(i);
-					//override the model to the current child page
-					ViewContext.ViewBag.MenuIteratorIndex = i;
-					ViewContext.ViewBag.CurrentUrl = currentModel.Url;
-					ViewContext.ViewData.Model = page;
+					//set ViewData needed in child template
+					ViewContext.ViewData["MenuIteratorIndex"] = i;
+					ViewContext.ViewData["CurrentUrl"] = currentModel.Url;
+					ViewContext.ViewData["MenuSitePage"]= page;
 
 					//render child without cached results.
 					await output.GetChildContentAsync(false);
@@ -95,8 +96,6 @@ namespace MiniWeb.Core.TagHelpers
 					//get the current parsed ItemTemplate from the context
 					output.Content.AppendHtml(menuContext.ItemTemplate);
 				}
-				//reset the current model
-				ViewContext.ViewData.Model = currentModel;
 			}
 			else
 			{

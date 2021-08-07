@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using MiniWeb.Core;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace MiniWeb.Storage.XmlStorage
 {
@@ -21,27 +22,29 @@ namespace MiniWeb.Storage.XmlStorage
 			StorageConfig = config.Value;
 		}
 
-		public bool Authenticate(string username, string password)
+		public Task<bool> Authenticate(string username, string password)
 		{
-			return StorageConfig.Users.Any(u => string.Compare(u.Key, username, true) == 0 && string.Compare(u.Value, password) == 0);
+			var result = StorageConfig.Users.Any(u => string.Compare(u.Key, username, true) == 0 && string.Compare(u.Value, password) == 0);
+			return Task.FromResult(result);
 		}
 
-		public ISitePage GetSitePageByUrl(string url)
+		public Task<ISitePage> GetSitePageByUrl(string url)
 		{
 			string name = GetSitePageFileName(url.ToLowerInvariant());
+			ISitePage result = null;
 			if (File.Exists(name))
 			{
-				return DeSerializeFile<XmlSitePage>(name);
+				result = DeSerializeFile<XmlSitePage>(name);
 			}
-			return null;
+			return Task.FromResult(result);
 		}
 
-		public ISitePage Deserialize(string filecontent)
+		public Task<ISitePage> Deserialize(string filecontent)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
+		public Task StoreSitePage(ISitePage sitePage, HttpRequest currentRequest)
 		{
 			string name = GetSitePageFileName(sitePage.Url.ToLowerInvariant());
 			if (MiniWebSite.Configuration.StoreVersions && File.Exists(name))
@@ -52,15 +55,17 @@ namespace MiniWeb.Storage.XmlStorage
 				File.Copy(name, version);
 			}
 			SerializeObject(name, sitePage);
+			return Task.FromResult(0);
 		}
 
-		public void DeleteSitePage(ISitePage sitePage)
+		public Task DeleteSitePage(ISitePage sitePage)
 		{
 			string name = GetSitePageFileName(sitePage.Url.ToLowerInvariant());
 			File.Delete(name);
+			return Task.FromResult(0);
 		}
 
-		public IEnumerable<ISitePage> AllPages()
+		public Task<IEnumerable<ISitePage>> AllPages()
 		{
 			List<ISitePage> pages = new List<ISitePage>();
 			if (Directory.Exists(MiniWebSite.HostingEnvironment.ContentRootPath + StorageConfig.SitePageFolder))
@@ -72,41 +77,56 @@ namespace MiniWeb.Storage.XmlStorage
 					pages.Add(DeSerializeFile<XmlSitePage>(page));
 				}
 			}
-			return pages;
+			return Task.FromResult<IEnumerable<ISitePage>>(pages);
 		}
 
-		public List<IPageSection> GetDefaultSectionContent(DefaultContent defaultContent)
+		public Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent)
 		{
-			return defaultContent?.Content?.Select(c => new PageSection()
+			var result = defaultContent?.Content?.Select(c => new XmlPageSection()
 			{
 				Key = c.Section,
-				Items = c.Items?.Select(i => new ContentItem()
+				Items = c.Items?.Select(i => new XmlContentItem()
 				{
 					Template = i,
 					Values = new Dictionary<string, string>()
 				}).ToList<IContentItem>()
 			}).ToList<IPageSection>();
+			return Task.FromResult<List<IPageSection>>(result);
 		}
-		
-		public ISitePage MiniWeb404Page
+
+		public Task<IPageSection> GetPageSection(SitePageSectionPostModel section)
 		{
-			get
+			var result = new XmlPageSection
 			{
-				return AllPages().FirstOrDefault(p => p.Url == "404") ?? new XmlSitePage()
+				Key = section.Key,
+				Items = section.Items.Select(i => new XmlContentItem
 				{
-					Title = "Page Not Found : 404",
-					MetaTitle = "Page Not Found : 404",
-					Layout = StorageConfig.Layout,
-					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
-					Visible = true,
-					Sections = new List<IPageSection>()
+					Template = i.Template,
+					Values = i.Values
+				}).ToList<IContentItem>()
+			};
+			return Task.FromResult<IPageSection>(result);
+		}
+
+
+
+		public async Task<ISitePage> MiniWeb404Page()
+		{
+			var result = (await AllPages()).FirstOrDefault(p => p.Url == "404") ?? new XmlSitePage()
+			{
+				Title = "Page Not Found : 404",
+				MetaTitle = "Page Not Found : 404",
+				Layout = StorageConfig.Layout,
+				Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+				Visible = true,
+				Sections = new List<IPageSection>()
 					{
-						new PageSection()
+						new XmlPageSection()
 						{
 							Key = "content",
 							Items = new List<IContentItem>()
 							{
-								new ContentItem {
+								new XmlContentItem {
 									Template = $"~{StorageConfig.ItemTemplatePath}/item.cshtml",
 									Values =
 									{
@@ -117,38 +137,28 @@ namespace MiniWeb.Storage.XmlStorage
 							}
 						}
 						},
-					Url = "404"
-				};
-			}
+				Url = "404"
+			};
+			return result;
 		}
 
-		public ISitePage MiniWebLoginPage
+		public Task<ISitePage> MiniWebLoginPage()
 		{
-			get
+			var result = new XmlSitePage()
 			{
-				return new XmlSitePage()
-				{
-					Title = "Login",
-					MetaTitle = "Login",
-					Layout = StorageConfig.Layout,
-					Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
-					Sections = new List<IPageSection>(),
-					Url = "miniweb/login",
-					Visible = true
-				};
-			}
+				Title = "Login",
+				MetaTitle = "Login",
+				Layout = StorageConfig.Layout,
+				Template = $"~{StorageConfig.PageTemplatePath}/OneColumn.cshtml",
+				Sections = new List<IPageSection>(),
+				Url = "miniweb/login",
+				Visible = true
+			};
+			return Task.FromResult<ISitePage>(result);
 		}
-
-		public JsonConverter JsonInterfaceConverter
+		public Task<ISitePage> NewPage()
 		{
-			get
-			{
-				return new JsonInterfaceConverter();
-			}
-		}
-		public ISitePage NewPage()
-		{
-			return new XmlSitePage();
+			return Task.FromResult<ISitePage>(new XmlSitePage());
 		}
 
 
@@ -191,7 +201,7 @@ namespace MiniWeb.Storage.XmlStorage
 
 		private static DataContractSerializer GetSerializer<T>()
 		{
-			return new DataContractSerializer(typeof(T), new[] { typeof(XmlSitePage), typeof(PageSection), typeof(ContentItem) });
+			return new DataContractSerializer(typeof(T), new[] { typeof(XmlSitePage), typeof(XmlPageSection), typeof(XmlContentItem) });
 		}
 
 		/// <summary>

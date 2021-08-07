@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace MiniWeb.Core
 {
@@ -8,22 +9,20 @@ namespace MiniWeb.Core
 	{
 		//Set explicitly to avoid circular dependency injection
 		IMiniWebSite MiniWebSite { get; set; }
-		bool Authenticate(string username, string password);
-		ISitePage GetSitePageByUrl(string url);
-		void StoreSitePage(ISitePage sitePage, HttpRequest currentRequest);
-		void DeleteSitePage(ISitePage sitePage);
-		IEnumerable<ISitePage> AllPages();
+		Task<bool> Authenticate(string username, string password);
+		Task<ISitePage> GetSitePageByUrl(string url);
+		Task StoreSitePage(ISitePage sitePage, HttpRequest currentRequest);
+		Task DeleteSitePage(ISitePage sitePage);
+		Task<IEnumerable<ISitePage>> AllPages();
 
-		ISitePage Deserialize(string filecontent);
+		Task<ISitePage> Deserialize(string filecontent);
 
-		ISitePage MiniWebLoginPage { get; }
-		ISitePage MiniWeb404Page { get; }
+		Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent);
+		Task<IPageSection> GetPageSection(SitePageSectionPostModel section);
 
-		List<IPageSection> GetDefaultSectionContent(DefaultContent defaultContent);
 
-		//Used to deserialize the Posted JSON to concrete classes.
-		JsonConverter JsonInterfaceConverter { get; }
-
-		ISitePage NewPage();
+		Task<ISitePage> MiniWebLoginPage();
+		Task<ISitePage> MiniWeb404Page();
+		Task<ISitePage> NewPage();
 	}
 }

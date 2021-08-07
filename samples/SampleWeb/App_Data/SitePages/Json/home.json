@@ -9,23 +9,18 @@
   "Visible": true,
   "ShowInMenu": true,
   "SortOrder": 0,
+  "Date": "2021-03-25T08:45:53",
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2020-11-19T10:42:32.9801571+01:00",
+  "LastModified": "2021-03-25T09:33:07.4648579+01:00",
   "Sections": [
     {
       "Key": "content",
       "Items": [
         {
-          "Template": "~/Views/Items/href.cshtml",
+          "Template": "~/Views/Items/item.cshtml",
           "Values": {
-            "link": "link defmo",
-            "link:href": "http://test.test",
-            "link:title": "link title",
-            "image": "",
-            "image:src": "",
-            "image:alt": "image",
-            "URL": "",
-            "ASSET": ""
+            "title": "Test Test",
+            "content": "Test"
           }
         }
       ]

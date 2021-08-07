@@ -29,7 +29,7 @@ namespace MiniWeb.Core.Tests
 		[Fact]
 		public void Show404Page()
 		{
-			var result = _pageController.Index("/nonexistent");
+			var result = _pageController.Index("/nonexistent").Result;
 			var viewResult = Assert.IsType<ViewResult>(result);
 			var model = Assert.IsAssignableFrom<ISitePage>(viewResult.ViewData.Model);
 			Assert.Equal("404", model.Url);
@@ -38,7 +38,7 @@ namespace MiniWeb.Core.Tests
 		[Fact]
 		public void ShowLoginPage()
 		{
-			var result = _pageController.Login();
+			var result = _pageController.Login().Result;
 			var viewResult = Assert.IsType<ViewResult>(result);
 			var model = Assert.IsAssignableFrom<ISitePage>(viewResult.ViewData.Model);
 			Assert.Equal("Login", model.Title);

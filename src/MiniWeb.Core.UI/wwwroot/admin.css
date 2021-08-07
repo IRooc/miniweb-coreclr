@@ -13,6 +13,10 @@ body .miniweb-editor-toolbar,
 body miniwebadmin {
 	font-size: 14px; /*everything relative to this*/
 	line-height: 1.42857143;	
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
 }
 body .miniweb-editor-toolbar *,
 body miniwebadmin * {
@@ -103,19 +107,18 @@ miniwebadmin > aside .alert.miniweb-alert-danger {
 
 miniwebadmin .miniweb-modal.show {
 	display: block !important;
-	position: absolute;
-	top: 0;
+	position: fixed;
+	top: 3em;
 	left: 0;
 	bottom: 0;
 	right: 0;
 	z-index: 10;
-	height: 100vh;
+	height: calc(100vh -3em);
 }
 
 miniwebadmin .miniweb-modal.show .miniweb-modal-backdrop {
 	position: fixed;
 	top: 3em;
-	left: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
@@ -125,15 +128,13 @@ miniwebadmin .miniweb-modal.show .miniweb-modal-backdrop {
 miniwebadmin .miniweb-modal .miniweb-modal-header h4 {
 	padding: 1em 0;
 	font-size: 1.5em;
-	position: relative;
 }
 miniwebadmin .miniweb-modal .miniweb-modal-content {
 	width: 40em;
 	background-color: white;
-	height: calc(95% - 3em);
+	height: calc(100vh - 3em);
 	overflow: scroll;;
-	position: relative;
-	top: 3em;
+	position: fixed;
 	left:0;
 	padding-left: 20px;
 	padding-bottom: 20px;
@@ -147,21 +148,38 @@ miniwebadmin .miniweb-modal.miniweb-modal-right .miniweb-modal-content {
 miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
 	left: calc(50% - 20em - 20px);
 }
+miniwebadmin .miniweb-modal.miniweb-modal-small {
+	top: calc(50% - 5em);
+}
+miniwebadmin .miniweb-modal.miniweb-modal-small .miniweb-modal-content {
+	height: 10em;
+	scrollbar-width: none;
+}
 miniwebadmin .miniweb-modal .miniweb-modal-content .right {
 	position: absolute;
 	right: 0;
-	top:0;
 }
 miniwebadmin .miniweb-modal .miniweb-modal-footer {
 	text-align: right;
 	padding: 0 48px 20px;
 }
 
+miniwebadmin .miniweb-content-items {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+miniwebadmin .miniweb-content-items button {
+    display: flex;
+    flex: 1 0 20%;
+    justify-content: center;
+    align-items: center;
+    max-width: 19%;
+    margin: 1% 1% 1% 0;
+
+}
 miniwebadmin .miniweb-tools {
-	position: fixed;
 	display: block;
-	top:0;
-	left:0;
 	width: 100%;
 	height: 3.5em;
 	background-color: #f4f2df;
@@ -195,7 +213,9 @@ miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list {
 	display: inline-block;
 }
 miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list li {
-	display: inline-block;
+	float: left;
+	position: relative;
+	height: 3rem;
 }
 miniwebadmin .pull-right {
 	float:right!important;
@@ -203,6 +223,7 @@ miniwebadmin .pull-right {
 miniwebadmin .miniweb-tools label {
 	font-size: 12px;
 	cursor: pointer;
+	padding: 5px;
 }
 miniwebadmin .miniweb-tools label input {
 	margin:0
@@ -230,6 +251,7 @@ miniwebadmin .miniweb-tools  button.icon {
 miniwebadmin .icon:before {
 	position: absolute;
 	font-size: 15px;
+	font-family: Arial, Helvetica;
 	top:3px;
 	left: 2px;
 }
@@ -245,11 +267,11 @@ miniwebadmin .icon.icon-save:before {
 	font-weight: 700;
 }
 miniwebadmin .icon.icon-cancel:before {
-	content: "\2B6E";
+	content: "\27F2";
 	font-weight: 700;
 }
 miniwebadmin .icon.icon-signout:before {
-	content: "\2BBF";
+	content: "\2297";
 }
 miniwebadmin .icon.icon-signout:hover:before {
 	color:red;
@@ -324,6 +346,9 @@ miniwebadmin .miniweb-add-asset {
 .miniweb-editing [data-miniwebsection]:hover {
 	border-color: grey;
 }
+.miniweb-editing [data-miniwebtemplate]:focus-within {
+    background: rgba(0,0,0,0.01);
+}
 .miniweb-editing [data-miniwebtemplate] {
 	overflow: hidden;
 	border-bottom: 1px dashed black;
@@ -331,13 +356,22 @@ miniwebadmin .miniweb-add-asset {
 	padding:1px;
 	scroll-margin-top: 50px;
 }
-
+.miniweb-editonly{
+	display: none;
+}
+.miniweb-editing .miniweb-editonly{
+	display: inherit;
+}
+.miniweb-editing .miniweb-input-value {
+	display: inline-block;
+	margin-top: 25px;
+	position: relative;
+}
 .miniweb-editing [contenteditable] {
 	outline: thin dashed #ccc;
 	width: 100%;
 	display: inline-block;
 	margin-top: 25px;
-	font-size: 1em;
 	position: relative;
 }
 
@@ -420,7 +454,7 @@ miniwebadmin .miniweb-add-asset {
 	font-size: 1em;
 }
 .miniweb-editing [data-miniwebedittype="asset"]::after {
-	content: "\1F0ED";
+	content: "\1F5BC";
 	cursor: pointer;
 	right: -25px;
 	position: absolute;
@@ -446,7 +480,7 @@ miniwebadmin .miniweb-add-asset {
 	display: flex;
 	min-height: 320px;
 	width: 90%;
-	padding-left: 20px;
+	padding-left: 10px;
 	flex-wrap: wrap;
 }
 
@@ -475,7 +509,7 @@ miniwebadmin .miniweb-add-asset {
 
 .miniweb-editing .miniweb-assetlist li span.miniweb-asset-pick:before {
 	font-family: Arial, Helvetica, sans-serif;
-	content: '\1F5CE';
+	content: '\1F5BD';
 	position: absolute;
 	opacity: 0.2;
 	margin: 0 auto;
@@ -514,10 +548,12 @@ miniwebadmin .miniweb-add-asset {
 	}
 	miniwebadmin .miniweb-nav-input {
 		max-width: 20vw;
-		max-height: 1rem;
 	}
 	miniwebadmin .miniweb-tools  button.icon  {
 		line-height: 15px;
+	}
+	miniwebadmin .miniweb-tools  button.icon.icon-signout  {
+		color:red;
 	}
 
 	miniwebadmin .miniweb-tools  button.icon span {

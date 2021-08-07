@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
+using System.Threading.Tasks;
 
 namespace MiniWeb.Core.Tests
 {
@@ -14,16 +15,15 @@ namespace MiniWeb.Core.Tests
 		public IMiniWebSite MiniWeb { get; set; }
 		public MiniWebSiteFixture()
 		{
-			var hostingEnv = new Mock<IHostingEnvironment>();
+			var hostingEnv = new Mock<IWebHostEnvironment>();
 			var loggerFactory = new Mock<ILoggerFactory>();
 			var contentStorage = new Mock<IMiniWebContentStorage>();
 			var assetStorage = new Mock<IMiniWebAssetStorage>();
 			var missingSitePage = Get404SitePage();
 			var loginPage = GetLoginPage();
 
-			hostingEnv.SetupGet(h => h.ContentRootPath).Returns("./");
-			contentStorage.SetupGet(x => x.MiniWeb404Page).Returns(missingSitePage.Object);
-			contentStorage.SetupGet(x => x.MiniWebLoginPage).Returns(loginPage.Object);
+			contentStorage.Setup(x => x.MiniWeb404Page()).Returns(Task.FromResult(missingSitePage.Object));
+			contentStorage.Setup(x => x.MiniWebLoginPage()).Returns(Task.FromResult(loginPage.Object));
 
 			var configOptions = Options.Create(new MiniWebConfiguration());
 

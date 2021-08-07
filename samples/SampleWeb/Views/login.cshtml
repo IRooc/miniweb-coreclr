@@ -4,17 +4,17 @@
 @using Microsoft.Extensions.DependencyInjection
 @inject MiniWeb.Core.IMiniWebSite MiniWebSite
 @{
-	Layout = "~/Views/_layout.cshtml";
+Layout = "~/Views/_layout.cshtml";
 }
-<div>
-	<form action="@MiniWebSite.GetPageUrl(Model)" method="post" role="form" class="col-md-5 col-md-offset-3 miniweb-login" id="login">
+<div class="row justify-content-md-center">
+	<form action="@MiniWebSite.GetPageUrl(Model)" method="post" role="form" class="col-md-5  miniweb-login" id="login">
 		<fieldset>
 			<h1 class="text-center">Sign in</h1>
 			@if (ViewBag.ErrorMessage != null)
 			{
-				<div class="alert alert-danger" role="alert">
-					@ViewBag.ErrorMessage
-				</div>
+			<div class="alert alert-danger" role="alert">
+				@ViewBag.ErrorMessage
+			</div>
 			}
 
 			<div class="form-group">
@@ -26,16 +26,17 @@
 				<label for="password">Password</label>
 				<input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
 			</div>
-			
+
 			<button type="submit" class="btn btn-primary">Sign in</button>
 		</fieldset>
 
 	</form>
-
+</div>
+<div class="row justify-content-md-center">
 
 	@{
 
-		var schemeProvider = Context.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
+	var schemeProvider = Context.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
 		var schemes = await schemeProvider.GetAllSchemesAsync();
 		if (schemes.Any(s => s.Name != MiniWebSite.Configuration.Authentication.AuthenticationScheme))
 		{
@@ -45,11 +46,11 @@
 				<h4>Use another service to log in.</h4>
 				@foreach (var type in schemes.Where(s => s.Name != MiniWebSite.Configuration.Authentication.AuthenticationScheme))
 				{
-					<button type="submit" class="btn btn-default" name="provider" value="@type.Name" title="@type.DisplayName">@type.DisplayName</button>
+				<button type="submit" class="btn btn-default" name="provider" value="@type.Name" title="@type.DisplayName">@type.DisplayName</button>
 				}
 			</fieldset>
 		</form>
 
-	}
-	}
+		}
+		}
 </div>

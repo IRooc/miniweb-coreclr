@@ -1,0 +1,29 @@
+{
+  "Url": "blog/blog1",
+  "RedirectUrl": null,
+  "Title": "blog1",
+  "Template": "~/Views/Pages/OneColumn.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
+  "MetaTitle": "test1",
+  "MetaDescription": "test",
+  "Visible": true,
+  "ShowInMenu": false,
+  "SortOrder": 1,
+  "Date": "2020-03-16T10:35:30",
+  "Created": "0001-01-01T00:00:00",
+  "LastModified": "2021-03-25T09:38:40.4756495+01:00",
+  "Sections": [
+    {
+      "Key": "content",
+      "Items": [
+        {
+          "Template": "~/Views/Items/blogitem.cshtml",
+          "Values": {
+            "title": "Blog 1 d",
+            "content": "Blog test is this the one option?<br />Testfsd"
+          }
+        }
+      ]
+    }
+  ]
+}

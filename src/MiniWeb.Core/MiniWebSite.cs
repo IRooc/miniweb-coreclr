@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Razor.Hosting;
+using System.IO;
 
 namespace MiniWeb.Core
 {
@@ -15,42 +19,59 @@ namespace MiniWeb.Core
 	{
 		public const string EmbeddedBase64FileInHtmlRegex = "(src|href)=\"(data:([^\"]+))\"(\\s+data-filename=\"([^\"]+)\")?";
 		public const string EmbeddedBase64FileInValueRegex = "(data:([^\"]+))";
+		public const string PagesCacheKey = "MiniWebPagesCacheKey";
+		public const string AssetsCacheKey = "MiniWebAssetsCacheKey";
 		public MiniWebConfiguration Configuration { get; }
-		public IHostingEnvironment HostingEnvironment { get; }
+		public IWebHostEnvironment HostingEnvironment { get; }
 
 		public ILogger Logger { get; }
 		public IMiniWebContentStorage ContentStorage { get; }
 		public IMiniWebAssetStorage AssetStorage { get; }
 		public IMemoryCache Cache { get; }
 
-		public IEnumerable<ISitePage> PageHierarchy { get; set; }
-		public IEnumerable<ISitePage> Pages { get; set; }
 		public IEnumerable<string> PageTemplates
 		{
 			get
 			{
-				string basePath = HostingEnvironment.ContentRootPath;
-				return System.IO.Directory.GetFiles(basePath + Configuration.PageTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+				var templatePath = Configuration.PageTemplatePath;
+				return GetTemplatesForPath(templatePath);
 			}
 		}
-
 		public IEnumerable<string> ItemTemplates
 		{
 			get
 			{
-				
-
-				string basePath = HostingEnvironment.ContentRootPath;
-				return System.IO.Directory.GetFiles(basePath + Configuration.ItemTemplatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+				var templatePath = Configuration.ItemTemplatePath;
+				return GetTemplatesForPath(templatePath);
 			}
+		}
+		private IEnumerable<string> GetTemplatesForPath(string templatePath)
+		{
+			var basePath = HostingEnvironment.ContentRootPath;
+			var result = Enumerable.Empty<string>();
+			if (HostingEnvironment.IsDevelopment() && Directory.Exists(basePath + templatePath))
+			{
+				result = System.IO.Directory.GetFiles(basePath + templatePath).Select(t => t = t.Replace(basePath, "~").Replace("\\", "/"));
+			}
+			if (!result.Any())
+			{
+				//find assemblies with precompiled views
+				var assemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetCustomAttributes(typeof(RazorCompiledItemAttribute), false).Any());
+				var resultList = new List<string>();
+				foreach (var assembly in assemblies)
+				{
+					var attribs = assembly.GetCustomAttributes(typeof(RazorCompiledItemAttribute), false).OfType<RazorCompiledItemAttribute>();
+					resultList.AddRange(attribs.Where(a => a.Identifier.StartsWith(templatePath)).Select(a => a.Identifier));
+				}
+				result = resultList.ToArray();
+			}
+			return result;
 		}
 
 
-		public MiniWebSite(IHostingEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
+		public MiniWebSite(IWebHostEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
 						   IMemoryCache cache, IOptions<MiniWebConfiguration> config)
 		{
-			Pages = Enumerable.Empty<ISitePage>();
-
 			HostingEnvironment = env;
 			Configuration = config.Value;
 			ContentStorage = storage;
@@ -63,8 +84,6 @@ namespace MiniWeb.Core
 			ContentStorage.MiniWebSite = this;
 			AssetStorage.MiniWebSite = this;
 
-			this.ReloadPages();
-			this.ReloadAssets();
 
 		}
 
@@ -77,34 +96,37 @@ namespace MiniWeb.Core
 			return null;
 		}
 
-		public FindResult GetPageByUrl(string url, bool editing = false)
+		public async Task<FindResult> GetPageByUrl(string url, ClaimsPrincipal user)
 		{
+			bool editing = IsAuthenticated(user);
 			var result = new FindResult();
+			var urlToFind = url;
 			Logger?.LogDebug($"Finding page {url}");
-			if (string.IsNullOrWhiteSpace(url) || url == "/")
+			if (string.IsNullOrWhiteSpace(urlToFind) || urlToFind == "/")
 			{
 				Logger?.LogDebug("Homepage");
-				url = Configuration.DefaultPage;
+				urlToFind = Configuration.DefaultPage;
 			}
 			var suffix = string.Empty;
-			if (url?.StartsWith("/") == true)
+			if (urlToFind?.StartsWith("/") == true)
 			{
-				url = url.Substring(1);
+				urlToFind = urlToFind.Substring(1);
 			}
-			if (!string.IsNullOrWhiteSpace(Configuration.PageExtension) && url.Contains(Configuration.PageExtension))
+			if (!string.IsNullOrWhiteSpace(Configuration.PageExtension) && urlToFind.Contains(Configuration.PageExtension))
 			{
 				string urlPattern = $"^(.*?)\\.{Configuration.PageExtension}(.*?)$";
-				Match match = Regex.Match(url, urlPattern);
+				Match match = Regex.Match(urlToFind, urlPattern);
 				if (match.Success)
 				{
-					url = match.Groups[1].Value;
+					urlToFind = match.Groups[1].Value;
 					suffix = match.Groups[2].Value;
 				}
 			}
 
-			var pageByUrl = Pages.FirstOrDefault(p => p.Url == url) ?? ContentStorage.GetSitePageByUrl(url) ?? ContentStorage.MiniWeb404Page;
-			var foundPage = pageByUrl.Visible || editing ? pageByUrl : ContentStorage.MiniWeb404Page;
-			if (foundPage == ContentStorage.MiniWeb404Page)
+			ISitePage notFoundPage = await ContentStorage.MiniWeb404Page();
+			var pageByUrl = (await Pages()).FirstOrDefault(p => p.Url == urlToFind) ?? (await ContentStorage.GetSitePageByUrl(urlToFind)) ?? notFoundPage;
+			var foundPage = pageByUrl.Visible || editing ? pageByUrl : notFoundPage;
+			if (foundPage == notFoundPage)
 			{
 				Logger?.LogWarning($"Could not find page [{url}] found page: [{foundPage.Url}]");
 			}
@@ -113,7 +135,7 @@ namespace MiniWeb.Core
 				result.Found = true;
 				if (string.IsNullOrWhiteSpace(foundPage.RedirectUrl))
 				{
-					if (foundPage.Url != url && $"{foundPage.Url}.{Configuration.PageExtension}" != url && (foundPage.Url != "404"))
+					if (foundPage.Url != urlToFind && $"{foundPage.Url}.{Configuration.PageExtension}" != urlToFind && (foundPage.Url != "404"))
 					{
 						if (!string.IsNullOrWhiteSpace(Configuration.PageExtension))
 						{
@@ -158,9 +180,9 @@ namespace MiniWeb.Core
 			return user?.IsInRole(MiniWebAuthentication.MiniWebCmsRoleValue) == true;
 		}
 
-		public bool Authenticate(string username, string password)
+		public async Task<bool> Authenticate(string username, string password)
 		{
-			return ContentStorage.Authenticate(username, password);
+			return await ContentStorage.Authenticate(username, password);
 		}
 
 		public ClaimsPrincipal GetClaimsPrincipal(string username)
@@ -180,37 +202,33 @@ namespace MiniWeb.Core
 				};
 		}
 
-		public void ReloadPages(bool forceReload = false)
+		public async Task<IEnumerable<ISitePage>> Pages(bool forceReload = false)
 		{
 			// Look for cache key.
-			IEnumerable<ISitePage> pages = null;
-			if (!forceReload && Cache?.TryGetValue("MWPAGES", out pages) == true)
-			{
-				Logger?.LogInformation("Cached pages");
-				Pages = pages;
-			}
-			else
+			IEnumerable<ISitePage> result = null;
+			if (forceReload || (Cache?.TryGetValue(PagesCacheKey, out result)) != true)
 			{
 				Logger?.LogInformation("Reload pages");
-				Pages = ContentStorage.AllPages().ToList();
+				result = (await ContentStorage.AllPages()).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 
-				Cache?.Set("MWPAGES", Pages);
+				Cache?.Set(PagesCacheKey, result);
 			}
-			PageHierarchy = Pages.Where(p => !p.Url.Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
-			foreach (var page in Pages)
+			//Create Hierarchy
+			foreach (var page in result)
 			{
 				string urlStart = page.Url + "/";
-				page.Pages = Pages.Where(p => p.Url.StartsWith(urlStart) && !p.Url.Replace(urlStart, "").Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
+				page.Pages = result.Where(p => p.Url.StartsWith(urlStart) && !p.Url.Replace(urlStart, "").Contains("/")).OrderBy(p => p.SortOrder).ThenBy(p => p.Title);
 				if (page.Url.Contains("/"))
 				{
 					//set parent
 					var parentUrl = page.Url.Substring(0, page.Url.LastIndexOf("/"));
-					page.Parent = Pages.FirstOrDefault(p => p.Url == parentUrl);
+					page.Parent = result.FirstOrDefault(p => p.Url == parentUrl);
 				}
 			}
+			return result;
 		}
 
-		public void SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false)
+		public async Task SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false)
 		{
 			Logger?.LogInformation($"Saving page {page.Url}");
 			page.LastModified = DateTime.Now;
@@ -221,58 +239,55 @@ namespace MiniWeb.Core
 			if (storeImages)
 			{
 				//NOTE(RC): save current with base 64 so at least it's saved.
-				ContentStorage.StoreSitePage(page, currentRequest);
+				await ContentStorage.StoreSitePage(page, currentRequest);
 				//NOTE(RC): can this be done saner?
 				foreach (var item in page.Sections.SelectMany(s => s.Items).Where(i => i.Values.Any(kv => kv.Value.Contains("data:"))))
 				{
 					for (var i = 0; i < item.Values.Count; i++)
 					{
 						var kv = item.Values.ElementAt(i);
-						item.Values[kv.Key] = SaveEmbeddedImages(item.Values[kv.Key]);
+						item.Values[kv.Key] = await SaveEmbeddedImages(item.Values[kv.Key]);
 					}
 				}
 			}
-			ContentStorage.StoreSitePage(page, currentRequest);
-			ReloadPages(true);
+			await ContentStorage.StoreSitePage(page, currentRequest);
+			Cache?.Remove(PagesCacheKey);
 		}
 
-		public void DeleteSitePage(ISitePage page)
+		public async Task DeleteSitePage(ISitePage page)
 		{
 			Logger?.LogInformation($"Deleting page {page.Url}");
-			ContentStorage.DeleteSitePage(page);
-			ReloadPages(true);
+			await ContentStorage.DeleteSitePage(page);
+			Cache?.Remove(PagesCacheKey);
 		}
 
-		public List<IPageSection> GetDefaultContentForTemplate(string template)
+		public async Task<List<IPageSection>> GetDefaultContentForTemplate(string template)
 		{
 			var defaultContent = Configuration.DefaultContent?.FirstOrDefault(t => string.CompareOrdinal(t.Template, template) == 0);
-			return ContentStorage.GetDefaultSectionContent(defaultContent);
+			return await ContentStorage.GetDefaultSectionContent(defaultContent);
 		}
 
 
-		public IEnumerable<IAsset> Assets { get; set; }
-		public void DeleteAsset(IAsset asset)
+		public async Task<IEnumerable<IAsset>> Assets(bool forceReload = false)
 		{
-			AssetStorage.RemoveAsset(asset);
-			ReloadAssets(true);
-		}
-
-		public void ReloadAssets(bool forceReload = false)
-		{
-			IEnumerable<IAsset> assets = null;
-			if (!forceReload && Cache?.TryGetValue("MWASSETS", out assets) == true)
-			{
-				Logger?.LogInformation("Cached assets");
-				Assets = assets;
-			}
-			else
+			IEnumerable<IAsset> result = null;
+			if (forceReload || (Cache?.TryGetValue(AssetsCacheKey, out result)) != true)
 			{
 				Logger?.LogInformation("Reload assets");
-				Assets = AssetStorage.GetAllAssets();
+				result = await AssetStorage.GetAllAssets();
 
-				Cache?.Set("MWASSETS", Assets);
+				Cache?.Set(AssetsCacheKey, result);
 			}
+			return result;
+
 		}
+
+		public async Task DeleteAsset(IAsset asset)
+		{
+			await AssetStorage.RemoveAsset(asset);
+			Cache?.Remove(AssetsCacheKey);
+		}
+
 
 		public IContentItem DummyContent(string template)
 		{
@@ -283,7 +298,7 @@ namespace MiniWeb.Core
 		}
 
 
-		private string SaveEmbeddedImages(string html)
+		private async Task<string> SaveEmbeddedImages(string html)
 		{
 			//handle each match individually, so multiple the same images are not stored twice but parsed once and replaced multiple times
 			Match match = Regex.Match(html, EmbeddedBase64FileInHtmlRegex);
@@ -294,7 +309,7 @@ namespace MiniWeb.Core
 				if (!string.IsNullOrWhiteSpace(base64String))
 				{
 					//byte[] bytes = ConvertToBytes(base64String);
-					var newAsset = AssetStorage.CreateAsset(filename, base64String);
+					var newAsset = await AssetStorage.CreateAsset(filename, base64String);
 					//string extension = Regex.Match(match.Value, "data:([^/]+)/([a-z]+);base64").Groups[2].Value;
 					string path = newAsset.VirtualPath;// SaveFileToDisk(bytes, extension, filename);
 
@@ -316,7 +331,7 @@ namespace MiniWeb.Core
 				var fileNameMatch = Regex.Match(base64String, "(;filename=(.*?));base64");
 				var fileName = fileNameMatch.Groups[2].Value;
 				base64String = base64String.Replace(fileNameMatch.Groups[1].Value, "");
-				var newAsset = AssetStorage.CreateAsset(fileName, base64String);
+				var newAsset = await AssetStorage.CreateAsset(fileName, base64String);
 				html = newAsset.VirtualPath;
 			}
 			return html;
