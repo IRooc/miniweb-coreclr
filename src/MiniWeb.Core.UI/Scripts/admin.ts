@@ -385,7 +385,7 @@ const savePage = function () {
 };
 const confirmDialog = function (message, action) {
 	const modal = document.querySelector<HTMLElement>('#miniweb-confirm');
-	modal.querySelector('form p').innerHTML = message;
+	modal.querySelector('h4').innerHTML = message;
 	//recreate the button to attach the event (easiest)
 	const oldButton = modal.querySelector('[data-miniweb-confirm]');
 	var newButton = oldButton.cloneNode(true);

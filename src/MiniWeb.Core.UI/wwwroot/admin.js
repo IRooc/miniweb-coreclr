@@ -358,7 +358,7 @@ const savePage = function () {
 };
 const confirmDialog = function (message, action) {
     const modal = document.querySelector('#miniweb-confirm');
-    modal.querySelector('form p').innerHTML = message;
+    modal.querySelector('h4').innerHTML = message;
     const oldButton = modal.querySelector('[data-miniweb-confirm]');
     var newButton = oldButton.cloneNode(true);
     oldButton.parentNode.replaceChild(newButton, oldButton);
