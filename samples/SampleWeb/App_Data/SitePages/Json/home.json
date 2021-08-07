@@ -11,19 +11,6 @@
   "SortOrder": 0,
   "Date": "2021-03-25T08:45:53",
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2021-03-25T09:33:07.4648579+01:00",
-  "Sections": [
-    {
-      "Key": "content",
-      "Items": [
-        {
-          "Template": "~/Views/Items/item.cshtml",
-          "Values": {
-            "title": "Test Test",
-            "content": "Test"
-          }
-        }
-      ]
-    }
-  ]
+  "LastModified": "2021-08-07T11:55:33.1499476+02:00",
+  "Sections": []
 }
