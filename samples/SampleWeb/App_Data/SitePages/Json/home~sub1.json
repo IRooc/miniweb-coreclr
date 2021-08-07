@@ -9,9 +9,9 @@
   "Visible": true,
   "ShowInMenu": true,
   "SortOrder": 1,
-  "Date":  "2021-01-03T14:05:10.2431997+02:00",
+  "Date": "2021-01-03T13:05:10.2431997+01:00",
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2021-08-03T14:05:10.2431997+02:00",
+  "LastModified": "2021-08-07T11:31:05.74451+02:00",
   "Sections": [
     {
       "Key": "content",
@@ -31,6 +31,14 @@
             "image:alt": "image",
             "content": "Enter content",
             "imagelocation": "right"
+          }
+        },
+        {
+          "Template": "~/Views/Items/three-images.cshtml",
+          "Values": {
+            "image": "",
+            "image:src": "/images/icon.png",
+            "image:alt": "logo 3"
           }
         }
       ]

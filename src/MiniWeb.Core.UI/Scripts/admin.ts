@@ -315,9 +315,9 @@ const saveContent = function () {
 						prop.classList.add('miniweb-invalid-item');
 					}
 				}
-				if (prop.contentEditable == "true"){
+				if (prop.contentEditable == "true") {
 					prop.innerHTML = value;
-				} else if (prop as HTMLInputElement != null){
+				} else if (prop as HTMLInputElement != null) {
 					const ht = (prop as HTMLInputElement);
 					ht.value = value;
 				}
@@ -383,9 +383,23 @@ const savePage = function () {
 
 	form.querySelector<HTMLInputElement>('[name="NewPage"]').value = "false";
 };
+const confirmDialog = function (message, action) {
+	const modal = document.querySelector<HTMLElement>('#miniweb-confirm');
+	modal.querySelector('form p').innerHTML = message;
+	//recreate the button to attach the event (easiest)
+	const oldButton = modal.querySelector('[data-miniweb-confirm]');
+	var newButton = oldButton.cloneNode(true);
+	oldButton.parentNode.replaceChild(newButton, oldButton);
+	newButton.addEventListener('click', () => {
+		action();
+		closeModals();
+	});
+	modal.classList.add('show');
+	modal.scrollIntoView(true);
+}
 
 const removePage = function () {
-	if (confirm('are you sure?')) {
+	confirmDialog('Do you want to remove the page?', () => {
 		const adminNav = document.getElementById('miniweb-admin-nav');
 		const formData = new FormData();
 		formData.append('__RequestVerificationToken', options.afToken);
@@ -407,7 +421,7 @@ const removePage = function () {
 				console.error(err);
 				showMessage(false, 'failed to delete');
 			});
-	}
+	});
 };
 
 const addNewPageModal = function () {
@@ -531,9 +545,9 @@ document.addEventListener('click', (e) => {
 		} else if (move === "down") {
 			item.parentNode.insertBefore(item, item.nextElementSibling.nextElementSibling);
 		} else if (move === "delete") {
-			if (confirm('are you sure?')) {
+			confirmDialog('are you sure?', () => {
 				item.remove();
-			}
+			});
 		} else {
 			console.error("unknown move", move, target);
 		}

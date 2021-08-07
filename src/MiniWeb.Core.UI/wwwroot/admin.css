@@ -148,6 +148,13 @@ miniwebadmin .miniweb-modal.miniweb-modal-right .miniweb-modal-content {
 miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
 	left: calc(50% - 20em - 20px);
 }
+miniwebadmin .miniweb-modal.miniweb-modal-small {
+	top: calc(50% - 5em);
+}
+miniwebadmin .miniweb-modal.miniweb-modal-small .miniweb-modal-content {
+	height: 10em;
+	scrollbar-width: none;
+}
 miniwebadmin .miniweb-modal .miniweb-modal-content .right {
 	position: absolute;
 	right: 0;
