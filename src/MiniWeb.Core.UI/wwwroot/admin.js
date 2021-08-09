@@ -363,7 +363,9 @@ const confirmDialog = function (message, action) {
     var newButton = oldButton.cloneNode(true);
     oldButton.parentNode.replaceChild(newButton, oldButton);
     newButton.addEventListener('click', () => {
-        action();
+        if (action) {
+            action();
+        }
         closeModals();
     });
     modal.classList.add('show');
@@ -426,6 +428,10 @@ const ctrlSsave = function (event) {
             saveContent();
         }
         ;
+        if (event.code === 'Escape') {
+            event.preventDefault();
+            cancelEdit();
+        }
     }
     else {
         const modal = document.querySelector('.miniweb-pageproperties');
@@ -434,6 +440,10 @@ const ctrlSsave = function (event) {
                 event.preventDefault();
                 savePage();
             }
+        }
+        else if (event.ctrlKey && event.code === 'KeyE') {
+            event.preventDefault();
+            editContent();
         }
     }
 };
