@@ -9,8 +9,9 @@
   "Visible": false,
   "ShowInMenu": false,
   "SortOrder": 3,
+  "Date": null,
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2019-10-21T13:32:54.2754536+02:00",
+  "LastModified": "2021-08-09T15:41:54.5633868+02:00",
   "Sections": [
     {
       "Key": "content",
@@ -19,7 +20,7 @@
           "Template": "~/Views/Items/item.cshtml",
           "Values": {
             "title": "Item 3 hidden",
-            "content": "A page that is linkable but not visible in the menu"
+            "content": "A page that is linkable but not visible in the <a href=\"/home/sub1.html\">menu</a>"
           }
         }
       ]

@@ -423,7 +423,7 @@ const addNewPageModal = function () {
 };
 const ctrlSsave = function (event) {
     if (document.querySelector('body').classList.contains('miniweb-editing')) {
-        if (event.ctrlKey && event.code === 'KeyS') {
+        if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
             event.preventDefault();
             saveContent();
         }
@@ -436,12 +436,12 @@ const ctrlSsave = function (event) {
     else {
         const modal = document.querySelector('.miniweb-pageproperties');
         if (modal.classList.contains('show')) {
-            if (event.ctrlKey && event.code === 'KeyS') {
+            if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
                 event.preventDefault();
                 savePage();
             }
         }
-        else if (event.ctrlKey && event.code === 'KeyE') {
+        else if ((event.ctrlKey || event.metaKey) && event.code === 'KeyE') {
             event.preventDefault();
             editContent();
         }

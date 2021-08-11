@@ -1,8 +1,10 @@
 ﻿@model MiniWeb.Core.IContentItem
 @inject MiniWeb.Core.IMiniWebSite MiniWebSite
-<a href="@MiniWebSite.GetPageUrl(Model.Page?.Parent)">Back to overview</a>
 <article miniweb-template="@Model.Template">
 	<h2 miniweb-prop="title" data-miniweb-validation="required">Enter title</h2>
     <p>@@ @(Model.Page?.Date?.ToString("yyyy-MM-ddTHH:mm:ss"))</p>
 	<div miniweb-prop="content" miniweb-edittype="html">Enter content</div>
+</article>
+<article>
+	<a href="@MiniWebSite.GetPageUrl(Model.Page?.Parent)">Back to overview</a>
 </article>
