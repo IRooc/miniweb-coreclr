@@ -1,4 +1,5 @@
 let options;
+const selfClosing = ['AREA', 'BASE', 'BR', 'COL', 'COMMAND', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
 const log = function (...args) {
     if (localStorage.getItem("showLog") === "true") {
         console.log(...args);
@@ -509,7 +510,9 @@ document.addEventListener('click', (e) => {
             const firstInput = newEl.querySelector('[contenteditable]');
             if (firstInput) {
                 firstInput.focus();
-                document.execCommand('selectAll', false, null);
+                if (selfClosing.indexOf(firstInput.tagName) === -1) {
+                    document.execCommand('selectAll', false, null);
+                }
             }
             closeModals();
         });
