@@ -19,11 +19,6 @@ namespace SampleWeb
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseIISIntegration();
-                    webBuilder.UseConfiguration(new ConfigurationBuilder()
-							.SetBasePath(Directory.GetCurrentDirectory())
-							.AddJsonFile("miniweb.json", optional: true)
-							.AddCommandLine(args)
-							.Build());
                     webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
                     {
                         var env = hostingContext.HostingEnvironment;

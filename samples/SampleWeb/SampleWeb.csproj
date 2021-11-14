@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>SampleWeb</AssemblyName>
     <OutputType>Exe</OutputType>
@@ -10,7 +10,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
     <ProjectReference Include="..\..\src\MiniWeb.Core\MiniWeb.Core.csproj" />
     <ProjectReference Include="..\..\src\MiniWeb.Core.UI\MiniWeb.Core.UI.csproj" />
     <ProjectReference Include="..\..\src\MiniWeb.Storage.JsonStorage\MiniWeb.Storage.JsonStorage.csproj" />
