@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -53,9 +54,7 @@ namespace MiniWeb.Core
             if (result.Found)
             {
                 _webSite.Logger?.LogInformation($"save PAGE found {result.Page.Url}");
-				throw new NotImplementedException("IMPLEMENT!");
-				/*
-                var newSections = JsonConvert.DeserializeObject<IEnumerable<SitePageSectionPostModel>>(items);
+                var newSections = JsonSerializer.Deserialize<IEnumerable<SitePageSectionPostModel>>(items);
                 result.Page.Sections.Clear();
                 foreach (var item in newSections)
                 {
@@ -65,7 +64,6 @@ namespace MiniWeb.Core
 
                 await _webSite.SaveSitePage(result.Page, Request, true);
                 return new JsonResult(new { result = true });
-				*/
             }
             return new JsonResult(new { result = false });
         }
