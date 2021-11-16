@@ -28,8 +28,11 @@
 				
                 <div miniweb-menu="/tijn">
                     <miniweb-menuitem>
+						@{
+							var subSitePage = ViewData["MenuSitePage"] as ISitePage;
+						}
 						<div class="seperator"></div>
-						<a href="@(MiniWebSite.GetPageUrl(Model))" class="main">@Model.Title</a>
+						<a href="@(MiniWebSite.GetPageUrl(subSitePage))" class="main">@subSitePage.Title</a>
                     </miniweb-menuitem>
 				</div>
 			</div>

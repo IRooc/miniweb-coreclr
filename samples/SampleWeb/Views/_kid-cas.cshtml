@@ -25,11 +25,15 @@
 			<div id="menu">
 				
                 <div class="RWM-Menu" miniweb-menu="/cas">
-                    <miniweb-menuitem>						
+                    <miniweb-menuitem>	
+						@{
+							var subSitePage = ViewData["MenuSitePage"] as ISitePage;
+							var subCurrentUrl = ViewData["CurrentUrl"] as string;
+						}
 						<div class="RWM-Menu-Leaf  ">
-							<div class="RWM-Menu-Template @(ViewBag.CurrentUrl.StartsWith(Model.Url + "/") || ViewBag.CurrentUrl == Model.Url ? " RWM-Menu-Selected" : "") @(!Model.ShowInMenu || !Model.Visible ? "miniweb-hidden-menu" : "")">
+							<div class="RWM-Menu-Template @(subSitePage.IsActiveFor(subCurrentUrl) ? " RWM-Menu-Selected" : "") @(!subSitePage.ShowInMenu || !subSitePage.Visible ? "miniweb-hidden-menu" : "")">
 				
-							<a href="@(MiniWebSite.GetPageUrl(Model))" class="main">@Model.Title</a>
+							<a href="@(MiniWebSite.GetPageUrl(subSitePage))" class="main">@subSitePage.Title</a>
 		
 							</div>
 						</div>
