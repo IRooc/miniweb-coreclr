@@ -44,7 +44,8 @@ namespace MiniWeb.AssetStorage.FileSystem
 		{
 			if (virtualFolder == null) virtualFolder = string.Empty;
 			Logger?.LogInformation($"Create asset {virtualFolder}/{fileName} in {Configuration.AssetRootPath}");
-			if (virtualFolder.StartsWith("/") == true) virtualFolder = virtualFolder.Substring(1);
+			if (virtualFolder.StartsWith("/")) virtualFolder = virtualFolder.Substring(1);
+			if (virtualFolder.StartsWith(Configuration.AssetRootPath)) virtualFolder = virtualFolder.Substring(Configuration.AssetRootPath.Length);
 			string filePath = Path.Combine(virtualFolder, fileName);
 			filePath = filePath.Replace("\\","/");
 			//should we check the assetrootpath?
