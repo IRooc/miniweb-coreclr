@@ -32,10 +32,7 @@ namespace SampleWeb
 		{
 			// Default services used by MiniWeb
 			services.AddAntiforgery();
-			services.AddMvc(options =>
-			{
-				options.EnableEndpointRouting = false;  //for now...
-			}); 
+			services.AddMvc(); 
 
 			services.AddMiniWeb(Configuration)
 					.AddMiniWebJsonStorage(Configuration)
@@ -88,8 +85,9 @@ namespace SampleWeb
 			app.UseDeveloperExceptionPage();
 
 			//use static assets
-			app.UseStaticFiles();
 			app.UseHttpsRedirection();
+			app.UseStaticFiles();
+			app.UseRouting();
 
 			//current hosting needs this ignore otherwise
 			app.Map("/emonitor.aspx", context =>
@@ -101,9 +99,16 @@ namespace SampleWeb
 				});
 			});
 
+			app.UseAuthentication();
+			app.UseAuthorization();
+
 			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
 			//app.UseEFMiniWebSite(false);
-			app.UseMiniWebSite();
+			//app.UseMiniWebSite();
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapMiniWebSite();
+			});
 		}
 
 	}

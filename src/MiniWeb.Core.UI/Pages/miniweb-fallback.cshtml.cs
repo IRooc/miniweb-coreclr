@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SampleRazor.Pages
+namespace MiniWeb.Core.UI.Pages
 {
 	public class MiniwebModel : PageModel
 	{
@@ -24,7 +24,7 @@ namespace SampleRazor.Pages
 		{
 			Miniweb.Logger?.LogDebug($"index action {Request.Path.Value}");
 
-			var result = await Miniweb.GetPageByUrl(PageUrl, User);
+			var result = await Miniweb.GetPageByUrl(PageUrl, User);            
 
 			//redirect if not editing?
 			if (!string.IsNullOrWhiteSpace(result.RedirectUrl))
