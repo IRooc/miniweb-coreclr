@@ -85,7 +85,6 @@ namespace SampleWeb
 			app.UseDeveloperExceptionPage();
 
 			//use static assets
-			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseRouting();
 
