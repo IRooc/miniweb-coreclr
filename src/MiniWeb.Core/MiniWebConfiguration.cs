@@ -11,6 +11,7 @@ namespace MiniWeb.Core
 
 		public string LoginView { get; set; } = "~/Views/login.cshtml";
 		public string ApiEndpoint {get;set;} = "/miniweb-api/";
+		public string RazorFallbackPageRoute { get; set; } = "/miniweb-fallback";
 
 		public string PageTemplatePath { get; set; } = "/Views/Pages";
 		public string ItemTemplatePath { get; set; } = "/Views/Items";

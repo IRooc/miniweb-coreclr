@@ -1,4 +1,4 @@
-﻿@model SampleRazor.Pages.MiniwebModel
+﻿@model MiniWeb.Core.UI.Pages.MiniwebModel
 @using MiniWeb.Core
 @inject IMiniWebSite MiniWebSite
 <!DOCTYPE html>
@@ -49,9 +49,9 @@
 		</footer>
 	</div>
 
-	@*model needs to be ISitePage*@
-	<partial name="_miniwebAdmin" model="Model.SitePage" />
-
 </body>
+
+@*model needs to be ISitePage*@
+<partial name="_miniwebAdmin" model="Model.SitePage" />
 
 </html>

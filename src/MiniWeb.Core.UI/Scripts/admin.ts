@@ -1,4 +1,6 @@
 ﻿let options: any;
+const selfClosing = ['AREA', 'BASE', 'BR', 'COL', 'COMMAND', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
+
 const log = function (...args: any[]) {
 	if (localStorage.getItem("showLog") === "true") {
 		console.log(...args);
@@ -383,7 +385,7 @@ const savePage = function () {
 
 	form.querySelector<HTMLInputElement>('[name="NewPage"]').value = "false";
 };
-const confirmDialog = function (message, action) {
+const confirmDialog = function (message: string, action: () => void) {
 	const modal = document.querySelector<HTMLElement>('#miniweb-confirm');
 	modal.querySelector('h4').innerHTML = message;
 	//recreate the button to attach the event (easiest)
@@ -391,7 +393,7 @@ const confirmDialog = function (message, action) {
 	var newButton = oldButton.cloneNode(true);
 	oldButton.parentNode.replaceChild(newButton, oldButton);
 	newButton.addEventListener('click', () => {
-		action();
+		if (action) { action(); }
 		closeModals();
 	});
 	modal.classList.add('show');
@@ -453,19 +455,26 @@ const addNewPageModal = function () {
 
 };
 
-const ctrlSsave = function (event) {
+const ctrlSsave = function (event: KeyboardEvent) {
 	if (document.querySelector('body').classList.contains('miniweb-editing')) {
-		if (event.ctrlKey && event.code === 'KeyS') {
+		if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
 			event.preventDefault();
 			saveContent();
 		};
+		if (event.code === 'Escape') {
+			event.preventDefault();
+			cancelEdit();
+		}
 	} else {
 		const modal = document.querySelector<HTMLElement>('.miniweb-pageproperties');
 		if (modal.classList.contains('show')) {
-			if (event.ctrlKey && event.code === 'KeyS') {
+			if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
 				event.preventDefault();
 				savePage();
 			}
+		} else if ((event.ctrlKey || event.metaKey) && event.code === 'KeyE') {
+			event.preventDefault();
+			editContent();
 		}
 	}
 };
@@ -531,7 +540,9 @@ document.addEventListener('click', (e) => {
 				const firstInput = newEl.querySelector<HTMLElement>('[contenteditable]');
 				if (firstInput) {
 					firstInput.focus();
-					document.execCommand('selectAll', false, null);
+					if (selfClosing.indexOf(firstInput.tagName) === -1) {
+						document.execCommand('selectAll', false, null);
+					}
 				}
 				closeModals();
 			});

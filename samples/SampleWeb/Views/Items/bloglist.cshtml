@@ -26,17 +26,19 @@
             <div>
 				 @Html.Raw(firstContentItem?.GetValue("content"))
 			</div>
-        </article>
+		</article>
      }
 	 if (pages.Count() > pageIndex * pageSize)
 	 {
-		  if (pageIndex + 1 < pages.Count() / (float)pageSize)
+		 <article>
+		  @if (pageIndex + 1 < pages.Count() / (float)pageSize)
 		  {
 			<a href="@(MiniWebSite.GetPageUrl(Model.Page))?page=@(pageIndex + 1)">&laquo;Older Posts</a>
 		  }
-		  if (pageIndex > 0)
+		  @if (pageIndex > 0)
 		  {
             <a href="@(MiniWebSite.GetPageUrl(Model.Page))?page=@(pageIndex-1)">Newer Posts&raquo;</a>
 		  }
+		  </article>
 	 }
 }

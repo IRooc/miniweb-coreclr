@@ -1,4 +1,5 @@
 let options;
+const selfClosing = ['AREA', 'BASE', 'BR', 'COL', 'COMMAND', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
 const log = function (...args) {
     if (localStorage.getItem("showLog") === "true") {
         console.log(...args);
@@ -363,7 +364,9 @@ const confirmDialog = function (message, action) {
     var newButton = oldButton.cloneNode(true);
     oldButton.parentNode.replaceChild(newButton, oldButton);
     newButton.addEventListener('click', () => {
-        action();
+        if (action) {
+            action();
+        }
         closeModals();
     });
     modal.classList.add('show');
@@ -421,19 +424,27 @@ const addNewPageModal = function () {
 };
 const ctrlSsave = function (event) {
     if (document.querySelector('body').classList.contains('miniweb-editing')) {
-        if (event.ctrlKey && event.code === 'KeyS') {
+        if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
             event.preventDefault();
             saveContent();
         }
         ;
+        if (event.code === 'Escape') {
+            event.preventDefault();
+            cancelEdit();
+        }
     }
     else {
         const modal = document.querySelector('.miniweb-pageproperties');
         if (modal.classList.contains('show')) {
-            if (event.ctrlKey && event.code === 'KeyS') {
+            if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
                 event.preventDefault();
                 savePage();
             }
+        }
+        else if ((event.ctrlKey || event.metaKey) && event.code === 'KeyE') {
+            event.preventDefault();
+            editContent();
         }
     }
 };
@@ -499,7 +510,9 @@ document.addEventListener('click', (e) => {
             const firstInput = newEl.querySelector('[contenteditable]');
             if (firstInput) {
                 firstInput.focus();
-                document.execCommand('selectAll', false, null);
+                if (selfClosing.indexOf(firstInput.tagName) === -1) {
+                    document.execCommand('selectAll', false, null);
+                }
             }
             closeModals();
         });

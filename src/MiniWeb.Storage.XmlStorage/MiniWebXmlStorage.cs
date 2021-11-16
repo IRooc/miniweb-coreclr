@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MiniWeb.Core;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 

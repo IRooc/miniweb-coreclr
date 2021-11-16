@@ -15,55 +15,53 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SampleRazor
 {
-	public class Startup
-	{
-		public IConfiguration Configuration { get; set; }
-		public Startup(IConfiguration configuration)
-		{
-			// Setup configuration sources.
-			Configuration = configuration;
-		}
+    public class Startup
+    {
+        public IConfiguration Configuration { get; set; }
+        public Startup(IConfiguration configuration)
+        {
+            // Setup configuration sources.
+            Configuration = configuration;
+        }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
-		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-		public void ConfigureServices(IServiceCollection services)
-		{
-			var config  = Configuration.Get<MiniWebConfiguration>();
-			
-			services.AddMiniWeb(Configuration)
-					.AddMiniWebJsonStorage(Configuration)
-					.AddMiniWebAssetFileSystemStorage(Configuration)
-					.AddMiniwebBasicAuth(Configuration);
-					
-			services.AddMvc();
-			services.AddRazorPages().AddRazorPagesOptions(options =>{
-				options.Conventions.AddPageRoute("/login", config.Authentication.LoginPath.Substring(1));
-			});
-		}
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public void ConfigureServices(IServiceCollection services)
+        {
+            var config = Configuration.Get<MiniWebConfiguration>();
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
+            services.AddMiniWeb(Configuration)
+                    .AddMiniWebJsonStorage(Configuration)
+                    .AddMiniWebAssetFileSystemStorage(Configuration)
+                    .AddMiniwebBasicAuth(Configuration);
 
-			app.UseHttpsRedirection();
-			app.UseStaticFiles();
-			app.UseRouting();
+            services.AddMvc();
+            services.AddRazorPages().AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AddPageRoute("/login", config.Authentication.LoginPath.Substring(1));
+            });
+        }
 
-			app.UseAuthentication();
-			app.UseAuthorization();
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapMiniwebApiRoute();
-				endpoints.MapRazorPages();
-				
-				//this fallback page handles all the Miniweb Pages
-				endpoints.MapFallbackToPage("{*pageUrl}", "/miniweb");
-			});
-		}
-	}
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapMiniwebRazorWithFallback();
+            });
+        }
+    }
 }

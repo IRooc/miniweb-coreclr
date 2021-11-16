@@ -9,7 +9,10 @@ body.miniweb.preview {
 body.miniweb.preview miniwebadmin {
 	display: none;
 }
-body .miniweb-editor-toolbar,
+body .miniweb-editor-toolbar {
+	font-size: 14px; /*everything relative to this*/
+	line-height: 1.42857143;	
+}
 body miniwebadmin {
 	font-size: 14px; /*everything relative to this*/
 	line-height: 1.42857143;	
