@@ -30,9 +30,9 @@ namespace SampleWeb
                     webBuilder.ConfigureLogging((hostingContext, logging) =>
                     {
                         logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                        logging.AddConsole();
                         if (hostingContext.HostingEnvironment.IsDevelopment())
                         {
+                            logging.AddConsole();
                             logging.AddDebug();
                         }
                     });

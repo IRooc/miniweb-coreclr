@@ -19,11 +19,6 @@ namespace SampleRazor
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseIISIntegration();
-                    webBuilder.UseConfiguration(new ConfigurationBuilder()
-							.SetBasePath(Directory.GetCurrentDirectory())
-							.AddJsonFile("miniweb.json", optional: true)
-							.AddCommandLine(args)
-							.Build());
                     webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
                     {
                         var env = hostingContext.HostingEnvironment;
@@ -34,9 +29,9 @@ namespace SampleRazor
                     webBuilder.ConfigureLogging((hostingContext, logging) =>
                     {
                         logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                        logging.AddConsole();
                         if (hostingContext.HostingEnvironment.IsDevelopment())
                         {
+                            logging.AddConsole();
                             logging.AddDebug();
                         }
                     });
