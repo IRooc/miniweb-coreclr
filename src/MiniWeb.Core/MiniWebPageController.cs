@@ -44,7 +44,7 @@ namespace MiniWeb.Core
 		[HttpPost]
 		public async Task<IActionResult> Login(string username, string password)
 		{
-			_webSite.Logger?.LogInformation("login post");
+			_webSite.Logger?.LogInformation("login post {username} {password}", username, password);
 			if (await _webSite.Authenticate(username, password))
 			{
 				var principal = _webSite.GetClaimsPrincipal(username);

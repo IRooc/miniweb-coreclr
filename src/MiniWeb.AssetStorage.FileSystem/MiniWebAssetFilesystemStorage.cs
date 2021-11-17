@@ -20,11 +20,11 @@ namespace MiniWeb.AssetStorage.FileSystem
 		public IWebHostEnvironment HostingEnvironment { get; }
 		public MiniWebAssetFileSystemConfig Configuration { get; }
 
-		public MiniWebAssetFileSystemStorage(IWebHostEnvironment env, ILoggerFactory loggerfactory, IOptions<MiniWebAssetFileSystemConfig> config)
+		public MiniWebAssetFileSystemStorage(IWebHostEnvironment env, ILogger<MiniWebAssetFileSystemStorage> logger, IOptions<MiniWebAssetFileSystemConfig> config)
 		{
 			HostingEnvironment = env;
 			Configuration = config.Value;
-			Logger = SetupLogging(loggerfactory);
+			Logger = logger;
 		}
 
 
@@ -44,7 +44,9 @@ namespace MiniWeb.AssetStorage.FileSystem
 		{
 			if (virtualFolder == null) virtualFolder = string.Empty;
 			Logger?.LogInformation($"Create asset {virtualFolder}/{fileName} in {Configuration.AssetRootPath}");
-			if (virtualFolder.StartsWith("/") == true) virtualFolder = virtualFolder.Substring(1);
+			if (virtualFolder.StartsWith("/")) virtualFolder = virtualFolder.Substring(1);
+			if (virtualFolder.StartsWith(Configuration.AssetRootPath)) virtualFolder = virtualFolder.Substring(Configuration.AssetRootPath.Length);
+
 			string filePath = Path.Combine(virtualFolder, fileName);
 			filePath = filePath.Replace("\\","/");
 			//should we check the assetrootpath?
@@ -78,15 +80,6 @@ namespace MiniWeb.AssetStorage.FileSystem
 		{
 			int index = base64.IndexOf(";base64,", StringComparison.Ordinal) + 8;
 			return Convert.FromBase64String(base64.Substring(index));
-		}
-
-		private ILogger SetupLogging(ILoggerFactory loggerfactory)
-		{
-			if (!string.IsNullOrWhiteSpace(Configuration?.LogCategoryName))
-			{
-				return loggerfactory.CreateLogger(Configuration.LogCategoryName);
-			}
-			return null;
 		}
 	}
 

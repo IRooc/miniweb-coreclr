@@ -77,15 +77,15 @@ public class Startup
 	{
 		// Default services used by MiniWeb
 		services.AddAntiforgery();
-		var builder = services.AddMvc(options =>
-		{
-			options.EnableEndpointRouting = false;  //for now...
-		});
+		var builder = services.AddMvc();
 
 		//register core, storage and filestorage
 		services.AddMiniWeb(Configuration, Environment)
 				.AddMiniWebJsonStorage(Configuration)
 				.AddMiniWebAssetFileSystemStorage(Configuration);
+
+		//if you want basic auth from miniweb add this line		
+		services.AddMiniwebBasicAuth(Configuration);
 	}
 
 	public void Configure(IApplicationBuilder app)
@@ -93,9 +93,14 @@ public class Startup
 		// Default middleware used by MiniWeb
 		app.UseDeveloperExceptionPage();
 		app.UseStaticFiles();
-
-		//Registers the miniweb middleware and MVC Routes
-		app.UseMiniWebSite();
+		
+		app.UseAuthentication();
+		app.UseAuthorization(); 
+		//Registers the miniweb Api and MVC Routes
+		app.UseEndpoints(endpoints =>
+		{
+			endpoints.MapMiniWebSite();
+		});
 	}
 }
 ```
@@ -118,9 +123,8 @@ Default stores the files in wwwroot/images so that they are served as well, need
 If you use the JsonStorage example make sure your username password is added to the miniweb.json
 ```JSON
 "MiniWebStorage": {
-	"Users": {
-		"username":"password"
-	}
+	"Username": "Testuser",
+	"Password": "Testpassword
 }
 ```
 Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.

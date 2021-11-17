@@ -79,7 +79,7 @@ namespace SampleWeb
 			});
 		}
 
-		public void Configure(IApplicationBuilder app, ILoggerFactory loggerfactory)
+		public void Configure(IApplicationBuilder app)
 		{
 			//show this always for now...
 			app.UseDeveloperExceptionPage();
