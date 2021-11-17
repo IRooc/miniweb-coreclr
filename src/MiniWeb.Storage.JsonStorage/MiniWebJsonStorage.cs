@@ -13,17 +13,20 @@ namespace MiniWeb.Storage.JsonStorage
 {
 	public class MiniWebJsonStorage : IMiniWebContentStorage
 	{
-		private MiniWebJsonStorageConfig StorageConfig { get; }
+        private readonly ILogger Logger;
+        private MiniWebJsonStorageConfig StorageConfig { get; }
 		public IMiniWebSite MiniWebSite { get; set; }
 
-		public MiniWebJsonStorage(IOptions<MiniWebJsonStorageConfig> config)
+		public MiniWebJsonStorage(IOptions<MiniWebJsonStorageConfig> config, ILogger<MiniWebJsonStorage> logger)
 		{
 			StorageConfig = config.Value;
-		}
+            Logger = logger;
+        }
 
 		public Task<bool> Authenticate(string username, string password)
 		{
-			var result = StorageConfig.Users?.Any(u => string.Compare(u.Key, username, true) == 0 && !string.IsNullOrEmpty(u.Value) && string.Compare(u.Value, password) == 0) == true;
+			Logger.LogInformation("Authenticate {USERNAME}", username);
+			var result = string.Compare(StorageConfig.Username, username, true) == 0 && !string.IsNullOrEmpty(StorageConfig.Password) && string.Compare(StorageConfig.Password, password) == 0;
 			return Task.FromResult(result);
 		}
 

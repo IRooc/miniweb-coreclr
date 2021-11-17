@@ -10,11 +10,6 @@
 			}
 		]
 	},
-	"MiniWebStorage": {
-		"Users": {
-			"Rooc": ""
-		}
-	},
 	"Logging": {
 		"EnableConsole": true,
 		"EnableFile": false,
