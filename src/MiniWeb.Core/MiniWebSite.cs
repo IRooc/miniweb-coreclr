@@ -69,7 +69,7 @@ namespace MiniWeb.Core
 		}
 
 
-		public MiniWebSite(IWebHostEnvironment env, ILoggerFactory loggerfactory, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
+		public MiniWebSite(IWebHostEnvironment env, ILogger<MiniWebSite> logger, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
 						   IMemoryCache cache, IOptions<MiniWebConfiguration> config)
 		{
 			HostingEnvironment = env;
@@ -77,7 +77,7 @@ namespace MiniWeb.Core
 			ContentStorage = storage;
 			AssetStorage = assetStorage;
 			Cache = cache;
-			Logger = SetupLogging(loggerfactory);
+			Logger = logger;
 
 			//pass on self to storage module
 			//cannot inject because of circular reference.
@@ -87,14 +87,6 @@ namespace MiniWeb.Core
 
 		}
 
-		private ILogger SetupLogging(ILoggerFactory loggerfactory)
-		{
-			if (!string.IsNullOrWhiteSpace(Configuration?.LogCategoryName))
-			{
-				return loggerfactory.CreateLogger(Configuration.LogCategoryName);
-			}
-			return null;
-		}
 
 		public async Task<FindResult> GetPageByUrl(string url, ClaimsPrincipal user)
 		{
@@ -188,7 +180,7 @@ namespace MiniWeb.Core
 		public ClaimsPrincipal GetClaimsPrincipal(string username)
 		{
 			Claim[] claims = GetClaimsFor(username);
-			Logger?.LogInformation($"signing in as :{username}");
+			Logger?.LogInformation($"signing in as: {username}");
 			var identity = new ClaimsIdentity(claims, Configuration.Authentication.AuthenticationScheme);
 			var principal = new ClaimsPrincipal(identity);
 			return principal;

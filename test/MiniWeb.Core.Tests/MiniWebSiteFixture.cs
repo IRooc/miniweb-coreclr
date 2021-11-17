@@ -16,7 +16,7 @@ namespace MiniWeb.Core.Tests
 		public MiniWebSiteFixture()
 		{
 			var hostingEnv = new Mock<IWebHostEnvironment>();
-			var loggerFactory = new Mock<ILoggerFactory>();
+			var logger = new Mock<ILogger<MiniWebSite>>();
 			var contentStorage = new Mock<IMiniWebContentStorage>();
 			var assetStorage = new Mock<IMiniWebAssetStorage>();
 			var missingSitePage = Get404SitePage();
@@ -27,7 +27,7 @@ namespace MiniWeb.Core.Tests
 
 			var configOptions = Options.Create(new MiniWebConfiguration());
 
-			MiniWeb = new MiniWebSite(hostingEnv.Object, loggerFactory.Object, contentStorage.Object, assetStorage.Object, null, configOptions);
+			MiniWeb = new MiniWebSite(hostingEnv.Object, logger.Object, contentStorage.Object, assetStorage.Object, null, configOptions);
 		}
 
 		private Mock<ISitePage> GetLoginPage()
