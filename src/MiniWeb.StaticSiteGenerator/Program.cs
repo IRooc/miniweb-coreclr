@@ -27,11 +27,15 @@ namespace MiniWeb.StaticSiteGenerator
         public static async Task Main(string[] args)
         {
 
-            var config = ParseConfig("-c", @"C:\Rc\Temp\wwwContent", "-o", @"C:\Rc\Temp\output\", "--replace", "True");
+            var config = ParseConfig("-c", @"C:\Rc\Temp\wwwContent", "-o", @"C:\Rc\Temp\output\", "--replace");
             if (args.Length > 0)
             {
                 config = ParseConfig(args);
             }
+
+            Console.WriteLine($"Starting generation with config");
+            Console.WriteLine($"{JsonConvert.SerializeObject(config, Formatting.Indented)}");
+
 
             var configBuilder = new ConfigurationBuilder();
             var configuration = configBuilder.AddJsonFile("miniweb.json", optional: true, reloadOnChange: true).Build();
@@ -49,7 +53,7 @@ namespace MiniWeb.StaticSiteGenerator
                           .AddMiniWebJsonStorage(configuration)
                           .AddMiniWebAssetFileSystemStorage(configuration);
 
-                  services.AddMvc().AddRazorRuntimeCompilation();              
+                  services.AddMvc().AddRazorRuntimeCompilation();
                   services.AddTransient<RazorViewToStringRenderer>();
 
               });
@@ -67,13 +71,14 @@ namespace MiniWeb.StaticSiteGenerator
                 }
                 var redirects = new Dictionary<string, string>();
                 var pages = await miniweb.Pages(true);
-                Console.WriteLine($"Processing {pages.Count()} pages");
-                foreach (var page in pages)
+                Console.WriteLine($"Processing {pages.Count(p => p.Visible)} pages");
+                foreach (var page in pages.OrderBy(p => p.Url))
                 {
                     if (!page.Visible) continue;
                     if (!string.IsNullOrWhiteSpace(page.RedirectUrl))
                     {
                         redirects.Add(page.Url, page.RedirectUrl);
+                        Console.WriteLine($" - {page.Url} => {page.RedirectUrl}");
                     }
                     else
                     {
@@ -82,8 +87,8 @@ namespace MiniWeb.StaticSiteGenerator
                         var file = Path.GetFileName(page.Url) + "." + miniweb.Configuration.PageExtension;
                         Directory.CreateDirectory(folder);
                         File.WriteAllText(Path.Combine(folder, file), pageresult);
+                        Console.WriteLine($" - {page.Url}");
                     }
-                    Console.WriteLine(page.Url);
                 }
                 Console.WriteLine($"Copy static content {config.ContentRoot}/wwwroot to {config.OutputFolder}");
                 DirectoryInfo diSource = new DirectoryInfo($"{config.ContentRoot}/wwwroot");
@@ -117,7 +122,7 @@ namespace MiniWeb.StaticSiteGenerator
                 };
                 File.WriteAllText($"{config.OutputFolder}/staticwebapp.config.json", JsonConvert.SerializeObject(staticWebsiteConfig, settings));
             }
-
+            Console.WriteLine($"Done");
         }
 
         public class GeneratorConfig
@@ -149,13 +154,16 @@ namespace MiniWeb.StaticSiteGenerator
                         {
                             index = Array.IndexOf(args, $"-{prop.Name.ToLower()}");
                         }
-                        if (index != -1 && index + 1 < args.Length)
+                        if (index != -1)
                         {
                             if (prop.PropertyType == typeof(bool))
                             {
-                                prop.SetValue(config, bool.Parse(args[index + 1]));
+                                if (index + 1 < args.Length && !args[index + 1].StartsWith("-"))
+                                    prop.SetValue(config, bool.Parse(args[index + 1]));
+                                else
+                                    prop.SetValue(config, true);
                             }
-                            else
+                            else if (index + 1 < args.Length && !args[index + 1].StartsWith("-"))
                             {
                                 prop.SetValue(config, args[index + 1]);
                             }
@@ -176,7 +184,7 @@ namespace MiniWeb.StaticSiteGenerator
             public NavigationFallback? navigationFallback { get; set; }
             public Dictionary<string, NavigationOverride>? responseOverrides { get; set; }
             public Dictionary<string, string>? globalHeaders { get; set; }
-            public Dictionary<string,string>? mimeTypes { get; set; }
+            public Dictionary<string, string>? mimeTypes { get; set; }
         }
 
         public class NavigationFallback
