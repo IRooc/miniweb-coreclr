@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\samples\SampleRazor\SampleRazor.csproj" />
+		<ProjectReference Include="..\..\samples\SampleWeb\SampleWeb.csproj" />
+		<ProjectReference Include="..\MiniWeb.AssetStorage.FileSystem\MiniWeb.AssetStorage.FileSystem.csproj" />
+		<ProjectReference Include="..\MiniWeb.Core.UI\MiniWeb.Core.UI.csproj" />
+		<ProjectReference Include="..\MiniWeb.Core\MiniWeb.Core.csproj" />
+		<ProjectReference Include="..\MiniWeb.Storage.JsonStorage\MiniWeb.Storage.JsonStorage.csproj" />
+	</ItemGroup>
+
+</Project>

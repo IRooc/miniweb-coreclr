@@ -2,7 +2,7 @@
 {
     public class MiniWebAssetFileSystemConfig
     {
-		public string AssetRootPath { get; set; } = "images/";
-		public string LogCategoryName { get; set; } = "MiniWeb";
+        public string AssetRootPath { get; set; } = "images/";
+        public string LogCategoryName { get; set; } = "MiniWeb";
     }
 }

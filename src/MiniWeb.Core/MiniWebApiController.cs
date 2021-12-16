@@ -120,6 +120,7 @@ namespace MiniWeb.Core
             }
             return new JsonResult(new { result = false });
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DownloadPages(string url, bool all)

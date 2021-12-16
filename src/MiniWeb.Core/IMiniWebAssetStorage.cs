@@ -5,12 +5,10 @@ using System.Threading.Tasks;
 namespace MiniWeb.Core
 {
     public interface IMiniWebAssetStorage
-    {	
-		//Set explicitly to avoid circular dependency injection
+    {
+		//Set explicitly and not injected to avoid circular dependency injection
 		IMiniWebSite MiniWebSite { get; set; }
-
-		Task<IEnumerable<IAsset>> GetAllAssets();
-		
+		Task<IEnumerable<IAsset>> GetAllAssets();		
 		Task<bool> RemoveAsset(IAsset asset);		
 		Task<IAsset> CreateAsset(string fileName, byte[] bytes, string virtualFolder = null);
 		Task<IAsset> CreateAsset(string fileName, string base64String, string virtualFolder = null);
@@ -29,6 +27,5 @@ namespace MiniWeb.Core
 		string FileName { get; set; }
 		string Folder { get; set; }
 		AssetType Type{ get; }
-
 	}
 }

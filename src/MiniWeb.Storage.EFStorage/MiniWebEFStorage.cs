@@ -49,7 +49,6 @@ namespace MiniWeb.Storage.EFStorage
 			return p;
 		}
 
-
 		public async Task<bool> Authenticate(string username, string password)
 		{
 			//TODO(RC):Fix hashing and stuff...
@@ -136,7 +135,6 @@ namespace MiniWeb.Storage.EFStorage
 			}
 			await Context.SaveChangesAsync();
 		}
-
 
 		public Task<List<IPageSection>> GetDefaultSectionContent(DefaultContent defaultContent)
 		{

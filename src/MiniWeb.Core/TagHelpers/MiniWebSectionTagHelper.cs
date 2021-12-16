@@ -14,6 +14,8 @@ namespace MiniWeb.Core.TagHelpers
 	public class MiniWebSectionTagHelper : TagHelper
 	{
 		private const string MiniWebSectionTagname = "miniweb-section";
+		private readonly IMiniWebSite _webSite;
+		private readonly IHtmlHelper _htmlHelper;
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
@@ -21,9 +23,7 @@ namespace MiniWeb.Core.TagHelpers
 
 		[HtmlAttributeName(MiniWebSectionTagname)]
 		public string Section { get; set; }
-
-		private readonly IMiniWebSite _webSite;
-		private readonly IHtmlHelper _htmlHelper;
+		
 		public MiniWebSectionTagHelper(IMiniWebSite webSite, IHtmlHelper helper)
 		{
 			_webSite = webSite;

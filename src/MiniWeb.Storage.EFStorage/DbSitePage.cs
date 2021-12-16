@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using MiniWeb.Core;
 
-namespace MiniWeb.Storage.XmlStorage
+namespace MiniWeb.Storage.EFStorage
 {
-    public class XmlSitePage : ISitePage
+    public class DbSitePage : ISitePage
 	{
 		public string Url { get; set; }
 		public string RedirectUrl { get; set; }
@@ -22,13 +22,7 @@ namespace MiniWeb.Storage.XmlStorage
 		public DateTime Created { get; set; }
 		public DateTime LastModified { get; set; }
 
-		public List<IPageSection> Sections { get; set; }
-
-		[IgnoreDataMember]
-		public IEnumerable<ISitePage> Pages { get; set; }
-
-		[IgnoreDataMember]
-		public ISitePage Parent { get; set; }
+		public List<DbContentItem> Items { get; set; }
 
 		[IgnoreDataMember]
 		public string BaseUrl
@@ -39,11 +33,14 @@ namespace MiniWeb.Storage.XmlStorage
 			}
 		}
 
-		public XmlSitePage()
-		{
-			Pages = new List<ISitePage>();
-			LastModified = DateTime.MinValue;
-		}
+		[IgnoreDataMember]
+		public IEnumerable<ISitePage> Pages { get; set; } = new List<DbSitePage>();
+
+		[IgnoreDataMember]
+		public ISitePage Parent { get; set; }
+
+		[IgnoreDataMember]
+		public List<IPageSection> Sections { get; set; }
 
 		public string GetBodyCss()
 		{
@@ -62,15 +59,34 @@ namespace MiniWeb.Storage.XmlStorage
 		}
 	}
 
-	public class XmlPageSection : IPageSection
+	public class DbContentItem
+	{
+		public int Sortorder { get; set; }
+		public string SectionKey { get; set; }
+
+		public string Template { get; set; }
+		public string Values { get; set; }
+
+		public string PageUrl { get; set; }
+		public DbSitePage Page { get; set; }
+	}
+
+	public class DbUser
+	{
+		public string UserName { get; set; }
+		public string Password { get; set; }
+		public string Salt { get; set; }
+		public bool Active { get; set; }
+	}
+
+	public class EFPageSection : IPageSection
 	{
 		public string Key { get; set; }
 		public List<IContentItem> Items { get; set; }
 	}
 
-	public class XmlContentItem : IContentItem
+	public class EFContentItem : IContentItem
 	{
-		[IgnoreDataMember]
 		public ISitePage Page { get; set; }
 		public string Template { get; set; }
 		public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
@@ -95,6 +111,5 @@ namespace MiniWeb.Storage.XmlStorage
 				return default(T);
 			}
 		}
-		
 	}
 }

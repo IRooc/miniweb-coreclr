@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29324.140
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{09F9F350-B9A5-44CE-A752-3ACAFAEE5F72}"
 	ProjectSection(SolutionItems) = preProject
@@ -30,9 +30,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{FB94
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWeb", "samples\SampleWeb\SampleWeb.csproj", "{212326C6-CFA4-41C7-BB34-E21C0ABDFCF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniWeb.Core.UI", "src\MiniWeb.Core.UI\MiniWeb.Core.UI.csproj", "{20B1F9F1-92A8-4695-BFE9-50767E1447A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniWeb.Core.UI", "src\MiniWeb.Core.UI\MiniWeb.Core.UI.csproj", "{20B1F9F1-92A8-4695-BFE9-50767E1447A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleRazor", "samples\SampleRazor\SampleRazor.csproj", "{5FA54578-E714-49C8-8B74-BD60196E5CE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleRazor", "samples\SampleRazor\SampleRazor.csproj", "{5FA54578-E714-49C8-8B74-BD60196E5CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniWeb.StaticSiteGenerator", "src\MiniWeb.StaticSiteGenerator\MiniWeb.StaticSiteGenerator.csproj", "{F12F73EC-AA71-4F16-A727-5F0E470EC659}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,6 +154,18 @@ Global
 		{5FA54578-E714-49C8-8B74-BD60196E5CE4}.Release|x64.Build.0 = Release|Any CPU
 		{5FA54578-E714-49C8-8B74-BD60196E5CE4}.Release|x86.ActiveCfg = Release|Any CPU
 		{5FA54578-E714-49C8-8B74-BD60196E5CE4}.Release|x86.Build.0 = Release|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Debug|x64.Build.0 = Debug|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Debug|x86.Build.0 = Debug|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Release|x64.ActiveCfg = Release|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Release|x64.Build.0 = Release|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Release|x86.ActiveCfg = Release|Any CPU
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,6 +180,7 @@ Global
 		{212326C6-CFA4-41C7-BB34-E21C0ABDFCF4} = {FB94B0C3-156B-4EAA-BD61-1D2E4593A615}
 		{20B1F9F1-92A8-4695-BFE9-50767E1447A8} = {7A9346FF-9D7B-4007-9449-BEBC15AB5FFE}
 		{5FA54578-E714-49C8-8B74-BD60196E5CE4} = {FB94B0C3-156B-4EAA-BD61-1D2E4593A615}
+		{F12F73EC-AA71-4F16-A727-5F0E470EC659} = {7A9346FF-9D7B-4007-9449-BEBC15AB5FFE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71988292-41F9-4C21-9B7F-801D1A133E14}

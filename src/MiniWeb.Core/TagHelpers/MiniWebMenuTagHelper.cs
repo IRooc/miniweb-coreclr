@@ -38,7 +38,6 @@ namespace MiniWeb.Core.TagHelpers
 	{
 		internal const string MiniWebMenuAttributename = "miniweb-menu";
 		private const string MiniWebItemTemplate = "miniweb-menu-template";
-
 		private readonly IMiniWebSite _webSite;
 
 		[HtmlAttributeNotBound]

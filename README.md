@@ -124,7 +124,7 @@ If you use the JsonStorage example make sure your username password is added to 
 ```JSON
 "MiniWebStorage": {
 	"Username": "Testuser",
-	"Password": "Testpassword
+	"Password": "Testpassword"
 }
 ```
 Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.
