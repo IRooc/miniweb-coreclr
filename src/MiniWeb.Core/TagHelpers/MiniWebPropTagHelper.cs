@@ -15,7 +15,6 @@ namespace MiniWeb.Core.TagHelpers
 		private const string MiniWebPropertyTagname = "miniweb-prop";
 		private const string MiniWebEditTypeTagname = "miniweb-edittype";
 		private const string MiniWebEditAttributesTagname = "miniweb-attributes";
-
 		private readonly IMiniWebSite _webSite;
 
 		[HtmlAttributeNotBound]
@@ -44,7 +43,6 @@ namespace MiniWeb.Core.TagHelpers
 				return (EditAttributeString ?? string.Empty).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 			}
 		}
-
 
 		public MiniWebPropTagHelper(IMiniWebSite webSite)
 		{

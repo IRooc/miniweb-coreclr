@@ -841,11 +841,7 @@ const miniwebAdminInit = function (userOptions) {
 				const a = document.createElement('a');
 				const mimeType = 'application/json';
 				const fileName = 'page.json';
-				if (navigator.msSaveBlob) { // IE10
-					navigator.msSaveBlob(new Blob([content], {
-						type: mimeType
-					}), fileName);
-				} else if (URL && 'download' in a) { //html5 A[download]
+				if (URL && 'download' in a) { //html5 A[download]
 					a.href = URL.createObjectURL(new Blob([content], {
 						type: mimeType
 					}));

@@ -28,10 +28,8 @@ namespace MiniWeb.Core
 		IEnumerable<ISitePage> Pages { get; set; }
 		ISitePage Parent { get; set; }
 		List<IPageSection> Sections { get; set; }
-
 		string GetBodyCss();
 		bool VisibleInMenu();
-
 		bool IsActiveFor(string url);
 	}
 	
@@ -46,7 +44,6 @@ namespace MiniWeb.Core
 		ISitePage Page { get; set; }
 		string Template { get; set; }
 		Dictionary<string, string> Values { get; set; }
-
 		T Get<T>(string value, T defaultvalue = default(T));
 		string GetValue(string value, string defaultvalue = "");
 	}

@@ -16,21 +16,17 @@ namespace MiniWeb.Core
 		IMiniWebAssetStorage AssetStorage { get; }
 		IEnumerable<string> PageTemplates { get; }
 		IEnumerable<string> ItemTemplates { get; }
-
 		string GetPageUrl(ISitePage page);
 		Task<FindResult> GetPageByUrl(string url, ClaimsPrincipal user);
 		Task<IEnumerable<ISitePage>> Pages(bool reload = false);
 		Task DeleteSitePage(ISitePage page);
 		Task SaveSitePage(ISitePage page, HttpRequest currentRequest, bool storeImages = false);
 		IContentItem DummyContent(string template);
-		Task<List<IPageSection>> GetDefaultContentForTemplate(string template);
-		
+		Task<List<IPageSection>> GetDefaultContentForTemplate(string template);		
 		Task<IEnumerable<IAsset>> Assets(bool reload = false);
 		Task DeleteAsset(IAsset asset);
-
 		Task<bool> Authenticate(string username, string password);
 		ClaimsPrincipal GetClaimsPrincipal(string username);
 		bool IsAuthenticated(ClaimsPrincipal user);
-
 	}
 }

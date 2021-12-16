@@ -13,7 +13,6 @@ namespace MiniWeb.Core.UI.TagHelpers
 	{
 		private const string MiniWebAdminTag = "miniwebadmin";
 		private const string MiniWebIgnoreAdminStartTagname = "ignoreadminstart";
-
 		private readonly IMiniWebSite _webSite;
 		private readonly IHtmlHelper _htmlHelper;
 		private readonly IAntiforgery _antiforgery;

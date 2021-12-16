@@ -1,13 +1,4 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,15 +13,14 @@ using System.Text.Json.Serialization;
 
 namespace MiniWeb.StaticSiteGenerator
 {
-    public class Program
+    public partial class Program
     {
         public static async Task Main(string[] args)
         {
-
-            var config = ParseConfig("-c", @"C:\Rc\Temp\wwwContent", "-o", @"C:\Rc\Temp\output\", "--replace");
+            var config = GeneratorConfig.ParseConfig("-c", @"C:\Rc\Temp\wwwContent", "-o", @"C:\Rc\Temp\output\", "--replace");
             if (args.Length > 0)
             {
-                config = ParseConfig(args);
+                config = GeneratorConfig.ParseConfig(args);
             }
 
             Console.WriteLine($"Starting generation with config");
@@ -125,95 +115,6 @@ namespace MiniWeb.StaticSiteGenerator
             Console.WriteLine($"Done");
         }
 
-        public class GeneratorConfig
-        {
-
-            [ConsoleArgument("-c")]
-            public string ContentRoot { get; set; } = string.Empty;
-
-            [ConsoleArgument("-o")]
-            public string OutputFolder { get; set; } = string.Empty;
-
-            [ConsoleArgument("--replace")]
-            public bool ReplaceOutput { get; set; }
-
-        }
-
-        public static GeneratorConfig ParseConfig(params string[] args)
-        {
-            var config = new GeneratorConfig();
-
-            foreach (var prop in config.GetType().GetProperties())
-            {
-                foreach (var attr in prop.GetCustomAttributes(false))
-                {
-                    if (attr is ConsoleArgumentAttribute consoleArgument)
-                    {
-                        var index = Array.IndexOf(args, consoleArgument.CommandPrefix);
-                        if (index == -1)
-                        {
-                            index = Array.IndexOf(args, $"-{prop.Name.ToLower()}");
-                        }
-                        if (index != -1)
-                        {
-                            if (prop.PropertyType == typeof(bool))
-                            {
-                                if (index + 1 < args.Length && !args[index + 1].StartsWith("-"))
-                                    prop.SetValue(config, bool.Parse(args[index + 1]));
-                                else
-                                    prop.SetValue(config, true);
-                            }
-                            else if (index + 1 < args.Length && !args[index + 1].StartsWith("-"))
-                            {
-                                prop.SetValue(config, args[index + 1]);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return config;
-        }
-
-
-
-        //MSDN: https://docs.microsoft.com/en-us/azure/static-web-apps/configuration
-        public class StaticWebAppConfig
-        {
-            public NavigationRoute[]? routes { get; set; }
-            public NavigationFallback? navigationFallback { get; set; }
-            public Dictionary<string, NavigationOverride>? responseOverrides { get; set; }
-            public Dictionary<string, string>? globalHeaders { get; set; }
-            public Dictionary<string, string>? mimeTypes { get; set; }
-        }
-
-        public class NavigationFallback
-        {
-            public string? rewrite { get; set; }
-            public string[]? exclude { get; set; }
-        }
-
-        public class NavigationOverride
-        {
-            public string? rewrite { get; set; }
-            public string? redirect { get; set; }
-            public int? statusCode { get; set; }
-        }
-
-
-        public class NavigationRoute
-        {
-            public string? route { get; set; }
-            public string[]? allowedRoles { get; set; }
-            public Dictionary<string, string>? headers { get; set; }
-            public string[]? methods { get; set; }
-            public string? rewrite { get; set; }
-            public int? statusCode { get; set; }
-            public string? redirect { get; set; }
-        }
-
-
-
 
         //MSDN: https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-6.0
         public static void CopyAll(DirectoryInfo source, DirectoryInfo target)
@@ -236,90 +137,6 @@ namespace MiniWeb.StaticSiteGenerator
                 DirectoryInfo nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
-        }
-
-
-    }
-
-
-    internal class ConsoleArgumentAttribute : Attribute
-    {
-        public ConsoleArgumentAttribute(string prefix)
-        {
-            CommandPrefix = prefix;
-        }
-
-        public string CommandPrefix { get; }
-    }
-
-
-    //https://github.com/aspnet/samples/blob/ae4ae5d560c1feca18818c0d696cd1dc89163fd4/samples/aspnetcore/mvc/renderviewtostring/RazorViewToStringRenderer.cs
-    public class RazorViewToStringRenderer
-    {
-        private IRazorViewEngine _viewEngine;
-        private ITempDataProvider _tempDataProvider;
-        private IServiceProvider _serviceProvider;
-
-        public RazorViewToStringRenderer(
-            IRazorViewEngine viewEngine,
-            ITempDataProvider tempDataProvider,
-            IServiceProvider serviceProvider)
-        {
-            _viewEngine = viewEngine;
-            _tempDataProvider = tempDataProvider;
-            _serviceProvider = serviceProvider;
-        }
-
-        public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
-        {
-            var actionContext = GetActionContext();
-            var view = FindView(actionContext, viewName);
-
-            using (var output = new StringWriter())
-            {
-                var viewContext = new ViewContext(
-                        actionContext,
-                        view,
-                        new ViewDataDictionary<TModel>(new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()), model),
-                        new TempDataDictionary(
-                            actionContext.HttpContext,
-                            _tempDataProvider),
-                        output,
-                        new HtmlHelperOptions());
-
-                await view.RenderAsync(viewContext);
-
-                return output.ToString();
-            }
-        }
-
-        private IView FindView(ActionContext actionContext, string viewName)
-        {
-            var getViewResult = _viewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
-            if (getViewResult.Success)
-            {
-                return getViewResult.View;
-            }
-
-            var findViewResult = _viewEngine.FindView(actionContext, viewName, isMainPage: true);
-            if (findViewResult.Success)
-            {
-                return findViewResult.View;
-            }
-
-            var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
-            var errorMessage = string.Join(
-                Environment.NewLine,
-                new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
-
-            throw new InvalidOperationException(errorMessage);
-        }
-
-        private ActionContext GetActionContext()
-        {
-            var httpContext = new DefaultHttpContext();
-            httpContext.RequestServices = _serviceProvider;
-            return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         }
     }
 }

@@ -8,20 +8,15 @@ namespace MiniWeb.Core
 		public string DefaultPage { get; set; } = "/home.html";
 		public string PageExtension { get; set; } = "html";
 		public bool PageExtensionForce { get; set; } = false;
-
 		public string LoginView { get; set; } = "~/Views/login.cshtml";
 		public string ApiEndpoint {get;set;} = "/miniweb-api/";
 		public string RazorFallbackPageRoute { get; set; } = "/miniweb-fallback";
-
 		public string PageTemplatePath { get; set; } = "/Views/Pages";
 		public string ItemTemplatePath { get; set; } = "/Views/Items";
 		public bool RedirectToFirstSub { get; set; } = false;
 		public bool StoreVersions { get; set; } = false;
-
 		public List<DefaultContent> DefaultContent { get; set; } = new List<DefaultContent>();
-
 		public MiniWebAuthentication Authentication { get; set; } = new MiniWebAuthentication();
-
 		public string LogCategoryName { get; set; } = "MiniWeb";
 	}
 
@@ -39,11 +34,8 @@ namespace MiniWeb.Core
 	public class DummyContentItem : IContentItem
 	{
 		public ISitePage Page { get; set; }
-
 		public string Template { get; set; }
-
 		public Dictionary<string, string> Values { get; set; }
-
 		public string GetValue(string value, string defaultvalue = "")
 		{
 			return defaultvalue;

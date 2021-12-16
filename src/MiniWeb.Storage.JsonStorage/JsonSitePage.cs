@@ -14,14 +14,12 @@ namespace MiniWeb.Storage.JsonStorage
 		public string Layout { get; set; }
 		public string MetaTitle { get; set; }
 		public string MetaDescription { get; set; }
-
 		public bool Visible { get; set; }
 		public bool ShowInMenu { get; set; }
 		public int SortOrder { get; set; }
 		public DateTime? Date { get; set; }
 		public DateTime Created { get; set; }
 		public DateTime LastModified { get; set; }
-
 		public List<IPageSection> Sections { get; set; }
 
 		[IgnoreDataMember]
@@ -97,6 +95,5 @@ namespace MiniWeb.Storage.JsonStorage
 				return default(T);
 			}
 		}
-
 	}
 }
