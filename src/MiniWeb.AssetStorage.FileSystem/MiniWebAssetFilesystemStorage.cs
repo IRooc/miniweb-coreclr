@@ -27,7 +27,6 @@ namespace MiniWeb.AssetStorage.FileSystem
 			Logger = logger;
 		}
 
-
 		public Task<IEnumerable<IAsset>> GetAllAssets()
 		{
 			string folder = Path.Combine(HostingEnvironment.WebRootPath, Configuration.AssetRootPath);
@@ -44,9 +43,10 @@ namespace MiniWeb.AssetStorage.FileSystem
 		{
 			if (virtualFolder == null) virtualFolder = string.Empty;
 			Logger?.LogInformation($"Create asset {virtualFolder}/{fileName} in {Configuration.AssetRootPath}");
+			
 			if (virtualFolder.StartsWith("/")) virtualFolder = virtualFolder.Substring(1);
 			if (virtualFolder.StartsWith(Configuration.AssetRootPath)) virtualFolder = virtualFolder.Substring(Configuration.AssetRootPath.Length);
-
+			
 			string filePath = Path.Combine(virtualFolder, fileName);
 			filePath = filePath.Replace("\\","/");
 			//should we check the assetrootpath?
@@ -88,6 +88,10 @@ namespace MiniWeb.AssetStorage.FileSystem
 		private string[] ImageExtensions = new[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
 		public IWebHostEnvironment HostingEnvironment { get; }
 		public MiniWebAssetFileSystemConfig Configuration { get; }
+		public string VirtualPath { get; set; }
+		public string FileName { get; set; }
+		public string Folder { get; set; }
+		
 		public FileSystemAsset(IWebHostEnvironment env, MiniWebAssetFileSystemConfig config, string fullPath)
 		{
 			HostingEnvironment = env;
@@ -96,6 +100,7 @@ namespace MiniWeb.AssetStorage.FileSystem
 			FileName = Path.GetFileName(VirtualPath);
 			Folder = Path.GetDirectoryName(VirtualPath).Replace("\\", "/");
 		}
+
 		public FileInfo Info
 		{
 			get
@@ -105,7 +110,6 @@ namespace MiniWeb.AssetStorage.FileSystem
 			}
 		}
 
-		public string VirtualPath { get; set; }
 		public AssetType Type
 		{
 			get
@@ -118,9 +122,6 @@ namespace MiniWeb.AssetStorage.FileSystem
 				return AssetType.File;
 			}
 		}
-
-		public string FileName { get; set; }
-		public string Folder { get; set; }
 
 		private string GetVirtualPath(string path)
 		{

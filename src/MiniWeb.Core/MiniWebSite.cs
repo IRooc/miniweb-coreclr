@@ -23,12 +23,10 @@ namespace MiniWeb.Core
 		public const string AssetsCacheKey = "MiniWebAssetsCacheKey";
 		public MiniWebConfiguration Configuration { get; }
 		public IWebHostEnvironment HostingEnvironment { get; }
-
 		public ILogger Logger { get; }
 		public IMiniWebContentStorage ContentStorage { get; }
 		public IMiniWebAssetStorage AssetStorage { get; }
 		public IMemoryCache Cache { get; }
-
 		public IEnumerable<string> PageTemplates
 		{
 			get
@@ -68,7 +66,6 @@ namespace MiniWeb.Core
 			return result;
 		}
 
-
 		public MiniWebSite(IWebHostEnvironment env, ILogger<MiniWebSite> logger, IMiniWebContentStorage storage, IMiniWebAssetStorage assetStorage,
 						   IMemoryCache cache, IOptions<MiniWebConfiguration> config)
 		{
@@ -83,8 +80,6 @@ namespace MiniWeb.Core
 			//cannot inject because of circular reference.
 			ContentStorage.MiniWebSite = this;
 			AssetStorage.MiniWebSite = this;
-
-
 		}
 
 
@@ -188,7 +183,7 @@ namespace MiniWeb.Core
 
 		public static Claim[] GetClaimsFor(string username)
 		{
-			return new[] {
+			return new [] {
 					new Claim(ClaimTypes.Name, username),
 					new Claim(ClaimTypes.Role, MiniWebAuthentication.MiniWebCmsRoleValue)
 				};

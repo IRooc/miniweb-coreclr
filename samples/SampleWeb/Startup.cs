@@ -85,19 +85,8 @@ namespace SampleWeb
 			app.UseDeveloperExceptionPage();
 
 			//use static assets
-			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseRouting();
-
-			//current hosting needs this ignore otherwise
-			app.Map("/emonitor.aspx", context =>
-			{
-				context.Run(async ctx =>
-				{
-					ctx.Response.ContentType = "text/plain";
-					await ctx.Response.WriteAsync("Enterprise Monitor test ASP");
-				});
-			});
 
 			app.UseAuthentication();
 			app.UseAuthorization();

@@ -8,7 +8,6 @@ namespace MiniWeb.Core
 		public string Layout { get; set; }
 		public string MetaDescription { get; set; }
 		public string MetaTitle { get; set; }
-
 		public DateTime Date { get; set; }
 		public bool ShowInMenu { get; set; }
 		public int SortOrder { get; set; }

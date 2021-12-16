@@ -8,6 +8,7 @@ namespace MiniWeb.Core.TagHelpers
 	public class MiniWebTemplateTagHelper : TagHelper
 	{
 		private const string MiniWebTemplateTagname = "miniweb-template";
+		private readonly IMiniWebSite _webSite;
 
 		[HtmlAttributeNotBound]
 		[ViewContext]
@@ -15,8 +16,6 @@ namespace MiniWeb.Core.TagHelpers
 
 		[HtmlAttributeName(MiniWebTemplateTagname)]
 		public string Template { get; set; }
-
-		private readonly IMiniWebSite _webSite;
 
 		public MiniWebTemplateTagHelper(IMiniWebSite webSite)
 		{

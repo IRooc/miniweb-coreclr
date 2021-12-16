@@ -155,11 +155,11 @@ namespace MiniWeb.Storage.XmlStorage
 			};
 			return Task.FromResult<ISitePage>(result);
 		}
+
 		public Task<ISitePage> NewPage()
 		{
 			return Task.FromResult<ISitePage>(new XmlSitePage());
 		}
-
 
 		private void SerializeObject(string filename, object obj)
 		{
@@ -203,11 +203,6 @@ namespace MiniWeb.Storage.XmlStorage
 			return new DataContractSerializer(typeof(T), new[] { typeof(XmlSitePage), typeof(XmlPageSection), typeof(XmlContentItem) });
 		}
 
-		/// <summary>
-		/// Gets the name of the site page file.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns></returns>
 		private string GetSitePageFileName(string url)
 		{
 			string name = url.Replace('/', '~') + ".xml";

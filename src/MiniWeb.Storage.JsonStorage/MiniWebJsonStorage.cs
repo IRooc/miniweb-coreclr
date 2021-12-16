@@ -200,11 +200,7 @@ namespace MiniWeb.Storage.JsonStorage
 			}
 
 		}
-		/// <summary>
-		/// Gets the name of the site page file.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns></returns>
+		
 		private string GetSitePageFileName(string url)
 		{
 			string name = url.Replace('/', '~') + ".json";
