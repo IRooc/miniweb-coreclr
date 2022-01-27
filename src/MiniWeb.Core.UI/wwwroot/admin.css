@@ -1,588 +1,673 @@
 ﻿body.miniweb {
-	margin-top: 3.5em;
+   margin-top: 3.5em;
 }
 
 body.miniweb.preview {
-	margin-top: inherit;
+   margin-top: inherit;
 }
 
 body.miniweb.preview miniwebadmin {
-	display: none;
+   display: none;
 }
+
 body .miniweb-editor-toolbar {
-	font-size: 14px; /*everything relative to this*/
-	line-height: 1.42857143;	
+   font-size: 14px; /*everything relative to this*/
+   line-height: 1.42857143;
 }
+
 body miniwebadmin {
-	font-size: 14px; /*everything relative to this*/
-	line-height: 1.42857143;	
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
+   font-size: 14px; /*everything relative to this*/
+   line-height: 1.42857143;
+   position: fixed;
+   left: 0;
+   top: 0;
+   width: 100%;
 }
+
 body .miniweb-editor-toolbar *,
 body miniwebadmin * {
-	font-family: Arial, Helvetica, sans-serif!important;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-	box-sizing: content-box;
+   font-family: Arial, Helvetica, sans-serif !important;
+   margin: 0;
+   padding: 0;
+   border: 0;
+   font-size: 100%;
+   font: inherit;
+   vertical-align: baseline;
+   box-sizing: content-box;
 }
+
 miniwebadmin input,
 miniwebadmin textarea,
 miniwebadmin select {
-	border: 1px solid black;
-	border-radius: 2px;
-	padding: 3px;
+   border: 1px solid black;
+   border-radius: 2px;
+   padding: 3px;
 }
 
 miniwebadmin button {
-	border: 1px solid darkgray;
-	background-color: lightgray;
-	border-radius: 2px;
-	padding: 3px 10px;
-	cursor: pointer;
+   border: 1px solid darkgray;
+   background-color: lightgray;
+   border-radius: 2px;
+   padding: 3px 10px;
+   cursor: pointer;
 }
+
 miniwebadmin button:hover {
-	background-color: #444;
-	color:white;
+   background-color: #444;
+   color: white;
 }
+
 miniwebadmin button.primary {
-	border: 1px solid #254d25;
-	background-color: #73a882;
-	color: #254d25;
+   border: 1px solid #254d25;
+   background-color: #73a882;
+   color: #254d25;
 }
+
 miniwebadmin button.primary:hover {
-	background-color: rgb(41, 116, 41);
-	color:white;
+   background-color: rgb(41, 116, 41);
+   color: white;
 }
+
 miniwebadmin button.danger {
-	border: 1px solid rgb(243, 78, 78);
-	background-color: rgb(230, 100, 100);
-	color:#4f0202;
+   border: 1px solid rgb(243, 78, 78);
+   background-color: rgb(230, 100, 100);
+   color: #4f0202;
 }
+
 miniwebadmin button.danger:hover {
-	background-color: rgb(165, 14, 14);
-	color:white;
+   background-color: rgb(165, 14, 14);
+   color: white;
 }
+
 miniwebadmin .miniweb-nav-input {
-	max-width: 13vw;
+   max-width: 13vw;
 }
 
 miniwebadmin #miniweb-templates,
 miniwebadmin .miniweb-modal,
-miniwebadmin #miniweb-html-tools {display: none;}
+miniwebadmin #miniweb-html-tools {
+   display: none;
+}
+
 miniwebadmin .is-hidden {
-	display: none !important;
+   display: none !important;
 }
+
 /*the alert*/
-miniwebadmin > aside {
-	position: fixed;
-	top: 1.5em;
-	width: 400px;
-	left: 40%;
-	z-index: 100;
+miniwebadmin>aside {
+   position: fixed;
+   top: 1.5em;
+   width: 400px;
+   left: 40%;
+   z-index: 100;
 }
-miniwebadmin > aside .alert {
-	background-color: lightgray;
-	padding: 10px;
-	border-radius: 5px;	
-	border-style: solid;
-	border-width: 1px;
+
+miniwebadmin>aside .alert {
+   background-color: lightgray;
+   padding: 10px;
+   border-radius: 5px;
+   border-style: solid;
+   border-width: 1px;
 }
-miniwebadmin > aside .alert.miniweb-alert-success {
-	color: #3c763d;
-    background-color: #dff0d8;
-	border-color: #3c763d;
-	box-shadow: 0 0 8px #3c763d;
+
+miniwebadmin>aside .alert.miniweb-alert-success {
+   color: #3c763d;
+   background-color: #dff0d8;
+   border-color: #3c763d;
+   box-shadow: 0 0 8px #3c763d;
 }
-miniwebadmin > aside .alert.miniweb-alert-danger {
-	color: red;
-	background-color: #f0cac9;
-	border-color: red;
-	box-shadow: 0 0 8px red;
+
+miniwebadmin>aside .alert.miniweb-alert-danger {
+   color: red;
+   background-color: #f0cac9;
+   border-color: red;
+   box-shadow: 0 0 8px red;
 }
 
 
 miniwebadmin .miniweb-modal.show {
-	display: block !important;
-	position: fixed;
-	top: 3em;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	z-index: 10;
-	height: calc(100vh -3em);
+   display: block !important;
+   position: fixed;
+   top: 3em;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   z-index: 10;
+   height: calc(100vh -3em);
 }
 
 miniwebadmin .miniweb-modal.show .miniweb-modal-backdrop {
-	position: fixed;
-	top: 3em;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	background-color: rgba(0,0,0,0.7);
-	z-index: 10;
+   position: fixed;
+   top: 3em;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   background-color: rgba(0, 0, 0, 0.7);
+   z-index: 10;
 }
+
 miniwebadmin .miniweb-modal .miniweb-modal-header h4 {
-	padding: 1em 0;
-	font-size: 1.5em;
+   padding: 1em 0;
+   font-size: 1.5em;
 }
+
 miniwebadmin .miniweb-modal .miniweb-modal-content {
-	width: 40em;
-	background-color: white;
-	height: calc(100vh - 3em);
-	overflow: scroll;;
-	position: fixed;
-	left:0;
-	padding-left: 20px;
-	padding-bottom: 20px;
-	z-index: 11;
+   width: 40em;
+   background-color: white;
+   height: calc(100vh - 3em);
+   overflow: scroll;
+   ;
+   position: fixed;
+   left: 0;
+   padding-left: 20px;
+   padding-bottom: 20px;
+   z-index: 11;
 }
+
 miniwebadmin .miniweb-modal.miniweb-modal-right .miniweb-modal-content {
-	position: absolute;
-	right: 0;
-	left:auto;
+   position: absolute;
+   right: 0;
+   left: auto;
 }
+
 miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content {
-	left: calc(50% - 20em - 20px);
+   left: calc(50% - 20em - 20px);
 }
+
 miniwebadmin .miniweb-modal.miniweb-modal-small {
-	top: calc(50% - 5em);
+   top: calc(50% - 5em);
 }
+
 miniwebadmin .miniweb-modal.miniweb-modal-small .miniweb-modal-content {
-	height: 10em;
-	scrollbar-width: none;
+   height: 10em;
+   scrollbar-width: none;
 }
+
 miniwebadmin .miniweb-modal .miniweb-modal-content .right {
-	position: absolute;
-	right: 0;
+   position: absolute;
+   right: 0;
 }
+
 miniwebadmin .miniweb-modal .miniweb-modal-footer {
-	text-align: right;
-	padding: 0 48px 20px;
+   text-align: right;
+   padding: 0 48px 20px;
 }
 
 miniwebadmin .miniweb-content-items {
-	display: flex;
-	flex-wrap: wrap;
+   display: flex;
+   flex-wrap: wrap;
 }
 
 miniwebadmin .miniweb-content-items button {
-    display: flex;
-    flex: 1 0 20%;
-    justify-content: center;
-    align-items: center;
-    max-width: 19%;
-    margin: 1% 1% 1% 0;
+   display: flex;
+   flex: 1 0 20%;
+   justify-content: center;
+   align-items: center;
+   max-width: 19%;
+   margin: 1% 1% 1% 0;
 
 }
+
 miniwebadmin .miniweb-tools {
-	display: block;
-	width: 100%;
-	height: 3.5em;
-	background-color: #f4f2df;
-	font-size: 10pt;
+   display: block;
+   width: 100%;
+   height: 3.5em;
+   background-color: #f4f2df;
+   font-size: 10pt;
 }
+
 miniwebadmin .miniweb-tools .miniweb-tool {
-	float: left;
+   float: left;
 }
+
 miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
-	width: 3em;
-	height: 100%;
-	background-color: red;
+   width: 3em;
+   height: 100%;
+   background-color: red;
 }
+
 miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status a {
-	color:white;
-	margin-top: 1em;
-	padding:0;
-	display: inline-block;
-	font-size: 10px;
-	text-align: center;
-	width: 100%;
-	text-decoration: none;
+   color: white;
+   margin-top: 1em;
+   padding: 0;
+   display: inline-block;
+   font-size: 10px;
+   text-align: center;
+   width: 100%;
+   text-decoration: none;
 }
+
 miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status.published {
-	background-color:  #f4f2df;
+   background-color: #f4f2df;
 }
+
 miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list {
-	list-style: none;
-	margin: 0.5em 0;
-	padding-left:0;
-	display: inline-block;
+   list-style: none;
+   margin: 0.5em 0;
+   padding-left: 0;
+   display: inline-block;
 }
+
 miniwebadmin .miniweb-tools .miniweb-tool .miniweb-horizontal-list li {
-	float: left;
-	position: relative;
-	height: 3rem;
+   float: left;
+   position: relative;
+   height: 3rem;
 }
+
 miniwebadmin .pull-right {
-	float:right!important;
+   float: right !important;
 }
+
 miniwebadmin .miniweb-tools label {
-	font-size: 12px;
-	cursor: pointer;
-	padding: 5px;
+   font-size: 12px;
+   cursor: pointer;
+   padding: 5px;
 }
+
 miniwebadmin .miniweb-tools label input {
-	margin:0
+   margin: 0
 }
-miniwebadmin .miniweb-tools  button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	padding: 5px 15px;
-	position: relative;
+
+miniwebadmin .miniweb-tools button {
+   background: none;
+   border: none;
+   cursor: pointer;
+   padding: 5px 15px;
+   position: relative;
 }
-miniwebadmin .miniweb-tools  button:hover {
-	background-color: #dbd8be;
-	color:black;
+
+miniwebadmin .miniweb-tools button:hover {
+   background-color: #dbd8be;
+   color: black;
 }
-miniwebadmin .miniweb-tools  button:disabled {
-	cursor: default;
-	color: lightgrey;
-	background: none;
+
+miniwebadmin .miniweb-tools button:disabled {
+   cursor: default;
+   color: lightgrey;
+   background: none;
 }
-miniwebadmin .miniweb-tools  button.icon {
-	padding-left:20px;
+
+miniwebadmin .miniweb-tools button.icon {
+   padding-left: 20px;
 }
 
 miniwebadmin .icon:before {
-	position: absolute;
-	font-size: 15px;
-	font-family: Arial, Helvetica;
-	top:3px;
-	left: 2px;
+   position: absolute;
+   font-size: 15px;
+   font-family: Arial, Helvetica;
+   top: 3px;
+   left: 2px;
 }
 
 miniwebadmin .icon.icon-props:before {
-	content: "\2634";
+   content: "\2634";
 }
+
 miniwebadmin .icon.icon-edit:before {
-	content: "\2710";
+   content: "\2710";
 }
+
 miniwebadmin .icon.icon-save:before {
-	content: "\1F5AB";
-	font-weight: 700;
+   content: "\1F5AB";
+   font-weight: 700;
 }
+
 miniwebadmin .icon.icon-cancel:before {
-	content: "\27F2";
-	font-weight: 700;
+   content: "\27F2";
+   font-weight: 700;
 }
+
 miniwebadmin .icon.icon-signout:before {
-	content: "\2297";
+   content: "\2297";
 }
+
 miniwebadmin .icon.icon-signout:hover:before {
-	color:red;
+   color: red;
 }
+
 miniwebadmin .icon.icon-new:before {
-	content: "\2606";
+   content: "\2606";
 }
 
 miniwebadmin .miniweb-form-group {
-	width: 100%;
-	margin: 0 0 10px;
+   width: 100%;
+   margin: 0 0 10px;
 }
+
 miniwebadmin .miniweb-form-group label {
-	display: block;
+   display: block;
 }
+
 miniwebadmin .miniweb-form-group label span {
-	display: inline-block;	
-	width: 30%;
-	font-size: 12px;
-	font-weight: normal;
+   display: inline-block;
+   width: 30%;
+   font-size: 12px;
+   font-weight: normal;
 
 }
+
 miniwebadmin .miniweb-form-group label input,
 miniwebadmin .miniweb-form-group label select {
-	width:60%
+   width: 60%
 }
+
 miniwebadmin .miniweb-form-group label input:invalid {
-	box-shadow: none;
+   box-shadow: none;
 }
+
 .miniweb-invalid-item,
 miniwebadmin form.miniweb-invalid .miniweb-form-group label input:invalid {
-	background-color: rgba(200,0,0,0.2);
+   background-color: rgba(200, 0, 0, 0.2);
 }
+
 miniwebadmin .miniweb-form-group label input[type="checkbox"] {
-	width: auto;
+   width: auto;
 }
+
 miniwebadmin .miniweb-form-group label .input-group {
-	display: inline-block;	
-	width:60%
+   display: inline-block;
+   width: 60%
 }
+
 miniwebadmin .miniweb-form-group label .input-group .addon {
-	display: inline-block;
-	width: auto;
+   display: inline-block;
+   width: auto;
 }
-miniwebadmin .miniweb-form-group .input-group .addon + input ,
-miniwebadmin .miniweb-form-group .input-group .addon + select {
-	width: 75%
+
+miniwebadmin .miniweb-form-group .input-group .addon+input,
+miniwebadmin .miniweb-form-group .input-group .addon+select {
+   width: 75%
 }
 
 miniwebadmin .miniweb-add-asset {
-	position:absolute;
-	width:0;
-	height:0;
-	border:0;
-	z-index: -1;
+   position: absolute;
+   width: 0;
+   height: 0;
+   border: 0;
+   z-index: -1;
 }
 
 .miniweb-hidden-menu {
-	display: none!important;
+   display: none !important;
 }
+
 .miniweb-hidden-menu.show {
-	display: unset!important;
+   display: unset !important;
 }
 
 .miniweb-editing pre {
-	max-width: 100%;
-	white-space: pre-wrap;
+   max-width: 100%;
+   white-space: pre-wrap;
 }
+
 .miniweb-editing [data-miniwebsection] {
-	border: 1px dotted transparent
+   border: 1px dotted transparent
 }
+
 .miniweb-editing [data-miniwebsection]:hover {
-	border-color: grey;
+   border-color: grey;
 }
+
 .miniweb-editing [data-miniwebtemplate]:focus-within {
-    background: rgba(0,0,0,0.01);
+   background: rgba(0, 0, 0, 0.01);
 }
+
 .miniweb-editing [data-miniwebtemplate] {
-	overflow: hidden;
-	border-bottom: 1px dashed black;
-	margin-bottom: 5px;
-	padding:1px;
-	scroll-margin-top: 50px;
+   overflow: hidden;
+   border-bottom: 1px dashed black;
+   margin-bottom: 5px;
+   padding: 1px;
+   scroll-margin-top: 50px;
 }
-.miniweb-editonly{
-	display: none;
+
+.miniweb-editonly {
+   display: none;
 }
-.miniweb-editing .miniweb-editonly{
-	display: inherit;
+
+.miniweb-editing .miniweb-editonly {
+   display: inherit;
 }
+
 .miniweb-editing .miniweb-input-value {
-	display: inline-block;
-	margin-top: 25px;
-	position: relative;
+   display: inline-block;
+   margin-top: 25px;
+   position: relative;
 }
+
 .miniweb-editing [contenteditable] {
-	outline: thin dashed #ccc;
-	width: 100%;
-	display: inline-block;
-	margin-top: 25px;
-	position: relative;
+   outline: thin dashed #ccc;
+   width: 100%;
+   display: inline-block;
+   margin-top: 25px;
+   position: relative;
 }
 
 .miniweb-editing [contenteditable][data-miniwebedittype="html"] {
-	min-height: 10em;
+   min-height: 10em;
 }
 
 .miniweb-editing [contenteditable]:focus,
 .miniweb-editing [contenteditable]:hover {
-	outline: thin solid #ccc;
+   outline: thin solid #ccc;
 }
+
 .miniweb-editing [contenteditable]:before {
-	position: absolute;
-	background: #888247;
-	color: #fff;
-	content: attr(data-miniwebprop);
-	white-space: nowrap;
-	top: -18px;
-	height: 18px;
-	padding: 0 5px;
-	border-radius: 5px 5px 0 0;
-	font-size: 14px;
-	left:0;
+   position: absolute;
+   background: #888247;
+   color: #fff;
+   content: attr(data-miniwebprop);
+   white-space: nowrap;
+   top: -18px;
+   height: 18px;
+   padding: 0 5px;
+   border-radius: 5px 5px 0 0;
+   font-size: 14px;
+   left: 0;
 }
 
 .miniweb-editing .miniweb-template-actions button {
-	background:none;
-	border:none;
-	color: darkblue;
+   background: none;
+   border: none;
+   color: darkblue;
 }
+
 .miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup {
-	display: inline-block;
+   display: inline-block;
 }
+
 .miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button {
-	margin: 0;
-	padding: 2px;
-	display: inline-block;
-	width: 20px;
-	border: 1px solid lightslategray;
-	background-color: white;
-	color: lightslategray;
-	border-radius: 12px;
-	cursor: pointer;
-	position: relative;
+   margin: 0;
+   padding: 2px;
+   display: inline-block;
+   width: 20px;
+   border: 1px solid lightslategray;
+   background-color: white;
+   color: lightslategray;
+   border-radius: 12px;
+   cursor: pointer;
+   position: relative;
 }
+
 .miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.miniweb-leftalign:after {
-	content: "";
-	width: 0;
-	height: 0;
-	position: absolute;
-	left: 9px;
-	bottom: 2px;
-	border-bottom: 15px solid transparent;
-	border-right: 10px solid white;
-} 
-.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.miniweb-rightalign:after {
-	content: "";
-	width: 0;
-	height: 0;
-	position: absolute;
-	left: 5px;
-	bottom: 2px;
-	border-bottom: 15px solid transparent;
-	border-left: 10px solid white;
-} 
-.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.icon.icon-earth:before {
-	content: "\1F517";
-	font-size:10px;
+   content: "";
+   width: 0;
+   height: 0;
+   position: absolute;
+   left: 9px;
+   bottom: 2px;
+   border-bottom: 15px solid transparent;
+   border-right: 10px solid white;
 }
+
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.miniweb-rightalign:after {
+   content: "";
+   width: 0;
+   height: 0;
+   position: absolute;
+   left: 5px;
+   bottom: 2px;
+   border-bottom: 15px solid transparent;
+   border-left: 10px solid white;
+}
+
+.miniweb-editing .miniweb-editor-toolbar .miniweb-buttongroup button.icon.icon-earth:before {
+   content: "\1F517";
+   font-size: 10px;
+}
+
 .miniweb-editing [data-miniwebedittype="asset"],
 .miniweb-editing [data-miniwebedittype="url"] {
-	width: 95%;
+   width: 95%;
 }
+
 .miniweb-editing [data-miniwebedittype="url"]::after {
-	content: "\1F517";
-	cursor: pointer;
-	
-	right: -25px;
-	position: absolute;
-	font-size: 1em;
+   content: "\1F517";
+   cursor: pointer;
+
+   right: -25px;
+   position: absolute;
+   font-size: 1em;
 }
+
 .miniweb-editing [data-miniwebedittype="asset"]::after {
-	content: "\1F5BC";
-	cursor: pointer;
-	right: -25px;
-	position: absolute;
+   content: "\1F5BC";
+   cursor: pointer;
+   right: -25px;
+   position: absolute;
 }
+
 .miniweb-attributes {
-	display: none;
+   display: none;
 }
+
 .miniweb-editing .miniweb-attributes {
-	display: inherit;
+   display: inherit;
 }
 
 .miniweb-editing button.miniweb-button {
-	cursor: pointer;
-	float: right;
+   cursor: pointer;
+   float: right;
 }
 
 .miniweb-editing button.miniweb-danger {
-	color:red;
+   color: red;
 }
 
 .miniweb-editing .miniweb-assetlist {
-	list-style: none;
-	display: flex;
-	min-height: 320px;
-	width: 90%;
-	padding-left: 10px;
-	flex-wrap: wrap;
+   list-style: none;
+   display: flex;
+   min-height: 320px;
+   width: 90%;
+   padding-left: 10px;
+   flex-wrap: wrap;
 }
 
 .miniweb-editing .miniweb-assetlist li {
-	margin: 2px;
-	width: 100px;
-	max-width: 100px;
-	height: 100px;
-	max-height: 100px;
-	border: 1px solid #ddd;
-	border-radius: 10px;
-	background: #fafafa;
-	display: flex;
-	flex: 1 0 17%;
-	justify-content: center;
-    align-items: center;
-	position: relative;
+   margin: 2px;
+   width: 100px;
+   max-width: 100px;
+   height: 100px;
+   max-height: 100px;
+   border: 1px solid #ddd;
+   border-radius: 10px;
+   background: #fafafa;
+   display: flex;
+   flex: 1 0 17%;
+   justify-content: center;
+   align-items: center;
+   position: relative;
 }
 
 .miniweb-editing .miniweb-assetlist li .miniweb-asset-pick {
-	max-width: 100%;
-	max-height: 100%;
-	object-fit: scale-down;
-	cursor: pointer;
+   max-width: 100%;
+   max-height: 100%;
+   object-fit: scale-down;
+   cursor: pointer;
 }
 
 .miniweb-editing .miniweb-assetlist li span.miniweb-asset-pick:before {
-	font-family: Arial, Helvetica, sans-serif;
-	content: '\1F5BD';
-	position: absolute;
-	opacity: 0.2;
-	margin: 0 auto;
-	top: 10px;
-	font-size: 4em;
-	left: 30px;
+   font-family: Arial, Helvetica, sans-serif;
+   content: '\1F5BD';
+   position: absolute;
+   opacity: 0.2;
+   margin: 0 auto;
+   top: 10px;
+   font-size: 4em;
+   left: 30px;
 }
 
 .miniweb-editing .miniweb-asset-pager {
-	position: absolute;
-	color: #2e6da4;
-	top: 150px;
-	font-size: 25px;
-	left: 10px;
-	text-decoration:none;
+   position: absolute;
+   color: #2e6da4;
+   top: 150px;
+   font-size: 25px;
+   left: 10px;
+   text-decoration: none;
 }
 
 .miniweb-editing #miniweb-asset-page-right.miniweb-asset-pager {
-	right: 12px;
-	left: auto;
+   right: 12px;
+   left: auto;
 }
 
 .miniweb-editing .miniweb-asset-pager:hover {
-	color: #337ab7;
+   color: #337ab7;
 }
 
 
 
 
 @media (max-width: 1024px) {
-	miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content,
-	miniwebadmin .miniweb-modal .miniweb-modal-content {
-		width: 95vw;
-		padding-left: 5vw;
-		left:0;
-	}
-	miniwebadmin .miniweb-nav-input {
-		max-width: 20vw;
-	}
-	miniwebadmin .miniweb-tools  button.icon  {
-		line-height: 15px;
-	}
-	miniwebadmin .miniweb-tools  button.icon.icon-signout  {
-		color:red;
-	}
 
-	miniwebadmin .miniweb-tools  button.icon span {
-		display: none;
-	}
-	miniwebadmin .icon:before {
-		left:11px;
-	}
-	miniwebadmin .hidden-xs {
-		display: none !important;
-	}
-	miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
-		width: 1em;
-	}
-	miniwebadmin .miniweb-modal .miniweb-modal-footer {
-		padding:0 21px 1rem;
-	}
-	miniwebadmin .miniweb-tools  button {
-		padding:0;
-		width:15px;
-		height: 22px;
-	}
-	miniwebadmin > aside {
-		width: 90%;
-		left:5%;
-	}
+   miniwebadmin .miniweb-modal.miniweb-modal-center .miniweb-modal-content,
+   miniwebadmin .miniweb-modal .miniweb-modal-content {
+      width: 95vw;
+      padding-left: 5vw;
+      left: 0;
+   }
+
+   miniwebadmin .miniweb-nav-input {
+      max-width: 20vw;
+   }
+
+   miniwebadmin .miniweb-tools button.icon {
+      line-height: 15px;
+   }
+
+   miniwebadmin .miniweb-tools button.icon.icon-signout {
+      color: red;
+   }
+
+   miniwebadmin .miniweb-tools button.icon span {
+      display: none;
+   }
+
+   miniwebadmin .icon:before {
+      left: 11px;
+   }
+
+   miniwebadmin .hidden-xs {
+      display: none !important;
+   }
+
+   miniwebadmin .miniweb-tools .miniweb-tool.miniweb-status {
+      width: 1em;
+   }
+
+   miniwebadmin .miniweb-modal .miniweb-modal-footer {
+      padding: 0 21px 1rem;
+   }
+
+   miniwebadmin .miniweb-tools button {
+      padding: 0;
+      width: 15px;
+      height: 22px;
+   }
+
+   miniwebadmin>aside {
+      width: 90%;
+      left: 5%;
+   }
 }
 
 
@@ -590,18 +675,18 @@ miniwebadmin .miniweb-add-asset {
 /**/
 
 .miniweb-hidden-menu {
-	display: none;
+   display: none;
 
 }
 
 .miniweb-hidden-menu a:before {
-content: '[';
+   content: '[';
 }
 
 .miniweb-hidden-menu a:after {
-content: ']';
+   content: ']';
 }
 
-.miniweb-hidden-menu > a {
-	color: grey!important;
+.miniweb-hidden-menu>a {
+   color: grey !important;
 }
