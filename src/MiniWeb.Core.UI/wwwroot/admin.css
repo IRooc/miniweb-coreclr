@@ -12,7 +12,9 @@ body.miniweb.preview miniwebadmin {
 
 body .miniweb-editor-toolbar {
    font-size: 14px; /*everything relative to this*/
-   line-height: 1.42857143;
+   line-height: 1.42857143;    
+   background: #f4f2df;
+   border-radius: 11px
 }
 
 body miniwebadmin {
@@ -440,6 +442,7 @@ miniwebadmin .miniweb-add-asset {
    display: inline-block;
    margin-top: 25px;
    position: relative;
+   background-color: white;
 }
 
 .miniweb-editing [contenteditable][data-miniwebedittype="html"] {

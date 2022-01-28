@@ -35,7 +35,6 @@ namespace SampleRazor
                     .AddMiniWebAssetFileSystemStorage(Configuration)
                     .AddMiniwebBasicAuth(Configuration);
 
-            services.AddMvc();
             services.AddRazorPages().AddRazorPagesOptions(options =>
             {
                 options.Conventions.AddPageRoute("/login", config.Authentication.LoginPath.Substring(1));
