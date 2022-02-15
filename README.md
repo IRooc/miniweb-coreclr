@@ -8,9 +8,7 @@ Secondly it is an experiment with what .net coreclr can and can't do. I'm curren
 * oAuth & basic authentication 
 * custom configuration
 * custom taghelpers
-* [embedded assets through custom middleware](http://irooc.github.io/miniweb-coreclr/embedded-assets.html)
-* [embedded Razor View](http://irooc.github.io/miniweb-coreclr/embedded-razorviews.html)
-* [embedded assets](http://irooc.github.io/miniweb-coreclr/embedded-assets.html) (css/js)
+* Razor Classlibrary for the Editor UI 
 
 it currently runs on  .net 5.0.
 Tested on windows, mac osx, linux (ubuntu)
@@ -129,8 +127,17 @@ If you use the JsonStorage example make sure your username password is added to 
 ```
 Other authentication mechanisms can also be used, see sampleweb for an example of Github auth.
 
-## TODO
-* Maybe change usage files to a Razor Pages?
+
+## Generate Static Site 
+There is also a static site generator for the Json storage currently, this needs a folder with at least the 
+following subfolders:
+```
+APP_Data
+Views
+wwwroot
+```
+It will generate a static site that you can upload to your hosting party. If you want to host on an Azure Static Website a `staticwebapp.config.json` file as well
+
 
 
 
