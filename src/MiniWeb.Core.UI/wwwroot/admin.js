@@ -238,7 +238,6 @@ const cancelEdit = function () {
     closeModals();
 };
 const getItemValue = function (source) {
-    var _a;
     log('getItemValue', source.contentEditable);
     if (source.contentEditable === "true") {
         let parsedDOM;
@@ -248,7 +247,7 @@ const getItemValue = function (source) {
         parsedDOM = result[1];
         return parsedDOM;
     }
-    return (_a = source) === null || _a === void 0 ? void 0 : _a.value;
+    return source === null || source === void 0 ? void 0 : source.value;
 };
 const saveContent = function () {
     if (!document.querySelector('body').classList.contains('miniweb-editing'))
