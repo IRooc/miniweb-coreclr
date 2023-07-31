@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MiniWeb.AssetStorage.FileSystem;
 using MiniWeb.Core;
+//TODO: Decide you storage type (also check the csproj file
 using MiniWeb.Storage.JsonStorage;
 //using MiniWeb.Storage.XmlStorage;
 //using MiniWeb.Storage.EFStorage;
@@ -35,9 +36,13 @@ namespace SampleWeb
 			services.AddMvc(); 
 
 			services.AddMiniWeb(Configuration)
-					.AddMiniWebJsonStorage(Configuration)
-					//        .AddMiniWebXmlStorage(Configuration)
-					.AddMiniWebAssetFileSystemStorage(Configuration);
+					//TODO: Sample website uses Json storage comment out this line if you pick another provider
+                    .AddMiniWebJsonStorage(Configuration)
+					// If you want SQL backend uncomment this line, you need to manually add a User in the database
+                    //        .AddMiniWebEFSqlServerStorage(Configuration)
+					// If you want XML storage uncomment this line
+                    //        .AddMiniWebXmlStorage(Configuration)
+                    .AddMiniWebAssetFileSystemStorage(Configuration);
 
 			var authConfig = Configuration.Get<MiniWebConfiguration>().Authentication;
 			var githubConfig = new GithubAuthConfig();
@@ -90,13 +95,11 @@ namespace SampleWeb
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
-			//Registers the miniweb middleware and MVC Routes, do not re-register cookieauth
-			//app.UseEFMiniWebSite(false);
-			//app.UseMiniWebSite();
+						
 			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapMiniWebSite();
+            {
+                //Registers the miniweb Routes,
+                endpoints.MapMiniWebSite();
 			});
 		}
 
