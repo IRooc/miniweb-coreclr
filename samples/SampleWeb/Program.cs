@@ -17,12 +17,12 @@ namespace SampleWeb
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
-                { 
+                {
                     webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
                     {
                         var env = hostingContext.HostingEnvironment;
                         config.AddJsonFile("miniweb.json", optional: true, reloadOnChange: true)
-                              .AddJsonFile($"githubauth.json", optional: true, reloadOnChange: true)
+                              .AddJsonFile("githubauth.json", optional: true, reloadOnChange: true)
                               .AddJsonFile($"miniweb.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
                         config.AddEnvironmentVariables();
                     });

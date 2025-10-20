@@ -124,7 +124,7 @@
 			<div class="miniweb-form-group">
 				<label>
 					<span>Date</span>
-					<input type="datetime-local" pattern="\d{4}-\d{1,2}-\d{1,2}T\d{2}:\d{2}:\d{2}" name="Date" placeholder="Date yyyy-MM-ddTHH:mm:ss" data-miniweb-newdate="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")" required value="@((Model.Date ?? DateTime.Now).ToString("yyyy-MM-ddTHH:mm:ss"))" />
+					<input type="datetime-local" name="Date" placeholder="Date yyyy-MM-ddTHH:mm:ss" data-miniweb-newdate="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required value="@((Model.Date ?? DateTime.Now).ToString("yyyy-MM-ddTHH:mm"))" />
 				</label>
 			</div>
 			<div class="miniweb-form-group">
@@ -247,7 +247,7 @@
 		</div>
 		<div class="miniweb-modal-footer">
 			<button data-miniweb-dismiss=".miniweb-modal">No</button>
-			<button data-miniweb-confirm="true" class="primary">Yes</button>		
+			<button data-miniweb-confirm="true" class="primary">Yes</button>
 		</div>
 	</div>
 </div>

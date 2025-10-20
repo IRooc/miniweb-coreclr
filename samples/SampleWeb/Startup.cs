@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MiniWeb.AssetStorage.FileSystem;
 using MiniWeb.Core;
-//TODO: Decide you storage type (also check the csproj file
+//TODO: Decide you storage type (also check the csproj file)
 using MiniWeb.Storage.JsonStorage;
 //using MiniWeb.Storage.XmlStorage;
 //using MiniWeb.Storage.EFStorage;
@@ -33,7 +33,7 @@ namespace SampleWeb
 		{
 			// Default services used by MiniWeb
 			services.AddAntiforgery();
-			services.AddMvc(); 
+			services.AddMvc();
 
 			services.AddMiniWeb(Configuration)
 					//TODO: Sample website uses Json storage comment out this line if you pick another provider
@@ -95,7 +95,7 @@ namespace SampleWeb
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-						
+
 			app.UseEndpoints(endpoints =>
             {
                 //Registers the miniweb Routes,

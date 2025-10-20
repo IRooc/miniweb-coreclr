@@ -3,14 +3,37 @@
   "RedirectUrl": null,
   "Title": "Home",
   "Template": "~/Views/Pages/OneColumn.cshtml",
-  "Layout": "~/Views/_home.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
   "MetaTitle": "Home title!",
   "MetaDescription": "Hello homepage",
   "Visible": true,
   "ShowInMenu": true,
   "SortOrder": 0,
-  "Date": "2021-03-25T08:45:53",
+  "Date": "2021-03-25T08:45:00",
   "Created": "0001-01-01T00:00:00",
-  "LastModified": "2021-08-07T11:55:33.1499476+02:00",
-  "Sections": []
+  "LastModified": "2025-10-20T08:51:33.3295875+02:00",
+  "Sections": [
+    {
+      "Key": "content",
+      "Items": [
+        {
+          "Template": "~/Views/Items/item.cshtml",
+          "Values": {
+            "title": "Hello",
+            "content": "Test"
+          }
+        },
+        {
+          "Template": "~/Views/Items/image-text.cshtml",
+          "Values": {
+            "image": "",
+            "image:src": "/images/icon.png",
+            "image:alt": "image",
+            "content": "Enter content",
+            "imagelocation": "right"
+          }
+        }
+      ]
+    }
+  ]
 }

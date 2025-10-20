@@ -10,6 +10,10 @@
 			}
 		]
 	},
+	"MiniWebStorage": {
+		"Username": "demo",
+		"Password": "demo"
+	},
 	"Logging": {
 		"EnableConsole": true,
 		"EnableFile": false,

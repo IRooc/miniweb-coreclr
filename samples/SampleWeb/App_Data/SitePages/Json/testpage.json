@@ -1,0 +1,16 @@
+{
+  "Url": "testpage",
+  "RedirectUrl": null,
+  "Title": "Test Page",
+  "Template": "~/Views/Pages/TwoColumn.cshtml",
+  "Layout": "~/Views/_layout.cshtml",
+  "MetaTitle": "Test Page",
+  "MetaDescription": "Test Page description",
+  "Visible": false,
+  "ShowInMenu": false,
+  "SortOrder": 1,
+  "Date": "2025-10-19T20:30:00",
+  "Created": "2025-10-19T20:30:49.0033035+02:00",
+  "LastModified": "2025-10-20T08:51:04.9829985+02:00",
+  "Sections": []
+}
